@@ -1,29 +1,22 @@
-import { useState } from 'react'
+import { useEffect } from "react";
 
-function App() {
-  const [count, setCount] = useState(0)
+export default function App() {
+  useEffect(() => {
+    document.title = "Tanie";
+
+    // tab icon (favicon)
+    let link = document.querySelector("link[rel='icon']") as HTMLLinkElement | null;
+    if (!link) {
+      link = document.createElement("link");
+      link.rel = "icon";
+      document.head.appendChild(link);
+    }
+    link.href = "/pfp.png";
+  }, []);
 
   return (
-    <main className="min-h-screen bg-slate-950 text-slate-100 flex items-center justify-center p-6">
-      <div className="w-full max-w-md rounded-2xl border border-slate-800 bg-slate-900 p-6 shadow-xl">
-        <h1 className="text-3xl font-bold">React + TypeScript + Tailwind</h1>
-        <p className="mt-2 text-slate-300">You are ready to build 🚀</p>
-
-        <div className="mt-6">
-          <button
-            className="rounded-lg bg-indigo-500 px-4 py-2 font-medium hover:bg-indigo-400"
-            onClick={() => setCount((count) => count + 1)}
-          >
-            count is {count}
-          </button>
-        </div>
-
-        <p className="mt-4 text-sm text-slate-400">
-          Edit src/App.tsx and save to test HMR
-        </p>
-      </div>
+    <main className="min-h-screen bg-white text-slate-900 p-8">
+      <h1 className="text-3xl font-bold">Tanie</h1>
     </main>
-  )
+  );
 }
-
-export default App
