@@ -3,7 +3,7 @@ import { motion } from "framer-motion"
 export default function Hero() {
   return (
     <motion.section
-      className="relative isolate mx-auto w-full max-w-6xl overflow-hidden px-6 py-20 sm:py-24"
+      className="relative isolate mx-auto w-full max-w-6xl overflow-hidden px-4 py-14 sm:px-6 sm:py-20 lg:py-24"
       initial={{ opacity: 0, y: 22 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.7, ease: "easeOut" }}
@@ -21,7 +21,7 @@ export default function Hero() {
       />
 
       <motion.div
-        className="glass-hero-panel relative max-w-3xl overflow-hidden rounded-3xl p-8 sm:p-12"
+        className="glass-hero-panel relative max-w-3xl overflow-hidden rounded-3xl p-6 sm:p-10 lg:p-12"
         initial={{ opacity: 0, scale: 0.96, y: 28 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         transition={{ duration: 0.8, ease: "easeOut", delay: 0.12 }}
@@ -42,7 +42,7 @@ export default function Hero() {
         </motion.p>
 
         <motion.h1
-          className="relative text-4xl font-bold tracking-tight text-white sm:text-5xl"
+          className="relative text-3xl font-bold tracking-tight text-white sm:text-4xl lg:text-5xl"
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.34 }}
@@ -51,7 +51,7 @@ export default function Hero() {
         </motion.h1>
 
         <motion.p
-          className="relative mt-6 text-lg text-slate-300"
+          className="relative mt-5 text-base text-slate-300 sm:mt-6 sm:text-lg"
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.42 }}
@@ -60,14 +60,14 @@ export default function Hero() {
         </motion.p>
 
         <motion.div
-          className="relative mt-8 flex flex-wrap gap-3"
+          className="relative mt-7 flex flex-col gap-3 sm:mt-8 sm:flex-row sm:flex-wrap"
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.5 }}
         >
           <motion.a
             href="#projects"
-            className="rounded-lg bg-white px-5 py-3 text-sm font-semibold text-slate-900 transition hover:bg-slate-200"
+            className="rounded-lg bg-white px-5 py-3 text-center text-sm font-semibold text-slate-900 transition hover:bg-slate-200"
             whileHover={{ y: -2, scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
           >
@@ -75,7 +75,7 @@ export default function Hero() {
           </motion.a>
           <motion.a
             href="#contact"
-            className="rounded-lg border border-white/25 bg-white/10 px-5 py-3 text-sm font-semibold text-slate-100 transition hover:bg-white/20"
+            className="rounded-lg border border-white/25 bg-white/10 px-5 py-3 text-center text-sm font-semibold text-slate-100 transition hover:bg-white/20"
             whileHover={{ y: -2, scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
           >
