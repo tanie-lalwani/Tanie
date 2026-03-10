@@ -80,14 +80,15 @@ export default function Hero() {
               View Projects
             </Link>
           </motion.div>
-          <motion.a
-            href="#contact"
+          <motion.div
             className="rounded-lg border border-white/25 bg-white/10 px-5 py-3 text-center text-sm font-semibold text-slate-100 transition hover:bg-white/20"
             whileHover={lowPowerMode ? undefined : { y: -2, scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
           >
-            Contact Me
-          </motion.a>
+            <Link to="/contact" className="block">
+              Contact Me
+            </Link>
+          </motion.div>
         </motion.div>
       </motion.div>
     </motion.section>
