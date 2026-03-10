@@ -1,6 +1,8 @@
 import { useEffect } from "react";
+import { Route, Routes } from "react-router-dom";
 import Hero from "./components/Hero";
 import Navbar from "./components/Navbar";
+import InterviewMe from "./pages/InterviewMe";
 
 export default function App() {
   useEffect(() => {
@@ -18,7 +20,10 @@ export default function App() {
   return (
     <main className="min-h-screen bg-slate-950 text-slate-100">
       <Navbar />
-      <Hero />
+      <Routes>
+        <Route path="/" element={<Hero />} />
+        <Route path="/interview-me" element={<InterviewMe />} />
+      </Routes>
     </main>
   );
 }
