@@ -2,6 +2,7 @@ import { useState, type FormEvent } from "react"
 import { motion } from "framer-motion"
 
 const RECIPIENT_EMAIL = "contact@tanie.me"
+const FORMSPREE_ENDPOINT = import.meta.env.VITE_FORMSPREE_ENDPOINT ?? ""
 
 type ContactFields = {
   name: string
@@ -19,24 +20,58 @@ const initialFields: ContactFields = {
 
 export default function Contact() {
   const [fields, setFields] = useState<ContactFields>(initialFields)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle")
+  const [submitMessage, setSubmitMessage] = useState("")
 
   const updateField = (key: keyof ContactFields, value: string) => {
     setFields((prev) => ({ ...prev, [key]: value }))
   }
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
 
-    const subject = fields.subject || `Portfolio inquiry from ${fields.name || "Visitor"}`
-    const body = [
-      `Name: ${fields.name}`,
-      `Email: ${fields.email}`,
-      "",
-      fields.message,
-    ].join("\n")
+    if (!FORMSPREE_ENDPOINT) {
+      setSubmitStatus("error")
+      setSubmitMessage("Form endpoint is missing. Set VITE_FORMSPREE_ENDPOINT in your .env file.")
+      return
+    }
 
-    const mailtoUrl = `mailto:${RECIPIENT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
-    window.location.href = mailtoUrl
+    setIsSubmitting(true)
+    setSubmitStatus("idle")
+    setSubmitMessage("")
+
+    try {
+      const subject = fields.subject || `Portfolio inquiry from ${fields.name || "Visitor"}`
+
+      const response = await fetch(FORMSPREE_ENDPOINT, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          ...fields,
+          subject,
+          _replyto: fields.email,
+          _subject: subject,
+          _to: RECIPIENT_EMAIL,
+        }),
+      })
+
+      if (!response.ok) {
+        throw new Error("Failed to submit form")
+      }
+
+      setSubmitStatus("success")
+      setSubmitMessage("Thanks! Your message was sent successfully.")
+      setFields(initialFields)
+    } catch {
+      setSubmitStatus("error")
+      setSubmitMessage("Message failed to send. Please try again in a moment.")
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
@@ -46,7 +81,7 @@ export default function Contact() {
           Contact Me
         </p>
         <p className="mt-4 text-sm text-slate-300 sm:text-base lg:text-lg">
-          Fill out the form and your mail app will open with your message pre-filled to {RECIPIENT_EMAIL}.
+          Fill out the form to send your message directly to {RECIPIENT_EMAIL} via Formspree.
         </p>
       </div>
 
@@ -63,6 +98,7 @@ export default function Contact() {
             Name
             <input
               type="text"
+              name="name"
               required
               value={fields.name}
               onChange={(event) => updateField("name", event.target.value)}
@@ -75,6 +111,7 @@ export default function Contact() {
             Email
             <input
               type="email"
+              name="email"
               required
               value={fields.email}
               onChange={(event) => updateField("email", event.target.value)}
@@ -88,6 +125,7 @@ export default function Contact() {
           Subject
           <input
             type="text"
+            name="subject"
             value={fields.subject}
             onChange={(event) => updateField("subject", event.target.value)}
             className="rounded-xl border border-white/20 bg-slate-900/70 px-3 py-2.5 text-slate-100 outline-none transition placeholder:text-slate-400 focus:border-white/40 focus:ring-2 focus:ring-white/20"
@@ -98,6 +136,7 @@ export default function Contact() {
         <label className="relative flex flex-col gap-2 text-sm text-slate-100">
           Message
           <textarea
+            name="message"
             required
             value={fields.message}
             onChange={(event) => updateField("message", event.target.value)}
@@ -109,11 +148,17 @@ export default function Contact() {
 
         <div className="relative flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-xs text-slate-300">Recipient: {RECIPIENT_EMAIL}</p>
+          {submitMessage ? (
+            <p className={`text-xs ${submitStatus === "success" ? "text-emerald-300" : "text-rose-300"}`}>
+              {submitMessage}
+            </p>
+          ) : null}
           <button
             type="submit"
+            disabled={isSubmitting}
             className="rounded-xl bg-white px-5 py-2.5 text-sm font-semibold text-slate-900 transition hover:bg-slate-200"
           >
-            Send Message
+            {isSubmitting ? "Sending..." : "Send Message"}
           </button>
         </div>
       </motion.form>
