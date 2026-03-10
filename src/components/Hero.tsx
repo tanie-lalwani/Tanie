@@ -1,4 +1,5 @@
 import { motion, useReducedMotion } from "framer-motion"
+import { Link } from "react-router-dom"
 import { useIsMobile } from "../hooks/useIsMobile"
 
 export default function Hero() {
@@ -70,14 +71,15 @@ export default function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.5 }}
         >
-          <motion.a
-            href="#projects"
+          <motion.div
             className="rounded-lg bg-white px-5 py-3 text-center text-sm font-semibold text-slate-900 transition hover:bg-slate-200"
             whileHover={lowPowerMode ? undefined : { y: -2, scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
           >
-            View Projects
-          </motion.a>
+            <Link to="/projects" className="block">
+              View Projects
+            </Link>
+          </motion.div>
           <motion.a
             href="#contact"
             className="rounded-lg border border-white/25 bg-white/10 px-5 py-3 text-center text-sm font-semibold text-slate-100 transition hover:bg-white/20"
