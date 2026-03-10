@@ -1,44 +1,88 @@
+import { motion } from "framer-motion"
+
 export default function Hero() {
   return (
-    <section className="relative isolate mx-auto w-full max-w-6xl overflow-hidden px-6 py-20 sm:py-24">
+    <motion.section
+      className="relative isolate mx-auto w-full max-w-6xl overflow-hidden px-6 py-20 sm:py-24"
+      initial={{ opacity: 0, y: 22 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.7, ease: "easeOut" }}
+    >
       <div className="pointer-events-none absolute inset-0 -z-20 bg-[radial-gradient(circle_at_12%_18%,rgba(203,213,225,0.16),transparent_45%),radial-gradient(circle_at_86%_82%,rgba(148,163,184,0.2),transparent_42%),linear-gradient(135deg,#020617,#0f172a_45%,#111827)]" />
-      <div className="pointer-events-none absolute -left-24 top-0 h-72 w-72 rounded-full bg-slate-300/20 blur-3xl" />
-      <div className="pointer-events-none absolute -right-20 bottom-0 h-80 w-80 rounded-full bg-zinc-300/15 blur-3xl" />
+      <motion.div
+        className="pointer-events-none absolute -left-24 top-0 h-72 w-72 rounded-full bg-slate-300/20 blur-3xl"
+        animate={{ y: [0, 18, 0], opacity: [0.25, 0.35, 0.25] }}
+        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+      />
+      <motion.div
+        className="pointer-events-none absolute -right-20 bottom-0 h-80 w-80 rounded-full bg-zinc-300/15 blur-3xl"
+        animate={{ y: [0, -14, 0], opacity: [0.2, 0.3, 0.2] }}
+        transition={{ duration: 9, repeat: Infinity, ease: "easeInOut" }}
+      />
 
-      <div className="glass-hero-panel relative max-w-3xl overflow-hidden rounded-3xl p-8 sm:p-12">
+      <motion.div
+        className="glass-hero-panel relative max-w-3xl overflow-hidden rounded-3xl p-8 sm:p-12"
+        initial={{ opacity: 0, scale: 0.96, y: 28 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        transition={{ duration: 0.8, ease: "easeOut", delay: 0.12 }}
+      >
         <div className="glass-hero-rim pointer-events-none absolute inset-0" />
         <div className="glass-hero-noise pointer-events-none absolute inset-0" />
         <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(122deg,rgba(255,255,255,0.42)_0%,rgba(255,255,255,0.08)_28%,rgba(255,255,255,0)_50%)]" />
         <div className="pointer-events-none absolute left-8 top-4 h-20 w-2/3 rounded-full bg-white/35 blur-2xl" />
         <div className="pointer-events-none absolute -bottom-16 -right-12 h-48 w-48 rounded-full bg-slate-200/15 blur-3xl" />
 
-        <p className="glass-chip relative mb-4 inline-flex rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-wide text-slate-100">
+        <motion.p
+          className="glass-chip relative mb-4 inline-flex rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-wide text-slate-100"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.45, delay: 0.28 }}
+        >
           React + TypeScript + Tailwind
-        </p>
+        </motion.p>
 
-        <h1 className="relative text-4xl font-bold tracking-tight text-white sm:text-5xl">
+        <motion.h1
+          className="relative text-4xl font-bold tracking-tight text-white sm:text-5xl"
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.34 }}
+        >
           I build clean, fast, and modern web experiences.
-        </h1>
+        </motion.h1>
 
-        <p className="relative mt-6 text-lg text-slate-300">
+        <motion.p
+          className="relative mt-6 text-lg text-slate-300"
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.42 }}
+        >
           Welcome to my portfolio. I focus on polished UI, good performance, and reliable developer workflows.
-        </p>
+        </motion.p>
 
-        <div className="relative mt-8 flex flex-wrap gap-3">
-          <a
+        <motion.div
+          className="relative mt-8 flex flex-wrap gap-3"
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.5 }}
+        >
+          <motion.a
             href="#projects"
             className="rounded-lg bg-white px-5 py-3 text-sm font-semibold text-slate-900 transition hover:bg-slate-200"
+            whileHover={{ y: -2, scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
           >
             View Projects
-          </a>
-          <a
+          </motion.a>
+          <motion.a
             href="#contact"
             className="rounded-lg border border-white/25 bg-white/10 px-5 py-3 text-sm font-semibold text-slate-100 transition hover:bg-white/20"
+            whileHover={{ y: -2, scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
           >
             Contact Me
-          </a>
-        </div>
-      </div>
-    </section>
+          </motion.a>
+        </motion.div>
+      </motion.div>
+    </motion.section>
   )
 }
