@@ -3,6 +3,7 @@ import { NavLink } from 'react-router-dom'
 
 const navLinks = [
   { label: 'Home', to: '/' },
+  { label: 'Projects', to: '/projects' },
   { label: 'Interview Me', to: '/interview-me' },
 ]
 

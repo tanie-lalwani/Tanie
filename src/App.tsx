@@ -3,6 +3,7 @@ import { Route, Routes, useLocation } from "react-router-dom";
 import Hero from "./components/Hero";
 import Navbar from "./components/Navbar";
 import InterviewMe from "./pages/InterviewMe";
+import Projects from "./pages/Projects";
 
 export default function App() {
   const location = useLocation();
@@ -25,6 +26,7 @@ export default function App() {
       {showNavbar ? <Navbar /> : null}
       <Routes>
         <Route path="/" element={<Hero />} />
+        <Route path="/projects" element={<Projects />} />
         <Route path="/interview-me" element={<InterviewMe />} />
       </Routes>
     </main>
