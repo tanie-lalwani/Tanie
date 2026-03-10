@@ -1,63 +1,81 @@
+import { useEffect, useRef, useState } from "react"
+
 const questions = [
-  {
-    question: "Tell me about yourself.",
-    note: "A concise intro covering your background, strengths, and goals.",
-  },
-  {
-    question: "Walk me through a project you are proud of.",
-    note: "Focus on your role, decisions, impact, and key tradeoffs.",
-  },
-  {
-    question: "How do you handle bugs in production?",
-    note: "Talk through triage, communication, and postmortem habits.",
-  },
-  {
-    question: "Describe a time you disagreed with a teammate.",
-    note: "Show conflict resolution, empathy, and outcome.",
-  },
-  {
-    question: "How do you optimize frontend performance?",
-    note: "Mention profiling, bundle strategy, rendering patterns, and metrics.",
-  },
-  {
-    question: "Why do you want this role?",
-    note: "Connect company mission with your strengths and growth goals.",
-  },
+  "Tell me about yourself.",
+  "Walk me through a project you are proud of.",
+  "How do you handle bugs in production?",
+  "Describe a time you disagreed with a teammate.",
+  "How do you optimize frontend performance?",
+  "Why do you want this role?",
 ]
 
 export default function InterviewMe() {
-  return (
-    <section className="mx-auto w-full max-w-6xl px-6 pb-20 pt-12 sm:pt-16">
-      <div className="mb-10 max-w-2xl">
-        <p className="glass-chip inline-flex rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-wide text-slate-100">
-          Interview Prep Route
-        </p>
-        <h1 className="mt-4 text-4xl font-bold tracking-tight text-white sm:text-5xl">Interview Me</h1>
-        <p className="mt-4 text-base text-slate-300 sm:text-lg">
-          Practice answers with these common interview prompts. Each card is a video placeholder for your future recordings.
-        </p>
-      </div>
+  const cardRefs = useRef<Array<HTMLElement | null>>([])
+  const [visibleCards, setVisibleCards] = useState<Record<number, boolean>>({})
 
-      <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-        {questions.map((item, index) => (
-          <article key={item.question} className="glass-hero-panel rounded-2xl p-4">
-            <div className="relative mb-4 aspect-video overflow-hidden rounded-xl border border-white/20 bg-slate-900/80">
-              <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.25),transparent_38%),linear-gradient(145deg,rgba(148,163,184,0.2),rgba(15,23,42,0.75))]" />
-              <div className="absolute inset-0 grid place-items-center">
-                <div className="rounded-full border border-white/30 bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-slate-100">
-                  Video Placeholder
-                </div>
-              </div>
-              <span className="absolute left-3 top-3 rounded-md border border-white/20 bg-black/35 px-2 py-1 text-xs text-slate-200">
-                Q{index + 1}
-              </span>
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        setVisibleCards((prev) => {
+          const next = { ...prev }
+
+        entries.forEach((entry) => {
+            const cardIndex = Number(entry.target.getAttribute("data-card-index"))
+            next[cardIndex] = entry.isIntersecting
+          })
+
+          return next
+        })
+      },
+      {
+        threshold: 0.7,
+      },
+    )
+
+    cardRefs.current.forEach((card) => {
+      if (card) observer.observe(card)
+    })
+
+    return () => observer.disconnect()
+  }, [])
+
+  return (
+    <section className="h-screen w-full overflow-y-auto bg-black [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden [scroll-snap-type:y_mandatory]">
+      {questions.map((question, index) => (
+        <article
+          key={question}
+          data-card-index={index}
+          ref={(node) => {
+            cardRefs.current[index] = node
+          }}
+          className={`flex h-screen w-full snap-start items-center justify-center px-3 py-6 transition-all duration-500 ease-out sm:px-6 ${
+            visibleCards[index]
+              ? "opacity-100 blur-0 scale-100"
+              : "opacity-45 blur-[2px] scale-[0.985] motion-reduce:opacity-100 motion-reduce:blur-0 motion-reduce:scale-100"
+          }`}
+        >
+          <div className="relative w-full max-w-[430px] overflow-hidden rounded-2xl border border-white/20 bg-slate-900 shadow-[0_24px_80px_rgba(0,0,0,0.75)] aspect-[9/16]">
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_22%_12%,rgba(255,255,255,0.2),transparent_30%),linear-gradient(160deg,#1f2937_0%,#111827_38%,#020617_100%)]" />
+            <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_0%,transparent_58%,rgba(0,0,0,0.78)_100%)]" />
+
+            <div className="absolute left-4 top-4 rounded-md border border-white/25 bg-black/35 px-2 py-1 text-[10px] font-medium uppercase tracking-wide text-slate-200">
+              Interview Reel {index + 1}
             </div>
 
-            <h2 className="text-base font-semibold text-white">{item.question}</h2>
-            <p className="mt-2 text-sm text-slate-300">{item.note}</p>
-          </article>
-        ))}
-      </div>
+            <div className="absolute inset-0 grid place-items-center">
+              <div className="rounded-full border border-white/30 bg-white/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-slate-100 backdrop-blur">
+                Video Placeholder
+              </div>
+            </div>
+
+            <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-5">
+              <p className="text-base font-semibold text-white drop-shadow-[0_3px_14px_rgba(0,0,0,0.8)] sm:text-lg">
+                {question}
+              </p>
+            </div>
+          </div>
+        </article>
+      ))}
     </section>
   )
 }

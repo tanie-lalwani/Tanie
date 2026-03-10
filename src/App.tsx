@@ -1,10 +1,13 @@
 import { useEffect } from "react";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 import Hero from "./components/Hero";
 import Navbar from "./components/Navbar";
 import InterviewMe from "./pages/InterviewMe";
 
 export default function App() {
+  const location = useLocation();
+  const showNavbar = location.pathname !== "/interview-me";
+
   useEffect(() => {
     document.title = "Tanie";
 
@@ -19,7 +22,7 @@ export default function App() {
 
   return (
     <main className="min-h-screen bg-slate-950 text-slate-100">
-      <Navbar />
+      {showNavbar ? <Navbar /> : null}
       <Routes>
         <Route path="/" element={<Hero />} />
         <Route path="/interview-me" element={<InterviewMe />} />
