@@ -3,7 +3,6 @@ import type { ReactNode } from "react"
 
 type SocialItem = {
   label: string
-  handle: string
   href: string
   icon: ReactNode
 }
@@ -11,7 +10,6 @@ type SocialItem = {
 const SOCIALS: SocialItem[] = [
   {
     label: "GitHub",
-    handle: "@taniehq",
     href: "https://github.com/taniehq",
     icon: (
       <svg viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5" aria-hidden="true">
@@ -21,7 +19,6 @@ const SOCIALS: SocialItem[] = [
   },
   {
     label: "Instagram",
-    handle: "@tanie.mp3",
     href: "https://instagram.com/tanie.mp3",
     icon: (
       <svg viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5" aria-hidden="true">
@@ -31,7 +28,6 @@ const SOCIALS: SocialItem[] = [
   },
   {
     label: "LinkedIn",
-    handle: "Tanisha Lalwani",
     href: "https://linkedin.com/in/tanisha-lalwani/",
     icon: (
       <svg viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5" aria-hidden="true">
@@ -41,7 +37,6 @@ const SOCIALS: SocialItem[] = [
   },
   {
     label: "Email",
-    handle: "contact@tanie.me",
     href: "mailto:contact@tanie.me",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" className="h-5 w-5" aria-hidden="true">
@@ -71,9 +66,7 @@ export default function SiteFooter({ className = "" }: SiteFooterProps) {
       <div className="mt-8 flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <p className="text-sm font-semibold text-slate-100">Tanie</p>
-          <p className="mt-1 max-w-xs text-xs leading-relaxed text-slate-500">
-            Frontend engineer based anywhere with Wi-Fi.<br />Open to roles, collabs, and good conversations.
-          </p>
+          <p className="mt-1 max-w-xs text-xs leading-relaxed text-slate-500">Frontend engineer.</p>
         </div>
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-x-8">
           {SOCIALS.map((s) => (
@@ -89,7 +82,6 @@ export default function SiteFooter({ className = "" }: SiteFooterProps) {
               </span>
               <span className="flex flex-col">
                 <span className="text-xs font-semibold leading-none tracking-wide">{s.label}</span>
-                <span className="mt-0.5 text-[11px] text-slate-500 group-hover:text-slate-400">{s.handle}</span>
               </span>
             </a>
           ))}

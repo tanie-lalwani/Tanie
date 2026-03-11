@@ -48,14 +48,9 @@ export default function InterviewMe() {
             <h1 className="mt-4 text-3xl font-bold tracking-tight text-white sm:text-4xl">
               Quick interview reel
             </h1>
-            <p className="mt-4 max-w-2xl text-sm leading-relaxed text-slate-300 sm:text-base">
-              Scroll to browse short prompt cards. Each card is meant to hold a direct, concise video answer so hiring teams can understand communication style, product thinking, and engineering depth quickly.
+            <p className="mt-4 max-w-xl text-sm leading-relaxed text-slate-300 sm:text-base">
+              Scroll through short prompts and concise video answers.
             </p>
-            <ul className="mt-6 grid gap-2 text-xs text-slate-400 sm:grid-cols-3">
-              <li className="rounded-xl border border-white/10 bg-slate-950/45 px-3 py-2">Communication clarity</li>
-              <li className="rounded-xl border border-white/10 bg-slate-950/45 px-3 py-2">Execution and craft</li>
-              <li className="rounded-xl border border-white/10 bg-slate-950/45 px-3 py-2">Process and collaboration</li>
-            </ul>
           </div>
         </div>
       </motion.article>

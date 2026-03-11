@@ -17,11 +17,6 @@ const SHELL: CSSProperties = {
   WebkitBackdropFilter: "blur(20px) saturate(130%)",
 }
 
-const CENTER_LIGHT: CSSProperties = {
-  background: "linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(226,232,240,0.35) 18%, rgba(255,255,255,0.95) 50%, rgba(226,232,240,0.35) 82%, rgba(255,255,255,0) 100%)",
-  boxShadow: "0 0 18px rgba(226,232,240,0.35), 0 0 34px rgba(226,232,240,0.15)",
-}
-
 const CTA: CSSProperties = {
   background: "linear-gradient(145deg, rgba(15,23,42,0.95) 0%, rgba(30,41,59,0.85) 100%)",
   border: "1px solid rgba(255,255,255,0.18)",
@@ -35,24 +30,22 @@ export default function Navbar() {
   return (
     <header className="sticky top-0 z-20">
       <nav className="relative flex h-11 w-full items-center justify-between px-5 sm:h-12 sm:px-8" style={SHELL}>
-        {/* Top-edge highlight rule */}
         <div
           className="pointer-events-none absolute inset-x-0 top-0 h-px"
           style={{ background: "linear-gradient(90deg, transparent 4%, rgba(226,232,240,0.55) 35%, rgba(226,232,240,0.82) 50%, rgba(226,232,240,0.55) 65%, transparent 96%)" }}
         />
-        <div className="pointer-events-none absolute left-1/2 top-0 h-1.5 w-28 -translate-x-1/2 rounded-b-full sm:w-36" style={CENTER_LIGHT} />
 
         <NavLink to="/" className="relative text-sm font-semibold tracking-tight text-slate-100 sm:text-base" style={{ fontFamily: 'var(--font-display)' }} onClick={closeMenu}>
           Tanie
         </NavLink>
 
-        <ul className="relative hidden items-center gap-3 text-sm font-medium md:flex">
+        <ul className="relative hidden items-center gap-1 text-sm font-medium md:flex">
           {navLinks.map((link) => (
             <li key={link.label}>
               <NavLink
                 to={link.to}
                 className={({ isActive }) =>
-                  `rounded-full px-3 py-1.5 transition ${isActive ? 'bg-white/10 text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.12)]' : 'text-slate-400 hover:bg-white/5 hover:text-white'}`
+                  `rounded-full px-3 py-1 transition ${isActive ? 'text-white' : 'text-slate-400 hover:text-white'}`
                 }
               >
                 {link.label}
@@ -63,7 +56,7 @@ export default function Navbar() {
 
         <NavLink
           to="/interview-me"
-          className="relative hidden rounded-lg px-3.5 py-1.5 text-xs font-semibold text-white transition hover:brightness-110 md:inline-flex"
+          className="relative hidden rounded-md px-3 py-1.5 text-xs font-semibold text-white transition hover:brightness-110 md:inline-flex"
           style={CTA}
         >
           Interview Me
