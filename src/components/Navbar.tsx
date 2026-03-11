@@ -9,12 +9,11 @@ const navLinks = [
 ]
 
 const SHELL: CSSProperties = {
-  background:
-    "linear-gradient(120deg, rgba(255,255,255,0.09) 0%, rgba(255,255,255,0.03) 38%, rgba(255,255,255,0.01) 100%), rgba(2,6,23,0.82)",
-  borderBottom: "1px solid rgba(255,255,255,0.10)",
-  boxShadow: "0 4px 20px rgba(2,6,23,0.5), inset 0 -1px 0 rgba(255,255,255,0.04)",
-  backdropFilter: "blur(20px) saturate(130%)",
-  WebkitBackdropFilter: "blur(20px) saturate(130%)",
+  background: "linear-gradient(180deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.05) 40%, rgba(255,255,255,0.03) 100%)",
+  borderBottom: "1px solid rgba(255,255,255,0.18)",
+  boxShadow: "0 6px 26px rgba(2,6,23,0.34), inset 0 1px 0 rgba(255,255,255,0.35), inset 0 -1px 0 rgba(255,255,255,0.08)",
+  backdropFilter: "blur(22px) saturate(175%) contrast(115%) brightness(108%)",
+  WebkitBackdropFilter: "blur(22px) saturate(175%) contrast(115%) brightness(108%)",
 }
 
 const CTA: CSSProperties = {
@@ -29,7 +28,22 @@ export default function Navbar() {
 
   return (
     <header className="sticky top-0 z-20">
-      <nav className="relative flex h-11 w-full items-center justify-between px-5 sm:h-12 sm:px-8" style={SHELL}>
+      <nav className="relative flex h-11 w-full items-center justify-between overflow-hidden px-5 sm:h-12 sm:px-8" style={SHELL}>
+        <div
+          className="pointer-events-none absolute inset-0 opacity-90"
+          style={{
+            background:
+              "radial-gradient(120% 180% at 10% 0%, rgba(255,255,255,0.26) 0%, transparent 46%), radial-gradient(120% 180% at 90% 100%, rgba(148,163,184,0.22) 0%, transparent 55%), linear-gradient(115deg, rgba(255,255,255,0.16) 0%, rgba(255,255,255,0.02) 36%, rgba(255,255,255,0.11) 64%, rgba(255,255,255,0.03) 100%)",
+          }}
+        />
+        <div
+          className="pointer-events-none absolute -left-16 top-0 h-full w-1/2 opacity-70"
+          style={{
+            background: "linear-gradient(98deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.28) 42%, rgba(255,255,255,0.04) 100%)",
+            filter: "blur(14px)",
+            transform: "skewX(-18deg)",
+          }}
+        />
         <div
           className="pointer-events-none absolute inset-x-0 top-0 h-px"
           style={{ background: "linear-gradient(90deg, transparent 4%, rgba(226,232,240,0.55) 35%, rgba(226,232,240,0.82) 50%, rgba(226,232,240,0.55) 65%, transparent 96%)" }}
