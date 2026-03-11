@@ -537,23 +537,52 @@ function PracticalHero({
   )
 }
 
+const SESSION_KEY = "portfolioMode"
+
+function readStoredMode(): Mode | null {
+  try {
+    const v = sessionStorage.getItem(SESSION_KEY)
+    return v === "practical" || v === "experience" ? v : null
+  } catch {
+    return null
+  }
+}
+
+function saveMode(m: Mode | null) {
+  try {
+    if (m === null) sessionStorage.removeItem(SESSION_KEY)
+    else sessionStorage.setItem(SESSION_KEY, m)
+  } catch { /* storage blocked — degrade gracefully */ }
+}
+
 // ─── Root component ───────────────────────────────────────────────────────────
 export default function Hero() {
   const isMobile = useIsMobile()
   const shouldReduceMotion = useReducedMotion()
-  const [mode, setMode] = useState<Mode | null>(null)
   const lowPowerModeBool: boolean = isMobile || (shouldReduceMotion ?? false)
+
+  const [mode, setMode] = useState<Mode | null>(readStoredMode)
+
+  function handleSelect(m: Mode) {
+    saveMode(m)
+    setMode(m)
+  }
+
+  function handleBack() {
+    saveMode(null)
+    setMode(null)
+  }
 
   return (
     <AnimatePresence mode="wait">
       {mode === null && (
-        <ModeSelection key="selection" onSelect={setMode} lowPowerMode={lowPowerModeBool} />
+        <ModeSelection key="selection" onSelect={handleSelect} lowPowerMode={lowPowerModeBool} />
       )}
       {mode === "experience" && (
-        <ExperiencePlaceholder key="experience" onBack={() => setMode(null)} lowPowerMode={lowPowerModeBool} />
+        <ExperiencePlaceholder key="experience" onBack={handleBack} lowPowerMode={lowPowerModeBool} />
       )}
       {mode === "practical" && (
-        <PracticalHero key="practical" lowPowerMode={lowPowerModeBool} onChangeMode={() => setMode(null)} />
+        <PracticalHero key="practical" lowPowerMode={lowPowerModeBool} onChangeMode={handleBack} />
       )}
     </AnimatePresence>
   )
