@@ -1,4 +1,4 @@
-import { Suspense, lazy, useState } from "react";
+import { Suspense, lazy, useState, useEffect } from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
 import Hero, { type Mode } from "./components/Hero";
 import Navbar from "./components/Navbar.tsx";
@@ -13,6 +13,30 @@ export default function App() {
   // Plain React state — persists across in-app navigation (App never unmounts)
   // but resets to null on a fresh page load, showing the selection screen.
   const [heroMode, setHeroMode] = useState<Mode | null>(null)
+
+  // When a mode is selected, push a history entry tagged with the mode
+  // so the browser back button has somewhere to return to.
+  useEffect(() => {
+    if (heroMode !== null) {
+      window.history.pushState({ isHeroMode: true, heroMode }, "")
+    }
+  }, [heroMode])
+
+  // Intercept the browser back button while on "/".
+  // If the history state we're landing on has no isHeroMode tag, the user
+  // is going back before any mode was chosen → reset to mode selection.
+  // If it does have the tag (e.g. back from /projects → /), keep the mode.
+  useEffect(() => {
+    const handlePopState = (e: PopStateEvent) => {
+      if (window.location.pathname === "/") {
+        if (!e.state?.isHeroMode) {
+          setHeroMode(null)
+        }
+      }
+    }
+    window.addEventListener("popstate", handlePopState)
+    return () => window.removeEventListener("popstate", handlePopState)
+  }, [])
 
   // Show navbar on all pages except /interview-me,
   // and on / only when the user has chosen Practical mode.
