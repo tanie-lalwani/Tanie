@@ -1,11 +1,12 @@
-import { useEffect, useState } from "react";
+import { Suspense, lazy, useState } from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
 import Hero, { type Mode } from "./components/Hero";
-import Navbar from "./components/Navbar";
+import Navbar from "./components/Navbar.tsx";
 import SiteFooter from "./components/SiteFooter";
-import InterviewMe from "./pages/InterviewMe.tsx";
-import Projects from "./pages/Projects.tsx";
-import Contact from "./pages/Contact.tsx";
+
+const InterviewMe = lazy(() => import("./pages/InterviewMe.tsx"));
+const Projects = lazy(() => import("./pages/Projects.tsx"));
+const Contact = lazy(() => import("./pages/Contact.tsx"));
 
 export default function App() {
   const location = useLocation();
@@ -23,27 +24,17 @@ export default function App() {
     location.pathname !== "/interview-me" &&
     !(location.pathname === "/" && heroMode !== "practical")
 
-  useEffect(() => {
-    document.title = "Tanie";
-
-    let link = document.querySelector("link[rel='icon']") as HTMLLinkElement | null;
-    if (!link) {
-      link = document.createElement("link");
-      link.rel = "icon";
-      document.head.appendChild(link);
-    }
-    link.href = "/favicon.png";
-  }, []);
-
   return (
     <main className="min-h-screen bg-slate-950 text-slate-100">
       {showNavbar ? <Navbar /> : null}
-      <Routes>
-        <Route path="/" element={<Hero mode={heroMode} onModeChange={setHeroMode} />} />
-        <Route path="/projects" element={<Projects />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/interview-me" element={<InterviewMe />} />
-      </Routes>
+      <Suspense fallback={<div className="px-4 py-10 text-center text-sm text-slate-400">Loading...</div>}>
+        <Routes>
+          <Route path="/" element={<Hero mode={heroMode} onModeChange={setHeroMode} />} />
+          <Route path="/projects" element={<Projects />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/interview-me" element={<InterviewMe />} />
+        </Routes>
+      </Suspense>
       {showFooter ? <SiteFooter /> : null}
     </main>
   );
