@@ -466,7 +466,7 @@ function PracticalHero({
               animate={{ opacity: 1 }}
               transition={{ delay: 0.38 }}
             >
-              Frontend Engineer
+              Full Stack Developer
             </motion.p>
 
             <motion.p
