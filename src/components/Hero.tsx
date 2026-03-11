@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion"
 import { Link } from "react-router-dom"
 import { useIsMobile } from "../hooks/useIsMobile"
@@ -319,7 +319,18 @@ function ModeSelection({
   )
 }
 
-// ─── Practical hero (existing content) ───────────────────────────────────────
+// ─── Practical hero ───────────────────────────────────────────────────────────
+const ROLES = ["Frontend Engineer", "UI / UX Craftsman", "React Developer", "TypeScript Advocate"]
+
+const STACK = [
+  { label: "React",      color: "text-cyan-300/80 border-cyan-400/25 bg-cyan-400/[0.07]" },
+  { label: "TypeScript", color: "text-blue-300/80 border-blue-400/25 bg-blue-400/[0.07]" },
+  { label: "Tailwind",   color: "text-teal-300/80 border-teal-400/25 bg-teal-400/[0.07]" },
+  { label: "Node.js",    color: "text-green-300/80 border-green-400/25 bg-green-400/[0.07]" },
+  { label: "Vite",       color: "text-yellow-300/75 border-yellow-400/25 bg-yellow-400/[0.07]" },
+  { label: "Framer",     color: "text-pink-300/80 border-pink-400/25 bg-pink-400/[0.07]" },
+]
+
 function PracticalHero({
   lowPowerMode,
   onChangeMode,
@@ -327,104 +338,201 @@ function PracticalHero({
   lowPowerMode: boolean
   onChangeMode: () => void
 }) {
+  const [roleIndex, setRoleIndex] = useState(0)
+  const [displayed, setDisplayed] = useState(() => lowPowerMode ? ROLES[0] : "")
+  const [deleting, setDeleting] = useState(false)
+
+  useEffect(() => {
+    if (lowPowerMode) return
+    const target = ROLES[roleIndex]
+    let t: ReturnType<typeof setTimeout>
+    if (!deleting) {
+      if (displayed.length < target.length) {
+        t = setTimeout(() => setDisplayed(target.slice(0, displayed.length + 1)), 52)
+      } else {
+        t = setTimeout(() => setDeleting(true), 2400)
+      }
+    } else {
+      if (displayed.length > 0) {
+        t = setTimeout(() => setDisplayed(displayed.slice(0, -1)), 28)
+      } else {
+        t = setTimeout(() => {
+          setDeleting(false)
+          setRoleIndex((i) => (i + 1) % ROLES.length)
+        }, 120)
+      }
+    }
+    return () => clearTimeout(t)
+  }, [displayed, deleting, roleIndex, lowPowerMode])
+
   return (
     <motion.section
-      className="relative isolate mx-auto w-full max-w-6xl overflow-hidden px-4 py-14 sm:px-6 sm:py-20 lg:py-24"
-      initial={{ opacity: 0, y: lowPowerMode ? 10 : 22 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: lowPowerMode ? -8 : -16 }}
-      transition={{ duration: lowPowerMode ? 0.45 : 0.7, ease: "easeOut" }}
+      className="relative isolate flex min-h-screen w-full flex-col items-center justify-center overflow-hidden px-6 py-24"
+      style={{ background: "linear-gradient(135deg, #020617 0%, #0c1322 50%, #0f172a 100%)" }}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0, y: lowPowerMode ? -8 : -18 }}
+      transition={{ duration: lowPowerMode ? 0.4 : 0.65, ease: "easeOut" }}
     >
-      {/* Subtle "change mode" badge */}
+      {/* Background orbs */}
+      <motion.div
+        className="pointer-events-none absolute -left-32 top-10 h-96 w-96 rounded-full"
+        style={{ background: "radial-gradient(circle, rgba(148,163,184,0.12) 0%, transparent 70%)", filter: "blur(72px)" }}
+        animate={lowPowerMode ? { opacity: 0.7 } : { y: [0, 24, 0], opacity: [0.7, 1, 0.7] }}
+        transition={{ duration: 9, repeat: Infinity, ease: "easeInOut" }}
+      />
+      <motion.div
+        className="pointer-events-none absolute -right-24 bottom-16 h-80 w-80 rounded-full"
+        style={{ background: "radial-gradient(circle, rgba(100,116,139,0.1) 0%, transparent 70%)", filter: "blur(64px)" }}
+        animate={lowPowerMode ? { opacity: 0.6 } : { y: [0, -18, 0], opacity: [0.6, 0.9, 0.6] }}
+        transition={{ duration: 11, repeat: Infinity, ease: "easeInOut" }}
+      />
+      {/* Fine dot-grid texture */}
+      <div
+        className="pointer-events-none absolute inset-0 opacity-[0.045]"
+        style={{
+          backgroundImage: "radial-gradient(rgba(148,163,184,1) 1px, transparent 1px)",
+          backgroundSize: "28px 28px",
+        }}
+      />
+
+      {/* Change mode */}
       <motion.button
-        className="absolute right-6 top-5 z-10 flex items-center gap-1.5 rounded-full border border-white/12 bg-white/6 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-widest text-slate-400/70 backdrop-blur-sm transition hover:border-white/20 hover:text-slate-300/90 sm:right-8"
+        className="absolute right-6 top-6 z-20 flex items-center gap-1.5 rounded-full border border-white/10 bg-white/4 px-3.5 py-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500 backdrop-blur-sm transition hover:border-white/18 hover:text-slate-300"
         onClick={onChangeMode}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 0.9 }}
+        transition={{ delay: 1.1 }}
         whileHover={lowPowerMode ? undefined : { scale: 1.04 }}
         whileTap={{ scale: 0.97 }}
       >
         ⊞ Change Mode
       </motion.button>
 
-      <div className="pointer-events-none absolute inset-0 -z-20 bg-[radial-gradient(circle_at_12%_18%,rgba(203,213,225,0.16),transparent_45%),radial-gradient(circle_at_86%_82%,rgba(148,163,184,0.2),transparent_42%),linear-gradient(135deg,#020617,#0f172a_45%,#111827)]" />
-      <motion.div
-        className="pointer-events-none absolute -left-24 top-0 h-72 w-72 rounded-full bg-slate-300/20 blur-3xl"
-        animate={lowPowerMode ? { opacity: 0.22 } : { y: [0, 18, 0], opacity: [0.25, 0.35, 0.25] }}
-        transition={lowPowerMode ? { duration: 0.2 } : { duration: 8, repeat: Infinity, ease: "easeInOut" }}
-      />
-      <motion.div
-        className="pointer-events-none absolute -right-20 bottom-0 h-80 w-80 rounded-full bg-zinc-300/15 blur-3xl"
-        animate={lowPowerMode ? { opacity: 0.2 } : { y: [0, -14, 0], opacity: [0.2, 0.3, 0.2] }}
-        transition={lowPowerMode ? { duration: 0.2 } : { duration: 9, repeat: Infinity, ease: "easeInOut" }}
-      />
+      {/* ── Main content ── */}
+      <div className="relative z-10 mx-auto w-full max-w-2xl">
 
-      <motion.div
-        className="glass-hero-panel relative max-w-3xl overflow-hidden rounded-3xl p-6 sm:p-10 lg:p-12"
-        initial={{ opacity: 0, scale: lowPowerMode ? 0.985 : 0.96, y: lowPowerMode ? 14 : 28 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
-        transition={{ duration: lowPowerMode ? 0.5 : 0.8, ease: "easeOut", delay: lowPowerMode ? 0.04 : 0.12 }}
-      >
-        <div className="glass-hero-rim pointer-events-none absolute inset-0" />
-        <div className="glass-hero-noise pointer-events-none absolute inset-0" />
-        <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(122deg,rgba(255,255,255,0.42)_0%,rgba(255,255,255,0.08)_28%,rgba(255,255,255,0)_50%)]" />
-        <div className="pointer-events-none absolute left-8 top-4 h-20 w-2/3 rounded-full bg-white/35 blur-2xl" />
-        <div className="pointer-events-none absolute -bottom-16 -right-12 h-48 w-48 rounded-full bg-slate-200/15 blur-3xl" />
-
-        <motion.p
-          className="glass-chip relative mb-4 inline-flex rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-wide text-slate-100"
+        {/* Status badge */}
+        <motion.div
+          className="mb-8 inline-flex items-center gap-2.5 rounded-full border border-emerald-500/20 bg-emerald-500/[0.07] px-4 py-1.5"
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.45, delay: 0.28 }}
+          transition={{ delay: 0.18 }}
         >
-          React + TypeScript + Tailwind
-        </motion.p>
+          <motion.span
+            className="h-1.5 w-1.5 rounded-full bg-emerald-400"
+            animate={lowPowerMode ? {} : { opacity: [1, 0.3, 1] }}
+            transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+          />
+          <span className="text-xs font-medium tracking-wide text-emerald-300/75">Available for opportunities</span>
+        </motion.div>
 
+        {/* Heading */}
         <motion.h1
-          className="relative text-3xl font-bold tracking-tight text-white sm:text-4xl lg:text-5xl"
-          initial={{ opacity: 0, y: 12 }}
+          className="text-5xl font-black tracking-tight text-white sm:text-6xl lg:text-[5.25rem] lg:leading-[1.04]"
+          initial={{ opacity: 0, y: 18 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.34 }}
+          transition={{ delay: 0.26, duration: 0.6 }}
         >
-          I build clean, fast, and modern web experiences.
+          Hey, I'm{" "}
+          <span
+            style={{
+              background: "linear-gradient(92deg, #e2e8f0 20%, #94a3b8 60%, #cbd5e1 100%)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              backgroundClip: "text",
+            }}
+          >
+            Tanie
+          </span>
         </motion.h1>
 
+        {/* Typewriter role */}
+        <motion.div
+          className="mt-4 flex h-8 items-center gap-1.5"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.38 }}
+        >
+          <span className="text-lg font-light tracking-wide text-slate-400 sm:text-xl">{displayed}</span>
+          <motion.span
+            className="mt-0.5 inline-block h-5 w-0.5 rounded-full bg-slate-400/60"
+            animate={lowPowerMode ? {} : { opacity: [1, 0, 1] }}
+            transition={{ duration: 0.9, repeat: Infinity, ease: "linear" }}
+          />
+        </motion.div>
+
+        {/* Bio */}
         <motion.p
-          className="relative mt-5 text-base text-slate-300 sm:mt-6 sm:text-lg"
+          className="mt-6 max-w-xl text-base leading-relaxed text-slate-400/80 sm:text-[1.0625rem]"
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.42 }}
+          transition={{ delay: 0.46, duration: 0.55 }}
         >
-          Welcome to my portfolio. I focus on polished UI, good performance, and reliable developer workflows.
+          I craft fast, accessible, production-grade web interfaces — from pixel-perfect components to full-stack deployments. Always obsessing over the details that make a product feel alive.
         </motion.p>
 
+        {/* CTA buttons */}
         <motion.div
-          className="relative mt-7 flex flex-col gap-3 sm:mt-8 sm:flex-row sm:flex-wrap"
+          className="mt-9 flex flex-wrap gap-3"
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.5 }}
+          transition={{ delay: 0.54, duration: 0.5 }}
         >
           <motion.div
-            className="rounded-lg bg-white px-5 py-3 text-center text-sm font-semibold text-slate-900 transition hover:bg-slate-200"
             whileHover={lowPowerMode ? undefined : { y: -2, scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
+            whileTap={{ scale: 0.97 }}
           >
-            <Link to="/projects" className="block">
+            <Link
+              to="/projects"
+              className="inline-flex items-center gap-2 rounded-xl bg-white px-6 py-3 text-sm font-semibold text-slate-900 shadow-lg shadow-black/30 transition hover:bg-slate-100"
+            >
               View Projects
+              <span className="text-slate-500">→</span>
             </Link>
           </motion.div>
           <motion.div
-            className="rounded-lg border border-white/25 bg-white/10 px-5 py-3 text-center text-sm font-semibold text-slate-100 transition hover:bg-white/20"
             whileHover={lowPowerMode ? undefined : { y: -2, scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
+            whileTap={{ scale: 0.97 }}
           >
-            <Link to="/contact" className="block">
-              Contact Me
+            <Link
+              to="/contact"
+              className="inline-flex items-center gap-2 rounded-xl border border-white/14 bg-white/5 px-6 py-3 text-sm font-semibold text-slate-200 backdrop-blur-sm transition hover:border-white/22 hover:bg-white/9"
+            >
+              Get in Touch
             </Link>
           </motion.div>
         </motion.div>
-      </motion.div>
+
+        {/* Divider */}
+        <motion.div
+          className="my-10"
+          style={{ height: "1px", background: "linear-gradient(to right, transparent, rgba(148,163,184,0.18) 30%, rgba(148,163,184,0.18) 70%, transparent)" }}
+          initial={{ scaleX: 0, opacity: 0 }}
+          animate={{ scaleX: 1, opacity: 1 }}
+          transition={{ delay: 0.7, duration: 0.7, ease: "easeOut" }}
+        />
+
+        {/* Tech stack */}
+        <motion.div
+          className="flex flex-wrap gap-2"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.78 }}
+        >
+          {STACK.map((item, i) => (
+            <motion.span
+              key={item.label}
+              className={`rounded-full border px-3.5 py-1 text-xs font-medium tracking-wide ${item.color}`}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.82 + i * 0.06 }}
+            >
+              {item.label}
+            </motion.span>
+          ))}
+        </motion.div>
+      </div>
     </motion.section>
   )
 }
