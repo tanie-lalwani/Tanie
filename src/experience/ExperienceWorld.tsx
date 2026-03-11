@@ -21,7 +21,12 @@ export default function ExperienceWorld({ onBack }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const [isReady, setIsReady] = useState(false)
 
-  useThreeScene(canvasRef, () => setIsReady(true))
+  useThreeScene(canvasRef, () => {
+    // Enforce minimum 2.5s loading time so the animation is visible
+    setTimeout(() => {
+      setIsReady(true)
+    }, 2500)
+  })
 
   return (
     <motion.div

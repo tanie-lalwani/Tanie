@@ -98,14 +98,14 @@ export default function LoadingLeaves({ isReady }: Props) {
 
     leaves.forEach((el, i) => {
       const leaf = LOADING_LEAVES[i]
-      // Gentle floating + rotating using fromTo for keyframe arrays
+      // Gentle floating + rotating — slowed down significantly
       tl.fromTo(
         el,
         { y: 0, rotation: 0 },
         {
           y: -18,
           rotation: `+=${360}`,
-          duration: 3.8 + i * 0.3,
+          duration: 6.5 + i * 0.5, // increased from 3.8+i*0.3
           ease: "sine.inOut",
           transformOrigin: "center center",
         },
@@ -130,7 +130,7 @@ export default function LoadingLeaves({ isReady }: Props) {
       {
         scale: 1.2,
         opacity: 1,
-        duration: 1.6,
+        duration: 2.4, // increased from 1.6
         ease: "sine.inOut",
       },
     )
