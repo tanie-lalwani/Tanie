@@ -19,6 +19,7 @@ export default function InterviewMe() {
   const shouldReduceMotion = useReducedMotion()
   const lowPowerMode = isMobile || shouldReduceMotion
   const [activeQuestion, setActiveQuestion] = useState(1)
+  const smoothEase: [number, number, number, number] = [0.22, 1, 0.36, 1]
 
   return (
     <section
@@ -33,10 +34,10 @@ export default function InterviewMe() {
 
       <motion.article
         className="flex h-svh w-full snap-start items-center justify-center px-3 pb-6 pt-4 sm:px-6 sm:py-6"
-        initial={{ opacity: 0.75, scale: 0.99 }}
+        initial={lowPowerMode ? { opacity: 1, scale: 1 } : { opacity: 0.8, scale: 0.992 }}
         whileInView={{ opacity: 1, scale: 1 }}
         viewport={{ root: scrollContainerRef, amount: 0.7 }}
-        transition={{ duration: 0.35, ease: "easeOut" }}
+        transition={{ duration: lowPowerMode ? 0.18 : 0.38, ease: lowPowerMode ? "linear" : smoothEase }}
       >
         <div className="relative w-full max-w-3xl overflow-hidden rounded-3xl border border-white/14 bg-[linear-gradient(145deg,rgba(255,255,255,0.08),rgba(255,255,255,0.02))] p-6 shadow-[0_24px_90px_rgba(0,0,0,0.68)] backdrop-blur-xl sm:p-10">
           <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(122deg,rgba(255,255,255,0.22)_0%,rgba(255,255,255,0.04)_32%,rgba(255,255,255,0)_56%)]" />
@@ -64,15 +65,15 @@ export default function InterviewMe() {
           viewport={{ root: scrollContainerRef, amount: lowPowerMode ? 0.62 : 0.72 }}
           transition={
             lowPowerMode
-              ? { duration: 0.25, ease: "easeOut" }
-              : { type: "spring", stiffness: 170, damping: 24, mass: 0.8 }
+              ? { duration: 0.2, ease: "linear" }
+              : { type: "spring", stiffness: 150, damping: 26, mass: 0.86 }
           }
           onViewportEnter={() => setActiveQuestion(index + 1)}
         >
           <motion.div
             className="relative aspect-9/16 w-full max-w-76.75 overflow-hidden rounded-2xl border border-white/20 bg-slate-900 shadow-[0_20px_70px_rgba(0,0,0,0.72)] sm:max-w-86 sm:shadow-[0_24px_80px_rgba(0,0,0,0.75)]"
-            whileHover={lowPowerMode ? undefined : { scale: 1.015 }}
-            transition={lowPowerMode ? { duration: 0.2 } : { type: "spring", stiffness: 220, damping: 20 }}
+            whileHover={lowPowerMode ? undefined : { scale: 1.012, y: -2 }}
+            transition={lowPowerMode ? { duration: 0.15 } : { type: "spring", stiffness: 190, damping: 24 }}
           >
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_22%_12%,rgba(255,255,255,0.2),transparent_30%),linear-gradient(160deg,#1f2937_0%,#111827_38%,#020617_100%)]" />
             <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_0%,transparent_58%,rgba(0,0,0,0.78)_100%)]" />
@@ -93,7 +94,7 @@ export default function InterviewMe() {
                 initial={{ opacity: 0, y: 14 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ root: scrollContainerRef, amount: 0.82 }}
-                transition={{ duration: lowPowerMode ? 0.2 : 0.35, delay: lowPowerMode ? 0 : 0.06 }}
+                transition={{ duration: lowPowerMode ? 0.16 : 0.32, delay: lowPowerMode ? 0 : 0.05, ease: lowPowerMode ? "linear" : smoothEase }}
               >
                 {question}
               </motion.p>

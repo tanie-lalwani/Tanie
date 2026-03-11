@@ -33,6 +33,8 @@ const initialFields: ContactFields = {
   message: "",
 }
 
+const SUBJECT_PRESETS = ["New project", "Contract role", "Collaboration", "Quick question"]
+
 export default function Contact() {
   const [fields, setFields] = useState<ContactFields>(initialFields)
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -90,7 +92,7 @@ export default function Contact() {
   }
 
   return (
-    <section className="mx-auto w-full max-w-6xl px-4 pb-10 pt-12 sm:px-6 sm:pb-14 sm:pt-16">
+    <section className="mx-auto w-full max-w-6xl px-4 pb-8 pt-10 sm:px-6 sm:pb-14 sm:pt-16">
       <PageHeader
         eyebrow="Contact"
         title="Let us build something clear"
@@ -98,17 +100,17 @@ export default function Contact() {
       />
 
       <motion.div
-        className="mb-8 grid gap-3 sm:grid-cols-2"
+        className="mb-6 grid gap-2.5 sm:mb-8 sm:gap-3 sm:grid-cols-2"
         initial={{ opacity: 0, y: 14 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.45 }}
       >
-        <div className="relative overflow-hidden rounded-2xl border border-white/20 bg-white/8 p-4 backdrop-blur-xl shadow-[inset_0_1px_0_rgba(255,255,255,0.28)]">
+        <div className="relative overflow-hidden rounded-xl border border-white/20 bg-white/8 p-3.5 backdrop-blur-xl shadow-[inset_0_1px_0_rgba(255,255,255,0.28)] sm:rounded-2xl sm:p-4">
           <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(122deg,rgba(255,255,255,0.18)_0%,rgba(255,255,255,0.02)_42%,rgba(255,255,255,0)_70%)]" />
           <p className="text-xs uppercase tracking-[0.2em] text-slate-500">Response</p>
           <p className="mt-2 text-sm font-semibold text-white">Within 24-48h</p>
         </div>
-        <div className="relative overflow-hidden rounded-2xl border border-white/20 bg-white/8 p-4 backdrop-blur-xl shadow-[inset_0_1px_0_rgba(255,255,255,0.28)]">
+        <div className="relative overflow-hidden rounded-xl border border-white/20 bg-white/8 p-3.5 backdrop-blur-xl shadow-[inset_0_1px_0_rgba(255,255,255,0.28)] sm:rounded-2xl sm:p-4">
           <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(122deg,rgba(255,255,255,0.18)_0%,rgba(255,255,255,0.02)_42%,rgba(255,255,255,0)_70%)]" />
           <p className="text-xs uppercase tracking-[0.2em] text-slate-500">Availability</p>
           <p className="mt-2 text-sm font-semibold text-white">Freelance and full-time roles</p>
@@ -117,7 +119,7 @@ export default function Contact() {
 
       <motion.form
         onSubmit={handleSubmit}
-        className="relative mx-auto w-full max-w-5xl space-y-5 overflow-hidden rounded-3xl p-5 sm:p-8"
+        className="relative mx-auto w-full max-w-5xl space-y-4 overflow-hidden rounded-2xl p-4 sm:space-y-5 sm:rounded-3xl sm:p-8"
         style={GLASS_PANEL}
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
@@ -126,7 +128,24 @@ export default function Contact() {
         <div className="pointer-events-none absolute inset-0" style={GLASS_RIM} />
         <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(122deg,rgba(255,255,255,0.22)_0%,rgba(255,255,255,0.04)_36%,rgba(255,255,255,0)_60%)]" />
         <div className="pointer-events-none absolute right-0 top-0 h-20 w-1/2 rounded-full bg-white/18 blur-2xl" />
-        <div className="relative grid grid-cols-1 gap-4 sm:grid-cols-2">
+
+        <div className="relative flex flex-wrap gap-2">
+          {SUBJECT_PRESETS.map((preset) => (
+            <button
+              key={preset}
+              type="button"
+              onClick={() => updateField("subject", preset)}
+              className={`rounded-full border px-3 py-1 text-[11px] font-semibold transition ${
+                fields.subject === preset
+                  ? "border-white/35 bg-white/20 text-slate-100"
+                  : "border-white/18 bg-white/8 text-slate-300 hover:border-white/28 hover:text-slate-100"
+              }`}
+            >
+              {preset}
+            </button>
+          ))}
+        </div>
+        <div className="relative grid grid-cols-1 gap-3.5 sm:gap-4 sm:grid-cols-2">
           <label className="flex flex-col gap-2 text-sm text-slate-100">
             Name
             <input
@@ -179,21 +198,36 @@ export default function Contact() {
           />
         </label>
 
-        <div className="relative flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="relative flex flex-col gap-2.5 sm:flex-row sm:items-center sm:justify-between sm:gap-3">
           <p className="text-xs text-slate-300">Recipient: {RECIPIENT_EMAIL}</p>
-          {submitMessage ? (
-            <p className={`text-xs ${submitStatus === "success" ? "text-emerald-300" : "text-rose-300"}`}>
-              {submitMessage}
-            </p>
-          ) : null}
+
           <button
             type="submit"
             disabled={isSubmitting}
-            className="rounded-xl bg-white px-5 py-2.5 text-sm font-semibold text-slate-900 transition hover:bg-slate-200"
+            className="w-full rounded-xl bg-white px-5 py-2.5 text-sm font-semibold text-slate-900 transition hover:bg-slate-200 disabled:cursor-not-allowed disabled:opacity-70 sm:w-auto"
           >
             {isSubmitting ? "Sending..." : "Send Message"}
           </button>
         </div>
+
+        {submitMessage ? (
+          <div
+            role="status"
+            aria-live="polite"
+            className={`relative rounded-xl border px-3 py-2 text-xs ${
+              submitStatus === "success"
+                ? "border-emerald-300/40 bg-emerald-400/10 text-emerald-200"
+                : "border-rose-300/40 bg-rose-400/10 text-rose-200"
+            }`}
+          >
+            {submitMessage}
+            {submitStatus === "error" ? (
+              <a href={`mailto:${RECIPIENT_EMAIL}`} className="ml-2 underline decoration-dotted underline-offset-2 hover:text-white">
+                Or email directly
+              </a>
+            ) : null}
+          </div>
+        ) : null}
       </motion.form>
     </section>
   )

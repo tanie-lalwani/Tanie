@@ -158,7 +158,7 @@ function ModeSelection({
 
   return (
     <motion.div
-      className="relative flex h-screen w-full flex-col overflow-hidden sm:flex-row"
+      className="relative flex h-[100svh] w-full flex-col overflow-hidden sm:h-screen sm:flex-row"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -166,7 +166,7 @@ function ModeSelection({
     >
       {/* ── Experience tile ─────────────────────────────────── */}
       <motion.button
-        className="relative flex flex-1 cursor-pointer flex-col items-center justify-center overflow-hidden border-0 outline-none"
+        className="relative flex min-h-[50svh] flex-1 cursor-pointer flex-col items-center justify-center overflow-hidden border-0 outline-none sm:min-h-0"
         style={{ background: "radial-gradient(ellipse at 30% 25%, rgba(139,92,246,0.42) 0%, transparent 55%), radial-gradient(ellipse at 74% 78%, rgba(34,211,238,0.3) 0%, transparent 50%), radial-gradient(ellipse at 58% 52%, rgba(236,72,153,0.2) 0%, transparent 45%), linear-gradient(160deg, #02020f 0%, #080110 50%, #020617 100%)" }}
         onHoverStart={() => !lowPowerMode && setHovered("experience")}
         onHoverEnd={() => !lowPowerMode && setHovered(null)}
@@ -225,7 +225,7 @@ function ModeSelection({
             Immersive
           </motion.span>
           <motion.h2
-            className="text-6xl font-black tracking-tight text-white sm:text-7xl lg:text-8xl"
+            className="text-5xl font-black tracking-tight text-white sm:text-7xl lg:text-8xl"
             style={{ textShadow: "0 0 38px rgba(139,92,246,0.68), 0 0 75px rgba(34,211,238,0.22)" }}
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
@@ -264,7 +264,7 @@ function ModeSelection({
 
       {/* ── Practical tile ──────────────────────────────────── */}
       <motion.button
-        className="relative flex flex-1 cursor-pointer flex-col items-center justify-center overflow-hidden border-0 outline-none"
+        className="relative flex min-h-[50svh] flex-1 cursor-pointer flex-col items-center justify-center overflow-hidden border-0 outline-none sm:min-h-0"
         style={{ background: "radial-gradient(ellipse at 68% 22%, rgba(100,116,139,0.22) 0%, transparent 50%), radial-gradient(ellipse at 28% 76%, rgba(71,85,105,0.16) 0%, transparent 45%), linear-gradient(160deg, #0f172a 0%, #060d1c 50%, #020617 100%)" }}
         onHoverStart={() => !lowPowerMode && setHovered("practical")}
         onHoverEnd={() => !lowPowerMode && setHovered(null)}
@@ -317,7 +317,7 @@ function ModeSelection({
             Classic
           </motion.span>
           <motion.h2
-            className="text-6xl font-black tracking-tight text-white sm:text-7xl lg:text-8xl"
+            className="text-5xl font-black tracking-tight text-white sm:text-7xl lg:text-8xl"
             style={{ textShadow: "0 0 28px rgba(148,163,184,0.36)" }}
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
@@ -360,14 +360,17 @@ function PracticalHero({
   lowPowerMode: boolean
   onChangeMode: () => void
 }) {
+  const cardEase: [number, number, number, number] = [0.22, 1, 0.36, 1]
+  const hoverLift = lowPowerMode ? undefined : { y: -2, scale: 1.015 }
+
   return (
     <motion.section
-      className="relative isolate flex min-h-screen w-full flex-col items-center justify-center overflow-hidden px-4 py-20 sm:px-6 sm:py-24"
+      className="relative isolate flex min-h-screen w-full flex-col items-center justify-center overflow-hidden px-4 py-16 sm:px-6 sm:py-24"
       style={{ background: "linear-gradient(135deg, #020617 0%, #0c1322 50%, #0f172a 100%)" }}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0, y: lowPowerMode ? -8 : -18 }}
-      transition={{ duration: lowPowerMode ? 0.4 : 0.65, ease: "easeOut" }}
+      transition={{ duration: lowPowerMode ? 0.28 : 0.58, ease: cardEase }}
     >
       {/* Background orbs */}
       <motion.div
@@ -393,7 +396,7 @@ function PracticalHero({
 
       {/* Change mode */}
       <motion.button
-        className="absolute right-4 top-5 z-20 flex items-center gap-1.5 rounded-full border border-white/10 bg-white/4 px-3.5 py-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500 backdrop-blur-sm transition hover:border-white/18 hover:text-slate-300 sm:right-6 sm:top-6"
+        className="absolute right-3 top-4 z-20 flex items-center gap-1 rounded-full border border-white/10 bg-white/4 px-3 py-1.5 text-[9px] font-semibold uppercase tracking-[0.16em] text-slate-500 backdrop-blur-sm transition hover:border-white/18 hover:text-slate-300 sm:right-6 sm:top-6 sm:text-[10px] sm:tracking-[0.18em]"
         onClick={onChangeMode}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -408,11 +411,11 @@ function PracticalHero({
       <div className="relative z-10 mx-auto w-full max-w-6xl">
 
         <motion.div
-          className="relative mx-auto w-full max-w-5xl overflow-hidden rounded-4xl p-6 sm:p-8 lg:p-10"
+          className="relative mx-auto w-full max-w-5xl overflow-hidden rounded-3xl p-5 sm:rounded-4xl sm:p-8 lg:p-10"
           style={GLASS_PANEL}
           initial={{ opacity: 0, y: 18, scale: lowPowerMode ? 1 : 0.985 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{ delay: 0.12, duration: 0.65, ease: "easeOut" }}
+          transition={{ delay: lowPowerMode ? 0.05 : 0.12, duration: lowPowerMode ? 0.3 : 0.58, ease: cardEase }}
         >
           <div className="pointer-events-none absolute inset-0" style={GLASS_RIM} />
           <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(122deg,rgba(255,255,255,0.28)_0%,rgba(255,255,255,0.06)_28%,rgba(255,255,255,0)_52%)]" />
@@ -423,7 +426,7 @@ function PracticalHero({
 
             {/* Status badge */}
             <motion.div
-              className="mb-8 inline-flex items-center gap-2.5 rounded-full px-4 py-1.5"
+              className="mb-6 inline-flex items-center gap-2 rounded-full px-3 py-1.5 sm:mb-8 sm:gap-2.5 sm:px-4"
               style={GLASS_CHIP}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
@@ -434,12 +437,12 @@ function PracticalHero({
                 animate={lowPowerMode ? {} : { opacity: [1, 0.3, 1] }}
                 transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
               />
-              <span className="text-xs font-medium tracking-wide text-emerald-300/75">Available for opportunities</span>
+              <span className="text-[11px] font-medium tracking-wide text-emerald-300/75 sm:text-xs">Available for opportunities</span>
             </motion.div>
 
             {/* Heading */}
             <motion.h1
-              className="text-5xl font-black tracking-tight text-white sm:text-6xl lg:text-[5.4rem] lg:leading-[1.02]"
+              className="text-4xl font-black leading-tight tracking-tight text-white sm:text-6xl lg:text-[5.4rem] lg:leading-[1.02]"
               initial={{ opacity: 0, y: 18 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.26, duration: 0.6 }}
@@ -458,7 +461,7 @@ function PracticalHero({
             </motion.h1>
 
             <motion.p
-              className="mt-4 text-sm uppercase tracking-[0.24em] text-slate-400"
+              className="mt-3 text-[11px] uppercase tracking-[0.18em] text-slate-400 sm:mt-4 sm:text-sm sm:tracking-[0.24em]"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.38 }}
@@ -467,7 +470,7 @@ function PracticalHero({
             </motion.p>
 
             <motion.p
-              className="mt-5 text-lg font-medium tracking-wide text-slate-200/88 sm:text-xl"
+              className="mt-4 text-base font-medium tracking-wide text-slate-200/88 sm:mt-5 sm:text-xl"
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.46, duration: 0.55 }}
@@ -477,30 +480,30 @@ function PracticalHero({
 
             {/* CTA buttons */}
             <motion.div
-              className="mt-9 flex flex-wrap gap-3"
+              className="mt-7 flex flex-col gap-2.5 sm:mt-9 sm:flex-row sm:flex-wrap sm:gap-3"
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.54, duration: 0.5 }}
             >
               <motion.div
-                whileHover={lowPowerMode ? undefined : { y: -2, scale: 1.02 }}
+                whileHover={hoverLift}
                 whileTap={{ scale: 0.97 }}
               >
                 <Link
                   to="/projects"
-                  className="inline-flex items-center gap-2 rounded-xl bg-white px-6 py-3 text-sm font-semibold text-slate-900 shadow-lg shadow-black/30 transition hover:bg-slate-100"
+                  className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-white px-6 py-3 text-sm font-semibold text-slate-900 shadow-lg shadow-black/30 transition hover:bg-slate-100 sm:w-auto"
                 >
                   View Projects
                   <span className="text-slate-500">→</span>
                 </Link>
               </motion.div>
               <motion.div
-                whileHover={lowPowerMode ? undefined : { y: -2, scale: 1.02 }}
+                whileHover={hoverLift}
                 whileTap={{ scale: 0.97 }}
               >
                 <Link
                   to="/contact"
-                  className="inline-flex items-center gap-2 rounded-xl border border-white/14 bg-white/5 px-6 py-3 text-sm font-semibold text-slate-200 backdrop-blur-sm transition hover:border-white/22 hover:bg-white/9"
+                  className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-white/14 bg-white/5 px-6 py-3 text-sm font-semibold text-slate-200 backdrop-blur-sm transition hover:border-white/22 hover:bg-white/9 sm:w-auto"
                 >
                   Get in Touch
                 </Link>
@@ -552,7 +555,7 @@ export default function Hero({ mode, onModeChange }: {
   const lowPowerModeBool: boolean = isMobile || (shouldReduceMotion ?? false)
 
   return (
-    <AnimatePresence mode="wait">
+    <AnimatePresence mode="wait" initial={false}>
       {mode === null && (
         <ModeSelection key="selection" onSelect={onModeChange} lowPowerMode={lowPowerModeBool} />
       )}
