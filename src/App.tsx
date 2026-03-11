@@ -6,26 +6,11 @@ import InterviewMe from "./pages/InterviewMe";
 import Projects from "./pages/Projects.tsx";
 import Contact from "./pages/Contact.tsx";
 
-const SESSION_KEY = "portfolioMode"
-
-function readStoredMode(): Mode | null {
-  try {
-    const v = sessionStorage.getItem(SESSION_KEY)
-    return v === "practical" || v === "experience" ? v : null
-  } catch { return null }
-}
-
 export default function App() {
   const location = useLocation();
-  const [heroMode, setHeroMode] = useState<Mode | null>(readStoredMode)
-
-  function handleModeChange(m: Mode | null) {
-    try {
-      if (m === null) sessionStorage.removeItem(SESSION_KEY)
-      else sessionStorage.setItem(SESSION_KEY, m)
-    } catch { /* blocked storage — degrade gracefully */ }
-    setHeroMode(m)
-  }
+  // Plain React state — persists across in-app navigation (App never unmounts)
+  // but resets to null on a fresh page load, showing the selection screen.
+  const [heroMode, setHeroMode] = useState<Mode | null>(null)
 
   // Show navbar on all pages except /interview-me,
   // and on / only when the user has chosen Practical mode.
@@ -49,7 +34,7 @@ export default function App() {
     <main className="min-h-screen bg-slate-950 text-slate-100">
       {showNavbar ? <Navbar /> : null}
       <Routes>
-        <Route path="/" element={<Hero mode={heroMode} onModeChange={handleModeChange} />} />
+        <Route path="/" element={<Hero mode={heroMode} onModeChange={setHeroMode} />} />
         <Route path="/projects" element={<Projects />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/interview-me" element={<InterviewMe />} />
