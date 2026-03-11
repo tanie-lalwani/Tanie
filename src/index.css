@@ -3,6 +3,10 @@
 :root {
 	--font-body: "Manrope", sans-serif;
 	--font-display: "Outfit", sans-serif;
+	--type-caption: clamp(0.74rem, 0.72rem + 0.08vw, 0.8rem);
+	--type-body: clamp(0.95rem, 0.92rem + 0.14vw, 1rem);
+	--type-body-lg: clamp(1.02rem, 0.98rem + 0.22vw, 1.12rem);
+	--type-title: clamp(1.7rem, 1.3rem + 1.8vw, 2.7rem);
 }
 
 html {
@@ -14,6 +18,8 @@ html {
 
 body {
 	font-family: var(--font-body);
+	font-size: var(--type-body);
+	line-height: 1.6;
 }
 
 h1,
@@ -31,5 +37,37 @@ input,
 textarea,
 select {
 	font: inherit;
+}
+
+/* Global type-scale normalization across pages and breakpoints */
+.text-xs {
+	font-size: var(--type-caption);
+	line-height: 1.35;
+}
+
+.text-sm,
+.text-base {
+	font-size: var(--type-body);
+	line-height: 1.6;
+}
+
+.text-lg,
+.text-xl {
+	font-size: var(--type-body-lg);
+	line-height: 1.5;
+}
+
+.text-3xl,
+.text-4xl,
+.text-5xl {
+	font-size: var(--type-title);
+	line-height: 1.12;
+}
+
+[class*="text-[9px]"],
+[class*="text-[10px]"],
+[class*="text-[11px]"] {
+	font-size: var(--type-caption) !important;
+	line-height: 1.35 !important;
 }
 
