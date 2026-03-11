@@ -11,6 +11,8 @@ export default defineConfig({
         manualChunks: {
           router: ["react-router-dom"],
           motion: ["framer-motion"],
+          three: ["three"],
+          gsap: ["gsap"],
         },
       },
     },

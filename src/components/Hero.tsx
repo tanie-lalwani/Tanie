@@ -2,6 +2,7 @@ import { useState } from "react"
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion"
 import { Link } from "react-router-dom"
 import { useIsMobile } from "../hooks/useIsMobile"
+import ExperienceWorld from "../experience/ExperienceWorld"
 
 export type Mode = "practical" | "experience"
 
@@ -23,128 +24,6 @@ const GLASS_CHIP = {
   border: "1px solid rgba(226,232,240,0.22)",
   boxShadow: "inset 0 1px 0 rgba(255,255,255,0.22)",
 } as const
-
-// ─── Experience placeholder (Three.js comes here later) ──────────────────────
-function ExperiencePlaceholder({
-  onBack,
-  lowPowerMode,
-}: {
-  onBack: () => void
-  lowPowerMode: boolean
-}) {
-  return (
-    <motion.div
-      className="relative flex h-screen w-full flex-col items-center justify-center overflow-hidden"
-      style={{ background: "linear-gradient(160deg, #02020f 0%, #080015 50%, #020617 100%)" }}
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.55 }}
-    >
-      {/* Ambient orbs */}
-      <div className="pointer-events-none absolute inset-0">
-        <motion.div
-          className="absolute h-128 w-lg rounded-full"
-          style={{ background: "radial-gradient(circle, rgba(139,92,246,0.55) 0%, transparent 70%)", filter: "blur(50px)", top: "5%", left: "2%" }}
-          animate={lowPowerMode ? {} : { x: [0, 22, -16, 0], y: [0, -28, 18, 0], scale: [1, 1.08, 0.93, 1], opacity: [1, 0.85, 0.95, 1] }}
-          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-        />
-        <motion.div
-          className="absolute h-80 w-80 rounded-full"
-          style={{ background: "radial-gradient(circle, rgba(34,211,238,0.48) 0%, transparent 70%)", filter: "blur(38px)", bottom: "8%", right: "5%" }}
-          animate={lowPowerMode ? {} : { x: [0, -28, 20, 0], y: [0, 16, -24, 0], scale: [1, 1.1, 0.9, 1], opacity: [1, 0.88, 0.96, 1] }}
-          transition={{ duration: 10.5, repeat: Infinity, ease: "easeInOut" }}
-        />
-        <motion.div
-          className="absolute h-56 w-56 rounded-full"
-          style={{ background: "radial-gradient(circle, rgba(236,72,153,0.4) 0%, transparent 70%)", filter: "blur(44px)", top: "48%", left: "52%" }}
-          animate={lowPowerMode ? {} : { x: [0, 32, -18, 0], y: [0, 22, -16, 0], scale: [1, 1.06, 1.12, 1], opacity: [0.9, 1, 0.85, 0.9] }}
-          transition={{ duration: 12.5, repeat: Infinity, ease: "easeInOut" }}
-        />
-      </div>
-
-      {/* Grid */}
-      <div
-        className="pointer-events-none absolute inset-0 opacity-[0.22]"
-        style={{
-          backgroundImage: "linear-gradient(rgba(139,92,246,0.22) 1px, transparent 1px), linear-gradient(90deg, rgba(139,92,246,0.22) 1px, transparent 1px)",
-          backgroundSize: "60px 60px",
-          WebkitMaskImage: "radial-gradient(ellipse at center, black 18%, transparent 66%)",
-          maskImage: "radial-gradient(ellipse at center, black 18%, transparent 66%)",
-        }}
-      />
-
-      {/* Pulsing rings */}
-      <motion.div
-        className="pointer-events-none absolute h-72 w-72 rounded-full border border-violet-500/20"
-        animate={lowPowerMode ? {} : { scale: [1, 1.45, 1], opacity: [0.45, 0.05, 0.45] }}
-        transition={{ duration: 3.8, repeat: Infinity, ease: "easeInOut" }}
-      />
-      <motion.div
-        className="pointer-events-none absolute h-44 w-44 rounded-full border border-cyan-400/25"
-        animate={lowPowerMode ? {} : { scale: [1, 1.6, 1], opacity: [0.55, 0.08, 0.55] }}
-        transition={{ duration: 3.8, repeat: Infinity, ease: "easeInOut", delay: 0.65 }}
-      />
-      <motion.div
-        className="pointer-events-none absolute h-24 w-24 rounded-full border border-pink-400/20"
-        animate={lowPowerMode ? {} : { scale: [1, 1.7, 1], opacity: [0.5, 0.06, 0.5] }}
-        transition={{ duration: 3.8, repeat: Infinity, ease: "easeInOut", delay: 1.3 }}
-      />
-
-      {/* Edge vignette */}
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_20%,rgba(0,0,0,0.75)_100%)]" />
-
-      {/* Content */}
-      <div className="relative z-10 flex flex-col items-center gap-3 px-6 text-center">
-        <motion.span
-          className="text-[10px] font-bold uppercase tracking-[0.55em] text-violet-300/60"
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-        >
-          Loading Reality
-        </motion.span>
-        <motion.h1
-          className="text-6xl font-black text-white sm:text-8xl"
-          style={{ textShadow: "0 0 55px rgba(139,92,246,0.72), 0 0 110px rgba(34,211,238,0.28)" }}
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-        >
-          Coming Soon
-        </motion.h1>
-        <motion.p
-          className="mt-1 max-w-xs text-sm leading-relaxed text-slate-400/65"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.45 }}
-        >
-          Three.js world in progress.
-        </motion.p>
-        <motion.div
-          className="mt-4 w-full max-w-md overflow-hidden rounded-2xl border border-violet-400/18 bg-black/30 p-4 text-left backdrop-blur-sm"
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.52 }}
-        >
-          <p className="text-[10px] uppercase tracking-[0.24em] text-violet-300/65">Teaser</p>
-          <p className="mt-2 text-xs text-slate-300/85">Entry hall, project arena, audio stage, and a contact portal.</p>
-        </motion.div>
-        <motion.button
-          className="mt-8 rounded-full border border-violet-500/30 bg-violet-950/40 px-7 py-2.5 text-sm font-medium text-violet-200/80 backdrop-blur-sm transition hover:bg-violet-900/50 hover:text-violet-100"
-          onClick={onBack}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.55 }}
-          whileHover={lowPowerMode ? undefined : { scale: 1.04 }}
-          whileTap={{ scale: 0.97 }}
-        >
-          ← Go Back
-        </motion.button>
-      </div>
-    </motion.div>
-  )
-}
 
 // ─── Mode selection split screen ─────────────────────────────────────────────
 function ModeSelection({
@@ -560,7 +439,7 @@ export default function Hero({ mode, onModeChange }: {
         <ModeSelection key="selection" onSelect={onModeChange} lowPowerMode={lowPowerModeBool} />
       )}
       {mode === "experience" && (
-        <ExperiencePlaceholder key="experience" onBack={() => onModeChange(null)} lowPowerMode={lowPowerModeBool} />
+        <ExperienceWorld key="experience" onBack={() => onModeChange(null)} />
       )}
       {mode === "practical" && (
         <PracticalHero key="practical" lowPowerMode={lowPowerModeBool} onChangeMode={() => onModeChange(null)} />
