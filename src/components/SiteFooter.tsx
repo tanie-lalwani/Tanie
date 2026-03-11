@@ -66,7 +66,7 @@ export default function SiteFooter({ className = "" }: SiteFooterProps) {
       <div className="mt-8 flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <p className="text-sm font-semibold text-slate-100">Tanie</p>
-          <p className="mt-1 max-w-xs text-xs leading-relaxed text-slate-500">Frontend engineer.</p>
+          <p className="mt-1 max-w-xs text-xs leading-relaxed text-slate-500">Full stack developer.</p>
         </div>
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-x-8">
           {SOCIALS.map((s) => (
