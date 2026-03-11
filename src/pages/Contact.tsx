@@ -4,16 +4,16 @@ import type { CSSProperties } from "react"
 import PageHeader from "../components/PageHeader"
 
 const GLASS_PANEL: CSSProperties = {
-  background: "linear-gradient(155deg, rgba(255,255,255,0.22) 0%, rgba(255,255,255,0.08) 35%, rgba(255,255,255,0.05) 100%)",
-  border: "1px solid rgba(255,255,255,0.34)",
-  boxShadow: "inset 0 1px 0 rgba(255,255,255,0.48), inset 0 -16px 28px rgba(148,163,184,0.16), 0 35px 90px rgba(2,6,23,0.6)",
-  backdropFilter: "blur(24px) saturate(115%)",
-  WebkitBackdropFilter: "blur(24px) saturate(115%)",
+  background: "linear-gradient(152deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.09) 32%, rgba(255,255,255,0.035) 100%)",
+  border: "1px solid rgba(255,255,255,0.26)",
+  boxShadow: "inset 0 1px 0 rgba(255,255,255,0.46), inset 0 -18px 34px rgba(148,163,184,0.14), 0 36px 90px rgba(2,6,23,0.58)",
+  backdropFilter: "blur(28px) saturate(128%)",
+  WebkitBackdropFilter: "blur(28px) saturate(128%)",
 }
 
 const GLASS_RIM: CSSProperties = {
-  background: "linear-gradient(130deg, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0.18) 18%, rgba(255,255,255,0.04) 45%, rgba(255,255,255,0.2) 100%)",
-  opacity: 0.58,
+  background: "linear-gradient(126deg, rgba(255,255,255,0.56) 0%, rgba(255,255,255,0.22) 16%, rgba(255,255,255,0.05) 44%, rgba(255,255,255,0.18) 100%)",
+  opacity: 0.62,
 }
 
 const RECIPIENT_EMAIL = "contact@tanie.me"
@@ -93,58 +93,39 @@ export default function Contact() {
     <section className="mx-auto w-full max-w-6xl px-4 pb-10 pt-12 sm:px-6 sm:pb-14 sm:pt-16">
       <PageHeader
         eyebrow="Contact"
-        title="Let us build something clear and memorable"
+        title="Let us build something clear"
         description={`Fill out the form and I will get back to you at ${RECIPIENT_EMAIL}.`}
       />
 
       <motion.div
-        className="mb-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4"
+        className="mb-8 grid gap-3 sm:grid-cols-2"
         initial={{ opacity: 0, y: 14 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.45 }}
       >
-        <div className="rounded-2xl border border-white/12 bg-white/5 p-4 backdrop-blur-sm">
+        <div className="relative overflow-hidden rounded-2xl border border-white/20 bg-white/8 p-4 backdrop-blur-xl shadow-[inset_0_1px_0_rgba(255,255,255,0.28)]">
+          <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(122deg,rgba(255,255,255,0.18)_0%,rgba(255,255,255,0.02)_42%,rgba(255,255,255,0)_70%)]" />
           <p className="text-xs uppercase tracking-[0.2em] text-slate-500">Response</p>
           <p className="mt-2 text-sm font-semibold text-white">Within 24-48h</p>
         </div>
-        <div className="rounded-2xl border border-white/12 bg-white/5 p-4 backdrop-blur-sm">
-          <p className="text-xs uppercase tracking-[0.2em] text-slate-500">Timezone</p>
-          <p className="mt-2 text-sm font-semibold text-white">IST, flexible overlap</p>
-        </div>
-        <div className="rounded-2xl border border-white/12 bg-white/5 p-4 backdrop-blur-sm">
-          <p className="text-xs uppercase tracking-[0.2em] text-slate-500">Preferred work</p>
-          <p className="mt-2 text-sm font-semibold text-white">Product UI and front-end systems</p>
-        </div>
-        <div className="rounded-2xl border border-white/12 bg-white/5 p-4 backdrop-blur-sm">
+        <div className="relative overflow-hidden rounded-2xl border border-white/20 bg-white/8 p-4 backdrop-blur-xl shadow-[inset_0_1px_0_rgba(255,255,255,0.28)]">
+          <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(122deg,rgba(255,255,255,0.18)_0%,rgba(255,255,255,0.02)_42%,rgba(255,255,255,0)_70%)]" />
           <p className="text-xs uppercase tracking-[0.2em] text-slate-500">Availability</p>
           <p className="mt-2 text-sm font-semibold text-white">Freelance and full-time roles</p>
         </div>
       </motion.div>
 
-      <motion.div
-        className="mb-8 rounded-2xl border border-white/12 bg-white/4 p-4 text-sm text-slate-300 backdrop-blur-sm sm:p-5"
-        initial={{ opacity: 0, y: 14 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.45, delay: 0.06 }}
-      >
-        <p className="text-xs uppercase tracking-[0.2em] text-slate-500">Contact me for</p>
-        <ul className="mt-3 grid gap-2 sm:grid-cols-2">
-          <li className="rounded-lg border border-white/10 bg-slate-950/40 px-3 py-2">Website redesigns and high-conversion landing pages</li>
-          <li className="rounded-lg border border-white/10 bg-slate-950/40 px-3 py-2">React and TypeScript front-end architecture</li>
-          <li className="rounded-lg border border-white/10 bg-slate-950/40 px-3 py-2">Performance and accessibility improvements</li>
-          <li className="rounded-lg border border-white/10 bg-slate-950/40 px-3 py-2">Design-system and component-library implementation</li>
-        </ul>
-      </motion.div>
-
       <motion.form
         onSubmit={handleSubmit}
-        className="relative max-w-3xl space-y-5 overflow-hidden rounded-3xl p-5 sm:p-8"
+        className="relative mx-auto w-full max-w-5xl space-y-5 overflow-hidden rounded-3xl p-5 sm:p-8"
         style={GLASS_PANEL}
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.45, ease: "easeOut" }}
       >
         <div className="pointer-events-none absolute inset-0" style={GLASS_RIM} />
+        <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(122deg,rgba(255,255,255,0.22)_0%,rgba(255,255,255,0.04)_36%,rgba(255,255,255,0)_60%)]" />
+        <div className="pointer-events-none absolute right-0 top-0 h-20 w-1/2 rounded-full bg-white/18 blur-2xl" />
         <div className="relative grid grid-cols-1 gap-4 sm:grid-cols-2">
           <label className="flex flex-col gap-2 text-sm text-slate-100">
             Name

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion"
 import { Link } from "react-router-dom"
 import { useIsMobile } from "../hooks/useIsMobile"
@@ -119,22 +119,16 @@ function ExperiencePlaceholder({
           animate={{ opacity: 1 }}
           transition={{ delay: 0.45 }}
         >
-          An immersive Three.js world is being built. Here is the current concept bridge.
+          Three.js world in progress.
         </motion.p>
         <motion.div
-          className="mt-5 w-full max-w-md overflow-hidden rounded-2xl border border-violet-400/18 bg-black/30 p-4 text-left backdrop-blur-sm"
+          className="mt-4 w-full max-w-md overflow-hidden rounded-2xl border border-violet-400/18 bg-black/30 p-4 text-left backdrop-blur-sm"
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.52 }}
         >
-          <p className="text-[10px] uppercase tracking-[0.24em] text-violet-300/65">Teaser map</p>
-          <div className="mt-3 grid gap-2 text-xs text-slate-300 sm:grid-cols-2">
-            <div className="rounded-lg border border-white/10 bg-white/5 px-3 py-2">Neon entry hall</div>
-            <div className="rounded-lg border border-white/10 bg-white/5 px-3 py-2">Project arena</div>
-            <div className="rounded-lg border border-white/10 bg-white/5 px-3 py-2">Audio-reactive stage</div>
-            <div className="rounded-lg border border-white/10 bg-white/5 px-3 py-2">Contact portal</div>
-          </div>
-          <p className="mt-3 text-xs text-slate-400/85">The final build will let visitors walk through spaces instead of clicking static pages.</p>
+          <p className="text-[10px] uppercase tracking-[0.24em] text-violet-300/65">Teaser</p>
+          <p className="mt-2 text-xs text-slate-300/85">Entry hall, project arena, audio stage, and a contact portal.</p>
         </motion.div>
         <motion.button
           className="mt-8 rounded-full border border-violet-500/30 bg-violet-950/40 px-7 py-2.5 text-sm font-medium text-violet-200/80 backdrop-blur-sm transition hover:bg-violet-900/50 hover:text-violet-100"
@@ -354,21 +348,9 @@ function ModeSelection({
 }
 
 // ─── Practical hero ───────────────────────────────────────────────────────────
-const ROLES = ["Frontend Engineer", "UI / UX Craftsman", "React Developer", "TypeScript Advocate"]
-
-const STACK = [
-  { label: "React", color: "text-cyan-300/80 border-cyan-400/25 bg-cyan-400/8" },
-  { label: "TypeScript", color: "text-blue-300/80 border-blue-400/25 bg-blue-400/8" },
-  { label: "Tailwind", color: "text-teal-300/80 border-teal-400/25 bg-teal-400/8" },
-  { label: "Node.js", color: "text-green-300/80 border-green-400/25 bg-green-400/8" },
-  { label: "Vite", color: "text-yellow-300/75 border-yellow-400/25 bg-yellow-400/8" },
-  { label: "Framer", color: "text-pink-300/80 border-pink-400/25 bg-pink-400/8" },
-]
-
 const METRICS = [
-  { value: "Fast", label: "polished shipping" },
-  { value: "UI + DX", label: "same obsession" },
-  { value: "Glass", label: "with restraint" },
+  { value: "Fast", label: "shipping" },
+  { value: "UI + DX", label: "balance" },
 ]
 
 function PracticalHero({
@@ -378,33 +360,6 @@ function PracticalHero({
   lowPowerMode: boolean
   onChangeMode: () => void
 }) {
-  const [roleIndex, setRoleIndex] = useState(0)
-  const [displayed, setDisplayed] = useState(() => lowPowerMode ? ROLES[0] : "")
-  const [deleting, setDeleting] = useState(false)
-
-  useEffect(() => {
-    if (lowPowerMode) return
-    const target = ROLES[roleIndex]
-    let t: ReturnType<typeof setTimeout>
-    if (!deleting) {
-      if (displayed.length < target.length) {
-        t = setTimeout(() => setDisplayed(target.slice(0, displayed.length + 1)), 52)
-      } else {
-        t = setTimeout(() => setDeleting(true), 2400)
-      }
-    } else {
-      if (displayed.length > 0) {
-        t = setTimeout(() => setDisplayed(displayed.slice(0, -1)), 28)
-      } else {
-        t = setTimeout(() => {
-          setDeleting(false)
-          setRoleIndex((i) => (i + 1) % ROLES.length)
-        }, 120)
-      }
-    }
-    return () => clearTimeout(t)
-  }, [displayed, deleting, roleIndex, lowPowerMode])
-
   return (
     <motion.section
       className="relative isolate flex min-h-screen w-full flex-col items-center justify-center overflow-hidden px-4 py-20 sm:px-6 sm:py-24"
@@ -502,23 +457,17 @@ function PracticalHero({
               </span>
             </motion.h1>
 
-            {/* Typewriter role */}
-            <motion.div
-              className="mt-4 flex h-8 items-center gap-1.5"
+            <motion.p
+              className="mt-4 text-sm uppercase tracking-[0.24em] text-slate-400"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.38 }}
             >
-              <span className="text-lg font-light tracking-wide text-slate-400 sm:text-xl">{displayed}</span>
-              <motion.span
-                className="mt-0.5 inline-block h-5 w-0.5 rounded-full bg-slate-400/60"
-                animate={lowPowerMode ? {} : { opacity: [1, 0, 1] }}
-                transition={{ duration: 0.9, repeat: Infinity, ease: "linear" }}
-              />
-            </motion.div>
+              Frontend Engineer
+            </motion.p>
 
             <motion.p
-              className="mt-6 text-lg font-medium tracking-wide text-slate-200/88 sm:text-xl"
+              className="mt-5 text-lg font-medium tracking-wide text-slate-200/88 sm:text-xl"
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.46, duration: 0.55 }}
@@ -567,7 +516,7 @@ function PracticalHero({
             />
 
             <motion.div
-              className="grid gap-3 sm:grid-cols-3"
+              className="grid gap-3 sm:grid-cols-2"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.78 }}
@@ -575,33 +524,15 @@ function PracticalHero({
               {METRICS.map((metric, i) => (
                 <motion.div
                   key={metric.label}
-                  className="rounded-2xl border border-white/12 bg-white/5 p-4 backdrop-blur-sm"
+                  className="relative overflow-hidden rounded-2xl border border-white/20 bg-white/10 p-4 backdrop-blur-xl shadow-[inset_0_1px_0_rgba(255,255,255,0.24)]"
                   initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.82 + i * 0.06 }}
                 >
+                  <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(122deg,rgba(255,255,255,0.22)_0%,rgba(255,255,255,0.03)_44%,rgba(255,255,255,0)_72%)]" />
                   <p className="text-lg font-semibold text-white">{metric.value}</p>
                   <p className="mt-1 text-xs uppercase tracking-[0.2em] text-slate-400">{metric.label}</p>
                 </motion.div>
-              ))}
-            </motion.div>
-
-            <motion.div
-              className="mt-4 flex flex-wrap gap-2"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.92 }}
-            >
-              {STACK.map((item, i) => (
-                <motion.span
-                  key={item.label}
-                  className={`rounded-full border px-3.5 py-1 text-xs font-medium tracking-wide ${item.color}`}
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.96 + i * 0.05 }}
-                >
-                  {item.label}
-                </motion.span>
               ))}
             </motion.div>
           </div>
