@@ -3,7 +3,7 @@ import { motion, AnimatePresence, useReducedMotion } from "framer-motion"
 import { Link } from "react-router-dom"
 import { useIsMobile } from "../hooks/useIsMobile"
 
-type Mode = "practical" | "experience"
+export type Mode = "practical" | "experience"
 
 // ─── Experience placeholder (Three.js comes here later) ──────────────────────
 function ExperiencePlaceholder({
@@ -537,52 +537,25 @@ function PracticalHero({
   )
 }
 
-const SESSION_KEY = "portfolioMode"
-
-function readStoredMode(): Mode | null {
-  try {
-    const v = sessionStorage.getItem(SESSION_KEY)
-    return v === "practical" || v === "experience" ? v : null
-  } catch {
-    return null
-  }
-}
-
-function saveMode(m: Mode | null) {
-  try {
-    if (m === null) sessionStorage.removeItem(SESSION_KEY)
-    else sessionStorage.setItem(SESSION_KEY, m)
-  } catch { /* storage blocked — degrade gracefully */ }
-}
-
 // ─── Root component ───────────────────────────────────────────────────────────
-export default function Hero() {
+export default function Hero({ mode, onModeChange }: {
+  mode: Mode | null
+  onModeChange: (m: Mode | null) => void
+}) {
   const isMobile = useIsMobile()
   const shouldReduceMotion = useReducedMotion()
   const lowPowerModeBool: boolean = isMobile || (shouldReduceMotion ?? false)
 
-  const [mode, setMode] = useState<Mode | null>(readStoredMode)
-
-  function handleSelect(m: Mode) {
-    saveMode(m)
-    setMode(m)
-  }
-
-  function handleBack() {
-    saveMode(null)
-    setMode(null)
-  }
-
   return (
     <AnimatePresence mode="wait">
       {mode === null && (
-        <ModeSelection key="selection" onSelect={handleSelect} lowPowerMode={lowPowerModeBool} />
+        <ModeSelection key="selection" onSelect={onModeChange} lowPowerMode={lowPowerModeBool} />
       )}
       {mode === "experience" && (
-        <ExperiencePlaceholder key="experience" onBack={handleBack} lowPowerMode={lowPowerModeBool} />
+        <ExperiencePlaceholder key="experience" onBack={() => onModeChange(null)} lowPowerMode={lowPowerModeBool} />
       )}
       {mode === "practical" && (
-        <PracticalHero key="practical" lowPowerMode={lowPowerModeBool} onChangeMode={handleBack} />
+        <PracticalHero key="practical" lowPowerMode={lowPowerModeBool} onChangeMode={() => onModeChange(null)} />
       )}
     </AnimatePresence>
   )

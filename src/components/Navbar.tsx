@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { NavLink } from 'react-router-dom'
+import type { CSSProperties } from 'react'
 
 const navLinks = [
   { label: 'Home', to: '/' },
@@ -7,27 +8,45 @@ const navLinks = [
   { label: 'Contact', to: '/contact' },
 ]
 
+const SHELL: CSSProperties = {
+  background:
+    "linear-gradient(120deg, rgba(255,255,255,0.09) 0%, rgba(255,255,255,0.03) 38%, rgba(255,255,255,0.01) 100%), rgba(2,6,23,0.82)",
+  borderBottom: "1px solid rgba(255,255,255,0.10)",
+  boxShadow: "0 4px 20px rgba(2,6,23,0.5), inset 0 -1px 0 rgba(255,255,255,0.04)",
+  backdropFilter: "blur(20px) saturate(130%)",
+  WebkitBackdropFilter: "blur(20px) saturate(130%)",
+}
+
+const CTA: CSSProperties = {
+  background: "linear-gradient(145deg, rgba(15,23,42,0.95) 0%, rgba(30,41,59,0.85) 100%)",
+  border: "1px solid rgba(255,255,255,0.18)",
+  boxShadow: "inset 0 1px 0 rgba(255,255,255,0.22), 0 4px 12px rgba(15,23,42,0.4)",
+}
+
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-
   const closeMenu = () => setIsMenuOpen(false)
 
   return (
-    <header className="sticky top-3 z-20 px-3 sm:top-4 sm:px-6">
-      <nav className="nav-glass-shell mx-auto flex h-14 w-full max-w-6xl items-center justify-between rounded-2xl px-3 sm:h-16 sm:px-6">
-        <div className="nav-glass-topbar pointer-events-none absolute left-1/2 top-0 h-1.5 w-32 -translate-x-1/2 rounded-b-full sm:w-40" />
+    <header className="sticky top-0 z-20">
+      <nav className="relative flex h-11 w-full items-center justify-between px-5 sm:h-12 sm:px-8" style={SHELL}>
+        {/* Top-edge highlight rule */}
+        <div
+          className="pointer-events-none absolute inset-x-0 top-0 h-px"
+          style={{ background: "linear-gradient(90deg, transparent 4%, rgba(226,232,240,0.55) 35%, rgba(226,232,240,0.82) 50%, rgba(226,232,240,0.55) 65%, transparent 96%)" }}
+        />
 
-        <NavLink to="/" className="relative text-base font-semibold tracking-tight text-slate-100 sm:text-lg" onClick={closeMenu}>
+        <NavLink to="/" className="relative text-sm font-semibold tracking-tight text-slate-100 sm:text-base" onClick={closeMenu}>
           Tanie
         </NavLink>
 
-        <ul className="relative hidden items-center gap-6 text-sm font-medium text-slate-200 md:flex">
+        <ul className="relative hidden items-center gap-7 text-sm font-medium md:flex">
           {navLinks.map((link) => (
             <li key={link.label}>
               <NavLink
                 to={link.to}
                 className={({ isActive }) =>
-                  `transition hover:text-white ${isActive ? 'text-white' : 'text-slate-200'}`
+                  `transition hover:text-white ${isActive ? 'text-white' : 'text-slate-400'}`
                 }
               >
                 {link.label}
@@ -38,14 +57,15 @@ export default function Navbar() {
 
         <NavLink
           to="/interview-me"
-          className="nav-glass-cta relative hidden rounded-xl px-4 py-2 text-sm font-semibold text-white transition hover:brightness-110 md:inline-flex"
+          className="relative hidden rounded-lg px-3.5 py-1.5 text-xs font-semibold text-white transition hover:brightness-110 md:inline-flex"
+          style={CTA}
         >
           Interview Me
         </NavLink>
 
         <button
           type="button"
-          className="relative inline-flex items-center justify-center rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-xs font-semibold uppercase tracking-wide text-slate-100 transition hover:bg-white/20 md:hidden"
+          className="relative inline-flex items-center justify-center rounded-md border border-white/15 bg-white/8 px-3 py-1.5 text-xs font-semibold uppercase tracking-wide text-slate-100 transition hover:bg-white/15 md:hidden"
           onClick={() => setIsMenuOpen((prev) => !prev)}
           aria-label="Toggle menu"
           aria-expanded={isMenuOpen}
@@ -54,19 +74,20 @@ export default function Navbar() {
           Menu
         </button>
 
-        {isMenuOpen ? (
+        {isMenuOpen && (
           <div
             id="mobile-nav-menu"
-            className="nav-glass-shell absolute left-0 right-0 top-[calc(100%+0.6rem)] rounded-xl p-3 md:hidden"
+            className="absolute inset-x-0 top-full p-2 md:hidden"
+            style={SHELL}
           >
-            <ul className="flex flex-col gap-1 text-sm font-medium text-slate-100">
+            <ul className="flex flex-col gap-0.5 text-sm font-medium text-slate-100">
               {navLinks.map((link) => (
                 <li key={link.label}>
                   <NavLink
                     to={link.to}
                     onClick={closeMenu}
                     className={({ isActive }) =>
-                      `block rounded-lg px-3 py-2 transition ${isActive ? 'bg-white/15 text-white' : 'hover:bg-white/10'}`
+                      `block rounded-lg px-3 py-2 transition ${isActive ? 'bg-white/12 text-white' : 'hover:bg-white/8'}`
                     }
                   >
                     {link.label}
@@ -75,7 +96,7 @@ export default function Navbar() {
               ))}
             </ul>
           </div>
-        ) : null}
+        )}
       </nav>
     </header>
   )
