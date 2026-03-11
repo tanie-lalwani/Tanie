@@ -65,7 +65,7 @@ const SOCIALS = [
 ]
 
 const RECIPIENT_EMAIL = "contact@tanie.me"
-const FORMSPREE_ENDPOINT = import.meta.env.VITE_FORMSPREE_ENDPOINT ?? ""
+const FORM_ENDPOINT = import.meta.env.VITE_FORMSPREE_ENDPOINT ?? ""
 
 type ContactFields = {
   name: string
@@ -94,9 +94,9 @@ export default function Contact() {
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
 
-    if (!FORMSPREE_ENDPOINT) {
+    if (!FORM_ENDPOINT) {
       setSubmitStatus("error")
-      setSubmitMessage("Form endpoint is missing. Set VITE_FORMSPREE_ENDPOINT in your .env file.")
+      setSubmitMessage("Form endpoint is not configured.")
       return
     }
 
@@ -107,7 +107,7 @@ export default function Contact() {
     try {
       const subject = fields.subject || `Portfolio inquiry from ${fields.name || "Visitor"}`
 
-      const response = await fetch(FORMSPREE_ENDPOINT, {
+      const response = await fetch(FORM_ENDPOINT, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -144,7 +144,7 @@ export default function Contact() {
           Contact Me
         </p>
         <p className="mt-4 text-sm text-slate-300 sm:text-base lg:text-lg">
-          Fill out the form to send your message directly to {RECIPIENT_EMAIL} via Formspree.
+          Fill out the form and I'll get back to you at {RECIPIENT_EMAIL}.
         </p>
       </div>
 
