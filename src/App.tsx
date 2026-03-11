@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
 import Hero, { type Mode } from "./components/Hero";
 import Navbar from "./components/Navbar";
-import InterviewMe from "./pages/InterviewMe";
+import SiteFooter from "./components/SiteFooter";
+import InterviewMe from "./pages/InterviewMe.tsx";
 import Projects from "./pages/Projects.tsx";
 import Contact from "./pages/Contact.tsx";
 
@@ -15,6 +16,10 @@ export default function App() {
   // Show navbar on all pages except /interview-me,
   // and on / only when the user has chosen Practical mode.
   const showNavbar =
+    location.pathname !== "/interview-me" &&
+    !(location.pathname === "/" && heroMode !== "practical")
+
+  const showFooter =
     location.pathname !== "/interview-me" &&
     !(location.pathname === "/" && heroMode !== "practical")
 
@@ -39,6 +44,7 @@ export default function App() {
         <Route path="/contact" element={<Contact />} />
         <Route path="/interview-me" element={<InterviewMe />} />
       </Routes>
+      {showFooter ? <SiteFooter /> : null}
     </main>
   );
 }
