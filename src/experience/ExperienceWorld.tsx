@@ -1,7 +1,8 @@
-import { useRef } from "react"
+import { useRef, useState } from "react"
 import { motion } from "framer-motion"
 import { useThreeScene } from "./scene/useThreeScene"
 import LeafReveal from "./ui/LeafReveal"
+import LoadingLeaves from "./ui/LoadingLeaves"
 import BackButton from "./ui/BackButton"
 
 interface Props {
@@ -18,7 +19,9 @@ interface Props {
  */
 export default function ExperienceWorld({ onBack }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
-  useThreeScene(canvasRef)
+  const [isReady, setIsReady] = useState(false)
+
+  useThreeScene(canvasRef, () => setIsReady(true))
 
   return (
     <motion.div
@@ -34,6 +37,9 @@ export default function ExperienceWorld({ onBack }: Props) {
         className="absolute inset-0 h-full w-full"
         style={{ display: "block" }}
       />
+
+      {/* Loading overlay with animated leaves */}
+      <LoadingLeaves isReady={isReady} />
 
       {/* Tropical leaf reveal animation + name text */}
       <LeafReveal />

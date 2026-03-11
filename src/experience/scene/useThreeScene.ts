@@ -8,11 +8,16 @@ import { createSand } from "./createSand"
 /**
  * Initialises and drives the Three.js beach scene on the supplied canvas ref.
  * Runs once on mount; cleans up renderer + ResizeObserver on unmount.
+ * Calls onReady() after the first frame finishes rendering.
  */
-export function useThreeScene(canvasRef: RefObject<HTMLCanvasElement | null>) {
+export function useThreeScene(
+  canvasRef: RefObject<HTMLCanvasElement | null>,
+  onReady?: () => void,
+) {
   useEffect(() => {
     const canvas = canvasRef.current
     if (!canvas) return
+    let readyFired = false
 
     // ── Renderer ────────────────────────────────────────────────────────────
     const renderer = new THREE.WebGLRenderer({ canvas, antialias: true })
@@ -66,6 +71,12 @@ export function useThreeScene(canvasRef: RefObject<HTMLCanvasElement | null>) {
       // Advance the water shader's internal time uniform
       water.material.uniforms["time"].value = clock.getElapsedTime() * 0.5
       renderer.render(scene, camera)
+
+      // Fire the ready callback after first frame
+      if (!readyFired) {
+        readyFired = true
+        onReady?.()
+      }
     }
     tick()
 
