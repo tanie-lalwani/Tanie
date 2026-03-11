@@ -9,17 +9,14 @@ const navLinks = [
 ]
 
 const SHELL: CSSProperties = {
-  background: "linear-gradient(180deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.05) 40%, rgba(255,255,255,0.03) 100%)",
-  borderBottom: "1px solid rgba(255,255,255,0.18)",
-  boxShadow: "0 6px 26px rgba(2,6,23,0.34), inset 0 1px 0 rgba(255,255,255,0.35), inset 0 -1px 0 rgba(255,255,255,0.08)",
-  backdropFilter: "blur(22px) saturate(175%) contrast(115%) brightness(108%)",
-  WebkitBackdropFilter: "blur(22px) saturate(175%) contrast(115%) brightness(108%)",
+  background: 'rgba(2, 6, 23, 0.18)',
+  borderBottom: '1px solid rgba(148, 163, 184, 0.18)',
+  backdropFilter: 'blur(6px)',
+  WebkitBackdropFilter: 'blur(6px)',
 }
 
 const CTA: CSSProperties = {
-  background: "linear-gradient(145deg, rgba(15,23,42,0.95) 0%, rgba(30,41,59,0.85) 100%)",
-  border: "1px solid rgba(255,255,255,0.18)",
-  boxShadow: "inset 0 1px 0 rgba(255,255,255,0.22), 0 4px 12px rgba(15,23,42,0.4)",
+  border: '1px solid rgba(255,255,255,0.2)',
 }
 
 export default function Navbar() {
@@ -28,26 +25,7 @@ export default function Navbar() {
 
   return (
     <header className="sticky top-0 z-20">
-      <nav className="relative flex h-11 w-full items-center justify-between overflow-hidden px-5 sm:h-12 sm:px-8" style={SHELL}>
-        <div
-          className="pointer-events-none absolute inset-0 opacity-90"
-          style={{
-            background:
-              "radial-gradient(120% 180% at 10% 0%, rgba(255,255,255,0.26) 0%, transparent 46%), radial-gradient(120% 180% at 90% 100%, rgba(148,163,184,0.22) 0%, transparent 55%), linear-gradient(115deg, rgba(255,255,255,0.16) 0%, rgba(255,255,255,0.02) 36%, rgba(255,255,255,0.11) 64%, rgba(255,255,255,0.03) 100%)",
-          }}
-        />
-        <div
-          className="pointer-events-none absolute -left-16 top-0 h-full w-1/2 opacity-70"
-          style={{
-            background: "linear-gradient(98deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.28) 42%, rgba(255,255,255,0.04) 100%)",
-            filter: "blur(14px)",
-            transform: "skewX(-18deg)",
-          }}
-        />
-        <div
-          className="pointer-events-none absolute inset-x-0 top-0 h-px"
-          style={{ background: "linear-gradient(90deg, transparent 4%, rgba(226,232,240,0.55) 35%, rgba(226,232,240,0.82) 50%, rgba(226,232,240,0.55) 65%, transparent 96%)" }}
-        />
+      <nav className="relative flex h-11 w-full items-center justify-between px-4 sm:h-12 sm:px-8" style={SHELL}>
 
         <NavLink to="/" className="relative text-sm font-semibold tracking-tight text-slate-100 sm:text-base" style={{ fontFamily: 'var(--font-display)' }} onClick={closeMenu}>
           Tanie
@@ -70,7 +48,7 @@ export default function Navbar() {
 
         <NavLink
           to="/interview-me"
-          className="relative hidden rounded-md px-3 py-1.5 text-xs font-semibold text-white transition hover:brightness-110 md:inline-flex"
+          className="relative hidden rounded-md bg-white/6 px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-white/12 md:inline-flex"
           style={CTA}
         >
           Interview Me
@@ -78,7 +56,7 @@ export default function Navbar() {
 
         <button
           type="button"
-          className="relative inline-flex items-center justify-center rounded-md border border-white/15 bg-white/8 px-3 py-1.5 text-xs font-semibold uppercase tracking-wide text-slate-100 transition hover:bg-white/15 md:hidden"
+          className="relative inline-flex items-center justify-center rounded-md border border-white/20 bg-white/8 px-3 py-1.5 text-xs font-semibold uppercase tracking-wide text-slate-100 transition hover:bg-white/14 md:hidden"
           onClick={() => setIsMenuOpen((prev) => !prev)}
           aria-label="Toggle menu"
           aria-expanded={isMenuOpen}
@@ -90,7 +68,7 @@ export default function Navbar() {
         {isMenuOpen && (
           <div
             id="mobile-nav-menu"
-            className="absolute inset-x-0 top-full p-2 md:hidden"
+            className="absolute inset-x-0 top-full mt-1 p-2 md:hidden"
             style={SHELL}
           >
             <ul className="flex flex-col gap-0.5 text-sm font-medium text-slate-100">
