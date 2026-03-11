@@ -1,2 +1,35 @@
 @import "tailwindcss";
 
+:root {
+	--font-body: "Manrope", sans-serif;
+	--font-display: "Outfit", sans-serif;
+}
+
+html {
+	font-family: var(--font-body);
+	text-rendering: optimizeLegibility;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+body {
+	font-family: var(--font-body);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	font-family: var(--font-display);
+	letter-spacing: -0.03em;
+}
+
+button,
+input,
+textarea,
+select {
+	font: inherit;
+}
+

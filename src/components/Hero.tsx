@@ -5,6 +5,25 @@ import { useIsMobile } from "../hooks/useIsMobile"
 
 export type Mode = "practical" | "experience"
 
+const GLASS_PANEL = {
+  background: "linear-gradient(155deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.08) 34%, rgba(255,255,255,0.04) 100%)",
+  border: "1px solid rgba(255,255,255,0.18)",
+  boxShadow: "inset 0 1px 0 rgba(255,255,255,0.24), inset 0 -18px 32px rgba(71,85,105,0.16), 0 28px 90px rgba(2,6,23,0.56)",
+  backdropFilter: "blur(26px) saturate(125%)",
+  WebkitBackdropFilter: "blur(26px) saturate(125%)",
+} as const
+
+const GLASS_RIM = {
+  background: "linear-gradient(132deg, rgba(255,255,255,0.42) 0%, rgba(255,255,255,0.14) 18%, rgba(255,255,255,0.04) 44%, rgba(255,255,255,0.12) 100%)",
+  opacity: 0.56,
+} as const
+
+const GLASS_CHIP = {
+  background: "linear-gradient(145deg, rgba(226,232,240,0.18) 0%, rgba(148,163,184,0.08) 100%)",
+  border: "1px solid rgba(226,232,240,0.22)",
+  boxShadow: "inset 0 1px 0 rgba(255,255,255,0.22)",
+} as const
+
 // ─── Experience placeholder (Three.js comes here later) ──────────────────────
 function ExperiencePlaceholder({
   onBack,
@@ -100,8 +119,23 @@ function ExperiencePlaceholder({
           animate={{ opacity: 1 }}
           transition={{ delay: 0.45 }}
         >
-          An immersive Three.js world is being built. Prepare to step inside.
+          An immersive Three.js world is being built. Here is the current concept bridge.
         </motion.p>
+        <motion.div
+          className="mt-5 w-full max-w-md overflow-hidden rounded-2xl border border-violet-400/18 bg-black/30 p-4 text-left backdrop-blur-sm"
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.52 }}
+        >
+          <p className="text-[10px] uppercase tracking-[0.24em] text-violet-300/65">Teaser map</p>
+          <div className="mt-3 grid gap-2 text-xs text-slate-300 sm:grid-cols-2">
+            <div className="rounded-lg border border-white/10 bg-white/5 px-3 py-2">Neon entry hall</div>
+            <div className="rounded-lg border border-white/10 bg-white/5 px-3 py-2">Project arena</div>
+            <div className="rounded-lg border border-white/10 bg-white/5 px-3 py-2">Audio-reactive stage</div>
+            <div className="rounded-lg border border-white/10 bg-white/5 px-3 py-2">Contact portal</div>
+          </div>
+          <p className="mt-3 text-xs text-slate-400/85">The final build will let visitors walk through spaces instead of clicking static pages.</p>
+        </motion.div>
         <motion.button
           className="mt-8 rounded-full border border-violet-500/30 bg-violet-950/40 px-7 py-2.5 text-sm font-medium text-violet-200/80 backdrop-blur-sm transition hover:bg-violet-900/50 hover:text-violet-100"
           onClick={onBack}
@@ -323,12 +357,18 @@ function ModeSelection({
 const ROLES = ["Frontend Engineer", "UI / UX Craftsman", "React Developer", "TypeScript Advocate"]
 
 const STACK = [
-  { label: "React",      color: "text-cyan-300/80 border-cyan-400/25 bg-cyan-400/[0.07]" },
-  { label: "TypeScript", color: "text-blue-300/80 border-blue-400/25 bg-blue-400/[0.07]" },
-  { label: "Tailwind",   color: "text-teal-300/80 border-teal-400/25 bg-teal-400/[0.07]" },
-  { label: "Node.js",    color: "text-green-300/80 border-green-400/25 bg-green-400/[0.07]" },
-  { label: "Vite",       color: "text-yellow-300/75 border-yellow-400/25 bg-yellow-400/[0.07]" },
-  { label: "Framer",     color: "text-pink-300/80 border-pink-400/25 bg-pink-400/[0.07]" },
+  { label: "React", color: "text-cyan-300/80 border-cyan-400/25 bg-cyan-400/8" },
+  { label: "TypeScript", color: "text-blue-300/80 border-blue-400/25 bg-blue-400/8" },
+  { label: "Tailwind", color: "text-teal-300/80 border-teal-400/25 bg-teal-400/8" },
+  { label: "Node.js", color: "text-green-300/80 border-green-400/25 bg-green-400/8" },
+  { label: "Vite", color: "text-yellow-300/75 border-yellow-400/25 bg-yellow-400/8" },
+  { label: "Framer", color: "text-pink-300/80 border-pink-400/25 bg-pink-400/8" },
+]
+
+const METRICS = [
+  { value: "Fast", label: "polished shipping" },
+  { value: "UI + DX", label: "same obsession" },
+  { value: "Glass", label: "with restraint" },
 ]
 
 function PracticalHero({
@@ -367,7 +407,7 @@ function PracticalHero({
 
   return (
     <motion.section
-      className="relative isolate flex min-h-screen w-full flex-col items-center justify-center overflow-hidden px-6 py-24"
+      className="relative isolate flex min-h-screen w-full flex-col items-center justify-center overflow-hidden px-4 py-20 sm:px-6 sm:py-24"
       style={{ background: "linear-gradient(135deg, #020617 0%, #0c1322 50%, #0f172a 100%)" }}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
@@ -398,7 +438,7 @@ function PracticalHero({
 
       {/* Change mode */}
       <motion.button
-        className="absolute right-6 top-6 z-20 flex items-center gap-1.5 rounded-full border border-white/10 bg-white/4 px-3.5 py-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500 backdrop-blur-sm transition hover:border-white/18 hover:text-slate-300"
+        className="absolute right-4 top-5 z-20 flex items-center gap-1.5 rounded-full border border-white/10 bg-white/4 px-3.5 py-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500 backdrop-blur-sm transition hover:border-white/18 hover:text-slate-300 sm:right-6 sm:top-6"
         onClick={onChangeMode}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -410,127 +450,161 @@ function PracticalHero({
       </motion.button>
 
       {/* ── Main content ── */}
-      <div className="relative z-10 mx-auto w-full max-w-2xl">
+      <div className="relative z-10 mx-auto w-full max-w-6xl">
 
-        {/* Status badge */}
         <motion.div
-          className="mb-8 inline-flex items-center gap-2.5 rounded-full border border-emerald-500/20 bg-emerald-500/[0.07] px-4 py-1.5"
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.18 }}
+          className="relative mx-auto w-full max-w-5xl overflow-hidden rounded-4xl p-6 sm:p-8 lg:p-10"
+          style={GLASS_PANEL}
+          initial={{ opacity: 0, y: 18, scale: lowPowerMode ? 1 : 0.985 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ delay: 0.12, duration: 0.65, ease: "easeOut" }}
         >
-          <motion.span
-            className="h-1.5 w-1.5 rounded-full bg-emerald-400"
-            animate={lowPowerMode ? {} : { opacity: [1, 0.3, 1] }}
-            transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
-          />
-          <span className="text-xs font-medium tracking-wide text-emerald-300/75">Available for opportunities</span>
-        </motion.div>
+          <div className="pointer-events-none absolute inset-0" style={GLASS_RIM} />
+          <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(122deg,rgba(255,255,255,0.28)_0%,rgba(255,255,255,0.06)_28%,rgba(255,255,255,0)_52%)]" />
+          <div className="pointer-events-none absolute left-10 top-5 h-20 w-2/3 rounded-full bg-white/18 blur-3xl" />
+          <div className="pointer-events-none absolute -bottom-14 -right-10 h-44 w-44 rounded-full bg-slate-200/8 blur-3xl" />
 
-        {/* Heading */}
-        <motion.h1
-          className="text-5xl font-black tracking-tight text-white sm:text-6xl lg:text-[5.25rem] lg:leading-[1.04]"
-          initial={{ opacity: 0, y: 18 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.26, duration: 0.6 }}
-        >
-          Hey, I'm{" "}
-          <span
-            style={{
-              background: "linear-gradient(92deg, #e2e8f0 20%, #94a3b8 60%, #cbd5e1 100%)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              backgroundClip: "text",
-            }}
-          >
-            Tanie
-          </span>
-        </motion.h1>
+          <div className="relative">
 
-        {/* Typewriter role */}
-        <motion.div
-          className="mt-4 flex h-8 items-center gap-1.5"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.38 }}
-        >
-          <span className="text-lg font-light tracking-wide text-slate-400 sm:text-xl">{displayed}</span>
-          <motion.span
-            className="mt-0.5 inline-block h-5 w-0.5 rounded-full bg-slate-400/60"
-            animate={lowPowerMode ? {} : { opacity: [1, 0, 1] }}
-            transition={{ duration: 0.9, repeat: Infinity, ease: "linear" }}
-          />
-        </motion.div>
-
-        {/* Bio */}
-        <motion.p
-          className="mt-6 max-w-xl text-base leading-relaxed text-slate-400/80 sm:text-[1.0625rem]"
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.46, duration: 0.55 }}
-        >
-          I craft fast, accessible, production-grade web interfaces — from pixel-perfect components to full-stack deployments. Always obsessing over the details that make a product feel alive.
-        </motion.p>
-
-        {/* CTA buttons */}
-        <motion.div
-          className="mt-9 flex flex-wrap gap-3"
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.54, duration: 0.5 }}
-        >
-          <motion.div
-            whileHover={lowPowerMode ? undefined : { y: -2, scale: 1.02 }}
-            whileTap={{ scale: 0.97 }}
-          >
-            <Link
-              to="/projects"
-              className="inline-flex items-center gap-2 rounded-xl bg-white px-6 py-3 text-sm font-semibold text-slate-900 shadow-lg shadow-black/30 transition hover:bg-slate-100"
-            >
-              View Projects
-              <span className="text-slate-500">→</span>
-            </Link>
-          </motion.div>
-          <motion.div
-            whileHover={lowPowerMode ? undefined : { y: -2, scale: 1.02 }}
-            whileTap={{ scale: 0.97 }}
-          >
-            <Link
-              to="/contact"
-              className="inline-flex items-center gap-2 rounded-xl border border-white/14 bg-white/5 px-6 py-3 text-sm font-semibold text-slate-200 backdrop-blur-sm transition hover:border-white/22 hover:bg-white/9"
-            >
-              Get in Touch
-            </Link>
-          </motion.div>
-        </motion.div>
-
-        {/* Divider */}
-        <motion.div
-          className="my-10"
-          style={{ height: "1px", background: "linear-gradient(to right, transparent, rgba(148,163,184,0.18) 30%, rgba(148,163,184,0.18) 70%, transparent)" }}
-          initial={{ scaleX: 0, opacity: 0 }}
-          animate={{ scaleX: 1, opacity: 1 }}
-          transition={{ delay: 0.7, duration: 0.7, ease: "easeOut" }}
-        />
-
-        {/* Tech stack */}
-        <motion.div
-          className="flex flex-wrap gap-2"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.78 }}
-        >
-          {STACK.map((item, i) => (
-            <motion.span
-              key={item.label}
-              className={`rounded-full border px-3.5 py-1 text-xs font-medium tracking-wide ${item.color}`}
-              initial={{ opacity: 0, y: 8 }}
+            {/* Status badge */}
+            <motion.div
+              className="mb-8 inline-flex items-center gap-2.5 rounded-full px-4 py-1.5"
+              style={GLASS_CHIP}
+              initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.82 + i * 0.06 }}
+              transition={{ delay: 0.18 }}
             >
-              {item.label}
-            </motion.span>
-          ))}
+              <motion.span
+                className="h-1.5 w-1.5 rounded-full bg-emerald-400"
+                animate={lowPowerMode ? {} : { opacity: [1, 0.3, 1] }}
+                transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+              />
+              <span className="text-xs font-medium tracking-wide text-emerald-300/75">Available for opportunities</span>
+            </motion.div>
+
+            {/* Heading */}
+            <motion.h1
+              className="text-5xl font-black tracking-tight text-white sm:text-6xl lg:text-[5.4rem] lg:leading-[1.02]"
+              initial={{ opacity: 0, y: 18 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.26, duration: 0.6 }}
+            >
+              Hey, I'm{" "}
+              <span
+                style={{
+                  background: "linear-gradient(92deg, #f8fafc 12%, #cbd5e1 56%, #94a3b8 100%)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  backgroundClip: "text",
+                }}
+              >
+                Tanie
+              </span>
+            </motion.h1>
+
+            {/* Typewriter role */}
+            <motion.div
+              className="mt-4 flex h-8 items-center gap-1.5"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.38 }}
+            >
+              <span className="text-lg font-light tracking-wide text-slate-400 sm:text-xl">{displayed}</span>
+              <motion.span
+                className="mt-0.5 inline-block h-5 w-0.5 rounded-full bg-slate-400/60"
+                animate={lowPowerMode ? {} : { opacity: [1, 0, 1] }}
+                transition={{ duration: 0.9, repeat: Infinity, ease: "linear" }}
+              />
+            </motion.div>
+
+            <motion.p
+              className="mt-6 text-lg font-medium tracking-wide text-slate-200/88 sm:text-xl"
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.46, duration: 0.55 }}
+            >
+              I make music and websites.
+            </motion.p>
+
+            {/* CTA buttons */}
+            <motion.div
+              className="mt-9 flex flex-wrap gap-3"
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.54, duration: 0.5 }}
+            >
+              <motion.div
+                whileHover={lowPowerMode ? undefined : { y: -2, scale: 1.02 }}
+                whileTap={{ scale: 0.97 }}
+              >
+                <Link
+                  to="/projects"
+                  className="inline-flex items-center gap-2 rounded-xl bg-white px-6 py-3 text-sm font-semibold text-slate-900 shadow-lg shadow-black/30 transition hover:bg-slate-100"
+                >
+                  View Projects
+                  <span className="text-slate-500">→</span>
+                </Link>
+              </motion.div>
+              <motion.div
+                whileHover={lowPowerMode ? undefined : { y: -2, scale: 1.02 }}
+                whileTap={{ scale: 0.97 }}
+              >
+                <Link
+                  to="/contact"
+                  className="inline-flex items-center gap-2 rounded-xl border border-white/14 bg-white/5 px-6 py-3 text-sm font-semibold text-slate-200 backdrop-blur-sm transition hover:border-white/22 hover:bg-white/9"
+                >
+                  Get in Touch
+                </Link>
+              </motion.div>
+            </motion.div>
+
+            <motion.div
+              className="my-8"
+              style={{ height: "1px", background: "linear-gradient(to right, transparent, rgba(148,163,184,0.18) 30%, rgba(148,163,184,0.18) 70%, transparent)" }}
+              initial={{ scaleX: 0, opacity: 0 }}
+              animate={{ scaleX: 1, opacity: 1 }}
+              transition={{ delay: 0.7, duration: 0.7, ease: "easeOut" }}
+            />
+
+            <motion.div
+              className="grid gap-3 sm:grid-cols-3"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.78 }}
+            >
+              {METRICS.map((metric, i) => (
+                <motion.div
+                  key={metric.label}
+                  className="rounded-2xl border border-white/12 bg-white/5 p-4 backdrop-blur-sm"
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.82 + i * 0.06 }}
+                >
+                  <p className="text-lg font-semibold text-white">{metric.value}</p>
+                  <p className="mt-1 text-xs uppercase tracking-[0.2em] text-slate-400">{metric.label}</p>
+                </motion.div>
+              ))}
+            </motion.div>
+
+            <motion.div
+              className="mt-4 flex flex-wrap gap-2"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.92 }}
+            >
+              {STACK.map((item, i) => (
+                <motion.span
+                  key={item.label}
+                  className={`rounded-full border px-3.5 py-1 text-xs font-medium tracking-wide ${item.color}`}
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.96 + i * 0.05 }}
+                >
+                  {item.label}
+                </motion.span>
+              ))}
+            </motion.div>
+          </div>
         </motion.div>
       </div>
     </motion.section>
