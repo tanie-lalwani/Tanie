@@ -9,7 +9,7 @@ export const nightMood: BeachMoodPreset = {
   mieCoefficient: 0.004,
   mieDirectionalG: 0.7,
   sunElevation: 4,
-  sunAzimuth: 250,
+  sunAzimuth: 124,
   sunColor: 0xc0dcff,
   waterColor: 0x1d4d6c,
   ambientColor: 0x93add8,

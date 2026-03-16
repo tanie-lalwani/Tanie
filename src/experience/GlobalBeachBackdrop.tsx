@@ -230,7 +230,7 @@ function addNightBeachAccents(scene: THREE.Scene, isMobile: boolean) {
     new THREE.SphereGeometry(22, 32, 32),
     new THREE.MeshBasicMaterial({ color: 0xd7e9ff }),
   )
-  moon.position.set(-180, 140, -380)
+  moon.position.set(180, 140, -380)
   scene.add(moon)
 
   const shorelineGlow = new THREE.Mesh(

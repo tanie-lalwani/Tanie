@@ -9,7 +9,7 @@ export const dawnMood: BeachMoodPreset = {
   mieCoefficient: 0.006,
   mieDirectionalG: 0.74,
   sunElevation: 16,
-  sunAzimuth: 204,
+  sunAzimuth: 222,
   sunColor: 0xfff2c6,
   waterColor: 0x006888,
   ambientColor: 0xfff1d8,

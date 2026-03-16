@@ -105,14 +105,14 @@ export default function Contact() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.45 }}
       >
-        <div className="relative overflow-hidden rounded-xl border border-white/20 bg-white/8 p-3.5 backdrop-blur-xl shadow-[inset_0_1px_0_rgba(255,255,255,0.28)] sm:rounded-2xl sm:p-4">
+        <div className="relative overflow-hidden rounded-xl border border-white/26 bg-slate-950/42 p-3.5 backdrop-blur-xl shadow-[inset_0_1px_0_rgba(255,255,255,0.28)] sm:rounded-2xl sm:p-4">
           <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(122deg,rgba(255,255,255,0.18)_0%,rgba(255,255,255,0.02)_42%,rgba(255,255,255,0)_70%)]" />
-          <p className="text-xs uppercase tracking-[0.2em] text-slate-500">Response</p>
+          <p className="text-xs uppercase tracking-[0.2em] text-slate-300">Response</p>
           <p className="mt-2 text-sm font-semibold text-white">Within 24-48h</p>
         </div>
-        <div className="relative overflow-hidden rounded-xl border border-white/20 bg-white/8 p-3.5 backdrop-blur-xl shadow-[inset_0_1px_0_rgba(255,255,255,0.28)] sm:rounded-2xl sm:p-4">
+        <div className="relative overflow-hidden rounded-xl border border-white/26 bg-slate-950/42 p-3.5 backdrop-blur-xl shadow-[inset_0_1px_0_rgba(255,255,255,0.28)] sm:rounded-2xl sm:p-4">
           <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(122deg,rgba(255,255,255,0.18)_0%,rgba(255,255,255,0.02)_42%,rgba(255,255,255,0)_70%)]" />
-          <p className="text-xs uppercase tracking-[0.2em] text-slate-500">Availability</p>
+          <p className="text-xs uppercase tracking-[0.2em] text-slate-300">Availability</p>
           <p className="mt-2 text-sm font-semibold text-white">Freelance and full-time roles</p>
         </div>
       </motion.div>
