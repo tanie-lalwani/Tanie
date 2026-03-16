@@ -1,15 +1,14 @@
 import { Suspense, lazy, useEffect, useState } from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
-import Hero from "./components/Hero";
 import Navbar from "./components/Navbar.tsx";
 import SiteFooter from "./components/SiteFooter";
 import GlobalBeachBackdrop from "./experience/GlobalBeachBackdrop";
 import BackdropSettingsBar from "./components/BackdropSettingsBar";
 import { getLocalTimePhase, type TimePhase } from "./experience/timePhase";
+import Home from "./pages/Home";
 
 const InterviewMe = lazy(() => import("./pages/InterviewMe.tsx"));
-const Projects = lazy(() => import("./pages/Projects.tsx"));
-const Contact = lazy(() => import("./pages/Contact.tsx"));
+
 const LOCAL_STORAGE_TIME_SYNC_KEY = "beach-time-sync-enabled"
 const LOCAL_STORAGE_MANUAL_PHASE_KEY = "beach-manual-phase"
 
@@ -53,7 +52,6 @@ export default function App() {
   const timePhase: TimePhase = isTimeSyncEnabled ? autoTimePhase : manualPhase
 
   const showNavbar = location.pathname !== "/interview-me"
-
   const showFooter = location.pathname !== "/interview-me"
 
   return (
@@ -63,9 +61,7 @@ export default function App() {
         {showNavbar ? <Navbar isSettingsOpen={isSettingsOpen} onSettingsToggle={setIsSettingsOpen} /> : null}
         <Suspense fallback={<div className="px-4 py-10 text-center text-sm text-slate-400">Loading...</div>}>
           <Routes>
-            <Route path="/" element={<Hero />} />
-            <Route path="/projects" element={<Projects />} />
-            <Route path="/contact" element={<Contact />} />
+            <Route path="/" element={<Home />} />
             <Route path="/interview-me" element={<InterviewMe />} />
           </Routes>
         </Suspense>
