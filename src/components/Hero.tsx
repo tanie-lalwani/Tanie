@@ -37,7 +37,7 @@ export default function Hero() {
       />
 
       <motion.div
-        className="relative mx-auto w-full max-w-6xl overflow-hidden rounded-3xl border border-white/20 bg-white/8 p-5 shadow-[0_30px_100px_rgba(2,6,23,0.58)] backdrop-blur-2xl sm:p-8 lg:p-10"
+        className="relative mx-auto w-full max-w-6xl overflow-hidden rounded-3xl border border-white/30 bg-slate-950/46 p-5 shadow-[0_30px_100px_rgba(2,6,23,0.58)] backdrop-blur-2xl sm:p-8 lg:p-10"
         initial={{ opacity: 0, y: 22 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}

@@ -63,7 +63,7 @@ export default function Projects() {
         description="Same proof and context, now navigated like a running strip that moves only when you choose."
       />
 
-      <div className="relative overflow-hidden rounded-2xl border border-white/14 bg-white/5 p-3 backdrop-blur-sm sm:rounded-3xl sm:p-5">
+      <div className="relative overflow-hidden rounded-2xl border border-white/26 bg-slate-950/44 p-3 backdrop-blur-md sm:rounded-3xl sm:p-5">
         <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(122deg,rgba(255,255,255,0.18)_0%,rgba(255,255,255,0.03)_36%,rgba(255,255,255,0)_58%)]" />
 
         <div className="relative mb-4 flex flex-wrap items-center justify-between gap-3 border-b border-white/10 pb-3 sm:mb-5 sm:pb-4">
