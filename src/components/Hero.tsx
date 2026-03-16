@@ -23,15 +23,15 @@ export default function Hero() {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
     >
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_20%_20%,rgba(14,116,144,0.35),transparent_45%),radial-gradient(ellipse_at_80%_72%,rgba(56,189,248,0.24),transparent_45%),linear-gradient(150deg,#030712_0%,#04111f_42%,#020617_100%)]" />
-      <div className="pointer-events-none absolute inset-0 bg-size-[56px_56px] bg-[linear-gradient(rgba(148,163,184,0.26)_1px,transparent_1px),linear-gradient(90deg,rgba(148,163,184,0.26)_1px,transparent_1px)] opacity-[0.14]" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_20%_18%,rgba(56,189,248,0.14),transparent_42%),radial-gradient(ellipse_at_82%_72%,rgba(34,211,238,0.08),transparent_38%)]" />
+      <div className="pointer-events-none absolute inset-0 bg-size-[56px_56px] bg-[linear-gradient(rgba(148,163,184,0.18)_1px,transparent_1px),linear-gradient(90deg,rgba(148,163,184,0.18)_1px,transparent_1px)] opacity-[0.06]" />
       <motion.div
-        className="pointer-events-none absolute -left-24 top-10 h-72 w-72 rounded-full bg-cyan-300/30 blur-[95px]"
+        className="pointer-events-none absolute -left-24 top-10 h-72 w-72 rounded-full bg-cyan-300/20 blur-[95px]"
         animate={lowPowerMode ? undefined : { x: [0, 28, -14, 0], y: [0, 16, -20, 0] }}
         transition={{ duration: 11, ease: "easeInOut", repeat: Infinity }}
       />
       <motion.div
-        className="pointer-events-none absolute -right-24 bottom-10 h-80 w-80 rounded-full bg-sky-400/22 blur-[110px]"
+        className="pointer-events-none absolute -right-24 bottom-10 h-80 w-80 rounded-full bg-sky-400/14 blur-[110px]"
         animate={lowPowerMode ? undefined : { x: [0, -24, 10, 0], y: [0, -24, 18, 0] }}
         transition={{ duration: 13, ease: "easeInOut", repeat: Infinity }}
       />
