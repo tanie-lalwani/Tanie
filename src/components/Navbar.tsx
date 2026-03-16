@@ -20,7 +20,12 @@ const CTA: CSSProperties = {
   border: '1px solid rgba(255,255,255,0.2)',
 }
 
-export default function Navbar() {
+type NavbarProps = {
+  isSettingsOpen: boolean
+  onSettingsToggle: (open: boolean) => void
+}
+
+export default function Navbar({ isSettingsOpen, onSettingsToggle }: NavbarProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const closeMenu = () => setIsMenuOpen(false)
 
@@ -54,6 +59,20 @@ export default function Navbar() {
         >
           Interview Me
         </NavLink>
+
+        <button
+          type="button"
+          title="Scene settings"
+          className="relative inline-flex items-center justify-center rounded-md border border-white/26 bg-white/12 px-2 py-1.5 text-white transition hover:bg-white/18 md:px-2.5"
+          onClick={() => onSettingsToggle(!isSettingsOpen)}
+          aria-label="Toggle scene settings"
+          aria-pressed={isSettingsOpen}
+        >
+          <svg className="h-4 w-4 md:h-4.5 md:w-4.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <circle cx="12" cy="12" r="1" />
+            <path d="M12 1v6m0 6v6M4.22 4.22l4.24 4.24m5.08 5.08l4.24 4.24M1 12h6m6 0h6M4.22 19.78l4.24-4.24m5.08-5.08l4.24-4.24" />
+          </svg>
+        </button>
 
         <button
           type="button"

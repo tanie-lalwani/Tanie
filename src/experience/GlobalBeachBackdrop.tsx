@@ -39,20 +39,25 @@ function buildNormalMap(size = 256): THREE.DataTexture {
   return texture
 }
 
-function buildSandTexture(size = 256): THREE.DataTexture {
+function buildSandTexture(size = 256, variant: "default" | "noon" = "default"): THREE.DataTexture {
   const data = new Uint8Array(size * size * 3)
 
   for (let y = 0; y < size; y++) {
     for (let x = 0; x < size; x++) {
       const idx = (y * size + x) * 3
-      const grain = 0.8 + Math.random() * 0.2
+      const grain = variant === "noon" ? 0.84 + Math.random() * 0.28 : 0.8 + Math.random() * 0.2
+      const waveFrequency = variant === "noon" ? 14 : 10
+      const secondaryFrequency = variant === "noon" ? 5 : 3
       const wave =
         0.5 +
-        0.5 * Math.sin((x / size) * Math.PI * 10 + (y / size) * Math.PI * 3)
+        0.5 * Math.sin((x / size) * Math.PI * waveFrequency + (y / size) * Math.PI * secondaryFrequency)
 
-      const r = Math.min(255, Math.round((212 + wave * 18) * grain))
-      const g = Math.min(255, Math.round((188 + wave * 14) * grain))
-      const b = Math.min(255, Math.round((142 + wave * 10) * grain))
+      const rBase = variant === "noon" ? 224 : 212
+      const gBase = variant === "noon" ? 199 : 188
+      const bBase = variant === "noon" ? 149 : 142
+      const r = Math.min(255, Math.round((rBase + wave * 16) * grain))
+      const g = Math.min(255, Math.round((gBase + wave * 13) * grain))
+      const b = Math.min(255, Math.round((bBase + wave * 8) * grain))
 
       data[idx] = r
       data[idx + 1] = g
@@ -67,7 +72,7 @@ function buildSandTexture(size = 256): THREE.DataTexture {
   return texture
 }
 
-function addSand(scene: THREE.Scene, preset: BeachMoodPreset) {
+function addSand(scene: THREE.Scene, preset: BeachMoodPreset, phase: TimePhase) {
   const geometry = new THREE.PlaneGeometry(1200, 84, 48, 22)
   const pos = geometry.attributes.position as THREE.BufferAttribute
 
@@ -77,8 +82,8 @@ function addSand(scene: THREE.Scene, preset: BeachMoodPreset) {
 
   geometry.computeVertexNormals()
 
-  const sandTexture = buildSandTexture(256)
-  sandTexture.repeat.set(18, 6)
+  const sandTexture = buildSandTexture(256, phase === "noon" ? "noon" : "default")
+  sandTexture.repeat.set(phase === "noon" ? 24 : 18, phase === "noon" ? 8 : 6)
 
   const material = new THREE.MeshStandardMaterial({
     color: preset.sandColor,
@@ -94,6 +99,164 @@ function addSand(scene: THREE.Scene, preset: BeachMoodPreset) {
   sand.position.set(0, 0.1, 112)
   sand.receiveShadow = true
   scene.add(sand)
+}
+
+function buildCloudTexture(size = 128): THREE.CanvasTexture {
+  const canvas = document.createElement("canvas")
+  canvas.width = size
+  canvas.height = size
+  const ctx = canvas.getContext("2d")
+
+  if (!ctx) {
+    return new THREE.CanvasTexture(canvas)
+  }
+
+  ctx.clearRect(0, 0, size, size)
+  const gradient = ctx.createRadialGradient(size * 0.5, size * 0.52, size * 0.08, size * 0.5, size * 0.5, size * 0.5)
+  gradient.addColorStop(0, "rgba(255,255,255,0.95)")
+  gradient.addColorStop(0.45, "rgba(255,255,255,0.72)")
+  gradient.addColorStop(1, "rgba(255,255,255,0)")
+  ctx.fillStyle = gradient
+  ctx.fillRect(0, 0, size, size)
+
+  const texture = new THREE.CanvasTexture(canvas)
+  texture.needsUpdate = true
+  return texture
+}
+
+function addNoonClouds(scene: THREE.Scene, isMobile: boolean) {
+  const group = new THREE.Group()
+  const texture = buildCloudTexture(128)
+  const cloudCount = isMobile ? 10 : 20
+
+  for (let i = 0; i < cloudCount; i++) {
+    const sprite = new THREE.Sprite(
+      new THREE.SpriteMaterial({
+        map: texture,
+        color: 0xffffff,
+        transparent: true,
+        opacity: 0.36 + Math.random() * 0.24,
+        depthWrite: false,
+      }),
+    )
+
+    sprite.position.set(
+      -340 + Math.random() * 680,
+      58 + Math.random() * 50,
+      -420 - Math.random() * 360,
+    )
+    const size = 64 + Math.random() * 120
+    sprite.scale.set(size, size * (0.35 + Math.random() * 0.25), 1)
+    group.add(sprite)
+  }
+
+  scene.add(group)
+
+  const update = (time: number) => {
+    group.children.forEach((child, index) => {
+      child.position.x += 0.02 + (index % 3) * 0.005
+      if (child.position.x > 380) child.position.x = -380
+      child.position.y += Math.sin(time * 0.16 + index * 0.7) * 0.004
+    })
+  }
+
+  return { update }
+}
+
+function addNoonSun(scene: THREE.Scene) {
+  // Overhead directional light creating sharp white-to-lavender illusion
+  const noonOverheadLight = new THREE.DirectionalLight(0xf5f2ff, 0.8)
+  noonOverheadLight.position.set(0, 300, 200)
+  scene.add(noonOverheadLight)
+
+  return {
+    update: () => {
+      // Static overhead light, no animation needed
+    },
+  }
+}
+
+function addNoonShipIllusion(scene: THREE.Scene, isMobile: boolean) {
+  const ship = new THREE.Group()
+
+  const hull = new THREE.Mesh(
+    new THREE.BoxGeometry(10, 1.3, 2.5),
+    new THREE.MeshStandardMaterial({ color: 0x402f27, roughness: 0.86 }),
+  )
+  hull.position.y = 0.15
+  ship.add(hull)
+
+  const bow = new THREE.Mesh(
+    new THREE.ConeGeometry(1.25, 2.5, 4),
+    new THREE.MeshStandardMaterial({ color: 0x3a2b23, roughness: 0.86 }),
+  )
+  bow.rotation.z = -Math.PI / 2
+  bow.position.set(5.1, 0.12, 0)
+  ship.add(bow)
+
+  const mast = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.08, 0.1, 3.6, 8),
+    new THREE.MeshStandardMaterial({ color: 0x5f4836, roughness: 0.8 }),
+  )
+  mast.position.set(-0.3, 2.1, 0)
+  ship.add(mast)
+
+  const sailShape = new THREE.Shape()
+  sailShape.moveTo(0, 0)
+  sailShape.lineTo(2.25, 1.05)
+  sailShape.lineTo(0, 2.05)
+  sailShape.closePath()
+
+  const sail = new THREE.Mesh(
+    new THREE.ShapeGeometry(sailShape),
+    new THREE.MeshStandardMaterial({
+      color: 0xf6f3e7,
+      roughness: 0.92,
+      side: THREE.DoubleSide,
+      transparent: true,
+      opacity: 0.95,
+    }),
+  )
+  sail.position.set(-0.2, 1.1, 0)
+  sail.rotation.y = -0.06
+  ship.add(sail)
+
+  const wakePieces: THREE.Mesh[] = []
+  for (let i = 0; i < 4; i++) {
+    const wake = new THREE.Mesh(
+      new THREE.PlaneGeometry(2.1 + i * 1.05, 0.42 + i * 0.14),
+      new THREE.MeshBasicMaterial({
+        color: 0xbdeeff,
+        transparent: true,
+        opacity: 0.18 - i * 0.03,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false,
+      }),
+    )
+    wake.rotation.x = -Math.PI / 2
+    wake.position.set(-5.8 - i * 1.8, 0.02, 0)
+    ship.add(wake)
+    wakePieces.push(wake)
+  }
+
+  ship.position.set(isMobile ? 120 : 150, 0.12, -320)
+  ship.rotation.y = -0.25
+  ship.scale.setScalar(isMobile ? 1.1 : 1.35)
+  scene.add(ship)
+
+  return {
+    update: (time: number) => {
+      ship.position.y = 0.1 + Math.sin(time * 0.95) * 0.12
+      ship.rotation.z = Math.sin(time * 0.65) * 0.028
+
+      wakePieces.forEach((wake, index) => {
+        const pulse = 0.82 + Math.sin(time * 2.4 - index * 0.7) * 0.25
+        wake.scale.x = pulse
+        const material = wake.material as THREE.MeshBasicMaterial
+        material.opacity = 0.11 + pulse * (0.08 - index * 0.012)
+      })
+    },
+  }
 }
 
 function createShell(preset: BeachMoodPreset): THREE.Mesh {
@@ -335,9 +498,12 @@ export default function GlobalBeachBackdrop({ phase }: { phase: TimePhase }) {
     water.position.y = -0.05
     scene.add(water)
 
-    addSand(scene, preset)
+    addSand(scene, preset, phase)
     scatterBeachDecor(scene, isMobile, preset)
     const dawnBirdFlock = phase === "dawn" ? addDawnBirds(scene, isMobile) : null
+    const noonCloudLayer = phase === "noon" ? addNoonClouds(scene, isMobile) : null
+    const noonSunLayer = phase === "noon" ? addNoonSun(scene) : null
+    const noonShipLayer = phase === "noon" ? addNoonShipIllusion(scene, isMobile) : null
 
     if (phase === "night") {
       addNightBeachAccents(scene, isMobile)
@@ -360,6 +526,9 @@ export default function GlobalBeachBackdrop({ phase }: { phase: TimePhase }) {
       const elapsed = clock.getElapsedTime()
       water.material.uniforms["time"].value = elapsed * 0.45
       dawnBirdFlock?.update(elapsed)
+      noonCloudLayer?.update(elapsed)
+      noonSunLayer?.update()
+      noonShipLayer?.update(elapsed)
       renderer.render(scene, camera)
     }
     render()
