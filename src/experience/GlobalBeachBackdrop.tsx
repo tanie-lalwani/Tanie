@@ -4,130 +4,7 @@ import { Water } from "three/examples/jsm/objects/Water.js"
 import { Sky } from "three/examples/jsm/objects/Sky.js"
 import { useIsMobile } from "../hooks/useIsMobile"
 import type { TimePhase } from "./timePhase"
-
-type MoodPreset = {
-  exposure: number
-  fogColor: number
-  fogDensity: number
-  turbidity: number
-  rayleigh: number
-  mieCoefficient: number
-  mieDirectionalG: number
-  sunElevation: number
-  sunAzimuth: number
-  sunColor: number
-  waterColor: number
-  ambientColor: number
-  ambientIntensity: number
-  sunlightColor: number
-  sunlightIntensity: number
-  fillColor: number
-  fillIntensity: number
-  overlayGradient: string
-}
-
-const MOOD_PRESETS: Record<TimePhase, MoodPreset> = {
-  dawn: {
-    exposure: 0.54,
-    fogColor: 0x84c8df,
-    fogDensity: 0.00075,
-    turbidity: 3.2,
-    rayleigh: 1.9,
-    mieCoefficient: 0.006,
-    mieDirectionalG: 0.74,
-    sunElevation: 16,
-    sunAzimuth: 204,
-    sunColor: 0xfff2c6,
-    waterColor: 0x006888,
-    ambientColor: 0xfff1d8,
-    ambientIntensity: 0.58,
-    sunlightColor: 0xfff2d2,
-    sunlightIntensity: 1.55,
-    fillColor: 0x99d8ff,
-    fillIntensity: 0.3,
-    overlayGradient: "linear-gradient(180deg, rgba(2,6,23,0.34) 0%, rgba(2,6,23,0.54) 52%, rgba(2,6,23,0.72) 100%)",
-  },
-  day: {
-    exposure: 0.74,
-    fogColor: 0xa9dbec,
-    fogDensity: 0.00052,
-    turbidity: 2.3,
-    rayleigh: 2.4,
-    mieCoefficient: 0.0045,
-    mieDirectionalG: 0.72,
-    sunElevation: 58,
-    sunAzimuth: 190,
-    sunColor: 0xffffff,
-    waterColor: 0x0d85b4,
-    ambientColor: 0xf5f8ff,
-    ambientIntensity: 0.66,
-    sunlightColor: 0xfff9ea,
-    sunlightIntensity: 1.78,
-    fillColor: 0xa7dfff,
-    fillIntensity: 0.36,
-    overlayGradient: "linear-gradient(180deg, rgba(2,6,23,0.14) 0%, rgba(2,6,23,0.24) 55%, rgba(2,6,23,0.4) 100%)",
-  },
-  afternoon: {
-    exposure: 0.65,
-    fogColor: 0x94d1e9,
-    fogDensity: 0.00062,
-    turbidity: 2.8,
-    rayleigh: 2.1,
-    mieCoefficient: 0.0052,
-    mieDirectionalG: 0.73,
-    sunElevation: 41,
-    sunAzimuth: 214,
-    sunColor: 0xfff0cd,
-    waterColor: 0x0976a4,
-    ambientColor: 0xffeed8,
-    ambientIntensity: 0.62,
-    sunlightColor: 0xffeac0,
-    sunlightIntensity: 1.66,
-    fillColor: 0x8fd2ff,
-    fillIntensity: 0.32,
-    overlayGradient: "linear-gradient(180deg, rgba(2,6,23,0.2) 0%, rgba(2,6,23,0.36) 55%, rgba(2,6,23,0.52) 100%)",
-  },
-  sunset: {
-    exposure: 0.48,
-    fogColor: 0xc39687,
-    fogDensity: 0.00078,
-    turbidity: 4.1,
-    rayleigh: 1.4,
-    mieCoefficient: 0.007,
-    mieDirectionalG: 0.76,
-    sunElevation: 8,
-    sunAzimuth: 232,
-    sunColor: 0xffbc80,
-    waterColor: 0x8b5f59,
-    ambientColor: 0xffd8c1,
-    ambientIntensity: 0.48,
-    sunlightColor: 0xffb58d,
-    sunlightIntensity: 1.35,
-    fillColor: 0x6ea7d9,
-    fillIntensity: 0.26,
-    overlayGradient: "linear-gradient(180deg, rgba(17,11,20,0.34) 0%, rgba(14,12,24,0.56) 52%, rgba(6,8,20,0.74) 100%)",
-  },
-  night: {
-    exposure: 0.28,
-    fogColor: 0x22395a,
-    fogDensity: 0.00095,
-    turbidity: 1.8,
-    rayleigh: 0.75,
-    mieCoefficient: 0.0032,
-    mieDirectionalG: 0.7,
-    sunElevation: -8,
-    sunAzimuth: 256,
-    sunColor: 0x7cb4ff,
-    waterColor: 0x0d2e4d,
-    ambientColor: 0x6f87b8,
-    ambientIntensity: 0.28,
-    sunlightColor: 0x91bfff,
-    sunlightIntensity: 0.62,
-    fillColor: 0x4f78af,
-    fillIntensity: 0.22,
-    overlayGradient: "linear-gradient(180deg, rgba(2,6,23,0.52) 0%, rgba(2,6,23,0.72) 52%, rgba(2,6,23,0.86) 100%)",
-  },
-}
+import { MOOD_PRESETS, type BeachMoodPreset } from "./moods"
 
 function buildNormalMap(size = 256): THREE.DataTexture {
   const data = new Uint8Array(size * size * 4)
@@ -162,8 +39,36 @@ function buildNormalMap(size = 256): THREE.DataTexture {
   return texture
 }
 
-function addSand(scene: THREE.Scene) {
-  const geometry = new THREE.PlaneGeometry(1000, 140, 44, 18)
+function buildSandTexture(size = 256): THREE.DataTexture {
+  const data = new Uint8Array(size * size * 3)
+
+  for (let y = 0; y < size; y++) {
+    for (let x = 0; x < size; x++) {
+      const idx = (y * size + x) * 3
+      const grain = 0.8 + Math.random() * 0.2
+      const wave =
+        0.5 +
+        0.5 * Math.sin((x / size) * Math.PI * 10 + (y / size) * Math.PI * 3)
+
+      const r = Math.min(255, Math.round((212 + wave * 18) * grain))
+      const g = Math.min(255, Math.round((188 + wave * 14) * grain))
+      const b = Math.min(255, Math.round((142 + wave * 10) * grain))
+
+      data[idx] = r
+      data[idx + 1] = g
+      data[idx + 2] = b
+    }
+  }
+
+  const texture = new THREE.DataTexture(data, size, size, THREE.RGBFormat)
+  texture.wrapS = THREE.RepeatWrapping
+  texture.wrapT = THREE.RepeatWrapping
+  texture.needsUpdate = true
+  return texture
+}
+
+function addSand(scene: THREE.Scene, preset: BeachMoodPreset) {
+  const geometry = new THREE.PlaneGeometry(1200, 84, 48, 22)
   const pos = geometry.attributes.position as THREE.BufferAttribute
 
   for (let i = 0; i < pos.count; i++) {
@@ -172,25 +77,33 @@ function addSand(scene: THREE.Scene) {
 
   geometry.computeVertexNormals()
 
+  const sandTexture = buildSandTexture(256)
+  sandTexture.repeat.set(18, 6)
+
   const material = new THREE.MeshStandardMaterial({
-    color: 0xe9cb84,
-    roughness: 0.96,
+    color: preset.sandColor,
+    map: sandTexture,
+    roughness: preset.sandRoughness,
     metalness: 0,
+    emissive: preset.sandEmissive,
+    emissiveIntensity: preset.sandEmissiveIntensity,
   })
 
   const sand = new THREE.Mesh(geometry, material)
   sand.rotation.x = -Math.PI / 2
-  sand.position.set(0, 0.12, 62)
+  sand.position.set(0, 0.1, 112)
   sand.receiveShadow = true
   scene.add(sand)
 }
 
-function createShell(): THREE.Mesh {
+function createShell(preset: BeachMoodPreset): THREE.Mesh {
   const geometry = new THREE.ConeGeometry(0.22, 0.55, 16, 1, true)
   const material = new THREE.MeshStandardMaterial({
     color: new THREE.Color().setHSL(0.08, 0.38, 0.75),
     roughness: 0.74,
     metalness: 0.02,
+    emissive: 0x2b4257,
+    emissiveIntensity: preset.shellEmissiveIntensity,
   })
   const shell = new THREE.Mesh(geometry, material)
   shell.scale.set(1, 0.48, 1)
@@ -198,7 +111,7 @@ function createShell(): THREE.Mesh {
   return shell
 }
 
-function createStarfish(): THREE.Mesh {
+function createStarfish(preset: BeachMoodPreset): THREE.Mesh {
   const shape = new THREE.Shape()
   const points = 5
   const outerRadius = 0.45
@@ -229,6 +142,8 @@ function createStarfish(): THREE.Mesh {
     color: new THREE.Color().setHSL(0.055, 0.66, 0.6),
     roughness: 0.8,
     metalness: 0.02,
+    emissive: 0x21303f,
+    emissiveIntensity: preset.starfishEmissiveIntensity,
   })
 
   const star = new THREE.Mesh(geometry, material)
@@ -236,18 +151,18 @@ function createStarfish(): THREE.Mesh {
   return star
 }
 
-function scatterBeachDecor(scene: THREE.Scene, isMobile: boolean) {
+function scatterBeachDecor(scene: THREE.Scene, isMobile: boolean, preset: BeachMoodPreset) {
   const decorCount = isMobile ? 16 : 34
 
   for (let i = 0; i < decorCount; i++) {
     const isStar = i % 3 === 0
-    const mesh = isStar ? createStarfish() : createShell()
+    const mesh = isStar ? createStarfish(preset) : createShell(preset)
     const lane = Math.random() > 0.5 ? 1 : -1
 
     mesh.position.set(
       lane * (7 + Math.random() * 24),
       0.18 + Math.random() * 0.04,
-      24 + Math.random() * 76,
+      72 + Math.random() * 72,
     )
 
     mesh.rotation.y = Math.random() * Math.PI * 2
@@ -258,6 +173,103 @@ function scatterBeachDecor(scene: THREE.Scene, isMobile: boolean) {
 
     scene.add(mesh)
   }
+}
+
+function addDawnBirds(scene: THREE.Scene, isMobile: boolean) {
+  const flock = new THREE.Group()
+  const birds: Array<{ mesh: THREE.LineSegments; speed: number; flapOffset: number; baseY: number }> = []
+  const birdCount = isMobile ? 7 : 13
+
+  for (let i = 0; i < birdCount; i++) {
+    const geometry = new THREE.BufferGeometry()
+    const points = new Float32Array([
+      -0.62, 0.0, 0,
+      0.0, 0.24, 0,
+      0.0, 0.24, 0,
+      0.62, 0.0, 0,
+    ])
+    geometry.setAttribute("position", new THREE.BufferAttribute(points, 3))
+
+    const material = new THREE.LineBasicMaterial({
+      color: 0x1f2d3a,
+      transparent: true,
+      opacity: 0.72,
+    })
+
+    const bird = new THREE.LineSegments(geometry, material)
+    bird.scale.setScalar(1.6 + Math.random() * 1.8)
+    bird.position.set(-220 - Math.random() * 480, 38 + Math.random() * 38, -300 - Math.random() * 320)
+    bird.rotation.y = -0.26
+    flock.add(bird)
+
+    birds.push({
+      mesh: bird,
+      speed: 12 + Math.random() * 8,
+      flapOffset: Math.random() * Math.PI * 2,
+      baseY: bird.position.y,
+    })
+  }
+
+  scene.add(flock)
+
+  const update = (time: number) => {
+    for (const bird of birds) {
+      const travel = ((time * bird.speed + bird.flapOffset * 25) % 520) - 260
+      bird.mesh.position.x = travel
+      bird.mesh.position.y = bird.baseY + Math.sin(time * 0.55 + bird.flapOffset) * 1.8
+      bird.mesh.scale.y = 0.7 + Math.abs(Math.sin(time * 5 + bird.flapOffset)) * 0.85
+      bird.mesh.rotation.z = Math.sin(time * 2 + bird.flapOffset) * 0.08
+    }
+  }
+
+  return { update }
+}
+
+function addNightBeachAccents(scene: THREE.Scene, isMobile: boolean) {
+  const moon = new THREE.Mesh(
+    new THREE.SphereGeometry(22, 32, 32),
+    new THREE.MeshBasicMaterial({ color: 0xd7e9ff }),
+  )
+  moon.position.set(-180, 140, -380)
+  scene.add(moon)
+
+  const shorelineGlow = new THREE.Mesh(
+    new THREE.PlaneGeometry(980, 18),
+    new THREE.MeshBasicMaterial({
+      color: 0x8be8ff,
+      transparent: true,
+      opacity: 0.12,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
+    }),
+  )
+  shorelineGlow.rotation.x = -Math.PI / 2
+  shorelineGlow.position.set(0, 0.2, 9)
+  scene.add(shorelineGlow)
+
+  const starCount = isMobile ? 120 : 240
+  const positions = new Float32Array(starCount * 3)
+
+  for (let i = 0; i < starCount; i++) {
+    positions[i * 3] = (Math.random() - 0.5) * 1800
+    positions[i * 3 + 1] = 120 + Math.random() * 520
+    positions[i * 3 + 2] = -700 - Math.random() * 900
+  }
+
+  const starGeometry = new THREE.BufferGeometry()
+  starGeometry.setAttribute("position", new THREE.BufferAttribute(positions, 3))
+
+  const stars = new THREE.Points(
+    starGeometry,
+    new THREE.PointsMaterial({
+      color: 0xb8d7ff,
+      size: isMobile ? 2.1 : 2.6,
+      transparent: true,
+      opacity: 0.75,
+      depthWrite: false,
+    }),
+  )
+  scene.add(stars)
 }
 
 export default function GlobalBeachBackdrop({ phase }: { phase: TimePhase }) {
@@ -290,8 +302,8 @@ export default function GlobalBeachBackdrop({ phase }: { phase: TimePhase }) {
       0.1,
       20000,
     )
-    camera.position.set(0, 4.4, 55)
-    camera.lookAt(0, 2, -40)
+    camera.position.set(0, 11.5, 88)
+    camera.lookAt(0, 1.8, -140)
 
     const sky = new Sky()
     sky.scale.setScalar(10000)
@@ -316,15 +328,20 @@ export default function GlobalBeachBackdrop({ phase }: { phase: TimePhase }) {
       sunDirection: new THREE.Vector3().copy(sun).normalize(),
       sunColor: preset.sunColor,
       waterColor: preset.waterColor,
-      distortionScale: isMobile ? 2.5 : 3.4,
+      distortionScale: isMobile ? Math.max(2.2, preset.waterDistortion - 0.9) : preset.waterDistortion,
       fog: false,
     })
     water.rotation.x = -Math.PI / 2
     water.position.y = -0.05
     scene.add(water)
 
-    addSand(scene)
-    scatterBeachDecor(scene, isMobile)
+    addSand(scene, preset)
+    scatterBeachDecor(scene, isMobile, preset)
+    const dawnBirdFlock = phase === "dawn" ? addDawnBirds(scene, isMobile) : null
+
+    if (phase === "night") {
+      addNightBeachAccents(scene, isMobile)
+    }
 
     scene.add(new THREE.AmbientLight(preset.ambientColor, preset.ambientIntensity))
     const sunLight = new THREE.DirectionalLight(preset.sunlightColor, preset.sunlightIntensity)
@@ -340,7 +357,9 @@ export default function GlobalBeachBackdrop({ phase }: { phase: TimePhase }) {
 
     const render = () => {
       raf = requestAnimationFrame(render)
-      water.material.uniforms["time"].value = clock.getElapsedTime() * 0.45
+      const elapsed = clock.getElapsedTime()
+      water.material.uniforms["time"].value = elapsed * 0.45
+      dawnBirdFlock?.update(elapsed)
       renderer.render(scene, camera)
     }
     render()
@@ -361,7 +380,7 @@ export default function GlobalBeachBackdrop({ phase }: { phase: TimePhase }) {
       resizeObserver.disconnect()
       renderer.dispose()
     }
-  }, [isMobile, preset])
+  }, [isMobile, preset, phase])
 
   return (
     <div className="pointer-events-none fixed inset-0 z-0">
