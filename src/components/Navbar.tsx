@@ -3,9 +3,9 @@ import { NavLink } from 'react-router-dom'
 import type { CSSProperties } from 'react'
 
 const navLinks = [
-  { label: 'Built So Far', to: '/projects' },
-  { label: 'Let\'s Start Building', to: '/contact' },
-  { label: 'Interview Me', to: '/interview-me' },
+  { label: 'Built So Far', href: '#projects' },
+  { label: 'Let\'s Start Building', href: '#contact' },
+  { label: 'Interview Me', href: '/interview-me' },
 ]
 
 const SHELL: CSSProperties = {
@@ -28,21 +28,30 @@ export default function Navbar({ isSettingsOpen, onSettingsToggle }: NavbarProps
     <header className="sticky top-0 z-20">
       <nav className="relative flex h-11 w-full items-center justify-between px-4 sm:h-12 sm:px-8" style={SHELL}>
 
-        <NavLink to="/" className="relative text-sm font-semibold tracking-tight text-slate-100 sm:text-base" style={{ fontFamily: 'var(--font-display)' }} onClick={closeMenu}>
+        <a href="/" className="relative text-sm font-semibold tracking-tight text-slate-100 sm:text-base" style={{ fontFamily: 'var(--font-display)' }} onClick={closeMenu}>
           Tanie
-        </NavLink>
+        </a>
 
         <ul className="relative hidden items-center gap-1 text-sm font-medium md:flex">
           {navLinks.map((link) => (
             <li key={link.label}>
-              <NavLink
-                to={link.to}
-                className={({ isActive }) =>
-                  `rounded-full px-3 py-1 transition ${isActive ? 'bg-white/12 text-white' : 'text-slate-200 hover:bg-white/8 hover:text-white'}`
-                }
-              >
-                {link.label}
-              </NavLink>
+              {link.href.startsWith('#') ? (
+                <a
+                  href={link.href}
+                  className="rounded-full px-3 py-1 transition text-slate-200 hover:bg-white/8 hover:text-white"
+                >
+                  {link.label}
+                </a>
+              ) : (
+                <NavLink
+                  to={link.href}
+                  className={({ isActive }) =>
+                    `rounded-full px-3 py-1 transition ${isActive ? 'bg-white/12 text-white' : 'text-slate-200 hover:bg-white/8 hover:text-white'}`
+                  }
+                >
+                  {link.label}
+                </NavLink>
+              )}
             </li>
           ))}
         </ul>
@@ -81,15 +90,25 @@ export default function Navbar({ isSettingsOpen, onSettingsToggle }: NavbarProps
             <ul className="flex flex-col gap-0.5 text-sm font-medium text-slate-100">
               {navLinks.map((link) => (
                 <li key={link.label}>
-                  <NavLink
-                    to={link.to}
-                    onClick={closeMenu}
-                    className={({ isActive }) =>
-                      `block rounded-lg px-3 py-2 transition ${isActive ? 'bg-white/16 text-white' : 'text-slate-100 hover:bg-white/12 hover:text-white'}`
-                    }
-                  >
-                    {link.label}
-                  </NavLink>
+                  {link.href.startsWith('#') ? (
+                    <a
+                      href={link.href}
+                      onClick={closeMenu}
+                      className="block rounded-lg px-3 py-2 transition text-slate-100 hover:bg-white/12 hover:text-white"
+                    >
+                      {link.label}
+                    </a>
+                  ) : (
+                    <NavLink
+                      to={link.href}
+                      onClick={closeMenu}
+                      className={({ isActive }) =>
+                        `block rounded-lg px-3 py-2 transition ${isActive ? 'bg-white/16 text-white' : 'text-slate-100 hover:bg-white/12 hover:text-white'}`
+                      }
+                    >
+                      {link.label}
+                    </NavLink>
+                  )}
                 </li>
               ))}
             </ul>
