@@ -3,6 +3,131 @@ import * as THREE from "three"
 import { Water } from "three/examples/jsm/objects/Water.js"
 import { Sky } from "three/examples/jsm/objects/Sky.js"
 import { useIsMobile } from "../hooks/useIsMobile"
+import type { TimePhase } from "./timePhase"
+
+type MoodPreset = {
+  exposure: number
+  fogColor: number
+  fogDensity: number
+  turbidity: number
+  rayleigh: number
+  mieCoefficient: number
+  mieDirectionalG: number
+  sunElevation: number
+  sunAzimuth: number
+  sunColor: number
+  waterColor: number
+  ambientColor: number
+  ambientIntensity: number
+  sunlightColor: number
+  sunlightIntensity: number
+  fillColor: number
+  fillIntensity: number
+  overlayGradient: string
+}
+
+const MOOD_PRESETS: Record<TimePhase, MoodPreset> = {
+  dawn: {
+    exposure: 0.54,
+    fogColor: 0x84c8df,
+    fogDensity: 0.00075,
+    turbidity: 3.2,
+    rayleigh: 1.9,
+    mieCoefficient: 0.006,
+    mieDirectionalG: 0.74,
+    sunElevation: 16,
+    sunAzimuth: 204,
+    sunColor: 0xfff2c6,
+    waterColor: 0x006888,
+    ambientColor: 0xfff1d8,
+    ambientIntensity: 0.58,
+    sunlightColor: 0xfff2d2,
+    sunlightIntensity: 1.55,
+    fillColor: 0x99d8ff,
+    fillIntensity: 0.3,
+    overlayGradient: "linear-gradient(180deg, rgba(2,6,23,0.34) 0%, rgba(2,6,23,0.54) 52%, rgba(2,6,23,0.72) 100%)",
+  },
+  day: {
+    exposure: 0.74,
+    fogColor: 0xa9dbec,
+    fogDensity: 0.00052,
+    turbidity: 2.3,
+    rayleigh: 2.4,
+    mieCoefficient: 0.0045,
+    mieDirectionalG: 0.72,
+    sunElevation: 58,
+    sunAzimuth: 190,
+    sunColor: 0xffffff,
+    waterColor: 0x0d85b4,
+    ambientColor: 0xf5f8ff,
+    ambientIntensity: 0.66,
+    sunlightColor: 0xfff9ea,
+    sunlightIntensity: 1.78,
+    fillColor: 0xa7dfff,
+    fillIntensity: 0.36,
+    overlayGradient: "linear-gradient(180deg, rgba(2,6,23,0.14) 0%, rgba(2,6,23,0.24) 55%, rgba(2,6,23,0.4) 100%)",
+  },
+  afternoon: {
+    exposure: 0.65,
+    fogColor: 0x94d1e9,
+    fogDensity: 0.00062,
+    turbidity: 2.8,
+    rayleigh: 2.1,
+    mieCoefficient: 0.0052,
+    mieDirectionalG: 0.73,
+    sunElevation: 41,
+    sunAzimuth: 214,
+    sunColor: 0xfff0cd,
+    waterColor: 0x0976a4,
+    ambientColor: 0xffeed8,
+    ambientIntensity: 0.62,
+    sunlightColor: 0xffeac0,
+    sunlightIntensity: 1.66,
+    fillColor: 0x8fd2ff,
+    fillIntensity: 0.32,
+    overlayGradient: "linear-gradient(180deg, rgba(2,6,23,0.2) 0%, rgba(2,6,23,0.36) 55%, rgba(2,6,23,0.52) 100%)",
+  },
+  sunset: {
+    exposure: 0.48,
+    fogColor: 0xc39687,
+    fogDensity: 0.00078,
+    turbidity: 4.1,
+    rayleigh: 1.4,
+    mieCoefficient: 0.007,
+    mieDirectionalG: 0.76,
+    sunElevation: 8,
+    sunAzimuth: 232,
+    sunColor: 0xffbc80,
+    waterColor: 0x8b5f59,
+    ambientColor: 0xffd8c1,
+    ambientIntensity: 0.48,
+    sunlightColor: 0xffb58d,
+    sunlightIntensity: 1.35,
+    fillColor: 0x6ea7d9,
+    fillIntensity: 0.26,
+    overlayGradient: "linear-gradient(180deg, rgba(17,11,20,0.34) 0%, rgba(14,12,24,0.56) 52%, rgba(6,8,20,0.74) 100%)",
+  },
+  night: {
+    exposure: 0.28,
+    fogColor: 0x22395a,
+    fogDensity: 0.00095,
+    turbidity: 1.8,
+    rayleigh: 0.75,
+    mieCoefficient: 0.0032,
+    mieDirectionalG: 0.7,
+    sunElevation: -8,
+    sunAzimuth: 256,
+    sunColor: 0x7cb4ff,
+    waterColor: 0x0d2e4d,
+    ambientColor: 0x6f87b8,
+    ambientIntensity: 0.28,
+    sunlightColor: 0x91bfff,
+    sunlightIntensity: 0.62,
+    fillColor: 0x4f78af,
+    fillIntensity: 0.22,
+    overlayGradient: "linear-gradient(180deg, rgba(2,6,23,0.52) 0%, rgba(2,6,23,0.72) 52%, rgba(2,6,23,0.86) 100%)",
+  },
+}
 
 function buildNormalMap(size = 256): THREE.DataTexture {
   const data = new Uint8Array(size * size * 4)
@@ -135,9 +260,10 @@ function scatterBeachDecor(scene: THREE.Scene, isMobile: boolean) {
   }
 }
 
-export default function GlobalBeachBackdrop() {
+export default function GlobalBeachBackdrop({ phase }: { phase: TimePhase }) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
   const isMobile = useIsMobile()
+  const preset = MOOD_PRESETS[phase]
 
   useEffect(() => {
     const canvas = canvasRef.current
@@ -153,10 +279,10 @@ export default function GlobalBeachBackdrop() {
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobile ? 1.4 : 1.8))
     renderer.setSize(canvas.clientWidth, canvas.clientHeight, false)
     renderer.toneMapping = THREE.ACESFilmicToneMapping
-    renderer.toneMappingExposure = 0.54
+    renderer.toneMappingExposure = preset.exposure
 
     const scene = new THREE.Scene()
-    scene.fog = new THREE.FogExp2(0x84c8df, 0.00075)
+    scene.fog = new THREE.FogExp2(preset.fogColor, preset.fogDensity)
 
     const camera = new THREE.PerspectiveCamera(
       50,
@@ -172,14 +298,14 @@ export default function GlobalBeachBackdrop() {
     scene.add(sky)
 
     const skyUniforms = sky.material.uniforms
-    skyUniforms["turbidity"].value = 3.2
-    skyUniforms["rayleigh"].value = 1.9
-    skyUniforms["mieCoefficient"].value = 0.006
-    skyUniforms["mieDirectionalG"].value = 0.74
+    skyUniforms["turbidity"].value = preset.turbidity
+    skyUniforms["rayleigh"].value = preset.rayleigh
+    skyUniforms["mieCoefficient"].value = preset.mieCoefficient
+    skyUniforms["mieDirectionalG"].value = preset.mieDirectionalG
 
     const sun = new THREE.Vector3()
-    const phi = THREE.MathUtils.degToRad(90 - 16)
-    const theta = THREE.MathUtils.degToRad(204)
+    const phi = THREE.MathUtils.degToRad(90 - preset.sunElevation)
+    const theta = THREE.MathUtils.degToRad(preset.sunAzimuth)
     sun.setFromSphericalCoords(1, phi, theta)
     skyUniforms["sunPosition"].value.copy(sun)
 
@@ -188,8 +314,8 @@ export default function GlobalBeachBackdrop() {
       textureHeight: 512,
       waterNormals: buildNormalMap(),
       sunDirection: new THREE.Vector3().copy(sun).normalize(),
-      sunColor: 0xfff2c6,
-      waterColor: 0x006888,
+      sunColor: preset.sunColor,
+      waterColor: preset.waterColor,
       distortionScale: isMobile ? 2.5 : 3.4,
       fog: false,
     })
@@ -200,12 +326,12 @@ export default function GlobalBeachBackdrop() {
     addSand(scene)
     scatterBeachDecor(scene, isMobile)
 
-    scene.add(new THREE.AmbientLight(0xfff1d8, 0.58))
-    const sunLight = new THREE.DirectionalLight(0xfff2d2, 1.55)
+    scene.add(new THREE.AmbientLight(preset.ambientColor, preset.ambientIntensity))
+    const sunLight = new THREE.DirectionalLight(preset.sunlightColor, preset.sunlightIntensity)
     sunLight.position.copy(sun).multiplyScalar(460)
     scene.add(sunLight)
 
-    const fillLight = new THREE.DirectionalLight(0x99d8ff, 0.3)
+    const fillLight = new THREE.DirectionalLight(preset.fillColor, preset.fillIntensity)
     fillLight.position.set(-180, 80, 120)
     scene.add(fillLight)
 
@@ -235,7 +361,7 @@ export default function GlobalBeachBackdrop() {
       resizeObserver.disconnect()
       renderer.dispose()
     }
-  }, [isMobile])
+  }, [isMobile, preset])
 
   return (
     <div className="pointer-events-none fixed inset-0 z-0">
@@ -245,7 +371,7 @@ export default function GlobalBeachBackdrop() {
         style={{ display: "block" }}
         aria-hidden="true"
       />
-      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(2,6,23,0.34)_0%,rgba(2,6,23,0.54)_52%,rgba(2,6,23,0.72)_100%)]" />
+      <div className="absolute inset-0" style={{ background: preset.overlayGradient }} />
     </div>
   )
 }
