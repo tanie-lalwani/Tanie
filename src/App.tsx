@@ -11,6 +11,7 @@ const InterviewMe = lazy(() => import("./pages/InterviewMe.tsx"));
 const Projects = lazy(() => import("./pages/Projects.tsx"));
 const Contact = lazy(() => import("./pages/Contact.tsx"));
 const LOCAL_STORAGE_TIME_SYNC_KEY = "beach-time-sync-enabled"
+const LOCAL_STORAGE_MANUAL_PHASE_KEY = "beach-manual-phase"
 
 export default function App() {
   const location = useLocation();
@@ -18,11 +19,22 @@ export default function App() {
     if (typeof window === "undefined") return false
     return window.localStorage.getItem(LOCAL_STORAGE_TIME_SYNC_KEY) === "true"
   })
+  const [manualPhase, setManualPhase] = useState<TimePhase>(() => {
+    if (typeof window === "undefined") return "dawn"
+    const savedPhase = window.localStorage.getItem(LOCAL_STORAGE_MANUAL_PHASE_KEY)
+    return savedPhase === "dawn" || savedPhase === "noon" || savedPhase === "sunset" || savedPhase === "night"
+      ? savedPhase
+      : "dawn"
+  })
   const [autoTimePhase, setAutoTimePhase] = useState<TimePhase>(() => getLocalTimePhase())
 
   useEffect(() => {
     window.localStorage.setItem(LOCAL_STORAGE_TIME_SYNC_KEY, String(isTimeSyncEnabled))
   }, [isTimeSyncEnabled])
+
+  useEffect(() => {
+    window.localStorage.setItem(LOCAL_STORAGE_MANUAL_PHASE_KEY, manualPhase)
+  }, [manualPhase])
 
   useEffect(() => {
     if (!isTimeSyncEnabled) return
@@ -37,7 +49,7 @@ export default function App() {
     return () => window.clearInterval(timer)
   }, [isTimeSyncEnabled])
 
-  const timePhase: TimePhase = isTimeSyncEnabled ? autoTimePhase : "dawn"
+  const timePhase: TimePhase = isTimeSyncEnabled ? autoTimePhase : manualPhase
 
   const showNavbar = location.pathname !== "/interview-me"
 
@@ -62,6 +74,7 @@ export default function App() {
         isTimeSyncEnabled={isTimeSyncEnabled}
         phase={timePhase}
         onToggleTimeSync={setIsTimeSyncEnabled}
+        onSelectPhase={setManualPhase}
       />
     </main>
   );
