@@ -46,14 +46,14 @@ export default function Projects() {
       <PageHeader
         eyebrow="What I Have Built"
         title="Client testimonials"
-        description="Same proof and context, now navigated like a running strip that moves only when you choose."
+        description=""
       />
 
       <div className="relative">
 
         <div className="relative mb-3 flex flex-wrap items-center justify-between gap-2.5 border-b border-white/8 pb-2.5 sm:mb-4 sm:pb-3">
           <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-slate-400">
-            Strip {String(activeIndex + 1).padStart(2, "0")} / {String(projects.length).padStart(2, "0")}
+            {String(activeIndex + 1).padStart(2, "0")} / {String(projects.length).padStart(2, "0")}
           </p>
           <div className="flex items-center gap-1.5">
             <button
@@ -73,7 +73,7 @@ export default function Projects() {
           </div>
         </div>
 
-        <div className="relative min-h-112">
+        <div className="relative min-h-64">
           <AnimatePresence mode="wait">
             <motion.article
               key={activeProject.client + activeProject.project}
@@ -84,8 +84,8 @@ export default function Projects() {
               transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
             >
               <div className="relative">
-                <div className="relative overflow-hidden rounded-xl border border-white/16 bg-slate-950/70 shadow-[inset_0_1px_0_rgba(255,255,255,0.18)]">
-                  <div className="aspect-video bg-[radial-gradient(circle_at_20%_20%,rgba(255,255,255,0.1),transparent_28%),linear-gradient(160deg,#0f172a_0%,#030712_56%,#020617_100%)]" />
+                <div className="relative overflow-hidden rounded-lg border border-white/14 bg-slate-950/70 shadow-[inset_0_1px_0_rgba(255,255,255,0.16)]">
+                  <div className="aspect-16/10 bg-[radial-gradient(circle_at_20%_20%,rgba(255,255,255,0.1),transparent_28%),linear-gradient(160deg,#0f172a_0%,#030712_56%,#020617_100%)]" />
                   <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_40%,rgba(2,6,23,0.76)_100%)]" />
                   <div className="absolute bottom-2.5 left-2.5 right-2.5 flex flex-col items-start justify-between gap-1.5 sm:bottom-3 sm:left-3 sm:right-3 sm:flex-row sm:items-end sm:gap-2.5">
                     <div>
@@ -98,20 +98,20 @@ export default function Projects() {
                   </div>
                 </div>
 
-                <div className="mt-4">
-                  <blockquote className="border-l border-white/14 pl-2.5 text-xs italic leading-relaxed text-slate-300">
+                <div className="mt-3">
+                  <blockquote className="border-l border-white/14 pl-2 text-[13px] italic leading-snug text-slate-300">
                     &quot;{activeProject.quote}&quot;
                   </blockquote>
-                  <p className="mt-2 text-xs leading-relaxed text-slate-400">{activeProject.outcome}</p>
+                  <p className="mt-1.5 text-[12px] leading-snug text-slate-400">{activeProject.outcome}</p>
 
-                  <div className="mt-3 flex flex-col gap-2 border-t border-white/8 pt-3 sm:flex-row sm:items-center sm:justify-between">
+                  <div className="mt-2.5 flex flex-col gap-1.5 border-t border-white/8 pt-2.5 sm:flex-row sm:items-center sm:justify-between">
                     <div>
-                      <p className="text-[11px] uppercase tracking-[0.22em] text-slate-500">Live website</p>
+                      <p className="text-[10px] uppercase tracking-[0.2em] text-slate-500">Live website</p>
                       <a
                         href={activeProject.site}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="mt-1 inline-flex text-sm font-medium text-slate-100 transition hover:text-white"
+                        className="mt-0.5 inline-flex text-[11px] font-medium text-slate-100 transition hover:text-white"
                       >
                         {activeProject.site.replace("https://", "")}
                       </a>
@@ -120,7 +120,7 @@ export default function Projects() {
                       href={activeProject.site}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-white/20 bg-white px-4 py-2 text-xs font-semibold text-slate-900 transition hover:bg-slate-200 sm:w-auto"
+                      className="inline-flex w-full items-center justify-center gap-2 rounded-lg border border-white/20 bg-white px-3 py-1.5 text-[11px] font-semibold text-slate-900 transition hover:bg-slate-200 sm:w-auto"
                     >
                       Verify Project
                       <span aria-hidden="true">↗</span>
