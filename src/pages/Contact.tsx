@@ -1,20 +1,6 @@
 import { useState, type FormEvent } from "react"
 import { motion } from "framer-motion"
-import type { CSSProperties } from "react"
 import PageHeader from "../components/PageHeader"
-
-const GLASS_PANEL: CSSProperties = {
-  background: "linear-gradient(152deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.09) 32%, rgba(255,255,255,0.035) 100%)",
-  border: "1px solid rgba(255,255,255,0.26)",
-  boxShadow: "inset 0 1px 0 rgba(255,255,255,0.46), inset 0 -18px 34px rgba(148,163,184,0.14), 0 36px 90px rgba(2,6,23,0.58)",
-  backdropFilter: "blur(28px) saturate(128%)",
-  WebkitBackdropFilter: "blur(28px) saturate(128%)",
-}
-
-const GLASS_RIM: CSSProperties = {
-  background: "linear-gradient(126deg, rgba(255,255,255,0.56) 0%, rgba(255,255,255,0.22) 16%, rgba(255,255,255,0.05) 44%, rgba(255,255,255,0.18) 100%)",
-  opacity: 0.62,
-}
 
 const RECIPIENT_EMAIL = "contact@tanie.me"
 const FORM_ENDPOINT = import.meta.env.VITE_FORMSPREE_ENDPOINT ?? ""
@@ -105,30 +91,23 @@ export default function Contact() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.45 }}
       >
-        <div className="relative overflow-hidden rounded-xl border border-white/26 bg-slate-950/42 p-3.5 backdrop-blur-xl shadow-[inset_0_1px_0_rgba(255,255,255,0.28)] sm:rounded-2xl sm:p-4">
-          <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(122deg,rgba(255,255,255,0.18)_0%,rgba(255,255,255,0.02)_42%,rgba(255,255,255,0)_70%)]" />
-          <p className="text-xs uppercase tracking-[0.2em] text-slate-300">Response</p>
+        <div className="relative">
+          <p className="text-xs uppercase tracking-[0.2em] text-cyan-100">Response</p>
           <p className="mt-2 text-sm font-semibold text-white">Within 24-48h</p>
         </div>
-        <div className="relative overflow-hidden rounded-xl border border-white/26 bg-slate-950/42 p-3.5 backdrop-blur-xl shadow-[inset_0_1px_0_rgba(255,255,255,0.28)] sm:rounded-2xl sm:p-4">
-          <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(122deg,rgba(255,255,255,0.18)_0%,rgba(255,255,255,0.02)_42%,rgba(255,255,255,0)_70%)]" />
-          <p className="text-xs uppercase tracking-[0.2em] text-slate-300">Availability</p>
+        <div className="relative">
+          <p className="text-xs uppercase tracking-[0.2em] text-cyan-100">Availability</p>
           <p className="mt-2 text-sm font-semibold text-white">Freelance and full-time roles</p>
         </div>
       </motion.div>
 
       <motion.form
         onSubmit={handleSubmit}
-        className="relative mx-auto w-full max-w-5xl space-y-4 overflow-hidden rounded-2xl p-4 sm:space-y-5 sm:rounded-3xl sm:p-8"
-        style={GLASS_PANEL}
+        className="relative mx-auto w-full max-w-5xl space-y-4 sm:space-y-5"
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.45, ease: "easeOut" }}
       >
-        <div className="pointer-events-none absolute inset-0" style={GLASS_RIM} />
-        <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(122deg,rgba(255,255,255,0.22)_0%,rgba(255,255,255,0.04)_36%,rgba(255,255,255,0)_60%)]" />
-        <div className="pointer-events-none absolute right-0 top-0 h-20 w-1/2 rounded-full bg-white/18 blur-2xl" />
-
         <div className="relative flex flex-wrap gap-2">
           {SUBJECT_PRESETS.map((preset) => (
             <button

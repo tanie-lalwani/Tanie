@@ -1,6 +1,8 @@
 import { formatPhaseLabel, type TimePhase } from "../experience/timePhase"
 
 type BackdropSettingsBarProps = {
+  isOpen: boolean
+  onOpenChange: (open: boolean) => void
   isTimeSyncEnabled: boolean
   phase: TimePhase
   onToggleTimeSync: (enabled: boolean) => void
@@ -10,16 +12,32 @@ type BackdropSettingsBarProps = {
 const MANUAL_PHASES: TimePhase[] = ["dawn", "noon", "sunset", "night"]
 
 export default function BackdropSettingsBar({
+  isOpen,
+  onOpenChange,
   isTimeSyncEnabled,
   phase,
   onToggleTimeSync,
   onSelectPhase,
 }: BackdropSettingsBarProps) {
+  if (!isOpen) return null
+
   return (
     <aside className="fixed bottom-3 right-3 z-30 w-[min(92vw,20rem)] rounded-2xl border border-white/18 bg-slate-950/62 p-3 shadow-[0_20px_70px_rgba(2,6,23,0.52)] backdrop-blur-xl sm:bottom-4 sm:right-4 sm:p-3.5">
-      <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-cyan-100/80">
-        Scene Mood
-      </p>
+      <div className="mb-2.5 flex items-center justify-between">
+        <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-cyan-100/80">
+          Scene Mood
+        </p>
+        <button
+          type="button"
+          onClick={() => onOpenChange(false)}
+          className="rounded-md p-0.5 text-slate-400 transition hover:text-white"
+          aria-label="Close settings"
+        >
+          <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
 
       <label className="mt-2 flex cursor-pointer items-center justify-between gap-3 rounded-xl border border-white/12 bg-white/5 px-3 py-2">
         <span className="text-xs font-semibold text-slate-100">Auto by local time</span>

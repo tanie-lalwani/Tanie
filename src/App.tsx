@@ -15,6 +15,7 @@ const LOCAL_STORAGE_MANUAL_PHASE_KEY = "beach-manual-phase"
 
 export default function App() {
   const location = useLocation();
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false)
   const [isTimeSyncEnabled, setIsTimeSyncEnabled] = useState<boolean>(() => {
     if (typeof window === "undefined") return false
     return window.localStorage.getItem(LOCAL_STORAGE_TIME_SYNC_KEY) === "true"
@@ -59,7 +60,7 @@ export default function App() {
     <main className="relative min-h-screen overflow-x-hidden text-slate-100">
       <GlobalBeachBackdrop phase={timePhase} />
       <div className="relative z-10">
-        {showNavbar ? <Navbar /> : null}
+        {showNavbar ? <Navbar isSettingsOpen={isSettingsOpen} onSettingsToggle={setIsSettingsOpen} /> : null}
         <Suspense fallback={<div className="px-4 py-10 text-center text-sm text-slate-400">Loading...</div>}>
           <Routes>
             <Route path="/" element={<Hero />} />
@@ -71,6 +72,8 @@ export default function App() {
         {showFooter ? <SiteFooter /> : null}
       </div>
       <BackdropSettingsBar
+        isOpen={isSettingsOpen}
+        onOpenChange={setIsSettingsOpen}
         isTimeSyncEnabled={isTimeSyncEnabled}
         phase={timePhase}
         onToggleTimeSync={setIsTimeSyncEnabled}
