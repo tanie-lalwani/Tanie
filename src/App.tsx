@@ -4,8 +4,11 @@ import Navbar from "./components/Navbar.tsx";
 import SiteFooter from "./components/SiteFooter";
 import GlobalBeachBackdrop from "./experience/GlobalBeachBackdrop";
 import BackdropSettingsBar from "./components/BackdropSettingsBar";
+import FloatingOrbs from "./components/FloatingOrbs";
 import { getLocalTimePhase, type TimePhase } from "./experience/timePhase";
 import Home from "./pages/Home";
+import { useCursorTrail } from "./hooks/useCursorTrail";
+import { useClickRipple } from "./hooks/useClickRipple";
 
 const InterviewMe = lazy(() => import("./pages/InterviewMe.tsx"));
 
@@ -27,6 +30,10 @@ export default function App() {
       : "dawn"
   })
   const [autoTimePhase, setAutoTimePhase] = useState<TimePhase>(() => getLocalTimePhase())
+
+  // Animation hooks
+  useCursorTrail()
+  useClickRipple()
 
   useEffect(() => {
     window.localStorage.setItem(LOCAL_STORAGE_TIME_SYNC_KEY, String(isTimeSyncEnabled))
@@ -57,6 +64,7 @@ export default function App() {
   return (
     <main className="relative min-h-screen overflow-x-hidden text-slate-100">
       <GlobalBeachBackdrop phase={timePhase} />
+      <FloatingOrbs />
       <div className="relative z-10">
         {showNavbar ? <Navbar isSettingsOpen={isSettingsOpen} onSettingsToggle={setIsSettingsOpen} /> : null}
         <Suspense fallback={<div className="px-4 py-10 text-center text-sm text-slate-400">Loading...</div>}>
