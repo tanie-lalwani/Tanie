@@ -26,8 +26,11 @@ export default function InterviewMe() {
       ref={scrollContainerRef}
       className="relative h-svh w-full overflow-y-auto bg-black [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden [scroll-snap-type:y_mandatory]"
     >
+      <div className="pointer-events-none fixed inset-0 z-0 bg-[radial-gradient(ellipse_at_20%_14%,rgba(14,116,144,0.36),transparent_42%),radial-gradient(ellipse_at_84%_76%,rgba(56,189,248,0.24),transparent_40%),linear-gradient(152deg,#020617_0%,#04111f_44%,#020617_100%)]" />
+      <div className="pointer-events-none fixed inset-0 z-0 bg-size-[54px_54px] bg-[linear-gradient(rgba(148,163,184,0.28)_1px,transparent_1px),linear-gradient(90deg,rgba(148,163,184,0.28)_1px,transparent_1px)] opacity-[0.12]" />
+
       <div className="pointer-events-none sticky top-3 z-20 flex justify-end px-3 sm:top-4 sm:px-6">
-        <div className="rounded-full border border-white/18 bg-white/8 px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-200 backdrop-blur-sm">
+        <div className="rounded-full border border-cyan-200/26 bg-cyan-100/8 px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.22em] text-cyan-100 backdrop-blur-sm">
           {String(activeQuestion).padStart(2, "0")} / {String(totalQuestions).padStart(2, "0")}
         </div>
       </div>
@@ -39,17 +42,17 @@ export default function InterviewMe() {
         viewport={{ root: scrollContainerRef, amount: 0.7 }}
         transition={{ duration: lowPowerMode ? 0.18 : 0.38, ease: lowPowerMode ? "linear" : smoothEase }}
       >
-        <div className="relative w-full max-w-3xl overflow-hidden rounded-3xl border border-white/14 bg-[linear-gradient(145deg,rgba(255,255,255,0.08),rgba(255,255,255,0.02))] p-6 shadow-[0_24px_90px_rgba(0,0,0,0.68)] backdrop-blur-xl sm:p-10">
+        <div className="relative w-full max-w-3xl overflow-hidden rounded-3xl border border-cyan-100/22 bg-[linear-gradient(145deg,rgba(255,255,255,0.1),rgba(255,255,255,0.03))] p-6 shadow-[0_24px_90px_rgba(0,0,0,0.68)] backdrop-blur-xl sm:p-10">
           <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(122deg,rgba(255,255,255,0.22)_0%,rgba(255,255,255,0.04)_32%,rgba(255,255,255,0)_56%)]" />
-          <div className="pointer-events-none absolute -right-8 -top-14 h-40 w-40 rounded-full bg-cyan-300/8 blur-3xl" />
+          <div className="pointer-events-none absolute -right-8 -top-14 h-40 w-40 rounded-full bg-cyan-300/16 blur-3xl" />
           <div className="relative">
-            <p className="inline-flex rounded-full border border-white/14 bg-white/8 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.24em] text-slate-300">
+            <p className="inline-flex rounded-full border border-cyan-100/26 bg-cyan-100/8 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.24em] text-cyan-100">
               Interview Deck
             </p>
             <h1 className="mt-4 text-3xl font-bold tracking-tight text-white sm:text-4xl">
               Quick interview reel
             </h1>
-            <p className="mt-4 max-w-xl text-sm leading-relaxed text-slate-300 sm:text-base">
+            <p className="mt-4 max-w-xl text-sm leading-relaxed text-slate-200 sm:text-base">
               Scroll through short prompts and concise video answers.
             </p>
           </div>
@@ -71,7 +74,7 @@ export default function InterviewMe() {
           onViewportEnter={() => setActiveQuestion(index + 1)}
         >
           <motion.div
-            className="relative aspect-9/16 w-full max-w-76.75 overflow-hidden rounded-2xl border border-white/20 bg-slate-900 shadow-[0_20px_70px_rgba(0,0,0,0.72)] sm:max-w-86 sm:shadow-[0_24px_80px_rgba(0,0,0,0.75)]"
+            className="relative aspect-9/16 w-full max-w-76.75 overflow-hidden rounded-2xl border border-cyan-100/24 bg-slate-900 shadow-[0_20px_70px_rgba(0,0,0,0.72)] sm:max-w-86 sm:shadow-[0_24px_80px_rgba(0,0,0,0.75)]"
             whileHover={lowPowerMode ? undefined : { scale: 1.012, y: -2 }}
             transition={lowPowerMode ? { duration: 0.15 } : { type: "spring", stiffness: 190, damping: 24 }}
           >

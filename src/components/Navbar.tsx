@@ -3,9 +3,10 @@ import { NavLink } from 'react-router-dom'
 import type { CSSProperties } from 'react'
 
 const navLinks = [
-  { label: 'Home', to: '/' },
-  { label: 'Projects', to: '/projects' },
-  { label: 'Contact', to: '/contact' },
+  { label: 'Hey I\'m Tanisha', to: '/' },
+  { label: 'Built So Far', to: '/projects' },
+  { label: 'Let\'s Start Building', to: '/contact' },
+  { label: 'Interview Me', to: '/interview-me' },
 ]
 
 const SHELL: CSSProperties = {
