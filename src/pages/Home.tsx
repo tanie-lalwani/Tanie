@@ -2,6 +2,7 @@ import { motion, AnimatePresence, useReducedMotion } from "framer-motion"
 import { useState, type FormEvent } from "react"
 import { useIsMobile } from "../hooks/useIsMobile"
 import PageHeader from "../components/PageHeader"
+import { SubmitSuccessEffect } from "../components/SubmitSuccessEffect"
 
 const projects = [
   {
@@ -123,6 +124,7 @@ export default function Home() {
 
   return (
     <main className="relative">
+      <SubmitSuccessEffect isVisible={submitStatus === "success"} />
       {/* Hero Section */}
       <motion.section
         id="home"
@@ -311,7 +313,9 @@ export default function Home() {
                 required
                 value={fields.name}
                 onChange={(event) => updateField("name", event.target.value)}
-                className="rounded-xl border border-white/20 bg-slate-900/70 px-3 py-2.5 text-slate-100 outline-none transition placeholder:text-slate-400 focus:border-white/40 focus:ring-2 focus:ring-white/20"
+                className={`rounded-xl border bg-slate-900/70 px-3 py-2.5 text-slate-100 outline-none transition placeholder:text-slate-400 focus:ring-2 ${
+                  fields.name ? "border-cyan-400/40 focus:border-cyan-300/60 focus:ring-cyan-300/20 shadow-[0_0_12px_rgba(34,211,238,0.2)]" : "border-white/20 focus:border-white/40 focus:ring-white/20"
+                }`}
                 placeholder="Your name"
               />
             </label>
@@ -324,7 +328,9 @@ export default function Home() {
                 required
                 value={fields.email}
                 onChange={(event) => updateField("email", event.target.value)}
-                className="rounded-xl border border-white/20 bg-slate-900/70 px-3 py-2.5 text-slate-100 outline-none transition placeholder:text-slate-400 focus:border-white/40 focus:ring-2 focus:ring-white/20"
+                className={`rounded-xl border bg-slate-900/70 px-3 py-2.5 text-slate-100 outline-none transition placeholder:text-slate-400 focus:ring-2 ${
+                  fields.email ? "border-cyan-400/40 focus:border-cyan-300/60 focus:ring-cyan-300/20 shadow-[0_0_12px_rgba(34,211,238,0.2)]" : "border-white/20 focus:border-white/40 focus:ring-white/20"
+                }`}
                 placeholder="you@example.com"
               />
             </label>
@@ -337,7 +343,9 @@ export default function Home() {
               name="subject"
               value={fields.subject}
               onChange={(event) => updateField("subject", event.target.value)}
-              className="rounded-xl border border-white/20 bg-slate-900/70 px-3 py-2.5 text-slate-100 outline-none transition placeholder:text-slate-400 focus:border-white/40 focus:ring-2 focus:ring-white/20"
+              className={`rounded-xl border bg-slate-900/70 px-3 py-2.5 text-slate-100 outline-none transition placeholder:text-slate-400 focus:ring-2 ${
+                fields.subject ? "border-cyan-400/40 focus:border-cyan-300/60 focus:ring-cyan-300/20 shadow-[0_0_12px_rgba(34,211,238,0.2)]" : "border-white/20 focus:border-white/40 focus:ring-white/20"
+              }`}
               placeholder="How can I help?"
             />
           </label>
@@ -350,7 +358,9 @@ export default function Home() {
               value={fields.message}
               onChange={(event) => updateField("message", event.target.value)}
               rows={6}
-              className="rounded-xl border border-white/20 bg-slate-900/70 px-3 py-2.5 text-slate-100 outline-none transition placeholder:text-slate-400 focus:border-white/40 focus:ring-2 focus:ring-white/20"
+              className={`rounded-xl border bg-slate-900/70 px-3 py-2.5 text-slate-100 outline-none transition placeholder:text-slate-400 focus:ring-2 ${
+                fields.message ? "border-cyan-400/40 focus:border-cyan-300/60 focus:ring-cyan-300/20 shadow-[0_0_12px_rgba(34,211,238,0.2)]" : "border-white/20 focus:border-white/40 focus:ring-white/20"
+              }`}
               placeholder="Tell me about your project, goals, and timeline..."
             />
           </label>
