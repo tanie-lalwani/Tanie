@@ -95,7 +95,7 @@ export default function Contact() {
     <section className="mx-auto w-full max-w-6xl px-4 pb-8 pt-10 sm:px-6 sm:pb-14 sm:pt-16">
       <PageHeader
         eyebrow="Contact"
-        title="Let us build something clear"
+        title="Let's start building"
         description={`Fill out the form and I will get back to you at ${RECIPIENT_EMAIL}.`}
       />
 
