@@ -26,8 +26,8 @@ export default function InterviewMe() {
       ref={scrollContainerRef}
       className="relative h-svh w-full overflow-y-auto bg-black [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden [scroll-snap-type:y_mandatory]"
     >
-      <div className="pointer-events-none fixed inset-0 z-0 bg-[radial-gradient(ellipse_at_20%_14%,rgba(14,116,144,0.36),transparent_42%),radial-gradient(ellipse_at_84%_76%,rgba(56,189,248,0.24),transparent_40%),linear-gradient(152deg,#020617_0%,#04111f_44%,#020617_100%)]" />
-      <div className="pointer-events-none fixed inset-0 z-0 bg-size-[54px_54px] bg-[linear-gradient(rgba(148,163,184,0.28)_1px,transparent_1px),linear-gradient(90deg,rgba(148,163,184,0.28)_1px,transparent_1px)] opacity-[0.12]" />
+      <div className="pointer-events-none fixed inset-0 z-0 bg-[radial-gradient(ellipse_at_20%_14%,rgba(14,116,144,0.14),transparent_42%),radial-gradient(ellipse_at_84%_76%,rgba(56,189,248,0.1),transparent_40%)]" />
+      <div className="pointer-events-none fixed inset-0 z-0 bg-size-[54px_54px] bg-[linear-gradient(rgba(148,163,184,0.2)_1px,transparent_1px),linear-gradient(90deg,rgba(148,163,184,0.2)_1px,transparent_1px)] opacity-[0.05]" />
 
       <div className="pointer-events-none sticky top-3 z-20 flex justify-end px-3 sm:top-4 sm:px-6">
         <div className="rounded-full border border-cyan-200/26 bg-cyan-100/8 px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.22em] text-cyan-100 backdrop-blur-sm">
