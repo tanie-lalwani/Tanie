@@ -85,22 +85,6 @@ export default function Contact() {
         description={`Fill out the form and I will get back to you at ${RECIPIENT_EMAIL}.`}
       />
 
-      <motion.div
-        className="mb-6 grid gap-2.5 sm:mb-8 sm:gap-3 sm:grid-cols-2"
-        initial={{ opacity: 0, y: 14 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.45 }}
-      >
-        <div className="relative">
-          <p className="text-xs uppercase tracking-[0.2em] text-cyan-100">Response</p>
-          <p className="mt-2 text-sm font-semibold text-white">Within 24-48h</p>
-        </div>
-        <div className="relative">
-          <p className="text-xs uppercase tracking-[0.2em] text-cyan-100">Availability</p>
-          <p className="mt-2 text-sm font-semibold text-white">Freelance and full-time roles</p>
-        </div>
-      </motion.div>
-
       <motion.form
         onSubmit={handleSubmit}
         className="relative mx-auto w-full max-w-5xl space-y-4 sm:space-y-5"

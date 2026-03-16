@@ -1,15 +1,5 @@
 import { motion, useReducedMotion } from "framer-motion"
-import { Link } from "react-router-dom"
 import { useIsMobile } from "../hooks/useIsMobile"
-
-const OFFERINGS = [
-  "Portfolios",
-  "Projects",
-  "Brand landing pages",
-  "Product visions",
-  "Custom games and concepts",
-  "Dashboards",
-]
 
 export default function Hero() {
   const isMobile = useIsMobile()
@@ -43,53 +33,13 @@ export default function Hero() {
         transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
       >
         <div className="relative">
-          <p className="inline-flex rounded-full border border-cyan-200/30 bg-cyan-100/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.24em] text-cyan-100">
-            Immersive Build Studio
-          </p>
-
-          <h1 className="mt-3 text-3xl font-black leading-tight tracking-tight text-white sm:text-5xl lg:text-6xl">
-            Hey, I&apos;m Tanisha.
+          <h1 className="text-4xl font-black leading-tight tracking-tight text-white sm:text-6xl lg:text-7xl">
+            I'm Tanisha.
           </h1>
 
-          <p className="mt-3 max-w-4xl text-xs leading-relaxed text-slate-200 sm:text-sm">
-            I can help you make your portfolios, projects, brand landing pages, visions, custom games or concepts, dashboards, and the list goes on.
+          <p className="mt-4 max-w-2xl text-sm leading-relaxed text-slate-200 sm:text-base">
+            Full-stack developer building immersive, creative experiences. Portfolios, games, dashboards, and everything in between. Check out my work or let's build together—use the menu above.
           </p>
-
-          <div className="mt-4 flex flex-wrap gap-2">
-            {OFFERINGS.map((item) => (
-              <span
-                key={item}
-                className="rounded-full border border-white/20 bg-white/8 px-2.5 py-1 text-[11px] font-medium text-slate-100"
-              >
-                {item}
-              </span>
-            ))}
-            <span className="rounded-full border border-cyan-200/30 bg-cyan-100/8 px-2.5 py-1 text-[11px] font-medium text-cyan-100">
-              And more...
-            </span>
-          </div>
-
-          <div className="mt-5 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
-            <Link
-              to="/projects"
-              className="inline-flex items-center justify-center gap-2 rounded-lg bg-white px-4 py-2 text-xs font-semibold text-slate-900 transition hover:bg-slate-100"
-            >
-              What I have built so far
-              <span aria-hidden="true">→</span>
-            </Link>
-            <Link
-              to="/contact"
-              className="inline-flex items-center justify-center rounded-lg border border-white/20 bg-white/8 px-4 py-2 text-xs font-semibold text-slate-100 transition hover:border-white/30 hover:bg-white/12"
-            >
-              Let&apos;s start building
-            </Link>
-            <Link
-              to="/interview-me"
-              className="inline-flex items-center justify-center rounded-lg border border-cyan-200/30 bg-cyan-100/8 px-4 py-2 text-xs font-semibold text-cyan-100 transition hover:bg-cyan-100/14"
-            >
-              Interview me
-            </Link>
-          </div>
         </div>
       </motion.div>
     </motion.section>
