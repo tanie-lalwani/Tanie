@@ -87,9 +87,6 @@ export default function Projects() {
                 <div className="relative overflow-hidden rounded-xl border border-white/16 bg-slate-950/70 shadow-[inset_0_1px_0_rgba(255,255,255,0.18)]">
                   <div className="aspect-video bg-[radial-gradient(circle_at_20%_20%,rgba(255,255,255,0.1),transparent_28%),linear-gradient(160deg,#0f172a_0%,#030712_56%,#020617_100%)]" />
                   <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_40%,rgba(2,6,23,0.76)_100%)]" />
-                  <div className="absolute left-2.5 top-2.5 rounded-full border border-white/18 bg-white/12 px-2 py-0.5 text-[8px] font-semibold uppercase tracking-[0.16em] text-slate-200 backdrop-blur-md shadow-[inset_0_1px_0_rgba(255,255,255,0.2)] sm:left-3 sm:top-3 sm:px-2.5 sm:py-1 sm:text-[9px] sm:tracking-[0.2em]">
-                    Drop testimonial video here
-                  </div>
                   <div className="absolute bottom-2.5 left-2.5 right-2.5 flex flex-col items-start justify-between gap-1.5 sm:bottom-3 sm:left-3 sm:right-3 sm:flex-row sm:items-end sm:gap-2.5">
                     <div>
                       <p className="text-sm font-semibold text-white">{activeProject.client}</p>

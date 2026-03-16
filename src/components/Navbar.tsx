@@ -3,7 +3,6 @@ import { NavLink } from 'react-router-dom'
 import type { CSSProperties } from 'react'
 
 const navLinks = [
-  { label: 'Hey I\'m Tanisha', to: '/' },
   { label: 'Built So Far', to: '/projects' },
   { label: 'Let\'s Start Building', to: '/contact' },
   { label: 'Interview Me', to: '/interview-me' },
@@ -14,10 +13,6 @@ const SHELL: CSSProperties = {
   borderBottom: '1px solid rgba(226, 232, 240, 0.24)',
   backdropFilter: 'blur(12px)',
   WebkitBackdropFilter: 'blur(12px)',
-}
-
-const CTA: CSSProperties = {
-  border: '1px solid rgba(255,255,255,0.2)',
 }
 
 type NavbarProps = {
@@ -51,14 +46,6 @@ export default function Navbar({ isSettingsOpen, onSettingsToggle }: NavbarProps
             </li>
           ))}
         </ul>
-
-        <NavLink
-          to="/interview-me"
-          className="relative hidden rounded-md bg-white/16 px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-white/22 md:inline-flex"
-          style={CTA}
-        >
-          Interview Me
-        </NavLink>
 
         <button
           type="button"
