@@ -380,7 +380,66 @@ function scatterBeachDecor(scene: THREE.Scene, isMobile: boolean, preset: BeachM
   }
 }
 
-function addDawnBirds(scene: THREE.Scene, isMobile: boolean) {
+function addNightBeachAccents(scene: THREE.Scene, isMobile: boolean) {
+  // Create a group for stars on layer 1 (non-reflective layer)
+  const starField = new THREE.Group()
+  starField.layers.set(1)
+
+  const starCount = isMobile ? 120 : 240
+  const positions = new Float32Array(starCount * 3)
+  const colors = new Float32Array(starCount * 3)
+  const twinkleOffsets = new Float32Array(starCount)
+
+  for (let i = 0; i < starCount; i++) {
+    positions[i * 3] = (Math.random() - 0.5) * 1000
+    positions[i * 3 + 1] = 100 + Math.random() * 700
+    positions[i * 3 + 2] = -400 - Math.random() * 600
+
+    const brightness = 0.85 + Math.random() * 0.15
+    colors[i * 3] = brightness
+    colors[i * 3 + 1] = brightness
+    colors[i * 3 + 2] = brightness
+    twinkleOffsets[i] = Math.random() * Math.PI * 2
+  }
+
+  const geometry = new THREE.BufferGeometry()
+  geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3))
+  geometry.setAttribute("color", new THREE.BufferAttribute(colors, 3))
+
+  const material = new THREE.PointsMaterial({
+    size: 3,
+    sizeAttenuation: true,
+    transparent: true,
+    opacity: 0.95,
+    vertexColors: true,
+  })
+
+  const stars = new THREE.Points(geometry, material)
+  stars.layers.set(1)
+  starField.add(stars)
+  scene.add(starField)
+
+  return {
+    update: (time: number) => {
+      // Per-star twinkling effect
+      const colorAttr = geometry.getAttribute("color") as THREE.BufferAttribute
+      const colors = colorAttr.array as Float32Array
+      
+      for (let i = 0; i < starCount; i++) {
+        const baseBrightness = 0.85 + ((i % 100) / 100) * 0.15
+        const twinkle = 0.6 + Math.sin(time * 1.2 + twinkleOffsets[i]) * 0.4
+        const finalBrightness = baseBrightness * twinkle
+        
+        colors[i * 3] = finalBrightness
+        colors[i * 3 + 1] = finalBrightness
+        colors[i * 3 + 2] = finalBrightness
+      }
+      colorAttr.needsUpdate = true
+    },
+  }
+}
+
+function addDawnBirds(scene: THREE.Scene, isMobile: boolean, preset: BeachMoodPreset) {
   const flock = new THREE.Group()
   const birds: Array<{ mesh: THREE.LineSegments; speed: number; flapOffset: number; baseY: number }> = []
   const birdCount = isMobile ? 7 : 13
@@ -396,7 +455,7 @@ function addDawnBirds(scene: THREE.Scene, isMobile: boolean) {
     geometry.setAttribute("position", new THREE.BufferAttribute(points, 3))
 
     const material = new THREE.LineBasicMaterial({
-      color: 0x1f2d3a,
+      color: preset.birdColor,
       transparent: true,
       opacity: 0.72,
     })
@@ -428,39 +487,6 @@ function addDawnBirds(scene: THREE.Scene, isMobile: boolean) {
   }
 
   return { update }
-}
-
-function addNightBeachAccents(scene: THREE.Scene, isMobile: boolean) {
-  const starCount = isMobile ? 120 : 240
-  const positions = new Float32Array(starCount * 3)
-
-  for (let i = 0; i < starCount; i++) {
-    positions[i * 3] = (Math.random() - 0.5) * 1800
-    positions[i * 3 + 1] = 120 + Math.random() * 520
-    positions[i * 3 + 2] = -700 - Math.random() * 900
-  }
-
-  const starGeometry = new THREE.BufferGeometry()
-  starGeometry.setAttribute("position", new THREE.BufferAttribute(positions, 3))
-
-  const stars = new THREE.Points(
-    starGeometry,
-    new THREE.PointsMaterial({
-      color: 0xb8d7ff,
-      size: isMobile ? 2.1 : 2.6,
-      transparent: true,
-      opacity: 0.75,
-      depthWrite: false,
-    }),
-  )
-  scene.add(stars)
-
-  return {
-    update: (time: number) => {
-      const starMaterial = stars.material as THREE.PointsMaterial
-      starMaterial.opacity = 0.63 + Math.sin(time * 0.22) * 0.08
-    },
-  }
 }
 
 export default function GlobalBeachBackdrop({ phase }: { phase: TimePhase }) {
@@ -537,12 +563,14 @@ export default function GlobalBeachBackdrop({ phase }: { phase: TimePhase }) {
       addSand(scene, preset, phase)
       scatterBeachDecor(scene, isMobile, preset)
     }
-    const dawnBirdFlock = phase === "dawn" ? addDawnBirds(scene, isMobile) : null
+    const dawnBirdFlock = phase === "dawn" ? addDawnBirds(scene, isMobile, preset) : null
     const noonCloudLayer = phase === "noon" ? addNoonClouds(scene, isMobile) : null
     const noonSunLayer = phase === "noon" ? addNoonSun(scene) : null
     const noonShipLayer = phase === "noon" ? addNoonShipIllusion(scene, isMobile) : null
-
     const nightLayer = phase === "night" ? addNightBeachAccents(scene, isMobile) : null
+
+    // Configure camera layers: layer 0 (default) + layer 1 (stars for night)
+    camera.layers.enable(1)
 
     scene.add(new THREE.AmbientLight(preset.ambientColor, preset.ambientIntensity))
     scene.add(

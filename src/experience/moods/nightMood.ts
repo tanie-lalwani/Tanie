@@ -1,7 +1,7 @@
 import type { BeachMoodPreset } from "./types"
 
 export const nightMood: BeachMoodPreset = {
-  exposure: 0.34,
+  exposure: 0.46,
   fogColor: 0x27415e,
   fogDensity: 0.0008,
   turbidity: 1.8,
@@ -31,6 +31,7 @@ export const nightMood: BeachMoodPreset = {
   sandEmissive: 0x0d1f33,
   sandEmissiveIntensity: 0.12,
   waterDistortion: 3.2,
-  shellEmissiveIntensity: 0.14,
-  starfishEmissiveIntensity: 0.16,
+  shellEmissiveIntensity: 0.2,
+  starfishEmissiveIntensity: 0.0,
+  birdColor: 0x1f2d3a,
 }
