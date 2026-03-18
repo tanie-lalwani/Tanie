@@ -88,7 +88,10 @@ export default function App() {
   const showFooter = location.pathname !== "/interview-me"
 
   return (
-    <main className="relative min-h-screen overflow-x-hidden text-slate-100">
+    <main
+      data-phase={timePhase}
+      className="relative min-h-screen overflow-x-hidden text-slate-100"
+    >
       <GlobalBeachBackdrop phase={timePhase} />
       <div className="relative z-10 readability-text-shadow">
         {showNavbar ? <Navbar isSettingsOpen={isSettingsOpen} onSettingsToggle={setIsSettingsOpen} /> : null}
