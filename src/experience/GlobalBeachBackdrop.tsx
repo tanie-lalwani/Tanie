@@ -546,7 +546,6 @@ export default function GlobalBeachBackdrop({ phase }: { phase: TimePhase }) {
         style={{ display: "block" }}
         aria-hidden="true"
       />
-      <div className="absolute inset-0" style={{ background: preset.overlayGradient }} />
     </div>
   )
 }

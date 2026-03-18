@@ -25,5 +25,4 @@ export const dawnMood: BeachMoodPreset = {
   waterDistortion: 3.4,
   shellEmissiveIntensity: 0,
   starfishEmissiveIntensity: 0,
-  overlayGradient: "linear-gradient(180deg, rgba(2,6,23,0.34) 0%, rgba(2,6,23,0.54) 52%, rgba(2,6,23,0.72) 100%)",
 }

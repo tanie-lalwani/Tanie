@@ -12,7 +12,7 @@ function FloatingOrbs() {
       {orbs.map((orb) => (
         <motion.div
           key={orb.id}
-          className={`absolute rounded-full bg-gradient-to-br ${orb.color} blur-3xl`}
+          className={`absolute rounded-full bg-linear-to-br ${orb.color} blur-3xl`}
           initial={{
             opacity: 0.3,
             scale: 0.8,

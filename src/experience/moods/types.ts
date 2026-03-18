@@ -23,5 +23,4 @@ export type BeachMoodPreset = {
   waterDistortion: number
   shellEmissiveIntensity: number
   starfishEmissiveIntensity: number
-  overlayGradient: string
 }
