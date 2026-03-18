@@ -6,6 +6,8 @@ import { useIsMobile } from "../hooks/useIsMobile"
 import type { TimePhase } from "./timePhase"
 import { MOOD_PRESETS, type BeachMoodPreset } from "./moods"
 
+const GLOBAL_OCEAN_START = performance.now() * 0.001
+
 function buildNormalMap(size = 256): THREE.DataTexture {
   const data = new Uint8Array(size * size * 4)
 
@@ -492,12 +494,99 @@ function addDawnBirds(scene: THREE.Scene, isMobile: boolean, preset: BeachMoodPr
 type GlobalBeachBackdropProps = {
   phase: TimePhase
   position?: "fixed" | "absolute"
+  depthStage?: "surface" | "mid" | "deep"
 }
 
-export default function GlobalBeachBackdrop({ phase, position = "fixed" }: GlobalBeachBackdropProps) {
+export default function GlobalBeachBackdrop({
+  phase,
+  position = "fixed",
+  depthStage = "surface",
+}: GlobalBeachBackdropProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
   const isMobile = useIsMobile()
   const preset = useMemo(() => MOOD_PRESETS[phase], [phase])
+
+  const depthProfile = useMemo(() => {
+    if (depthStage === "mid") {
+      return {
+        exposureMultiplier: 0.58,
+        fogDensityMultiplier: 3,
+        waterLightnessDrop: 0.26,
+        waterSaturationBoost: 0.08,
+        fogLightnessDrop: 0.34,
+        cameraY: 5.6,
+        lookAtY: -2.6,
+        lookAtZ: -176,
+        lightMultiplier: 0.36,
+        distortionMultiplier: 0.55,
+      }
+    }
+
+    if (depthStage === "deep") {
+      return {
+        exposureMultiplier: 0.42,
+        fogDensityMultiplier: 4.6,
+        waterLightnessDrop: 0.36,
+        waterSaturationBoost: 0.1,
+        fogLightnessDrop: 0.48,
+        cameraY: 3.9,
+        lookAtY: -4.8,
+        lookAtZ: -206,
+        lightMultiplier: 0.2,
+        distortionMultiplier: 0.42,
+      }
+    }
+
+    return {
+      exposureMultiplier: 1,
+      fogDensityMultiplier: 1,
+      waterLightnessDrop: 0,
+      waterSaturationBoost: 0,
+      fogLightnessDrop: 0,
+      cameraY: 11.5,
+      lookAtY: 1.8,
+      lookAtZ: -140,
+      lightMultiplier: 1,
+      distortionMultiplier: 1,
+    }
+  }, [depthStage])
+
+  const waterColor = useMemo(() => {
+    const color = new THREE.Color(preset.waterColor)
+    const hsl = { h: 0, s: 0, l: 0 }
+    color.getHSL(hsl)
+    const phaseExtraDrop = phase === "night" ? 0.06 : phase === "noon" ? 0.04 : 0.03
+    color.setHSL(
+      hsl.h,
+      Math.min(1, hsl.s + depthProfile.waterSaturationBoost),
+      Math.max(0.02, hsl.l - depthProfile.waterLightnessDrop - phaseExtraDrop),
+    )
+    return color
+  }, [preset.waterColor, depthProfile, phase])
+
+  const fogColor = useMemo(() => {
+    const color = new THREE.Color(preset.fogColor)
+    const hsl = { h: 0, s: 0, l: 0 }
+    color.getHSL(hsl)
+    color.setHSL(hsl.h, Math.min(1, hsl.s + 0.03), Math.max(0.02, hsl.l - depthProfile.fogLightnessDrop))
+    return color
+  }, [preset.fogColor, depthProfile])
+
+  const sunColor = useMemo(() => {
+    const color = new THREE.Color(preset.sunColor)
+    const hsl = { h: 0, s: 0, l: 0 }
+    color.getHSL(hsl)
+    color.setHSL(hsl.h, Math.max(0, hsl.s - 0.06), Math.max(0.04, hsl.l * depthProfile.lightMultiplier))
+    return color
+  }, [preset.sunColor, depthProfile.lightMultiplier])
+
+  const submergedClearColor = useMemo(() => {
+    const color = waterColor.clone().lerp(fogColor, 0.42)
+    color.offsetHSL(0, 0.02, -0.16)
+    return color
+  }, [fogColor, waterColor])
+
+  const isSurfaceStage = depthStage === "surface"
 
   useEffect(() => {
     const canvas = canvasRef.current
@@ -513,10 +602,15 @@ export default function GlobalBeachBackdrop({ phase, position = "fixed" }: Globa
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobile ? 1.4 : 1.8))
     renderer.setSize(canvas.clientWidth, canvas.clientHeight, false)
     renderer.toneMapping = THREE.ACESFilmicToneMapping
-    renderer.toneMappingExposure = preset.exposure
+    renderer.toneMappingExposure = Math.max(0.28, preset.exposure * depthProfile.exposureMultiplier)
+    if (isSurfaceStage) {
+      renderer.setClearAlpha(0)
+    } else {
+      renderer.setClearColor(submergedClearColor, 1)
+    }
 
     const scene = new THREE.Scene()
-    scene.fog = new THREE.FogExp2(preset.fogColor, preset.fogDensity)
+    scene.fog = new THREE.FogExp2(fogColor, preset.fogDensity * depthProfile.fogDensityMultiplier)
 
     const camera = new THREE.PerspectiveCamera(
       50,
@@ -524,24 +618,26 @@ export default function GlobalBeachBackdrop({ phase, position = "fixed" }: Globa
       0.1,
       20000,
     )
-    camera.position.set(0, 11.5, 88)
-    camera.lookAt(0, 1.8, -140)
-
-    const sky = new Sky()
-    sky.scale.setScalar(10000)
-    scene.add(sky)
-
-    const skyUniforms = sky.material.uniforms
-    skyUniforms["turbidity"].value = preset.turbidity
-    skyUniforms["rayleigh"].value = preset.rayleigh
-    skyUniforms["mieCoefficient"].value = preset.mieCoefficient
-    skyUniforms["mieDirectionalG"].value = preset.mieDirectionalG
+    camera.position.set(0, depthProfile.cameraY, 88)
+    camera.lookAt(0, depthProfile.lookAtY, depthProfile.lookAtZ)
 
     const sun = new THREE.Vector3()
     const phi = THREE.MathUtils.degToRad(90 - preset.sunElevation)
     const theta = THREE.MathUtils.degToRad(preset.sunAzimuth)
     sun.setFromSphericalCoords(1, phi, theta)
-    skyUniforms["sunPosition"].value.copy(sun)
+
+    if (isSurfaceStage) {
+      const sky = new Sky()
+      sky.scale.setScalar(10000)
+      scene.add(sky)
+
+      const skyUniforms = sky.material.uniforms
+      skyUniforms["turbidity"].value = preset.turbidity
+      skyUniforms["rayleigh"].value = preset.rayleigh
+      skyUniforms["mieCoefficient"].value = preset.mieCoefficient
+      skyUniforms["mieDirectionalG"].value = preset.mieDirectionalG
+      skyUniforms["sunPosition"].value.copy(sun)
+    }
 
     const waterGeometry = new THREE.PlaneGeometry(
       12000,
@@ -555,55 +651,61 @@ export default function GlobalBeachBackdrop({ phase, position = "fixed" }: Globa
       textureHeight: 512,
       waterNormals: buildNormalMap(),
       sunDirection: new THREE.Vector3().copy(sun).normalize(),
-      sunColor: preset.sunColor,
-      waterColor: preset.waterColor,
-      distortionScale: isMobile ? Math.max(2.2, preset.waterDistortion - 0.9) : preset.waterDistortion,
+      sunColor,
+      waterColor,
+      distortionScale: isMobile
+        ? Math.max(1.5, (preset.waterDistortion - 0.9) * depthProfile.distortionMultiplier)
+        : preset.waterDistortion * depthProfile.distortionMultiplier,
       fog: false,
     })
     water.rotation.x = -Math.PI / 2
     water.position.y = -0.05
     scene.add(water)
 
-    if (phase !== "night") {
+    if (phase !== "night" && isSurfaceStage) {
       addSand(scene, preset, phase)
       scatterBeachDecor(scene, isMobile, preset)
     }
-    const dawnBirdFlock = phase === "dawn" ? addDawnBirds(scene, isMobile, preset) : null
-    const noonCloudLayer = phase === "noon" ? addNoonClouds(scene, isMobile) : null
-    const noonSunLayer = phase === "noon" ? addNoonSun(scene) : null
-    const noonShipLayer = phase === "noon" ? addNoonShipIllusion(scene, isMobile) : null
-    const nightLayer = phase === "night" ? addNightBeachAccents(scene, isMobile) : null
+    const dawnBirdFlock = phase === "dawn" && isSurfaceStage ? addDawnBirds(scene, isMobile, preset) : null
+    const noonCloudLayer = phase === "noon" && isSurfaceStage ? addNoonClouds(scene, isMobile) : null
+    const noonSunLayer = phase === "noon" && isSurfaceStage ? addNoonSun(scene) : null
+    const noonShipLayer = phase === "noon" && isSurfaceStage ? addNoonShipIllusion(scene, isMobile) : null
+    const nightLayer = phase === "night" && isSurfaceStage ? addNightBeachAccents(scene, isMobile) : null
 
     // Configure camera layers: layer 0 (default) + layer 1 (stars for night)
     camera.layers.enable(1)
 
-    scene.add(new THREE.AmbientLight(preset.ambientColor, preset.ambientIntensity))
+    scene.add(new THREE.AmbientLight(preset.ambientColor, preset.ambientIntensity * depthProfile.lightMultiplier))
     scene.add(
       new THREE.HemisphereLight(
         preset.hemisphereSkyColor,
         preset.hemisphereGroundColor,
-        preset.hemisphereIntensity,
+        preset.hemisphereIntensity * depthProfile.lightMultiplier,
       ),
     )
 
-    const sunLight = new THREE.DirectionalLight(preset.sunlightColor, preset.sunlightIntensity)
-    sunLight.position.copy(sun).multiplyScalar(preset.sunlightDistance)
-    scene.add(sunLight)
+    if (isSurfaceStage) {
+      const sunLight = new THREE.DirectionalLight(
+        preset.sunlightColor,
+        preset.sunlightIntensity * depthProfile.lightMultiplier,
+      )
+      sunLight.position.copy(sun).multiplyScalar(preset.sunlightDistance)
+      scene.add(sunLight)
 
-    const fillLight = new THREE.DirectionalLight(preset.fillColor, preset.fillIntensity)
-    fillLight.position.set(...preset.fillPosition)
-    scene.add(fillLight)
+      const fillLight = new THREE.DirectionalLight(preset.fillColor, preset.fillIntensity * depthProfile.lightMultiplier)
+      fillLight.position.set(...preset.fillPosition)
+      scene.add(fillLight)
 
-    const rimLight = new THREE.DirectionalLight(preset.rimColor, preset.rimIntensity)
-    rimLight.position.set(...preset.rimPosition)
-    scene.add(rimLight)
+      const rimLight = new THREE.DirectionalLight(preset.rimColor, preset.rimIntensity * depthProfile.lightMultiplier)
+      rimLight.position.set(...preset.rimPosition)
+      scene.add(rimLight)
+    }
 
     let raf = 0
-    const clock = new THREE.Clock()
 
     const render = () => {
       raf = requestAnimationFrame(render)
-      const elapsed = clock.getElapsedTime()
+      const elapsed = performance.now() * 0.001 - GLOBAL_OCEAN_START
       water.material.uniforms["time"].value = elapsed * 0.45
       dawnBirdFlock?.update(elapsed)
       noonCloudLayer?.update(elapsed)
@@ -630,7 +732,7 @@ export default function GlobalBeachBackdrop({ phase, position = "fixed" }: Globa
       resizeObserver.disconnect()
       renderer.dispose()
     }
-  }, [isMobile, preset, phase])
+  }, [depthProfile, fogColor, isMobile, isSurfaceStage, phase, preset, submergedClearColor, sunColor, waterColor])
 
   const positionClass = position === "absolute" ? "absolute" : "fixed"
 

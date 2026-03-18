@@ -134,7 +134,7 @@ export default function Home({ phase }: HomeProps) {
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
       >
-        <GlobalBeachBackdrop phase={phase} position="absolute" />
+        <GlobalBeachBackdrop phase={phase} position="absolute" depthStage="surface" />
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_45%,rgba(15,23,42,0)_0%,rgba(15,23,42,0.12)_72%,rgba(15,23,42,0.26)_100%)] in-data-[phase=noon]:bg-[radial-gradient(circle_at_50%_45%,rgba(39,39,42,0)_0%,rgba(39,39,42,0.08)_72%,rgba(39,39,42,0.18)_100%)]" />
         <motion.div
           className="relative z-10 mx-auto w-full max-w-6xl"
@@ -157,8 +157,11 @@ export default function Home({ phase }: HomeProps) {
       {/* Projects Section */}
       <section
         id="projects"
-        className="relative mx-auto w-full max-w-6xl px-4 py-10 sm:px-6 sm:py-14"
+        className="relative isolate w-full overflow-hidden py-10 sm:py-14"
       >
+        <GlobalBeachBackdrop phase={phase} position="absolute" depthStage="mid" />
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_44%,rgba(2,6,23,0.06)_0%,rgba(2,6,23,0.2)_70%,rgba(2,6,23,0.34)_100%)] in-data-[phase=noon]:bg-[radial-gradient(circle_at_50%_44%,rgba(8,47,73,0.08)_0%,rgba(6,36,64,0.24)_72%,rgba(2,6,23,0.42)_100%)]" />
+        <div className="relative z-10 mx-auto w-full max-w-6xl px-4 sm:px-6">
         <PageHeader
           eyebrow="What I Have Built"
           title="Client testimonials"
@@ -261,10 +264,14 @@ export default function Home({ phase }: HomeProps) {
             ))}
           </div>
         </div>
+        </div>
       </section>
 
       {/* Contact Section */}
-      <section id="contact" className="relative mx-auto w-full max-w-6xl px-4 py-10 sm:px-6 sm:py-14">
+      <section id="contact" className="relative isolate w-full overflow-hidden py-10 sm:py-14">
+        <GlobalBeachBackdrop phase={phase} position="absolute" depthStage="deep" />
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_48%,rgba(2,6,23,0.1)_0%,rgba(2,6,23,0.3)_66%,rgba(2,6,23,0.52)_100%)] in-data-[phase=noon]:bg-[radial-gradient(circle_at_50%_48%,rgba(7,31,55,0.12)_0%,rgba(6,22,46,0.34)_66%,rgba(2,6,23,0.58)_100%)]" />
+        <div className="relative z-10 mx-auto w-full max-w-6xl px-4 sm:px-6">
         <PageHeader
           eyebrow="Contact"
           title="Let's start building"
@@ -381,6 +388,7 @@ export default function Home({ phase }: HomeProps) {
             </div>
           ) : null}
         </motion.form>
+        </div>
       </section>
     </main>
   )
