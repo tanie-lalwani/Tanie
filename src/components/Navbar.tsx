@@ -30,7 +30,7 @@ export default function Navbar({ isSettingsOpen, onSettingsToggle }: NavbarProps
               {link.href.startsWith('#') ? (
                 <a
                   href={link.href}
-                  className="rounded-full px-3 py-1 text-slate-200 transition hover:bg-white/8 hover:text-white in-data-[phase=noon]:text-sky-900 in-data-[phase=noon]:hover:bg-sky-900/58 in-data-[phase=noon]:hover:text-sky-950"
+                  className="rounded-full px-3 py-1 text-slate-200 transition hover:bg-white/8 hover:text-white in-data-[phase=noon]:text-sky-900 in-data-[phase=noon]:hover:bg-sky-200/72 in-data-[phase=noon]:hover:text-sky-950"
                 >
                   {link.label}
                 </a>
@@ -38,7 +38,7 @@ export default function Navbar({ isSettingsOpen, onSettingsToggle }: NavbarProps
                 <NavLink
                   to={link.href}
                   className={({ isActive }) =>
-                    `rounded-full px-3 py-1 transition ${isActive ? 'bg-white/12 text-white in-data-[phase=noon]:bg-sky-200/14 in-data-[phase=noon]:text-sky-950' : 'text-slate-200 hover:bg-white/8 hover:text-white in-data-[phase=noon]:text-sky-900 in-data-[phase=noon]:hover:bg-sky-900/58 in-data-[phase=noon]:hover:text-sky-950'}`
+                    `rounded-full px-3 py-1 transition ${isActive ? 'bg-white/12 text-white in-data-[phase=noon]:bg-sky-200/35 in-data-[phase=noon]:text-sky-950' : 'text-slate-200 hover:bg-white/8 hover:text-white in-data-[phase=noon]:text-sky-900 in-data-[phase=noon]:hover:bg-sky-200/72 in-data-[phase=noon]:hover:text-sky-950'}`
                   }
                 >
                   {link.label}
@@ -64,7 +64,7 @@ export default function Navbar({ isSettingsOpen, onSettingsToggle }: NavbarProps
 
         <button
           type="button"
-          className="relative inline-flex items-center justify-center rounded-md border border-white/26 bg-white/16 px-3 py-1.5 text-xs font-semibold uppercase tracking-wide text-slate-100 transition hover:bg-white/24 in-data-[phase=noon]:border-sky-700/30 in-data-[phase=noon]:bg-sky-200/75 in-data-[phase=noon]:text-sky-950 in-data-[phase=noon]:hover:bg-sky-900/60 md:hidden"
+          className="relative inline-flex items-center justify-center rounded-md border border-white/26 bg-white/16 px-3 py-1.5 text-xs font-semibold uppercase tracking-wide text-slate-100 transition hover:bg-white/24 in-data-[phase=noon]:border-sky-700/30 in-data-[phase=noon]:bg-sky-200/75 in-data-[phase=noon]:text-sky-950 in-data-[phase=noon]:hover:bg-sky-200/82 md:hidden"
           onClick={() => setIsMenuOpen((prev) => !prev)}
           aria-label="Toggle menu"
           aria-expanded={isMenuOpen}
@@ -85,7 +85,7 @@ export default function Navbar({ isSettingsOpen, onSettingsToggle }: NavbarProps
                     <a
                       href={link.href}
                       onClick={closeMenu}
-                      className="block rounded-lg px-3 py-2 text-slate-100 transition hover:bg-white/12 hover:text-white in-data-[phase=noon]:text-sky-950 in-data-[phase=noon]:hover:bg-sky-900/60 in-data-[phase=noon]:hover:text-sky-950"
+                      className="block rounded-lg px-3 py-2 text-slate-100 transition hover:bg-white/12 hover:text-white in-data-[phase=noon]:text-sky-950 in-data-[phase=noon]:hover:bg-sky-200/82 in-data-[phase=noon]:hover:text-sky-950"
                     >
                       {link.label}
                     </a>
@@ -94,7 +94,7 @@ export default function Navbar({ isSettingsOpen, onSettingsToggle }: NavbarProps
                       to={link.href}
                       onClick={closeMenu}
                       className={({ isActive }) =>
-                        `block rounded-lg px-3 py-2 transition ${isActive ? 'bg-white/16 text-white in-data-[phase=noon]:bg-sky-200/16 in-data-[phase=noon]:text-sky-950' : 'text-slate-100 hover:bg-white/12 hover:text-white in-data-[phase=noon]:text-sky-950 in-data-[phase=noon]:hover:bg-sky-900/60 in-data-[phase=noon]:hover:text-sky-950'}`
+                        `block rounded-lg px-3 py-2 transition ${isActive ? 'bg-white/16 text-white in-data-[phase=noon]:bg-sky-200/35 in-data-[phase=noon]:text-sky-950' : 'text-slate-100 hover:bg-white/12 hover:text-white in-data-[phase=noon]:text-sky-950 in-data-[phase=noon]:hover:bg-sky-200/82 in-data-[phase=noon]:hover:text-sky-950'}`
                       }
                     >
                       {link.label}

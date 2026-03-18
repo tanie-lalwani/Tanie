@@ -95,7 +95,7 @@ export default function BackdropSettingsBar({
               className={`flex items-center justify-center rounded-lg border px-2 py-2.5 text-[11px] font-semibold transition ${
                 phase === item
                   ? "border-cyan-200/40 bg-cyan-100/18 text-cyan-50 in-data-[phase=noon]:border-sky-700/35 in-data-[phase=noon]:bg-sky-200/12 in-data-[phase=noon]:text-sky-950"
-                  : "border-white/14 bg-white/7 text-slate-200 hover:bg-white/12 in-data-[phase=noon]:border-sky-700/30 in-data-[phase=noon]:bg-sky-100/85 in-data-[phase=noon]:text-sky-900 in-data-[phase=noon]:hover:bg-sky-900/60"
+                  : "border-white/14 bg-white/7 text-slate-200 hover:bg-white/12 in-data-[phase=noon]:border-sky-700/30 in-data-[phase=noon]:bg-sky-100/85 in-data-[phase=noon]:text-sky-900 in-data-[phase=noon]:hover:bg-sky-200/82"
               } disabled:cursor-not-allowed disabled:opacity-45`}
             >
               {PHASE_ICONS[item]}
