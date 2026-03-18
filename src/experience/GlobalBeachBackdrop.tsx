@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react"
+import { useEffect, useMemo, useRef } from "react"
 import * as THREE from "three"
 import { Water } from "three/examples/jsm/objects/Water.js"
 import { Sky } from "three/examples/jsm/objects/Sky.js"
@@ -32,9 +32,51 @@ function buildNormalMap(size = 256): THREE.DataTexture {
     }
   }
 
-  const texture = new THREE.DataTexture(data, size, size, THREE.RGBAFormat)
+  // Blur the normal field slightly to soften hard seam-like bands.
+  const blurred = new Uint8Array(data.length)
+  const weights = [1, 2, 1, 2, 4, 2, 1, 2, 1]
+  const offsets = [-1, -1, 0, -1, 1, -1, -1, 0, 0, 0, 1, 0, -1, 1, 0, 1, 1, 1]
+
+  for (let y = 0; y < size; y++) {
+    for (let x = 0; x < size; x++) {
+      let sx = 0
+      let sy = 0
+      let sz = 0
+      let sw = 0
+
+      for (let i = 0; i < 9; i++) {
+        const ox = offsets[i * 2]
+        const oy = offsets[i * 2 + 1]
+        const xx = (x + ox + size) % size
+        const yy = (y + oy + size) % size
+        const sIdx = (yy * size + xx) * 4
+        const w = weights[i]
+
+        sx += (data[sIdx] / 127.5 - 1) * w
+        sy += (data[sIdx + 1] / 127.5 - 1) * w
+        sz += (data[sIdx + 2] / 255) * w
+        sw += w
+      }
+
+      const nx = sx / sw
+      const ny = sy / sw
+      const nz = sz / sw
+      const len = Math.sqrt(nx * nx + ny * ny + nz * nz) || 1
+
+      const idx = (y * size + x) * 4
+      blurred[idx] = Math.round(((nx / len) + 1) * 127.5)
+      blurred[idx + 1] = Math.round(((ny / len) + 1) * 127.5)
+      blurred[idx + 2] = Math.round((nz / len) * 255)
+      blurred[idx + 3] = 255
+    }
+  }
+
+  const texture = new THREE.DataTexture(blurred, size, size, THREE.RGBAFormat)
   texture.wrapS = THREE.RepeatWrapping
   texture.wrapT = THREE.RepeatWrapping
+  texture.magFilter = THREE.LinearFilter
+  texture.minFilter = THREE.LinearMipmapLinearFilter
+  texture.generateMipmaps = true
   texture.needsUpdate = true
   return texture
 }
@@ -424,7 +466,7 @@ function addNightBeachAccents(scene: THREE.Scene, isMobile: boolean) {
 export default function GlobalBeachBackdrop({ phase }: { phase: TimePhase }) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
   const isMobile = useIsMobile()
-  const preset = MOOD_PRESETS[phase]
+  const preset = useMemo(() => MOOD_PRESETS[phase], [phase])
 
   useEffect(() => {
     const canvas = canvasRef.current
@@ -470,7 +512,14 @@ export default function GlobalBeachBackdrop({ phase }: { phase: TimePhase }) {
     sun.setFromSphericalCoords(1, phi, theta)
     skyUniforms["sunPosition"].value.copy(sun)
 
-    const water = new Water(new THREE.PlaneGeometry(12000, 12000), {
+    const waterGeometry = new THREE.PlaneGeometry(
+      12000,
+      12000,
+      isMobile ? 96 : 192,
+      isMobile ? 96 : 192,
+    )
+
+    const water = new Water(waterGeometry, {
       textureWidth: 512,
       textureHeight: 512,
       waterNormals: buildNormalMap(),
@@ -496,13 +545,25 @@ export default function GlobalBeachBackdrop({ phase }: { phase: TimePhase }) {
     const nightLayer = phase === "night" ? addNightBeachAccents(scene, isMobile) : null
 
     scene.add(new THREE.AmbientLight(preset.ambientColor, preset.ambientIntensity))
+    scene.add(
+      new THREE.HemisphereLight(
+        preset.hemisphereSkyColor,
+        preset.hemisphereGroundColor,
+        preset.hemisphereIntensity,
+      ),
+    )
+
     const sunLight = new THREE.DirectionalLight(preset.sunlightColor, preset.sunlightIntensity)
-    sunLight.position.copy(sun).multiplyScalar(460)
+    sunLight.position.copy(sun).multiplyScalar(preset.sunlightDistance)
     scene.add(sunLight)
 
     const fillLight = new THREE.DirectionalLight(preset.fillColor, preset.fillIntensity)
-    fillLight.position.set(-180, 80, 120)
+    fillLight.position.set(...preset.fillPosition)
     scene.add(fillLight)
+
+    const rimLight = new THREE.DirectionalLight(preset.rimColor, preset.rimIntensity)
+    rimLight.position.set(...preset.rimPosition)
+    scene.add(rimLight)
 
     let raf = 0
     const clock = new THREE.Clock()
