@@ -70,9 +70,10 @@ export default function App() {
   return (
     <main
       data-phase={timePhase}
-      className="relative min-h-screen overflow-x-hidden text-slate-100 transition-colors duration-500 data-[phase=noon]:bg-zinc-100 data-[phase=noon]:text-zinc-900"
+      className="relative min-h-screen overflow-x-hidden bg-slate-950/10 text-slate-100 transition-colors duration-500 data-[phase=dawn]:bg-sky-950/10 data-[phase=noon]:bg-sky-100/85 data-[phase=noon]:text-sky-950 data-[phase=night]:bg-slate-950/30"
     >
       <GlobalBeachBackdrop phase={timePhase} />
+      <div className="pointer-events-none absolute inset-0 z-1 bg-[radial-gradient(circle_at_50%_44%,rgba(2,6,23,0)_0%,rgba(2,6,23,0.08)_70%,rgba(2,6,23,0.22)_100%)] data-[phase=noon]:bg-[radial-gradient(circle_at_50%_44%,rgba(2,132,199,0)_0%,rgba(2,132,199,0.12)_72%,rgba(2,132,199,0.22)_100%)]" />
       <div className="relative z-10 readability-text-shadow">
         {showNavbar ? <Navbar isSettingsOpen={isSettingsOpen} onSettingsToggle={setIsSettingsOpen} /> : null}
         <Suspense fallback={<div className="px-4 py-10 text-center text-sm text-slate-400">Loading...</div>}>
@@ -94,3 +95,4 @@ export default function App() {
     </main>
   );
 }
+

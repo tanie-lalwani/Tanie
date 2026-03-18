@@ -1,7 +1,7 @@
 import type { BeachMoodPreset } from "./types"
 
 export const noonMood: BeachMoodPreset = {
-  exposure: 0.48,
+  exposure: 0.44,
   fogColor: 0xb7def3,
   fogDensity: 0.00066,
   turbidity: 3.2,
@@ -13,18 +13,18 @@ export const noonMood: BeachMoodPreset = {
   sunColor: 0xffdd99,
   waterColor: 0x1f7fa8,
   ambientColor: 0xffe8c4,
-  ambientIntensity: 0.52,
+  ambientIntensity: 0.44,
   hemisphereSkyColor: 0x8fd8ff,
   hemisphereGroundColor: 0xffc99a,
-  hemisphereIntensity: 0.32,
+  hemisphereIntensity: 0.26,
   sunlightColor: 0xffdd99,
-  sunlightIntensity: 0.95,
+  sunlightIntensity: 0.72,
   sunlightDistance: 500,
   fillColor: 0x7fc6ff,
-  fillIntensity: 0.38,
+  fillIntensity: 0.28,
   fillPosition: [-170, 98, 116],
   rimColor: 0xffb08a,
-  rimIntensity: 0.38,
+  rimIntensity: 0.22,
   rimPosition: [210, 40, -230],
   sandColor: 0xf0d7a3,
   sandRoughness: 0.96,
@@ -32,4 +32,6 @@ export const noonMood: BeachMoodPreset = {
   sandEmissiveIntensity: 0,
   waterDistortion: 3.4,
   shellEmissiveIntensity: 0,
-  starfishEmissiveIntensity: 0,  birdColor: 0x1f2d3a,}
+  starfishEmissiveIntensity: 0,
+  birdColor: 0x1f2d3a,
+}
