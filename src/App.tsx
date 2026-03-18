@@ -1,5 +1,6 @@
 import { Suspense, lazy, useEffect, useState } from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
+import Lenis from "lenis";
 import Navbar from "./components/Navbar.tsx";
 import SiteFooter from "./components/SiteFooter";
 import GlobalBeachBackdrop from "./experience/GlobalBeachBackdrop";
@@ -34,6 +35,31 @@ export default function App() {
   // Animation hooks
   useCursorTrail()
   useClickRipple()
+
+  useEffect(() => {
+    if (typeof window === "undefined") return
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return
+
+    const lenis = new Lenis({
+      duration: 1.1,
+      smoothWheel: true,
+      wheelMultiplier: 0.9,
+      touchMultiplier: 1,
+    })
+
+    let rafId = 0
+    const raf = (time: number) => {
+      lenis.raf(time)
+      rafId = window.requestAnimationFrame(raf)
+    }
+
+    rafId = window.requestAnimationFrame(raf)
+
+    return () => {
+      window.cancelAnimationFrame(rafId)
+      lenis.destroy()
+    }
+  }, [])
 
   useEffect(() => {
     window.localStorage.setItem(LOCAL_STORAGE_TIME_SYNC_KEY, String(isTimeSyncEnabled))

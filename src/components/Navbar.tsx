@@ -9,10 +9,10 @@ const navLinks = [
 ]
 
 const SHELL: CSSProperties = {
-  background: 'rgba(2, 6, 23, 0.44)',
+  background: 'rgba(2, 6, 23, 0.24)',
   borderBottom: '1px solid rgba(226, 232, 240, 0.24)',
-  backdropFilter: 'blur(12px)',
-  WebkitBackdropFilter: 'blur(12px)',
+  backdropFilter: 'blur(8px)',
+  WebkitBackdropFilter: 'blur(8px)',
 }
 
 type NavbarProps = {
