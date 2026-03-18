@@ -1,3 +1,4 @@
+import type { ReactNode } from "react"
 import { formatPhaseLabel, type TimePhase } from "../experience/timePhase"
 
 type BackdropSettingsBarProps = {
@@ -9,7 +10,26 @@ type BackdropSettingsBarProps = {
   onSelectPhase: (phase: TimePhase) => void
 }
 
-const MANUAL_PHASES: TimePhase[] = ["dawn", "noon", "sunset", "night"]
+const MANUAL_PHASES: TimePhase[] = ["dawn", "noon", "night"]
+
+const PHASE_ICONS: Record<TimePhase, ReactNode> = {
+  dawn: (
+    <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M4 16h16M6 16a6 6 0 0112 0M12 4v2M7.1 6.1l1.4 1.4M16.9 6.1l-1.4 1.4" />
+    </svg>
+  ),
+  noon: (
+    <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8}>
+      <circle cx="12" cy="12" r="3.8" />
+      <path strokeLinecap="round" d="M12 2.8v2.4M12 18.8v2.4M2.8 12h2.4M18.8 12h2.4M5.7 5.7l1.7 1.7M16.6 16.6l1.7 1.7M18.3 5.7l-1.7 1.7M7.4 16.6l-1.7 1.7" />
+    </svg>
+  ),
+  night: (
+    <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M14.8 3.2a8.6 8.6 0 108 12.1 7.1 7.1 0 01-8-12.1z" />
+    </svg>
+  ),
+}
 
 export default function BackdropSettingsBar({
   isOpen,
@@ -63,20 +83,22 @@ export default function BackdropSettingsBar({
         <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-400">
           Manual Switch
         </p>
-        <div className="mt-1.5 grid grid-cols-2 gap-1.5">
+        <div className="mt-1.5 grid grid-cols-3 gap-1.5">
           {MANUAL_PHASES.map((item) => (
             <button
               key={item}
               type="button"
               disabled={isTimeSyncEnabled}
               onClick={() => onSelectPhase(item)}
-              className={`rounded-lg border px-2 py-1.5 text-[11px] font-semibold transition ${
+              aria-label={formatPhaseLabel(item)}
+              title={formatPhaseLabel(item)}
+              className={`flex items-center justify-center rounded-lg border px-2 py-2.5 text-[11px] font-semibold transition ${
                 phase === item
                   ? "border-cyan-200/40 bg-cyan-100/18 text-cyan-50"
                   : "border-white/14 bg-white/7 text-slate-200 hover:bg-white/12"
               } disabled:cursor-not-allowed disabled:opacity-45`}
             >
-              {formatPhaseLabel(item)}
+              {PHASE_ICONS[item]}
             </button>
           ))}
         </div>
