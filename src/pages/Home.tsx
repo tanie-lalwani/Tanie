@@ -1,6 +1,5 @@
-import { motion, AnimatePresence, useReducedMotion } from "framer-motion"
+import { motion, AnimatePresence } from "framer-motion"
 import { useState, type FormEvent } from "react"
-import { useIsMobile } from "../hooks/useIsMobile"
 import PageHeader from "../components/PageHeader"
 import { SubmitSuccessEffect } from "../components/SubmitSuccessEffect"
 
@@ -50,10 +49,6 @@ const initialFields: ContactFields = {
 }
 
 export default function Home() {
-  const isMobile = useIsMobile()
-  const shouldReduceMotion = useReducedMotion()
-  const lowPowerMode = isMobile || (shouldReduceMotion ?? false)
-
   // Projects state
   const [activeIndex, setActiveIndex] = useState(0)
   const activeProject = projects[activeIndex]
@@ -133,8 +128,6 @@ export default function Home() {
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
       >
-        <div className="pointer-events-none absolute inset-0 bg-size-[56px_56px] bg-[linear-gradient(rgba(148,163,184,0.18)_1px,transparent_1px),linear-gradient(90deg,rgba(148,163,184,0.18)_1px,transparent_1px)] opacity-[0.06]" />
-
         <motion.div
           className="relative mx-auto w-full max-w-6xl"
           initial={{ opacity: 0, y: 22 }}
