@@ -4,6 +4,7 @@ import { Water } from "three/examples/jsm/objects/Water.js"
 import { createSky } from "./createSky"
 import { createWater } from "./createWater"
 import { createSand } from "./createSand"
+import { useIsMobile } from "../../hooks/useIsMobile"
 
 /**
  * Initialises and drives the Three.js beach scene on the supplied canvas ref.
@@ -14,15 +15,28 @@ export function useThreeScene(
   canvasRef: RefObject<HTMLCanvasElement | null>,
   onReady?: () => void,
 ) {
+  const isMobile = useIsMobile()
+
   useEffect(() => {
     const canvas = canvasRef.current
     if (!canvas) return
     let readyFired = false
 
+    const getViewportSize = () => {
+      const host = canvas.parentElement ?? canvas
+      const { width, height } = host.getBoundingClientRect()
+      return {
+        width: Math.max(1, Math.floor(width)),
+        height: Math.max(1, Math.floor(height)),
+      }
+    }
+
+    const initialSize = getViewportSize()
+
     // ── Renderer ────────────────────────────────────────────────────────────
     const renderer = new THREE.WebGLRenderer({ canvas, antialias: true })
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
-    renderer.setSize(canvas.clientWidth, canvas.clientHeight, false)
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobile ? 1.5 : 2))
+    renderer.setSize(initialSize.width, initialSize.height, false)
     renderer.toneMapping = THREE.ACESFilmicToneMapping
     renderer.toneMappingExposure = 0.5
 
@@ -34,12 +48,28 @@ export function useThreeScene(
     // Eye-level perspective: standing on the beach looking toward the horizon
     const camera = new THREE.PerspectiveCamera(
       55,
-      canvas.clientWidth / canvas.clientHeight,
+      initialSize.width / initialSize.height,
       0.1,
       20000,
     )
-    camera.position.set(0, 3, 58)
-    camera.lookAt(0, 1.5, 0)
+
+    const updateCameraForViewport = (aspect: number) => {
+      const narrowViewport = aspect < 1
+
+      if (isMobile || narrowViewport) {
+        camera.fov = 66
+        camera.position.set(0, 4.2, 72)
+        camera.lookAt(0, 2.1, 6)
+      } else {
+        camera.fov = 55
+        camera.position.set(0, 3, 58)
+        camera.lookAt(0, 1.5, 0)
+      }
+
+      camera.updateProjectionMatrix()
+    }
+
+    updateCameraForViewport(camera.aspect)
 
     // ── Scene elements ────────────────────────────────────────────────────────
     const { sun } = createSky(scene)
@@ -54,14 +84,16 @@ export function useThreeScene(
 
     // ── Responsive resize ─────────────────────────────────────────────────────
     const handleResize = () => {
-      const w = canvas.clientWidth
-      const h = canvas.clientHeight
+      const { width: w, height: h } = getViewportSize()
       camera.aspect = w / h
-      camera.updateProjectionMatrix()
+      updateCameraForViewport(camera.aspect)
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobile ? 1.5 : 2))
       renderer.setSize(w, h, false)
     }
     const ro = new ResizeObserver(handleResize)
     ro.observe(canvas.parentElement ?? canvas)
+    window.addEventListener("resize", handleResize)
+    window.addEventListener("orientationchange", handleResize)
 
     // ── Animation loop ────────────────────────────────────────────────────────
     let raf: number
@@ -83,7 +115,9 @@ export function useThreeScene(
     return () => {
       cancelAnimationFrame(raf)
       ro.disconnect()
+      window.removeEventListener("resize", handleResize)
+      window.removeEventListener("orientationchange", handleResize)
       renderer.dispose()
     }
-  }, [canvasRef])
+  }, [canvasRef, isMobile, onReady])
 }

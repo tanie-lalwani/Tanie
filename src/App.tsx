@@ -12,24 +12,12 @@ import { useClickRipple } from "./hooks/useClickRipple";
 
 const InterviewMe = lazy(() => import("./pages/InterviewMe.tsx"));
 
-const LOCAL_STORAGE_TIME_SYNC_KEY = "beach-time-sync-enabled"
-const LOCAL_STORAGE_MANUAL_PHASE_KEY = "beach-manual-phase"
-
 export default function App() {
   const location = useLocation();
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
-  const [isTimeSyncEnabled, setIsTimeSyncEnabled] = useState<boolean>(() => {
-    if (typeof window === "undefined") return false
-    return window.localStorage.getItem(LOCAL_STORAGE_TIME_SYNC_KEY) === "true"
-  })
-  const [manualPhase, setManualPhase] = useState<TimePhase>(() => {
-    if (typeof window === "undefined") return "dawn"
-    const savedPhase = window.localStorage.getItem(LOCAL_STORAGE_MANUAL_PHASE_KEY)
-    return savedPhase === "dawn" || savedPhase === "noon" || savedPhase === "sunset" || savedPhase === "night"
-      ? savedPhase
-      : "dawn"
-  })
-  const [autoTimePhase, setAutoTimePhase] = useState<TimePhase>(() => getLocalTimePhase())
+  const [isTimeSyncEnabled, setIsTimeSyncEnabled] = useState(false)
+  const [manualPhase, setManualPhase] = useState<TimePhase>("dawn")
+  const [autoTimePhase, setAutoTimePhase] = useState<TimePhase>("dawn")
 
   // Animation hooks
   useCursorTrail()
@@ -62,14 +50,6 @@ export default function App() {
   }, [location.pathname])
 
   useEffect(() => {
-    window.localStorage.setItem(LOCAL_STORAGE_TIME_SYNC_KEY, String(isTimeSyncEnabled))
-  }, [isTimeSyncEnabled])
-
-  useEffect(() => {
-    window.localStorage.setItem(LOCAL_STORAGE_MANUAL_PHASE_KEY, manualPhase)
-  }, [manualPhase])
-
-  useEffect(() => {
     if (!isTimeSyncEnabled) return
 
     const syncPhase = () => {
@@ -90,7 +70,7 @@ export default function App() {
   return (
     <main
       data-phase={timePhase}
-      className="relative min-h-screen overflow-x-hidden text-slate-100"
+      className="relative min-h-screen overflow-x-hidden text-slate-100 transition-colors duration-500 data-[phase=noon]:bg-zinc-100 data-[phase=noon]:text-zinc-900"
     >
       <GlobalBeachBackdrop phase={timePhase} />
       <div className="relative z-10 readability-text-shadow">

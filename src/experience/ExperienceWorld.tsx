@@ -1,4 +1,4 @@
-import { useRef, useState } from "react"
+import { useCallback, useRef, useState } from "react"
 import { motion } from "framer-motion"
 import { useThreeScene } from "./scene/useThreeScene"
 import LeafReveal from "./ui/LeafReveal"
@@ -21,16 +21,18 @@ export default function ExperienceWorld({ onBack }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const [isReady, setIsReady] = useState(false)
 
-  useThreeScene(canvasRef, () => {
+  const handleSceneReady = useCallback(() => {
     // Enforce minimum 2.5s loading time so the animation is visible
     setTimeout(() => {
       setIsReady(true)
     }, 2500)
-  })
+  }, [])
+
+  useThreeScene(canvasRef, handleSceneReady)
 
   return (
     <motion.div
-      className="relative h-screen w-full overflow-hidden"
+      className="relative h-dvh min-h-screen w-full overflow-hidden"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
