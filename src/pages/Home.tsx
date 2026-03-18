@@ -2,6 +2,8 @@ import { motion, AnimatePresence } from "framer-motion"
 import { useState, type FormEvent } from "react"
 import PageHeader from "../components/PageHeader"
 import { SubmitSuccessEffect } from "../components/SubmitSuccessEffect"
+import GlobalBeachBackdrop from "../experience/GlobalBeachBackdrop"
+import type { TimePhase } from "../experience/timePhase"
 
 const projects = [
   {
@@ -48,7 +50,11 @@ const initialFields: ContactFields = {
   message: "",
 }
 
-export default function Home() {
+type HomeProps = {
+  phase: TimePhase
+}
+
+export default function Home({ phase }: HomeProps) {
   // Projects state
   const [activeIndex, setActiveIndex] = useState(0)
   const activeProject = projects[activeIndex]
@@ -128,9 +134,10 @@ export default function Home() {
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
       >
+        <GlobalBeachBackdrop phase={phase} position="absolute" />
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_45%,rgba(15,23,42,0)_0%,rgba(15,23,42,0.12)_72%,rgba(15,23,42,0.26)_100%)] in-data-[phase=noon]:bg-[radial-gradient(circle_at_50%_45%,rgba(39,39,42,0)_0%,rgba(39,39,42,0.08)_72%,rgba(39,39,42,0.18)_100%)]" />
         <motion.div
-          className="relative mx-auto w-full max-w-6xl"
+          className="relative z-10 mx-auto w-full max-w-6xl"
           initial={{ opacity: 0, y: 22 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
@@ -167,14 +174,14 @@ export default function Home() {
               <button
                 type="button"
                 onClick={goToPrev}
-                className="rounded-md border border-white/18 bg-white/7 px-2.5 py-1 text-[11px] font-semibold text-slate-100 transition hover:bg-white/12 in-data-[phase=noon]:border-sky-700/30 in-data-[phase=noon]:bg-sky-100/88 in-data-[phase=noon]:text-sky-950 in-data-[phase=noon]:hover:bg-sky-900/62"
+                className="rounded-md border border-white/18 bg-white/7 px-2.5 py-1 text-[11px] font-semibold text-slate-100 transition hover:bg-white/12 in-data-[phase=noon]:border-sky-700/30 in-data-[phase=noon]:bg-sky-100/88 in-data-[phase=noon]:text-sky-950 in-data-[phase=noon]:hover:bg-sky-200/78"
               >
                 Previous
               </button>
               <button
                 type="button"
                 onClick={goToNext}
-                className="rounded-md border border-white/18 bg-white px-2.5 py-1 text-[11px] font-semibold text-slate-900 transition hover:bg-slate-100 in-data-[phase=noon]:border-sky-700/35 in-data-[phase=noon]:bg-sky-900/12 in-data-[phase=noon]:text-sky-950 in-data-[phase=noon]:hover:bg-sky-700"
+                className="rounded-md border border-white/18 bg-white px-2.5 py-1 text-[11px] font-semibold text-slate-900 transition hover:bg-slate-100 in-data-[phase=noon]:border-sky-700/35 in-data-[phase=noon]:bg-sky-200/35 in-data-[phase=noon]:text-sky-950 in-data-[phase=noon]:hover:bg-sky-200/82"
               >
                 Next
               </button>
@@ -228,7 +235,7 @@ export default function Home() {
                         href={activeProject.site}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex w-full items-center justify-center gap-2 rounded-lg border border-white/20 bg-white px-3 py-1.5 text-[11px] font-semibold text-slate-900 transition hover:bg-slate-200 in-data-[phase=noon]:border-sky-700/35 in-data-[phase=noon]:bg-sky-900/12 in-data-[phase=noon]:text-sky-950 in-data-[phase=noon]:hover:bg-sky-700 sm:w-auto"
+                        className="inline-flex w-full items-center justify-center gap-2 rounded-lg border border-white/20 bg-white px-3 py-1.5 text-[11px] font-semibold text-slate-900 transition hover:bg-slate-200 in-data-[phase=noon]:border-sky-700/35 in-data-[phase=noon]:bg-sky-200/35 in-data-[phase=noon]:text-sky-950 in-data-[phase=noon]:hover:bg-sky-200/82 sm:w-auto"
                       >
                         Verify Project
                         <span aria-hidden="true">↗</span>
@@ -354,7 +361,7 @@ export default function Home() {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full rounded-xl bg-white px-5 py-2.5 text-sm font-semibold text-slate-900 transition hover:bg-slate-200 disabled:cursor-not-allowed disabled:opacity-70 in-data-[phase=noon]:border in-data-[phase=noon]:border-sky-700/35 in-data-[phase=noon]:bg-sky-900/12 in-data-[phase=noon]:text-sky-950 in-data-[phase=noon]:hover:bg-sky-700 sm:w-auto"
+              className="w-full rounded-xl bg-white px-5 py-2.5 text-sm font-semibold text-slate-900 transition hover:bg-slate-200 disabled:cursor-not-allowed disabled:opacity-70 in-data-[phase=noon]:border in-data-[phase=noon]:border-sky-700/35 in-data-[phase=noon]:bg-sky-200/35 in-data-[phase=noon]:text-sky-950 in-data-[phase=noon]:hover:bg-sky-200/82 sm:w-auto"
             >
               {isSubmitting ? "Sending..." : "Send Message"}
             </button>

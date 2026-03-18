@@ -489,7 +489,12 @@ function addDawnBirds(scene: THREE.Scene, isMobile: boolean, preset: BeachMoodPr
   return { update }
 }
 
-export default function GlobalBeachBackdrop({ phase }: { phase: TimePhase }) {
+type GlobalBeachBackdropProps = {
+  phase: TimePhase
+  position?: "fixed" | "absolute"
+}
+
+export default function GlobalBeachBackdrop({ phase, position = "fixed" }: GlobalBeachBackdropProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
   const isMobile = useIsMobile()
   const preset = useMemo(() => MOOD_PRESETS[phase], [phase])
@@ -627,8 +632,10 @@ export default function GlobalBeachBackdrop({ phase }: { phase: TimePhase }) {
     }
   }, [isMobile, preset, phase])
 
+  const positionClass = position === "absolute" ? "absolute" : "fixed"
+
   return (
-    <div className="pointer-events-none fixed inset-0 z-0">
+    <div className={`pointer-events-none ${positionClass} inset-0 z-0`}>
       <canvas
         ref={canvasRef}
         className="h-full w-full"
