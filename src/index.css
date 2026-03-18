@@ -1,12 +1,12 @@
 @import "tailwindcss";
 
 :root {
-	--font-body: "Manrope", sans-serif;
-	--font-display: "Outfit", sans-serif;
-	--type-caption: clamp(0.74rem, 0.72rem + 0.08vw, 0.8rem);
-	--type-body: clamp(0.95rem, 0.92rem + 0.14vw, 1rem);
-	--type-body-lg: clamp(1.02rem, 0.98rem + 0.22vw, 1.12rem);
-	--type-title: clamp(1.7rem, 1.3rem + 1.8vw, 2.7rem);
+	--font-body: "Aptos", "Segoe UI", "Trebuchet MS", sans-serif;
+	--font-display: "Cambria", "Palatino Linotype", "Book Antiqua", serif;
+	--type-caption: clamp(0.72rem, 0.7rem + 0.08vw, 0.78rem);
+	--type-body: clamp(0.92rem, 0.9rem + 0.12vw, 0.98rem);
+	--type-body-lg: clamp(1rem, 0.96rem + 0.2vw, 1.08rem);
+	--type-title: clamp(1.55rem, 1.22rem + 1.45vw, 2.4rem);
 }
 
 html {
@@ -72,6 +72,30 @@ select {
 }
 
 .readability-text-shadow {
-	text-shadow: 0 1px 6px rgba(2, 6, 23, 0.34);
+	text-shadow:
+		0 1px 2px rgba(2, 6, 23, 0.5),
+		0 4px 14px rgba(2, 6, 23, 0.42),
+		0 0 22px rgba(125, 211, 252, 0.16);
 }
+
+main[data-phase="dawn"] .readability-text-shadow {
+	text-shadow:
+		0 1px 2px rgba(7, 20, 38, 0.54),
+		0 4px 16px rgba(7, 20, 38, 0.46),
+		0 0 24px rgba(147, 197, 253, 0.2);
+}
+
+main[data-phase="night"] .readability-text-shadow {
+	text-shadow:
+		0 1px 2px rgba(1, 4, 12, 0.66),
+		0 5px 18px rgba(1, 4, 12, 0.56),
+		0 0 20px rgba(56, 189, 248, 0.14);
+}
+
+main[data-phase="noon"] .readability-text-shadow {
+	text-shadow:
+		0 1px 1px rgba(255, 255, 255, 0.2),
+		0 2px 8px rgba(39, 39, 42, 0.12);
+}
+
 

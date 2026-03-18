@@ -18,9 +18,9 @@ export default function Navbar({ isSettingsOpen, onSettingsToggle }: NavbarProps
 
   return (
     <header className="sticky top-0 z-20">
-      <nav className="relative flex h-11 w-full items-center justify-between border-b border-white/24 bg-slate-950/24 px-4 backdrop-blur-md sm:h-12 sm:px-8 data-[phase=noon]:border-zinc-700/35 data-[phase=noon]:bg-zinc-100/78" >
+      <nav className="relative flex h-11 w-full items-center justify-between border-b border-white/24 bg-slate-950/24 px-4 backdrop-blur-md sm:h-12 sm:px-8 in-data-[phase=dawn]:border-sky-100/24 in-data-[phase=dawn]:bg-sky-950/24 in-data-[phase=noon]:border-sky-700/30 in-data-[phase=noon]:bg-sky-100/85 in-data-[phase=night]:border-slate-300/14 in-data-[phase=night]:bg-slate-950/38" >
 
-        <a href="/" className="relative text-sm font-semibold tracking-tight text-slate-100 sm:text-base data-[phase=noon]:text-zinc-900" style={{ fontFamily: 'var(--font-display)' }} onClick={closeMenu}>
+        <a href="/" className="relative text-sm font-semibold tracking-tight text-slate-100 sm:text-base in-data-[phase=dawn]:text-sky-50 in-data-[phase=noon]:text-sky-950 in-data-[phase=night]:text-slate-100" style={{ fontFamily: 'var(--font-display)' }} onClick={closeMenu}>
           Tanie
         </a>
 
@@ -30,7 +30,7 @@ export default function Navbar({ isSettingsOpen, onSettingsToggle }: NavbarProps
               {link.href.startsWith('#') ? (
                 <a
                   href={link.href}
-                  className="rounded-full px-3 py-1 text-slate-200 transition hover:bg-white/8 hover:text-white data-[phase=noon]:text-zinc-700 data-[phase=noon]:hover:bg-zinc-200/70 data-[phase=noon]:hover:text-zinc-950"
+                  className="rounded-full px-3 py-1 text-slate-200 transition hover:bg-white/8 hover:text-white in-data-[phase=noon]:text-sky-900 in-data-[phase=noon]:hover:bg-sky-900/58 in-data-[phase=noon]:hover:text-sky-950"
                 >
                   {link.label}
                 </a>
@@ -38,7 +38,7 @@ export default function Navbar({ isSettingsOpen, onSettingsToggle }: NavbarProps
                 <NavLink
                   to={link.href}
                   className={({ isActive }) =>
-                    `rounded-full px-3 py-1 transition ${isActive ? 'bg-white/12 text-white data-[phase=noon]:bg-zinc-900/10 data-[phase=noon]:text-zinc-950' : 'text-slate-200 hover:bg-white/8 hover:text-white data-[phase=noon]:text-zinc-700 data-[phase=noon]:hover:bg-zinc-200/70 data-[phase=noon]:hover:text-zinc-950'}`
+                    `rounded-full px-3 py-1 transition ${isActive ? 'bg-white/12 text-white in-data-[phase=noon]:bg-sky-200/14 in-data-[phase=noon]:text-sky-950' : 'text-slate-200 hover:bg-white/8 hover:text-white in-data-[phase=noon]:text-sky-900 in-data-[phase=noon]:hover:bg-sky-900/58 in-data-[phase=noon]:hover:text-sky-950'}`
                   }
                 >
                   {link.label}
@@ -51,7 +51,7 @@ export default function Navbar({ isSettingsOpen, onSettingsToggle }: NavbarProps
         <button
           type="button"
           title="Scene settings"
-          className="relative inline-flex items-center justify-center rounded-md border border-white/26 bg-white/12 px-2 py-1.5 text-white transition hover:bg-white/18 data-[phase=noon]:border-zinc-700/35 data-[phase=noon]:bg-zinc-200/75 data-[phase=noon]:text-zinc-900 data-[phase=noon]:hover:bg-zinc-200 md:px-2.5"
+          className="relative inline-flex items-center justify-center rounded-md border border-white/26 bg-white/12 px-2 py-1.5 text-white transition hover:bg-white/18 in-data-[phase=noon]:border-sky-700/30 in-data-[phase=noon]:bg-sky-200/75 in-data-[phase=noon]:text-sky-950 in-data-[phase=noon]:hover:bg-sky-900/60 md:px-2.5"
           onClick={() => onSettingsToggle(!isSettingsOpen)}
           aria-label="Toggle scene settings"
           aria-pressed={isSettingsOpen}
@@ -64,7 +64,7 @@ export default function Navbar({ isSettingsOpen, onSettingsToggle }: NavbarProps
 
         <button
           type="button"
-          className="relative inline-flex items-center justify-center rounded-md border border-white/26 bg-white/16 px-3 py-1.5 text-xs font-semibold uppercase tracking-wide text-slate-100 transition hover:bg-white/24 data-[phase=noon]:border-zinc-700/35 data-[phase=noon]:bg-zinc-200/75 data-[phase=noon]:text-zinc-900 data-[phase=noon]:hover:bg-zinc-200 md:hidden"
+          className="relative inline-flex items-center justify-center rounded-md border border-white/26 bg-white/16 px-3 py-1.5 text-xs font-semibold uppercase tracking-wide text-slate-100 transition hover:bg-white/24 in-data-[phase=noon]:border-sky-700/30 in-data-[phase=noon]:bg-sky-200/75 in-data-[phase=noon]:text-sky-950 in-data-[phase=noon]:hover:bg-sky-900/60 md:hidden"
           onClick={() => setIsMenuOpen((prev) => !prev)}
           aria-label="Toggle menu"
           aria-expanded={isMenuOpen}
@@ -76,16 +76,16 @@ export default function Navbar({ isSettingsOpen, onSettingsToggle }: NavbarProps
         {isMenuOpen && (
           <div
             id="mobile-nav-menu"
-            className="absolute inset-x-0 top-full mt-1 border-b border-white/24 bg-slate-950/28 p-2 backdrop-blur-md data-[phase=noon]:border-zinc-700/35 data-[phase=noon]:bg-zinc-100/82 md:hidden"
+            className="absolute inset-x-0 top-full mt-1 border-b border-white/24 bg-slate-950/28 p-2 backdrop-blur-md in-data-[phase=noon]:border-sky-700/30 in-data-[phase=noon]:bg-sky-100/90 md:hidden"
           >
-            <ul className="flex flex-col gap-0.5 text-sm font-medium text-slate-100 data-[phase=noon]:text-zinc-900">
+            <ul className="flex flex-col gap-0.5 text-sm font-medium text-slate-100 in-data-[phase=noon]:text-sky-950">
               {navLinks.map((link) => (
                 <li key={link.label}>
                   {link.href.startsWith('#') ? (
                     <a
                       href={link.href}
                       onClick={closeMenu}
-                      className="block rounded-lg px-3 py-2 text-slate-100 transition hover:bg-white/12 hover:text-white data-[phase=noon]:text-zinc-800 data-[phase=noon]:hover:bg-zinc-200/75 data-[phase=noon]:hover:text-zinc-950"
+                      className="block rounded-lg px-3 py-2 text-slate-100 transition hover:bg-white/12 hover:text-white in-data-[phase=noon]:text-sky-950 in-data-[phase=noon]:hover:bg-sky-900/60 in-data-[phase=noon]:hover:text-sky-950"
                     >
                       {link.label}
                     </a>
@@ -94,7 +94,7 @@ export default function Navbar({ isSettingsOpen, onSettingsToggle }: NavbarProps
                       to={link.href}
                       onClick={closeMenu}
                       className={({ isActive }) =>
-                        `block rounded-lg px-3 py-2 transition ${isActive ? 'bg-white/16 text-white data-[phase=noon]:bg-zinc-900/12 data-[phase=noon]:text-zinc-950' : 'text-slate-100 hover:bg-white/12 hover:text-white data-[phase=noon]:text-zinc-800 data-[phase=noon]:hover:bg-zinc-200/75 data-[phase=noon]:hover:text-zinc-950'}`
+                        `block rounded-lg px-3 py-2 transition ${isActive ? 'bg-white/16 text-white in-data-[phase=noon]:bg-sky-200/16 in-data-[phase=noon]:text-sky-950' : 'text-slate-100 hover:bg-white/12 hover:text-white in-data-[phase=noon]:text-sky-950 in-data-[phase=noon]:hover:bg-sky-900/60 in-data-[phase=noon]:hover:text-sky-950'}`
                       }
                     >
                       {link.label}
@@ -109,3 +109,7 @@ export default function Navbar({ isSettingsOpen, onSettingsToggle }: NavbarProps
     </header>
   )
 }
+
+
+
+

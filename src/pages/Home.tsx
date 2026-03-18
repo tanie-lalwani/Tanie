@@ -123,23 +123,24 @@ export default function Home() {
       {/* Hero Section */}
       <motion.section
         id="home"
-        className="relative isolate flex min-h-[calc(100svh-2.75rem)] w-full items-center overflow-hidden px-4 py-8 sm:min-h-[calc(100vh-3rem)] sm:px-6 sm:py-14"
+        className="relative isolate flex min-h-[calc(100svh-2.75rem)] w-full items-start overflow-hidden px-4 pb-8 pt-16 sm:min-h-[calc(100vh-3rem)] sm:px-6 sm:pb-14 sm:pt-24"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
       >
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_45%,rgba(15,23,42,0)_0%,rgba(15,23,42,0.12)_72%,rgba(15,23,42,0.26)_100%)] in-data-[phase=noon]:bg-[radial-gradient(circle_at_50%_45%,rgba(39,39,42,0)_0%,rgba(39,39,42,0.08)_72%,rgba(39,39,42,0.18)_100%)]" />
         <motion.div
           className="relative mx-auto w-full max-w-6xl"
           initial={{ opacity: 0, y: 22 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
         >
-          <div className="relative">
-            <h1 className="text-4xl font-black leading-tight tracking-tight text-white sm:text-6xl lg:text-7xl">
+          <div className="relative max-w-2xl">
+            <h1 className="text-4xl font-black leading-tight tracking-tight text-white in-data-[phase=noon]:text-slate-950 sm:text-6xl lg:text-7xl">
               I'm Tanisha.
             </h1>
 
-            <p className="mt-4 max-w-2xl text-sm leading-relaxed text-slate-200 sm:text-base">
+            <p className="mt-4 max-w-xl text-sm leading-relaxed text-slate-200 in-data-[phase=dawn]:text-sky-100 in-data-[phase=noon]:text-slate-900 in-data-[phase=night]:text-slate-300 sm:text-base">
               Full-stack developer building immersive, creative experiences. Portfolios, games, dashboards, and everything in between. Scroll to see my work or jump to the contact form.
             </p>
           </div>
@@ -158,22 +159,22 @@ export default function Home() {
         />
 
         <div className="relative">
-          <div className="relative mb-2 flex flex-wrap items-center justify-between gap-2.5 border-b border-white/8 pb-2.5 sm:mb-3 sm:pb-3">
-            <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-slate-400">
+          <div className="relative mb-2 flex flex-wrap items-center justify-between gap-2.5 border-b border-white/8 pb-2.5 in-data-[phase=noon]:border-sky-700/24 sm:mb-3 sm:pb-3">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-slate-400 in-data-[phase=noon]:text-sky-800">
               {String(activeIndex + 1).padStart(2, "0")} / {String(projects.length).padStart(2, "0")}
             </p>
             <div className="flex items-center gap-1.5">
               <button
                 type="button"
                 onClick={goToPrev}
-                className="rounded-md border border-white/18 bg-white/7 px-2.5 py-1 text-[11px] font-semibold text-slate-100 transition hover:bg-white/12"
+                className="rounded-md border border-white/18 bg-white/7 px-2.5 py-1 text-[11px] font-semibold text-slate-100 transition hover:bg-white/12 in-data-[phase=noon]:border-sky-700/30 in-data-[phase=noon]:bg-sky-100/88 in-data-[phase=noon]:text-sky-950 in-data-[phase=noon]:hover:bg-sky-900/62"
               >
                 Previous
               </button>
               <button
                 type="button"
                 onClick={goToNext}
-                className="rounded-md border border-white/18 bg-white px-2.5 py-1 text-[11px] font-semibold text-slate-900 transition hover:bg-slate-100"
+                className="rounded-md border border-white/18 bg-white px-2.5 py-1 text-[11px] font-semibold text-slate-900 transition hover:bg-slate-100 in-data-[phase=noon]:border-sky-700/35 in-data-[phase=noon]:bg-sky-900/12 in-data-[phase=noon]:text-sky-950 in-data-[phase=noon]:hover:bg-sky-700"
               >
                 Next
               </button>
@@ -191,34 +192,34 @@ export default function Home() {
                 transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
               >
                 <div className="relative">
-                  <div className="relative overflow-hidden rounded-lg border border-white/14 bg-slate-950/38 shadow-[inset_0_1px_0_rgba(255,255,255,0.16)]">
-                    <div className="aspect-video bg-[radial-gradient(circle_at_20%_20%,rgba(255,255,255,0.1),transparent_28%),linear-gradient(160deg,#0f172a_0%,#030712_56%,#020617_100%)]" />
+                  <div className="relative overflow-hidden rounded-lg border border-white/14 bg-slate-950/38 shadow-[inset_0_1px_0_rgba(255,255,255,0.16)] in-data-[phase=noon]:border-sky-700/28 in-data-[phase=noon]:bg-sky-100/88 in-data-[phase=noon]:shadow-[inset_0_1px_0_rgba(24,24,27,0.08)]">
+                    <div className="aspect-video bg-[radial-gradient(circle_at_20%_20%,rgba(255,255,255,0.1),transparent_28%),linear-gradient(160deg,#0f172a_0%,#030712_56%,#020617_100%)] in-data-[phase=noon]:bg-[radial-gradient(circle_at_24%_18%,rgba(255,255,255,0.92),transparent_34%),linear-gradient(160deg,#f4f4f5_0%,#e4e4e7_56%,#d4d4d8_100%)]" />
                     <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_40%,rgba(2,6,23,0.76)_100%)]" />
                     <div className="absolute bottom-2.5 left-2.5 right-2.5 flex flex-col items-start justify-between gap-1.5 sm:bottom-3 sm:left-3 sm:right-3 sm:flex-row sm:items-end sm:gap-2.5">
                       <div>
-                        <p className="text-sm font-semibold text-white">{activeProject.client}</p>
-                        <p className="mt-0.5 text-[10px] uppercase tracking-[0.16em] text-slate-400">{activeProject.role}</p>
+                        <p className="text-sm font-semibold text-white in-data-[phase=noon]:text-sky-950">{activeProject.client}</p>
+                        <p className="mt-0.5 text-[10px] uppercase tracking-[0.16em] text-slate-400 in-data-[phase=noon]:text-sky-800">{activeProject.role}</p>
                       </div>
-                      <div className="rounded-full border border-white/18 bg-white/6 px-2.5 py-0.5 text-[9px] font-medium text-slate-200 sm:text-[10px]">
+                      <div className="rounded-full border border-white/18 bg-white/6 px-2.5 py-0.5 text-[9px] font-medium text-slate-200 in-data-[phase=noon]:border-sky-700/30 in-data-[phase=noon]:bg-sky-100/88 in-data-[phase=noon]:text-sky-900 sm:text-[10px]">
                         {activeProject.project}
                       </div>
                     </div>
                   </div>
 
                   <div className="mt-3">
-                    <blockquote className="border-l border-white/14 pl-2 text-[13px] italic leading-snug text-slate-300">
+                    <blockquote className="border-l border-white/14 pl-2 text-[13px] italic leading-snug text-slate-300 in-data-[phase=noon]:border-sky-700/24 in-data-[phase=noon]:text-sky-900">
                       &quot;{activeProject.quote}&quot;
                     </blockquote>
-                    <p className="mt-1.5 text-[12px] leading-snug text-slate-400">{activeProject.outcome}</p>
+                    <p className="mt-1.5 text-[12px] leading-snug text-slate-400 in-data-[phase=noon]:text-sky-800">{activeProject.outcome}</p>
 
-                    <div className="mt-2.5 flex flex-col gap-1.5 border-t border-white/8 pt-2.5 sm:flex-row sm:items-center sm:justify-between">
+                    <div className="mt-2.5 flex flex-col gap-1.5 border-t border-white/8 pt-2.5 in-data-[phase=noon]:border-sky-700/24 sm:flex-row sm:items-center sm:justify-between">
                       <div>
-                        <p className="text-[10px] uppercase tracking-[0.2em] text-slate-500">Live website</p>
+                        <p className="text-[10px] uppercase tracking-[0.2em] text-slate-500 in-data-[phase=noon]:text-sky-800">Live website</p>
                         <a
                           href={activeProject.site}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="mt-0.5 inline-flex text-[11px] font-medium text-slate-100 transition hover:text-white"
+                          className="mt-0.5 inline-flex text-[11px] font-medium text-slate-100 transition hover:text-white in-data-[phase=noon]:text-sky-950 in-data-[phase=noon]:hover:text-sky-950"
                         >
                           {activeProject.site.replace("https://", "")}
                         </a>
@@ -227,7 +228,7 @@ export default function Home() {
                         href={activeProject.site}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex w-full items-center justify-center gap-2 rounded-lg border border-white/20 bg-white px-3 py-1.5 text-[11px] font-semibold text-slate-900 transition hover:bg-slate-200 sm:w-auto"
+                        className="inline-flex w-full items-center justify-center gap-2 rounded-lg border border-white/20 bg-white px-3 py-1.5 text-[11px] font-semibold text-slate-900 transition hover:bg-slate-200 in-data-[phase=noon]:border-sky-700/35 in-data-[phase=noon]:bg-sky-900/12 in-data-[phase=noon]:text-sky-950 in-data-[phase=noon]:hover:bg-sky-700 sm:w-auto"
                       >
                         Verify Project
                         <span aria-hidden="true">↗</span>
@@ -246,7 +247,7 @@ export default function Home() {
                 type="button"
                 onClick={() => setActiveIndex(index)}
                 className={`h-1.5 flex-1 rounded-full transition ${
-                  index === activeIndex ? "bg-cyan-200/90" : "bg-white/18 hover:bg-white/32"
+                  index === activeIndex ? "bg-cyan-200/90 in-data-[phase=noon]:bg-sky-900/20" : "bg-white/18 hover:bg-white/32 in-data-[phase=noon]:bg-sky-300/35 in-data-[phase=noon]:hover:bg-sky-200/55"
                 }`}
                 aria-label={`Go to testimonial ${index + 1}`}
               />
@@ -278,8 +279,8 @@ export default function Home() {
                 onClick={() => updateField("subject", preset)}
                 className={`rounded-full border px-3 py-1 text-[11px] font-semibold transition ${
                   fields.subject === preset
-                    ? "border-white/35 bg-white/20 text-slate-100"
-                    : "border-white/18 bg-white/8 text-slate-300 hover:border-white/28 hover:text-slate-100"
+                    ? "border-white/35 bg-white/20 text-slate-100 in-data-[phase=noon]:border-sky-700/35 in-data-[phase=noon]:bg-sky-200/14 in-data-[phase=noon]:text-sky-950"
+                    : "border-white/18 bg-white/8 text-slate-300 hover:border-white/28 hover:text-slate-100 in-data-[phase=noon]:border-sky-700/30 in-data-[phase=noon]:bg-sky-100/85 in-data-[phase=noon]:text-sky-900 in-data-[phase=noon]:hover:border-sky-100/36 in-data-[phase=noon]:hover:text-sky-950"
                 }`}
               >
                 {preset}
@@ -287,7 +288,7 @@ export default function Home() {
             ))}
           </div>
           <div className="relative grid grid-cols-1 gap-3.5 sm:gap-4 sm:grid-cols-2">
-            <label className="flex flex-col gap-2 text-sm text-slate-100">
+            <label className="flex flex-col gap-2 text-sm text-slate-100 in-data-[phase=noon]:text-sky-950">
               Name
               <input
                 type="text"
@@ -295,14 +296,14 @@ export default function Home() {
                 required
                 value={fields.name}
                 onChange={(event) => updateField("name", event.target.value)}
-                className={`rounded-xl border bg-slate-900/36 px-3 py-2.5 text-slate-100 outline-none transition placeholder:text-slate-400 focus:ring-2 ${
-                  fields.name ? "border-cyan-400/40 focus:border-cyan-300/60 focus:ring-cyan-300/20 shadow-[0_0_12px_rgba(34,211,238,0.2)]" : "border-white/20 focus:border-white/40 focus:ring-white/20"
+                className={`rounded-xl border bg-slate-900/36 px-3 py-2.5 text-slate-100 outline-none transition placeholder:text-slate-400 focus:ring-2 in-data-[phase=noon]:border-sky-700/30 in-data-[phase=noon]:bg-sky-100/88 in-data-[phase=noon]:text-sky-950 in-data-[phase=noon]:placeholder:text-sky-800/60 in-data-[phase=noon]:focus:ring-sky-900/12 ${
+                  fields.name ? "border-cyan-400/40 focus:border-cyan-300/60 focus:ring-cyan-300/20 shadow-[0_0_12px_rgba(34,211,238,0.2)] in-data-[phase=noon]:border-sky-700/35 in-data-[phase=noon]:focus:border-sky-800/45" : "border-white/20 focus:border-white/40 focus:ring-white/20 in-data-[phase=noon]:focus:border-sky-800/38"
                 }`}
                 placeholder="Your name"
               />
             </label>
 
-            <label className="flex flex-col gap-2 text-sm text-slate-100">
+            <label className="flex flex-col gap-2 text-sm text-slate-100 in-data-[phase=noon]:text-sky-950">
               Email
               <input
                 type="email"
@@ -310,29 +311,29 @@ export default function Home() {
                 required
                 value={fields.email}
                 onChange={(event) => updateField("email", event.target.value)}
-                className={`rounded-xl border bg-slate-900/36 px-3 py-2.5 text-slate-100 outline-none transition placeholder:text-slate-400 focus:ring-2 ${
-                  fields.email ? "border-cyan-400/40 focus:border-cyan-300/60 focus:ring-cyan-300/20 shadow-[0_0_12px_rgba(34,211,238,0.2)]" : "border-white/20 focus:border-white/40 focus:ring-white/20"
+                className={`rounded-xl border bg-slate-900/36 px-3 py-2.5 text-slate-100 outline-none transition placeholder:text-slate-400 focus:ring-2 in-data-[phase=noon]:border-sky-700/30 in-data-[phase=noon]:bg-sky-100/88 in-data-[phase=noon]:text-sky-950 in-data-[phase=noon]:placeholder:text-sky-800/60 in-data-[phase=noon]:focus:ring-sky-900/12 ${
+                  fields.email ? "border-cyan-400/40 focus:border-cyan-300/60 focus:ring-cyan-300/20 shadow-[0_0_12px_rgba(34,211,238,0.2)] in-data-[phase=noon]:border-sky-700/35 in-data-[phase=noon]:focus:border-sky-800/45" : "border-white/20 focus:border-white/40 focus:ring-white/20 in-data-[phase=noon]:focus:border-sky-800/38"
                 }`}
                 placeholder="you@example.com"
               />
             </label>
           </div>
 
-          <label className="relative flex flex-col gap-2 text-sm text-slate-100">
+          <label className="relative flex flex-col gap-2 text-sm text-slate-100 in-data-[phase=noon]:text-sky-950">
             Subject
             <input
               type="text"
               name="subject"
               value={fields.subject}
               onChange={(event) => updateField("subject", event.target.value)}
-              className={`rounded-xl border bg-slate-900/36 px-3 py-2.5 text-slate-100 outline-none transition placeholder:text-slate-400 focus:ring-2 ${
-                fields.subject ? "border-cyan-400/40 focus:border-cyan-300/60 focus:ring-cyan-300/20 shadow-[0_0_12px_rgba(34,211,238,0.2)]" : "border-white/20 focus:border-white/40 focus:ring-white/20"
+              className={`rounded-xl border bg-slate-900/36 px-3 py-2.5 text-slate-100 outline-none transition placeholder:text-slate-400 focus:ring-2 in-data-[phase=noon]:border-sky-700/30 in-data-[phase=noon]:bg-sky-100/88 in-data-[phase=noon]:text-sky-950 in-data-[phase=noon]:placeholder:text-sky-800/60 in-data-[phase=noon]:focus:ring-sky-900/12 ${
+                fields.subject ? "border-cyan-400/40 focus:border-cyan-300/60 focus:ring-cyan-300/20 shadow-[0_0_12px_rgba(34,211,238,0.2)] in-data-[phase=noon]:border-sky-700/35 in-data-[phase=noon]:focus:border-sky-800/45" : "border-white/20 focus:border-white/40 focus:ring-white/20 in-data-[phase=noon]:focus:border-sky-800/38"
               }`}
               placeholder="How can I help?"
             />
           </label>
 
-          <label className="relative flex flex-col gap-2 text-sm text-slate-100">
+          <label className="relative flex flex-col gap-2 text-sm text-slate-100 in-data-[phase=noon]:text-sky-950">
             Message
             <textarea
               name="message"
@@ -340,20 +341,20 @@ export default function Home() {
               value={fields.message}
               onChange={(event) => updateField("message", event.target.value)}
               rows={6}
-              className={`rounded-xl border bg-slate-900/36 px-3 py-2.5 text-slate-100 outline-none transition placeholder:text-slate-400 focus:ring-2 ${
-                fields.message ? "border-cyan-400/40 focus:border-cyan-300/60 focus:ring-cyan-300/20 shadow-[0_0_12px_rgba(34,211,238,0.2)]" : "border-white/20 focus:border-white/40 focus:ring-white/20"
+              className={`rounded-xl border bg-slate-900/36 px-3 py-2.5 text-slate-100 outline-none transition placeholder:text-slate-400 focus:ring-2 in-data-[phase=noon]:border-sky-700/30 in-data-[phase=noon]:bg-sky-100/88 in-data-[phase=noon]:text-sky-950 in-data-[phase=noon]:placeholder:text-sky-800/60 in-data-[phase=noon]:focus:ring-sky-900/12 ${
+                fields.message ? "border-cyan-400/40 focus:border-cyan-300/60 focus:ring-cyan-300/20 shadow-[0_0_12px_rgba(34,211,238,0.2)] in-data-[phase=noon]:border-sky-700/35 in-data-[phase=noon]:focus:border-sky-800/45" : "border-white/20 focus:border-white/40 focus:ring-white/20 in-data-[phase=noon]:focus:border-sky-800/38"
               }`}
               placeholder="Tell me about your project, goals, and timeline..."
             />
           </label>
 
           <div className="relative flex flex-col gap-2.5 sm:flex-row sm:items-center sm:justify-between sm:gap-3">
-            <p className="text-xs text-slate-300">Recipient: {RECIPIENT_EMAIL}</p>
+            <p className="text-xs text-slate-300 in-data-[phase=noon]:text-sky-900">Recipient: {RECIPIENT_EMAIL}</p>
 
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full rounded-xl bg-white px-5 py-2.5 text-sm font-semibold text-slate-900 transition hover:bg-slate-200 disabled:cursor-not-allowed disabled:opacity-70 sm:w-auto"
+              className="w-full rounded-xl bg-white px-5 py-2.5 text-sm font-semibold text-slate-900 transition hover:bg-slate-200 disabled:cursor-not-allowed disabled:opacity-70 in-data-[phase=noon]:border in-data-[phase=noon]:border-sky-700/35 in-data-[phase=noon]:bg-sky-900/12 in-data-[phase=noon]:text-sky-950 in-data-[phase=noon]:hover:bg-sky-700 sm:w-auto"
             >
               {isSubmitting ? "Sending..." : "Send Message"}
             </button>
@@ -377,3 +378,7 @@ export default function Home() {
     </main>
   )
 }
+
+
+
+

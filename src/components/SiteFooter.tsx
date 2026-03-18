@@ -59,14 +59,11 @@ export default function SiteFooter({ className = "" }: SiteFooterProps) {
       viewport={{ once: true, amount: 0.3 }}
       transition={{ duration: 0.5 }}
     >
-      <div
-        className="h-px w-full"
-        style={{ background: "linear-gradient(to right, transparent, rgba(148,163,184,0.18) 30%, rgba(148,163,184,0.18) 70%, transparent)" }}
-      />
+      <div className="h-px w-full bg-linear-to-r from-transparent via-slate-400/18 to-transparent in-data-[phase=dawn]:via-sky-100/22 in-data-[phase=noon]:via-sky-200/20 in-data-[phase=night]:via-slate-300/16" />
       <div className="mt-8 flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
         <div>
-          <p className="text-sm font-semibold text-slate-100">Tanie</p>
-          <p className="mt-1 max-w-xs text-xs leading-relaxed text-slate-500">Full stack developer.</p>
+          <p className="text-sm font-semibold text-slate-100 in-data-[phase=dawn]:text-sky-50 in-data-[phase=noon]:text-sky-950 in-data-[phase=night]:text-slate-100">Tanie</p>
+          <p className="mt-1 max-w-xs text-xs leading-relaxed text-slate-500 in-data-[phase=dawn]:text-sky-100/85 in-data-[phase=noon]:text-sky-800 in-data-[phase=night]:text-slate-400">Full stack developer.</p>
         </div>
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-x-8">
           {SOCIALS.map((s) => (
@@ -75,9 +72,9 @@ export default function SiteFooter({ className = "" }: SiteFooterProps) {
               href={s.href}
               target={s.href.startsWith("mailto") ? undefined : "_blank"}
               rel={s.href.startsWith("mailto") ? undefined : "noopener noreferrer"}
-              className="group flex items-center gap-3 text-slate-400 transition hover:text-slate-100"
+              className="group flex items-center gap-3 text-slate-400 transition hover:text-slate-100 in-data-[phase=noon]:text-sky-800 in-data-[phase=noon]:hover:text-sky-950"
             >
-              <span className="flex h-8 w-8 items-center justify-center rounded-lg border border-white/10 bg-white/4 text-slate-400 transition group-hover:border-white/20 group-hover:text-slate-100">
+              <span className="flex h-8 w-8 items-center justify-center rounded-lg border border-white/10 bg-white/4 text-slate-400 transition group-hover:border-white/20 group-hover:text-slate-100 in-data-[phase=noon]:border-sky-700/28 in-data-[phase=noon]:bg-sky-100/85 in-data-[phase=noon]:text-sky-900 in-data-[phase=noon]:group-hover:border-sky-100/34 in-data-[phase=noon]:group-hover:text-sky-50">
                 {s.icon}
               </span>
               <span className="flex flex-col">
@@ -87,13 +84,14 @@ export default function SiteFooter({ className = "" }: SiteFooterProps) {
           ))}
         </div>
       </div>
-      <div
-        className="mt-8 h-px w-full"
-        style={{ background: "linear-gradient(to right, transparent, rgba(148,163,184,0.10) 30%, rgba(148,163,184,0.10) 70%, transparent)" }}
-      />
-      <p className="mt-4 text-center text-[11px] text-slate-600">
+      <div className="mt-8 h-px w-full bg-linear-to-r from-transparent via-slate-400/10 to-transparent in-data-[phase=dawn]:via-sky-100/14 in-data-[phase=noon]:via-sky-200/16 in-data-[phase=night]:via-slate-300/12" />
+      <p className="mt-4 text-center text-[11px] text-slate-600 in-data-[phase=dawn]:text-sky-100/75 in-data-[phase=noon]:text-sky-800 in-data-[phase=night]:text-slate-500">
         © {new Date().getFullYear()} Tanie — built with React, TypeScript and Tailwind
       </p>
     </motion.footer>
   )
 }
+
+
+
+
