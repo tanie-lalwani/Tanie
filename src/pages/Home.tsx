@@ -209,7 +209,7 @@ export default function Home() {
                 transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
               >
                 <div className="relative">
-                  <div className="relative overflow-hidden rounded-lg border border-white/14 bg-slate-950/70 shadow-[inset_0_1px_0_rgba(255,255,255,0.16)]">
+                  <div className="relative overflow-hidden rounded-lg border border-white/14 bg-slate-950/38 shadow-[inset_0_1px_0_rgba(255,255,255,0.16)]">
                     <div className="aspect-video bg-[radial-gradient(circle_at_20%_20%,rgba(255,255,255,0.1),transparent_28%),linear-gradient(160deg,#0f172a_0%,#030712_56%,#020617_100%)]" />
                     <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_40%,rgba(2,6,23,0.76)_100%)]" />
                     <div className="absolute bottom-2.5 left-2.5 right-2.5 flex flex-col items-start justify-between gap-1.5 sm:bottom-3 sm:left-3 sm:right-3 sm:flex-row sm:items-end sm:gap-2.5">
@@ -217,7 +217,7 @@ export default function Home() {
                         <p className="text-sm font-semibold text-white">{activeProject.client}</p>
                         <p className="mt-0.5 text-[10px] uppercase tracking-[0.16em] text-slate-400">{activeProject.role}</p>
                       </div>
-                      <div className="rounded-full border border-white/18 bg-white/10 px-2.5 py-0.5 text-[9px] font-medium text-slate-200 backdrop-blur-sm sm:text-[10px]">
+                      <div className="rounded-full border border-white/18 bg-white/6 px-2.5 py-0.5 text-[9px] font-medium text-slate-200 sm:text-[10px]">
                         {activeProject.project}
                       </div>
                     </div>
@@ -313,7 +313,7 @@ export default function Home() {
                 required
                 value={fields.name}
                 onChange={(event) => updateField("name", event.target.value)}
-                className={`rounded-xl border bg-slate-900/70 px-3 py-2.5 text-slate-100 outline-none transition placeholder:text-slate-400 focus:ring-2 ${
+                className={`rounded-xl border bg-slate-900/36 px-3 py-2.5 text-slate-100 outline-none transition placeholder:text-slate-400 focus:ring-2 ${
                   fields.name ? "border-cyan-400/40 focus:border-cyan-300/60 focus:ring-cyan-300/20 shadow-[0_0_12px_rgba(34,211,238,0.2)]" : "border-white/20 focus:border-white/40 focus:ring-white/20"
                 }`}
                 placeholder="Your name"
@@ -328,7 +328,7 @@ export default function Home() {
                 required
                 value={fields.email}
                 onChange={(event) => updateField("email", event.target.value)}
-                className={`rounded-xl border bg-slate-900/70 px-3 py-2.5 text-slate-100 outline-none transition placeholder:text-slate-400 focus:ring-2 ${
+                className={`rounded-xl border bg-slate-900/36 px-3 py-2.5 text-slate-100 outline-none transition placeholder:text-slate-400 focus:ring-2 ${
                   fields.email ? "border-cyan-400/40 focus:border-cyan-300/60 focus:ring-cyan-300/20 shadow-[0_0_12px_rgba(34,211,238,0.2)]" : "border-white/20 focus:border-white/40 focus:ring-white/20"
                 }`}
                 placeholder="you@example.com"
@@ -343,7 +343,7 @@ export default function Home() {
               name="subject"
               value={fields.subject}
               onChange={(event) => updateField("subject", event.target.value)}
-              className={`rounded-xl border bg-slate-900/70 px-3 py-2.5 text-slate-100 outline-none transition placeholder:text-slate-400 focus:ring-2 ${
+              className={`rounded-xl border bg-slate-900/36 px-3 py-2.5 text-slate-100 outline-none transition placeholder:text-slate-400 focus:ring-2 ${
                 fields.subject ? "border-cyan-400/40 focus:border-cyan-300/60 focus:ring-cyan-300/20 shadow-[0_0_12px_rgba(34,211,238,0.2)]" : "border-white/20 focus:border-white/40 focus:ring-white/20"
               }`}
               placeholder="How can I help?"
@@ -358,7 +358,7 @@ export default function Home() {
               value={fields.message}
               onChange={(event) => updateField("message", event.target.value)}
               rows={6}
-              className={`rounded-xl border bg-slate-900/70 px-3 py-2.5 text-slate-100 outline-none transition placeholder:text-slate-400 focus:ring-2 ${
+              className={`rounded-xl border bg-slate-900/36 px-3 py-2.5 text-slate-100 outline-none transition placeholder:text-slate-400 focus:ring-2 ${
                 fields.message ? "border-cyan-400/40 focus:border-cyan-300/60 focus:ring-cyan-300/20 shadow-[0_0_12px_rgba(34,211,238,0.2)]" : "border-white/20 focus:border-white/40 focus:ring-white/20"
               }`}
               placeholder="Tell me about your project, goals, and timeline..."

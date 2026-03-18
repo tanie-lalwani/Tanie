@@ -389,27 +389,6 @@ function addDawnBirds(scene: THREE.Scene, isMobile: boolean) {
 }
 
 function addNightBeachAccents(scene: THREE.Scene, isMobile: boolean) {
-  const moon = new THREE.Mesh(
-    new THREE.SphereGeometry(22, 32, 32),
-    new THREE.MeshBasicMaterial({ color: 0xd7e9ff }),
-  )
-  moon.position.set(180, 140, -380)
-  scene.add(moon)
-
-  const shorelineGlow = new THREE.Mesh(
-    new THREE.PlaneGeometry(980, 18),
-    new THREE.MeshBasicMaterial({
-      color: 0x8be8ff,
-      transparent: true,
-      opacity: 0.12,
-      blending: THREE.AdditiveBlending,
-      depthWrite: false,
-    }),
-  )
-  shorelineGlow.rotation.x = -Math.PI / 2
-  shorelineGlow.position.set(0, 0.2, 9)
-  scene.add(shorelineGlow)
-
   const starCount = isMobile ? 120 : 240
   const positions = new Float32Array(starCount * 3)
 
@@ -433,6 +412,13 @@ function addNightBeachAccents(scene: THREE.Scene, isMobile: boolean) {
     }),
   )
   scene.add(stars)
+
+  return {
+    update: (time: number) => {
+      const starMaterial = stars.material as THREE.PointsMaterial
+      starMaterial.opacity = 0.63 + Math.sin(time * 0.22) * 0.08
+    },
+  }
 }
 
 export default function GlobalBeachBackdrop({ phase }: { phase: TimePhase }) {
@@ -498,16 +484,16 @@ export default function GlobalBeachBackdrop({ phase }: { phase: TimePhase }) {
     water.position.y = -0.05
     scene.add(water)
 
-    addSand(scene, preset, phase)
-    scatterBeachDecor(scene, isMobile, preset)
+    if (phase !== "night") {
+      addSand(scene, preset, phase)
+      scatterBeachDecor(scene, isMobile, preset)
+    }
     const dawnBirdFlock = phase === "dawn" ? addDawnBirds(scene, isMobile) : null
     const noonCloudLayer = phase === "noon" ? addNoonClouds(scene, isMobile) : null
     const noonSunLayer = phase === "noon" ? addNoonSun(scene) : null
     const noonShipLayer = phase === "noon" ? addNoonShipIllusion(scene, isMobile) : null
 
-    if (phase === "night") {
-      addNightBeachAccents(scene, isMobile)
-    }
+    const nightLayer = phase === "night" ? addNightBeachAccents(scene, isMobile) : null
 
     scene.add(new THREE.AmbientLight(preset.ambientColor, preset.ambientIntensity))
     const sunLight = new THREE.DirectionalLight(preset.sunlightColor, preset.sunlightIntensity)
@@ -529,6 +515,7 @@ export default function GlobalBeachBackdrop({ phase }: { phase: TimePhase }) {
       noonCloudLayer?.update(elapsed)
       noonSunLayer?.update()
       noonShipLayer?.update(elapsed)
+      nightLayer?.update(elapsed)
       renderer.render(scene, camera)
     }
     render()
