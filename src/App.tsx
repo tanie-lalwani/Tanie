@@ -1,4 +1,4 @@
-import { Suspense, lazy, useEffect, useState } from "react";
+import { Suspense, lazy, useEffect, useRef, useState } from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
 import Lenis from "lenis";
 import Navbar from "./components/Navbar.tsx";
@@ -13,6 +13,7 @@ const InterviewMe = lazy(() => import("./pages/InterviewMe.tsx"));
 export default function App() {
   const location = useLocation();
   const [timePhase, setTimePhase] = useState<TimePhase>("dawn")
+  const lenisRef = useRef<Lenis | null>(null)
 
   // Animation hooks
   useCursorTrail()
@@ -21,7 +22,13 @@ export default function App() {
   useEffect(() => {
     if (typeof window === "undefined") return
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return
-    if (location.pathname === "/interview-me") return
+    if (location.pathname === "/interview-me") {
+      lenisRef.current?.destroy()
+      lenisRef.current = null
+      return
+    }
+
+    lenisRef.current?.destroy()
 
     const lenis = new Lenis({
       duration: 1.1,
@@ -29,6 +36,7 @@ export default function App() {
       wheelMultiplier: 0.9,
       touchMultiplier: 1,
     })
+    lenisRef.current = lenis
 
     let rafId = 0
     const raf = (time: number) => {
@@ -40,7 +48,12 @@ export default function App() {
 
     return () => {
       window.cancelAnimationFrame(rafId)
-      lenis.destroy()
+      if (lenisRef.current === lenis) {
+        lenisRef.current.destroy()
+        lenisRef.current = null
+      } else {
+        lenis.destroy()
+      }
     }
   }, [location.pathname])
 

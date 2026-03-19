@@ -19,7 +19,7 @@ export function useCursorTrail() {
     container.style.top = "0"
     container.style.left = "0"
     container.style.pointerEvents = "none"
-    container.style.zIndex = "9999"
+    container.style.zIndex = "5"
     document.body.appendChild(container)
     containerRef.current = container
 

@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef } from "react"
 import * as THREE from "three"
+import type { MotionValue } from "framer-motion"
 import { Water } from "three/examples/jsm/objects/Water.js"
 import { Sky } from "three/examples/jsm/objects/Sky.js"
 import { useIsMobile } from "../hooks/useIsMobile"
@@ -432,7 +433,13 @@ function addDawnBirds(scene: THREE.Scene, isMobile: boolean, preset: BeachMoodPr
   return { update }
 }
 
-function addUnderwaterParticles(scene: THREE.Scene, phase: TimePhase, depthStage: "mid" | "deep", isMobile: boolean) {
+function addUnderwaterParticles(
+  scene: THREE.Scene,
+  phase: TimePhase,
+  depthStage: "mid" | "deep",
+  isMobile: boolean,
+  bubbleTexture?: THREE.Texture,
+) {
   const count = isMobile ? (depthStage === "deep" ? 280 : 220) : depthStage === "deep" ? 520 : 380
   const spread = depthStage === "deep" ? 520 : 460
   const depthSpan = depthStage === "deep" ? 520 : 420
@@ -486,6 +493,9 @@ function addUnderwaterParticles(scene: THREE.Scene, phase: TimePhase, depthStage
     blending: THREE.AdditiveBlending,
     depthWrite: false,
     vertexColors: true,
+    map: bubbleTexture,
+    alphaMap: bubbleTexture,
+    alphaTest: bubbleTexture ? 0.08 : 0,
   })
 
   const particles = new THREE.Points(geometry, material)
@@ -580,8 +590,8 @@ function addMutedTopSunlight(scene: THREE.Scene, phase: TimePhase, depthStage: "
   const isMid = depthStage === "mid"
   const lightColor = phase === "noon" ? 0xb8dcff : 0xa8c9ea
   const topLight = new THREE.DirectionalLight(lightColor, phase === "noon" ? (isMid ? 0.19 : 0.13) : isMid ? 0.15 : 0.1)
-  topLight.position.set(0, 96, 28)
-  topLight.target.position.set(0, -40, -260)
+  topLight.position.set(0, 112, 38)
+  topLight.target.position.set(0, 6, -138)
   scene.add(topLight)
   scene.add(topLight.target)
 
@@ -598,22 +608,29 @@ function addMutedTopSunlight(scene: THREE.Scene, phase: TimePhase, depthStage: "
     }),
   )
 
-  haze.position.set(0, 18, -260)
+  haze.position.set(0, 28, -158)
+  haze.rotation.x = -0.14
   scene.add(haze)
 
   return {
     update: (time: number) => {
-      haze.position.x = Math.sin(time * 0.12) * 18
-      haze.position.y = 18 + Math.sin(time * 0.2) * 1.8
+      haze.position.x = Math.sin(time * 0.12) * 16
+      haze.position.y = 28 + Math.sin(time * 0.2) * 1.8
       const material = haze.material as THREE.MeshBasicMaterial
-      material.opacity = (phase === "noon" ? (isMid ? 0.09 : 0.065) : isMid ? 0.075 : 0.05) + Math.sin(time * 0.55) * 0.009
+      material.opacity = (phase === "noon" ? (isMid ? 0.1 : 0.07) : isMid ? 0.082 : 0.055) + Math.sin(time * 0.55) * 0.009
     },
   }
 }
 
-function addUnderwaterReflections(scene: THREE.Scene, phase: TimePhase, depthStage: "mid" | "deep") {
-  const textureA = buildCausticTexture(256)
-  const textureB = buildCausticTexture(256)
+function addUnderwaterReflections(
+  scene: THREE.Scene,
+  phase: TimePhase,
+  depthStage: "mid" | "deep",
+  causticTextureA?: THREE.Texture,
+  causticTextureB?: THREE.Texture,
+) {
+  const textureA = causticTextureA ?? buildCausticTexture(256)
+  const textureB = causticTextureB ?? buildCausticTexture(256)
   textureB.repeat.set(3.6, 2.8)
 
   const color = phase === "noon" ? 0x9edaff : phase === "dawn" ? 0x86b9de : 0x7da9ca
@@ -645,8 +662,8 @@ function addUnderwaterReflections(scene: THREE.Scene, phase: TimePhase, depthSta
     }),
   )
 
-  planeA.position.set(0, -6, -245)
-  planeB.position.set(0, -10, -270)
+  planeA.position.set(0, -3, -168)
+  planeB.position.set(0, -8, -186)
   scene.add(planeA)
   scene.add(planeB)
 
@@ -665,8 +682,8 @@ function addUnderwaterReflections(scene: THREE.Scene, phase: TimePhase, depthSta
   }
 }
 
-function addMidDepthFish(scene: THREE.Scene, isMobile: boolean, phase: TimePhase) {
-  const fishCount = isMobile ? 10 : 18
+function addMidDepthFish(scene: THREE.Scene, _isMobile: boolean, phase: TimePhase) {
+  const fishCount = 0
   const fishGroup = new THREE.Group()
   const fish: Array<{
     mesh: THREE.Group
@@ -839,7 +856,7 @@ function getSectionScrollProgress(element: HTMLElement) {
 
 function getDepthBlend(depthStage: "surface" | "mid" | "deep", sectionProgress: number) {
   if (depthStage === "surface") {
-    return smoothstep(0.58, 1, sectionProgress) * 0.34
+    return smoothstep(0.08, 0.95, sectionProgress)
   }
 
   if (depthStage === "mid") {
@@ -847,56 +864,6 @@ function getDepthBlend(depthStage: "surface" | "mid" | "deep", sectionProgress: 
   }
 
   return 0.7 + smoothstep(0.04, 0.94, sectionProgress) * 0.3
-}
-
-function addThermoclineVeil(scene: THREE.Scene, phase: TimePhase, depthStage: "surface" | "mid" | "deep") {
-  const warmTint = phase === "noon" ? 0xbfe7ff : 0xb2d3ef
-  const coolTint = phase === "noon" ? 0x5aa6d2 : 0x4f84ac
-
-  const topBand = new THREE.Mesh(
-    new THREE.PlaneGeometry(1400, 220),
-    new THREE.MeshBasicMaterial({
-      color: warmTint,
-      transparent: true,
-      opacity: 0,
-      blending: THREE.AdditiveBlending,
-      depthWrite: false,
-      side: THREE.DoubleSide,
-    }),
-  )
-  topBand.position.set(0, 14, -118)
-  scene.add(topBand)
-
-  const lowerBand = new THREE.Mesh(
-    new THREE.PlaneGeometry(1400, 280),
-    new THREE.MeshBasicMaterial({
-      color: coolTint,
-      transparent: true,
-      opacity: 0,
-      blending: THREE.NormalBlending,
-      depthWrite: false,
-      side: THREE.DoubleSide,
-    }),
-  )
-  lowerBand.position.set(0, -2, -130)
-  scene.add(lowerBand)
-
-  const stageBoost = depthStage === "surface" ? 1 : depthStage === "mid" ? 0.85 : 0.68
-
-  return {
-    update: (time: number, depthBlend: number) => {
-      const warmEdge = smoothstep(0.18, 0.65, depthBlend)
-      const coolEdge = smoothstep(0.42, 1, depthBlend)
-      const topMaterial = topBand.material as THREE.MeshBasicMaterial
-      const lowerMaterial = lowerBand.material as THREE.MeshBasicMaterial
-
-      topMaterial.opacity = (0.08 + warmEdge * 0.18) * stageBoost + Math.sin(time * 0.8) * 0.006
-      lowerMaterial.opacity = (0.03 + coolEdge * 0.22) * stageBoost + Math.cos(time * 0.55) * 0.005
-
-      topBand.position.y = 14 + Math.sin(time * 0.24) * 1.8
-      lowerBand.position.y = -2 + Math.sin(time * 0.18 + 0.6) * 2.4
-    },
-  }
 }
 
 function disposeScene(scene: THREE.Scene) {
@@ -921,61 +888,104 @@ type GlobalBeachBackdropProps = {
   phase: TimePhase
   position?: "fixed" | "absolute"
   depthStage?: "surface" | "mid" | "deep"
+  enableContinuousDive?: boolean
+  diveProgressValue?: MotionValue<number>
 }
 
 export default function GlobalBeachBackdrop({
   phase,
   position = "fixed",
   depthStage = "surface",
+  enableContinuousDive = false,
+  diveProgressValue,
 }: GlobalBeachBackdropProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
+  const externalDiveProgressRef = useRef<number | null>(null)
   const isMobile = useIsMobile()
   const preset = useMemo(() => MOOD_PRESETS[phase], [phase])
+  const isSurfaceStage = depthStage === "surface"
+  const usesContinuousDive = enableContinuousDive
+  const supportsUnderwaterSystems = !isSurfaceStage || usesContinuousDive
+
+  useEffect(() => {
+    if (!diveProgressValue) {
+      externalDiveProgressRef.current = null
+      return
+    }
+
+    externalDiveProgressRef.current = clamp01(diveProgressValue.get())
+    const unsubscribe = diveProgressValue.on("change", (value) => {
+      externalDiveProgressRef.current = clamp01(value)
+    })
+
+    return () => {
+      unsubscribe()
+    }
+  }, [diveProgressValue])
 
   const depthProfile = useMemo(() => {
+    if (usesContinuousDive) {
+      return {
+        exposureMultiplier: 0.34,
+        fogDensityMultiplier: 5.1,
+        waterLightnessDrop: 0.42,
+        waterSaturationBoost: 0.12,
+        fogLightnessDrop: 0.54,
+        cameraY: 0.45,
+        cameraZ: 79,
+        lookAtY: -0.9,
+        lookAtZ: -170,
+        lightMultiplier: 0.16,
+        distortionMultiplier: 0.84,
+      }
+    }
+
     if (depthStage === "mid") {
       return {
-        exposureMultiplier: 0.58,
-        fogDensityMultiplier: 3,
-        waterLightnessDrop: 0.26,
-        waterSaturationBoost: 0.08,
-        fogLightnessDrop: 0.34,
-        cameraY: -1.4,
-        lookAtY: -4.8,
-        lookAtZ: -176,
-        lightMultiplier: 0.36,
-        distortionMultiplier: 0.92,
+        exposureMultiplier: 0.46,
+        fogDensityMultiplier: 3.7,
+        waterLightnessDrop: 0.31,
+        waterSaturationBoost: 0.1,
+        fogLightnessDrop: 0.4,
+        cameraY: 2.8,
+        cameraZ: 84,
+        lookAtY: 1.2,
+        lookAtZ: -152,
+        lightMultiplier: 0.29,
+        distortionMultiplier: 0.9,
       }
     }
 
     if (depthStage === "deep") {
       return {
-        exposureMultiplier: 0.42,
-        fogDensityMultiplier: 4.6,
-        waterLightnessDrop: 0.36,
-        waterSaturationBoost: 0.1,
-        fogLightnessDrop: 0.48,
-        cameraY: -4.2,
-        lookAtY: -6.6,
-        lookAtZ: -206,
-        lightMultiplier: 0.2,
-        distortionMultiplier: 0.84,
+        exposureMultiplier: 0.34,
+        fogDensityMultiplier: 5.2,
+        waterLightnessDrop: 0.42,
+        waterSaturationBoost: 0.12,
+        fogLightnessDrop: 0.56,
+        cameraY: 0.6,
+        cameraZ: 80,
+        lookAtY: -0.5,
+        lookAtZ: -168,
+        lightMultiplier: 0.16,
+        distortionMultiplier: 0.82,
       }
     }
 
     return {
-      exposureMultiplier: 1,
+      exposureMultiplier: 0.78,
       fogDensityMultiplier: 1,
       waterLightnessDrop: 0,
       waterSaturationBoost: 0,
       fogLightnessDrop: 0,
-      cameraY: 11.5,
-      lookAtY: 1.8,
-      lookAtZ: -140,
-      lightMultiplier: 1,
+      cameraY: 2,
+      cameraZ: 70,
+      lookAtY: -1.2,
+      lookAtZ: -162,
+      lightMultiplier: 0.72,
       distortionMultiplier: 1,
     }
-  }, [depthStage])
+  }, [depthStage, usesContinuousDive])
 
   const waterColor = useMemo(() => {
     const color = new THREE.Color(preset.waterColor)
@@ -1025,8 +1035,6 @@ export default function GlobalBeachBackdrop({
     return color
   }, [fogColor, waterColor, phase])
 
-  const isSurfaceStage = depthStage === "surface"
-
   useEffect(() => {
     const canvas = canvasRef.current
     if (!canvas) return
@@ -1042,7 +1050,7 @@ export default function GlobalBeachBackdrop({
     renderer.setSize(canvas.clientWidth, canvas.clientHeight, false)
     renderer.toneMapping = THREE.ACESFilmicToneMapping
     renderer.toneMappingExposure = Math.max(0.28, preset.exposure * depthProfile.exposureMultiplier)
-    if (isSurfaceStage) {
+    if (isSurfaceStage && !usesContinuousDive) {
       renderer.setClearAlpha(0)
     } else {
       renderer.setClearColor(submergedClearColor, 1)
@@ -1050,6 +1058,16 @@ export default function GlobalBeachBackdrop({
 
     const scene = new THREE.Scene()
     scene.fog = new THREE.FogExp2(fogColor, preset.fogDensity * depthProfile.fogDensityMultiplier)
+
+    const textureLoader = new THREE.TextureLoader()
+    const proceduralWaterNormals = buildNormalMap()
+    const waterNormalsTexture = textureLoader.load("/textures/waternormals.jpg")
+    waterNormalsTexture.wrapS = THREE.RepeatWrapping
+    waterNormalsTexture.wrapT = THREE.RepeatWrapping
+
+    const bubbleSpriteTexture = textureLoader.load("/textures/bubble-circle.png")
+    bubbleSpriteTexture.wrapS = THREE.ClampToEdgeWrapping
+    bubbleSpriteTexture.wrapT = THREE.ClampToEdgeWrapping
 
     const camera = new THREE.PerspectiveCamera(
       50,
@@ -1091,7 +1109,7 @@ export default function GlobalBeachBackdrop({
       water = new Water(waterGeometry, {
         textureWidth: 512,
         textureHeight: 512,
-        waterNormals: buildNormalMap(),
+        waterNormals: waterNormalsTexture ?? proceduralWaterNormals,
         sunDirection: new THREE.Vector3().copy(sun).normalize(),
         sunColor,
         waterColor,
@@ -1113,12 +1131,14 @@ export default function GlobalBeachBackdrop({
     const noonCloudLayer = phase === "noon" && isSurfaceStage ? addNoonClouds(scene, isMobile) : null
     const noonSunLayer = phase === "noon" && isSurfaceStage ? addNoonSun(scene) : null
     const noonShipLayer = phase === "noon" && isSurfaceStage ? addNoonShipIllusion(scene, isMobile) : null
-    const underwaterLayer = !isSurfaceStage ? addUnderwaterParticles(scene, phase, depthStage, isMobile) : null
-    const mutedSunlightLayer = !isSurfaceStage ? addMutedTopSunlight(scene, phase, depthStage) : null
-    const reflectionLayer = !isSurfaceStage ? addUnderwaterReflections(scene, phase, depthStage) : null
-    const thermoclineLayer = addThermoclineVeil(scene, phase, depthStage)
-    const fishLayer = depthStage === "mid" ? addMidDepthFish(scene, isMobile, phase) : null
-    const deepFishLayer = depthStage === "deep" ? addDeepFish(scene, isMobile, phase) : null
+    const underwaterDepthStage: "mid" | "deep" = depthStage === "deep" ? "deep" : "mid"
+    const underwaterLayer = supportsUnderwaterSystems
+      ? addUnderwaterParticles(scene, phase, underwaterDepthStage, isMobile, bubbleSpriteTexture)
+      : null
+    const mutedSunlightLayer = supportsUnderwaterSystems ? addMutedTopSunlight(scene, phase, underwaterDepthStage) : null
+    const reflectionLayer = supportsUnderwaterSystems ? addUnderwaterReflections(scene, phase, underwaterDepthStage) : null
+    const fishLayer = depthStage === "mid" || usesContinuousDive ? addMidDepthFish(scene, isMobile, phase) : null
+    const deepFishLayer = depthStage === "deep" || usesContinuousDive ? addDeepFish(scene, isMobile, phase) : null
 
     // Configure camera layers: layer 0 (default) + layer 1 (stars for night)
     camera.layers.enable(1)
@@ -1186,22 +1206,26 @@ export default function GlobalBeachBackdrop({
       }
 
       const sectionProgress = getSectionScrollProgress(parent)
-      const targetDepthBlend = getDepthBlend(depthStage, sectionProgress)
+      const controlledProgress =
+        typeof externalDiveProgressRef.current === "number" ? externalDiveProgressRef.current : sectionProgress
+      const targetDepthBlend = usesContinuousDive ? controlledProgress : getDepthBlend(depthStage, controlledProgress)
       smoothedDepthBlend = THREE.MathUtils.lerp(smoothedDepthBlend, targetDepthBlend, 0.065)
-      const stageDepth = isSurfaceStage ? smoothedDepthBlend : clamp01(smoothedDepthBlend)
+      const stageDepth = usesContinuousDive || !isSurfaceStage ? clamp01(smoothedDepthBlend) : smoothedDepthBlend
 
       const exposureMultiplier = THREE.MathUtils.lerp(1, depthProfile.exposureMultiplier, stageDepth)
       renderer.toneMappingExposure = Math.max(0.2, preset.exposure * exposureMultiplier)
 
-      if (!isSurfaceStage) {
+      if (!isSurfaceStage || usesContinuousDive) {
         dynamicFogColor.copy(stageFogColor).lerp(deepFog, smoothstep(0.25, 1, stageDepth))
         dynamicClearColor.copy(stageClearColor).lerp(deepClear, smoothstep(0.2, 1, stageDepth))
         fog.color.copy(dynamicFogColor)
-        fog.density = preset.fogDensity * THREE.MathUtils.lerp(1.8, depthProfile.fogDensityMultiplier, stageDepth)
+        const startFogDensity = usesContinuousDive ? 1 : 1.8
+        fog.density = preset.fogDensity * THREE.MathUtils.lerp(startFogDensity, depthProfile.fogDensityMultiplier, stageDepth)
         renderer.setClearColor(dynamicClearColor, 1)
       }
 
       camera.position.y = THREE.MathUtils.lerp(11.5, depthProfile.cameraY, stageDepth)
+      camera.position.z = THREE.MathUtils.lerp(88, depthProfile.cameraZ, stageDepth)
       cameraLookAt.y = THREE.MathUtils.lerp(1.8, depthProfile.lookAtY, stageDepth)
       cameraLookAt.z = THREE.MathUtils.lerp(-140, depthProfile.lookAtZ, stageDepth)
       camera.lookAt(cameraLookAt)
@@ -1221,12 +1245,15 @@ export default function GlobalBeachBackdrop({
       noonCloudLayer?.update(elapsed)
       noonSunLayer?.update()
       noonShipLayer?.update(elapsed)
-      thermoclineLayer.update(elapsed, stageDepth)
       underwaterLayer?.update(elapsed, delta)
       mutedSunlightLayer?.update(elapsed)
       reflectionLayer?.update(elapsed)
-      fishLayer?.update(elapsed)
-      deepFishLayer?.update(elapsed)
+      if (stageDepth > 0.34) {
+        fishLayer?.update(elapsed)
+      }
+      if (stageDepth > 0.56) {
+        deepFishLayer?.update(elapsed)
+      }
       renderer.render(scene, camera)
     }
     render()
@@ -1246,12 +1273,15 @@ export default function GlobalBeachBackdrop({
       cancelAnimationFrame(raf)
       resizeObserver.disconnect()
       visibilityObserver.disconnect()
+      proceduralWaterNormals.dispose()
+      waterNormalsTexture.dispose()
+      bubbleSpriteTexture.dispose()
       water?.geometry.dispose()
       water?.material.dispose()
       disposeScene(scene)
       renderer.dispose()
     }
-  }, [depthProfile, fogColor, isMobile, isSurfaceStage, phase, preset, submergedClearColor, sunColor, waterColor, depthStage])
+  }, [depthProfile, fogColor, isMobile, isSurfaceStage, phase, preset, submergedClearColor, sunColor, waterColor, depthStage, usesContinuousDive, supportsUnderwaterSystems])
 
   const positionClass = position === "absolute" ? "absolute" : "fixed"
 
