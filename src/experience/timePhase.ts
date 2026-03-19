@@ -1,20 +1,17 @@
-export type TimePhase = "dawn" | "noon" | "night"
+export type TimePhase = "dawn" | "noon"
 
 export function getLocalTimePhase(date = new Date()): TimePhase {
   const hour = date.getHours()
 
   if (hour >= 5 && hour < 9) return "dawn"
-  if (hour >= 9 && hour < 18) return "noon"
-  return "night"
+  return "noon"
 }
 
 export function formatPhaseLabel(phase: TimePhase): string {
   switch (phase) {
     case "dawn":
-      return "Dawn"
+      return "Light"
     case "noon":
-      return "Noon"
-    case "night":
-      return "Night"
+      return "Dark"
   }
 }

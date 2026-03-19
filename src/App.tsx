@@ -3,8 +3,7 @@ import { Route, Routes, useLocation } from "react-router-dom";
 import Lenis from "lenis";
 import Navbar from "./components/Navbar.tsx";
 import SiteFooter from "./components/SiteFooter";
-import BackdropSettingsBar from "./components/BackdropSettingsBar";
-import { getLocalTimePhase, type TimePhase } from "./experience/timePhase";
+import { type TimePhase } from "./experience/timePhase";
 import Home from "./pages/Home";
 import { useCursorTrail } from "./hooks/useCursorTrail";
 import { useClickRipple } from "./hooks/useClickRipple";
@@ -13,10 +12,7 @@ const InterviewMe = lazy(() => import("./pages/InterviewMe.tsx"));
 
 export default function App() {
   const location = useLocation();
-  const [isSettingsOpen, setIsSettingsOpen] = useState(false)
-  const [isTimeSyncEnabled, setIsTimeSyncEnabled] = useState(false)
-  const [manualPhase, setManualPhase] = useState<TimePhase>("dawn")
-  const [autoTimePhase, setAutoTimePhase] = useState<TimePhase>("dawn")
+  const [timePhase, setTimePhase] = useState<TimePhase>("dawn")
 
   // Animation hooks
   useCursorTrail()
@@ -48,20 +44,9 @@ export default function App() {
     }
   }, [location.pathname])
 
-  useEffect(() => {
-    if (!isTimeSyncEnabled) return
-
-    const syncPhase = () => {
-      const nextPhase = getLocalTimePhase()
-      setAutoTimePhase((prev) => (prev === nextPhase ? prev : nextPhase))
-    }
-
-    syncPhase()
-    const timer = window.setInterval(syncPhase, 60000)
-    return () => window.clearInterval(timer)
-  }, [isTimeSyncEnabled])
-
-  const timePhase: TimePhase = isTimeSyncEnabled ? autoTimePhase : manualPhase
+  const toggleMode = () => {
+    setTimePhase((prev) => (prev === "dawn" ? "noon" : "dawn"))
+  }
 
   const showNavbar = location.pathname !== "/interview-me"
   const showFooter = location.pathname !== "/interview-me"
@@ -73,7 +58,7 @@ export default function App() {
     >
       <div className="pointer-events-none absolute inset-0 z-1 bg-[radial-gradient(circle_at_50%_44%,rgba(2,6,23,0)_0%,rgba(2,6,23,0.08)_70%,rgba(2,6,23,0.22)_100%)] data-[phase=noon]:bg-[radial-gradient(circle_at_50%_44%,rgba(2,30,58,0)_0%,rgba(2,30,58,0.08)_72%,rgba(2,6,23,0.24)_100%)]" />
       <div className="relative z-10 readability-text-shadow">
-        {showNavbar ? <Navbar isSettingsOpen={isSettingsOpen} onSettingsToggle={setIsSettingsOpen} /> : null}
+        {showNavbar ? <Navbar phase={timePhase} onToggleMode={toggleMode} /> : null}
         <Suspense fallback={<div className="px-4 py-10 text-center text-sm text-slate-400">Loading...</div>}>
           <Routes>
             <Route path="/" element={<Home phase={timePhase} />} />
@@ -82,14 +67,6 @@ export default function App() {
         </Suspense>
         {showFooter ? <SiteFooter /> : null}
       </div>
-      <BackdropSettingsBar
-        isOpen={isSettingsOpen}
-        onOpenChange={setIsSettingsOpen}
-        isTimeSyncEnabled={isTimeSyncEnabled}
-        phase={timePhase}
-        onToggleTimeSync={setIsTimeSyncEnabled}
-        onSelectPhase={setManualPhase}
-      />
     </main>
   );
 }
