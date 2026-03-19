@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { NavLink } from 'react-router-dom'
+import type { TimePhase } from '../experience/timePhase'
 
 const navLinks = [
   { label: 'Built So Far', href: '#projects' },
@@ -8,13 +9,14 @@ const navLinks = [
 ]
 
 type NavbarProps = {
-  isSettingsOpen: boolean
-  onSettingsToggle: (open: boolean) => void
+  phase: TimePhase
+  onToggleMode: () => void
 }
 
-export default function Navbar({ isSettingsOpen, onSettingsToggle }: NavbarProps) {
+export default function Navbar({ phase, onToggleMode }: NavbarProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const closeMenu = () => setIsMenuOpen(false)
+  const isDarkMode = phase === 'noon'
 
   return (
     <header className="sticky top-0 z-20">
@@ -50,16 +52,22 @@ export default function Navbar({ isSettingsOpen, onSettingsToggle }: NavbarProps
 
         <button
           type="button"
-          title="Scene settings"
+          title={isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'}
           className="relative inline-flex items-center justify-center rounded-md border border-white/26 bg-white/12 px-2 py-1.5 text-white transition hover:bg-white/18 in-data-[phase=noon]:border-sky-700/30 in-data-[phase=noon]:bg-sky-200/75 in-data-[phase=noon]:text-sky-950 in-data-[phase=noon]:hover:bg-sky-900/60 md:px-2.5"
-          onClick={() => onSettingsToggle(!isSettingsOpen)}
-          aria-label="Toggle scene settings"
-          aria-pressed={isSettingsOpen}
+          onClick={onToggleMode}
+          aria-label={isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'}
+          aria-pressed={isDarkMode}
         >
-          <svg className="h-4 w-4 md:h-4.5 md:w-4.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <circle cx="12" cy="12" r="1" />
-            <path d="M12 1v6m0 6v6M4.22 4.22l4.24 4.24m5.08 5.08l4.24 4.24M1 12h6m6 0h6M4.22 19.78l4.24-4.24m5.08-5.08l4.24-4.24" />
-          </svg>
+          {isDarkMode ? (
+            <svg className="h-4 w-4 md:h-4.5 md:w-4.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+              <circle cx="12" cy="12" r="3.8" />
+              <path strokeLinecap="round" d="M12 2.8v2.4M12 18.8v2.4M2.8 12h2.4M18.8 12h2.4M5.7 5.7l1.7 1.7M16.6 16.6l1.7 1.7M18.3 5.7l-1.7 1.7M7.4 16.6l-1.7 1.7" />
+            </svg>
+          ) : (
+            <svg className="h-4 w-4 md:h-4.5 md:w-4.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M14.8 3.2a8.6 8.6 0 108 12.1 7.1 7.1 0 01-8-12.1z" />
+            </svg>
+          )}
         </button>
 
         <button

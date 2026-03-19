@@ -10,7 +10,7 @@ type BackdropSettingsBarProps = {
   onSelectPhase: (phase: TimePhase) => void
 }
 
-const MANUAL_PHASES: TimePhase[] = ["dawn", "noon", "night"]
+const MANUAL_PHASES: TimePhase[] = ["dawn", "noon"]
 
 const PHASE_ICONS: Record<TimePhase, ReactNode> = {
   dawn: (
@@ -22,11 +22,6 @@ const PHASE_ICONS: Record<TimePhase, ReactNode> = {
     <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8}>
       <circle cx="12" cy="12" r="3.8" />
       <path strokeLinecap="round" d="M12 2.8v2.4M12 18.8v2.4M2.8 12h2.4M18.8 12h2.4M5.7 5.7l1.7 1.7M16.6 16.6l1.7 1.7M18.3 5.7l-1.7 1.7M7.4 16.6l-1.7 1.7" />
-    </svg>
-  ),
-  night: (
-    <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M14.8 3.2a8.6 8.6 0 108 12.1 7.1 7.1 0 01-8-12.1z" />
     </svg>
   ),
 }
@@ -83,7 +78,7 @@ export default function BackdropSettingsBar({
         <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-400 in-data-[phase=noon]:text-sky-800">
           Mood Board
         </p>
-        <div className="mt-1.5 grid grid-cols-3 gap-1.5">
+        <div className="mt-1.5 grid grid-cols-2 gap-1.5">
           {MANUAL_PHASES.map((item) => (
             <button
               key={item}
