@@ -8,6 +8,10 @@ import type { TimePhase } from "./timePhase"
 import { MOOD_PRESETS, type BeachMoodPreset } from "./moods"
 
 const GLOBAL_OCEAN_START = performance.now() * 0.001
+const ENABLE_DAWN_BIRDS = false
+const ENABLE_NOON_SHIP = false
+const ENABLE_FISH = false
+const ENABLE_GLASS_TANK_EFFECT = false
 
 function buildNormalMap(size = 256): THREE.DataTexture {
   const data = new Uint8Array(size * size * 4)
@@ -869,6 +873,10 @@ function addUnderwaterSurfaceWindow(
 
   const tint = phase === "noon" ? 0xc9f3ff : phase === "dawn" ? 0xb7e6fb : 0x9ad3ea
   const baseOpacity = depthStage === "mid" ? 0.24 : 0.2
+  const baseSurfaceY = isMobile ? 6.8 : 8.3
+  const baseShimmerY = isMobile ? 7.15 : 8.65
+  const baseShadowY = isMobile ? 6.55 : 8
+  const baseReflectionY = isMobile ? 7.35 : 8.95
 
   const surfaceSheet = new THREE.Mesh(
     new THREE.PlaneGeometry(isMobile ? 760 : 1100, isMobile ? 620 : 820),
@@ -930,10 +938,10 @@ function addUnderwaterSurfaceWindow(
     }),
   )
 
-  surfaceSheet.position.set(0, isMobile ? 7.8 : 9.5, -124)
-  shimmerSheet.position.set(0, isMobile ? 8.15 : 9.85, -126)
-  shadowSheet.position.set(0, isMobile ? 7.55 : 9.2, -123)
-  reflectionSheet.position.set(0, isMobile ? 8.35 : 10.15, -127)
+  surfaceSheet.position.set(0, baseSurfaceY, -124)
+  shimmerSheet.position.set(0, baseShimmerY, -126)
+  shadowSheet.position.set(0, baseShadowY, -123)
+  reflectionSheet.position.set(0, baseReflectionY, -127)
   surfaceSheet.rotation.x = -Math.PI / 2 - 0.1
   shimmerSheet.rotation.x = -Math.PI / 2 - 0.14
   shadowSheet.rotation.x = -Math.PI / 2 - 0.06
@@ -945,7 +953,7 @@ function addUnderwaterSurfaceWindow(
 
   return {
     update: (_time: number, stageDepth: number, surfaceWaveTime: number) => {
-      const enterBlend = smoothstep(0.18, 0.38, stageDepth)
+      const enterBlend = smoothstep(0.24, 0.46, stageDepth)
       const lingerBlend = 1 - smoothstep(0.5, 0.93, stageDepth)
       const visibility = enterBlend * lingerBlend
 
@@ -963,10 +971,10 @@ function addUnderwaterSurfaceWindow(
       shimmerSheet.position.x = -shimmerDrift * 0.7 + secondaryDrift * 0.8
       shadowSheet.position.x = shimmerDrift * 0.5 - secondaryDrift * 0.45
       reflectionSheet.position.x = -shimmerDrift * 0.85 + secondaryDrift
-      surfaceSheet.position.y = (isMobile ? 7.8 : 9.5) + Math.sin(primaryWave * 1.1) * 0.28
-      shimmerSheet.position.y = (isMobile ? 8.15 : 9.85) + Math.cos(primaryWave * 1.22) * 0.24
-      shadowSheet.position.y = (isMobile ? 7.55 : 9.2) + Math.sin(primaryWave * 0.96) * 0.2
-      reflectionSheet.position.y = (isMobile ? 8.35 : 10.15) + Math.cos(primaryWave * 1.48) * 0.2
+      surfaceSheet.position.y = baseSurfaceY + Math.sin(primaryWave * 1.1) * 0.28
+      shimmerSheet.position.y = baseShimmerY + Math.cos(primaryWave * 1.22) * 0.24
+      shadowSheet.position.y = baseShadowY + Math.sin(primaryWave * 0.96) * 0.2
+      reflectionSheet.position.y = baseReflectionY + Math.cos(primaryWave * 1.48) * 0.2
       surfaceSheet.rotation.z = Math.sin(secondaryWave * 0.6) * 0.01
       shimmerSheet.rotation.z = Math.cos(secondaryWave * 0.75) * 0.012
       shadowSheet.rotation.z = Math.sin(secondaryWave * 0.5) * 0.008
@@ -1414,9 +1422,9 @@ export default function GlobalBeachBackdrop({
     const bubbleSpriteTexture = textureLoader.load("/textures/bubble-circle.png")
     bubbleSpriteTexture.wrapS = THREE.ClampToEdgeWrapping
     bubbleSpriteTexture.wrapT = THREE.ClampToEdgeWrapping
-    const birdSpriteTexture = buildBirdSpriteTexture(256)
-    const fishTexture = buildFishTexture(256)
-    const tankSideTexture = supportsUnderwaterSystems ? waterNormalsTexture.clone() : null
+    const birdSpriteTexture = ENABLE_DAWN_BIRDS ? buildBirdSpriteTexture(256) : null
+    const fishTexture = ENABLE_FISH ? buildFishTexture(256) : null
+    const tankSideTexture = supportsUnderwaterSystems && ENABLE_GLASS_TANK_EFFECT ? waterNormalsTexture.clone() : null
     const surfaceRippleTextureA = supportsUnderwaterSystems ? waterNormalsTexture.clone() : null
     const surfaceRippleTextureB = supportsUnderwaterSystems ? waterNormalsTexture.clone() : null
     if (tankSideTexture) {
@@ -1492,7 +1500,7 @@ export default function GlobalBeachBackdrop({
 
     let tankWaterVolume: THREE.Mesh<THREE.BoxGeometry, THREE.MeshPhysicalMaterial> | null = null
     let tankGlassOverlay: THREE.Mesh<THREE.PlaneGeometry, THREE.MeshBasicMaterial> | null = null
-    if (supportsUnderwaterSystems) {
+    if (supportsUnderwaterSystems && ENABLE_GLASS_TANK_EFFECT) {
       tankWaterVolume = new THREE.Mesh(
         new THREE.BoxGeometry(isMobile ? 36 : 52, isMobile ? 20 : 30, isMobile ? 230 : 290),
         new THREE.MeshPhysicalMaterial({
@@ -1526,14 +1534,18 @@ export default function GlobalBeachBackdrop({
       scene.add(tankGlassOverlay)
     }
 
-    if (isSurfaceStage) {
+    if (isSurfaceStage && !usesContinuousDive) {
       addSand(scene, preset, phase)
       scatterBeachDecor(scene, isMobile, preset)
     }
-    const dawnBirdFlock = phase === "dawn" && isSurfaceStage ? addDawnBirds(scene, isMobile, preset, birdSpriteTexture) : null
+    const dawnBirdFlock = ENABLE_DAWN_BIRDS && phase === "dawn" && isSurfaceStage
+      ? addDawnBirds(scene, isMobile, preset, birdSpriteTexture ?? undefined)
+      : null
     const noonCloudLayer = phase === "noon" && isSurfaceStage ? addNoonClouds(scene, isMobile) : null
     const noonSunLayer = phase === "noon" && isSurfaceStage ? addNoonSun(scene) : null
-    const noonShipLayer = phase === "noon" && isSurfaceStage ? addNoonShipIllusion(scene, isMobile) : null
+    const noonShipLayer = ENABLE_NOON_SHIP && phase === "noon" && isSurfaceStage
+      ? addNoonShipIllusion(scene, isMobile)
+      : null
     const underwaterDepthStage: "mid" | "deep" = depthStage === "deep" ? "deep" : "mid"
     const underwaterLayer = supportsUnderwaterSystems
       ? addUnderwaterParticles(scene, phase, underwaterDepthStage, isMobile, bubbleSpriteTexture)
@@ -1550,8 +1562,12 @@ export default function GlobalBeachBackdrop({
         surfaceRippleTextureB ?? undefined,
       )
       : null
-    const fishLayer = depthStage === "mid" || usesContinuousDive ? addMidDepthFish(scene, isMobile, phase, fishTexture) : null
-    const deepFishLayer = depthStage === "deep" || usesContinuousDive ? addDeepFish(scene, isMobile, phase, fishTexture) : null
+    const fishLayer = ENABLE_FISH && (depthStage === "mid" || usesContinuousDive)
+      ? addMidDepthFish(scene, isMobile, phase, fishTexture ?? undefined)
+      : null
+    const deepFishLayer = ENABLE_FISH && (depthStage === "deep" || usesContinuousDive)
+      ? addDeepFish(scene, isMobile, phase, fishTexture ?? undefined)
+      : null
 
     // Configure camera layers: layer 0 (default) + layer 1 (stars for night)
     camera.layers.enable(1)
@@ -1601,22 +1617,11 @@ export default function GlobalBeachBackdrop({
     visibilityObserver.observe(parent)
 
     const fog = scene.fog as THREE.FogExp2
-    const stageFogColor = fogColor.clone()
-    const stageClearColor = submergedClearColor.clone()
-    const deepFog = fogColor.clone().offsetHSL(phase === "noon" ? -0.008 : 0.005, -0.05, -0.12)
-    const deepClear = submergedClearColor.clone().offsetHSL(phase === "noon" ? -0.004 : 0.008, -0.07, -0.15)
-    
-    // Create a lighter blue underwater surface color (still getting light refraction from above)
-    const surfaceUnderwaterColor = new THREE.Color()
-    surfaceUnderwaterColor.setHSL(
-      0.54,
-      0.58,
-      0.52
-    )
-    const midUnderwaterColor = stageClearColor.clone().lerp(surfaceUnderwaterColor, 0.36)
-    
-    const dynamicFogColor = stageFogColor.clone()
-    const dynamicClearColor = stageClearColor.clone()
+    const flatUnderwaterColor = waterColor.clone()
+    const transitionLightBlue = waterColor.clone().offsetHSL(-0.008, 0.06, 0.035)
+    const postSurfaceBlue = waterColor.clone().offsetHSL(-0.014, 0.11, -0.035)
+    const dynamicFogColor = flatUnderwaterColor.clone()
+    const dynamicClearColor = flatUnderwaterColor.clone()
 
     const render = () => {
       raf = requestAnimationFrame(render)
@@ -1642,29 +1647,23 @@ export default function GlobalBeachBackdrop({
       renderer.toneMappingExposure = Math.max(0.2, preset.exposure * exposureMultiplier * depthExposureFactor)
 
       if (!isSurfaceStage || usesContinuousDive) {
-        // Wide, multi-stop blend: surface blue -> mid blue -> deep blue.
-        const entryBlend = smoothstep(0.02, 0.72, stageDepth)
-        const midBlend = smoothstep(0.22, 0.86, stageDepth)
-        const deepBlend = smoothstep(0.62, 1.0, stageDepth)
-        
-        // Keep transitions smooth and ensure the deepest point stays lighter than before.
-        dynamicClearColor.copy(surfaceUnderwaterColor)
-          .lerp(midUnderwaterColor, entryBlend)
-          .lerp(stageClearColor, midBlend * 0.72)
-          .lerp(deepClear, deepBlend * 0.66)
-        
-        dynamicFogColor.copy(surfaceUnderwaterColor)
-          .lerp(midUnderwaterColor, entryBlend)
-          .lerp(stageFogColor, midBlend * 0.72)
-          .lerp(deepFog, deepBlend * 0.66)
-        
+        // Two-stage color handoff: light blue first, deeper blue later.
+        const earlyLightBlueBlend = usesContinuousDive ? smoothstep(0.12, 0.3, stageDepth) : 0
+        const postSurfaceBlueBlend = usesContinuousDive ? smoothstep(0.34, 0.56, stageDepth) : 0
+        dynamicClearColor.copy(flatUnderwaterColor)
+        dynamicClearColor.lerp(transitionLightBlue, earlyLightBlueBlend)
+        dynamicClearColor.lerp(postSurfaceBlue, postSurfaceBlueBlend)
+        dynamicFogColor.copy(flatUnderwaterColor)
+        dynamicFogColor.lerp(transitionLightBlue, earlyLightBlueBlend)
+        dynamicFogColor.lerp(postSurfaceBlue, postSurfaceBlueBlend)
+
         fog.color.copy(dynamicFogColor)
-        
+
         // Fog density: lighter near surface, increases with depth for layered effect
         const startFogDensity = usesContinuousDive ? 0.48 : 1.8
         const baseDensity = THREE.MathUtils.lerp(startFogDensity, depthProfile.fogDensityMultiplier, stageDepth)
         fog.density = preset.fogDensity * baseDensity
-        
+
         renderer.setClearColor(dynamicClearColor, 1)
       }
 
@@ -1716,7 +1715,7 @@ export default function GlobalBeachBackdrop({
       if (water) {
         water.material.uniforms["time"].value = surfaceWaveTime
         water.position.y = -0.05 - smoothstep(0.1, 0.92, stageDepth) * 4.9
-        // Fade out water surface visibility as we dive deeper
+        // Fade out water surface visibility as we dive deeper.
         if (usesContinuousDive) {
           water.visible = smoothstep(0.4, 0.12, stageDepth) > 0.1
         }
@@ -1757,8 +1756,8 @@ export default function GlobalBeachBackdrop({
       proceduralWaterNormals.dispose()
       waterNormalsTexture.dispose()
       bubbleSpriteTexture.dispose()
-      birdSpriteTexture.dispose()
-      fishTexture.dispose()
+      birdSpriteTexture?.dispose()
+      fishTexture?.dispose()
       tankSideTexture?.dispose()
       surfaceRippleTextureA?.dispose()
       surfaceRippleTextureB?.dispose()
