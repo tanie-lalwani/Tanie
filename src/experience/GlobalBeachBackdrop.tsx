@@ -478,58 +478,6 @@ function scatterBeachDecor(scene: THREE.Scene, isMobile: boolean, preset: BeachM
   }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function addDawnBirds(scene: THREE.Scene, isMobile: boolean, preset: BeachMoodPreset, birdTexture?: THREE.Texture) {
-  const flock = new THREE.Group()
-  const birds: Array<{ mesh: THREE.Sprite; material: THREE.SpriteMaterial; speed: number; flapOffset: number; baseY: number; baseOpacity: number }> = []
-  const birdCount = isMobile ? 7 : 13
-
-  for (let i = 0; i < birdCount; i++) {
-    const baseOpacity = 0.68 + Math.random() * 0.18
-    const material = new THREE.SpriteMaterial({
-      map: birdTexture,
-      alphaMap: birdTexture,
-      color: preset.birdColor,
-      transparent: true,
-      opacity: baseOpacity,
-      depthWrite: false,
-    })
-
-    const bird = new THREE.Sprite(material)
-    const size = 8 + Math.random() * 7
-    bird.scale.set(size * 1.55, size, 1)
-    bird.position.set(-220 - Math.random() * 480, 38 + Math.random() * 38, -300 - Math.random() * 320)
-    bird.rotation.y = -0.26
-    flock.add(bird)
-
-    birds.push({
-      mesh: bird,
-      speed: 12 + Math.random() * 8,
-      flapOffset: Math.random() * Math.PI * 2,
-      baseY: bird.position.y,
-      material,
-      baseOpacity,
-    })
-  }
-
-  scene.add(flock)
-
-  const update = (time: number, depthBlend = 0) => {
-    const fade = 1 - smoothstep(0.16, 0.42, depthBlend)
-    flock.visible = fade > 0.01
-    for (const bird of birds) {
-      const travel = ((time * bird.speed + bird.flapOffset * 25) % 520) - 260
-      bird.mesh.position.x = travel
-      bird.mesh.position.y = bird.baseY + Math.sin(time * 0.55 + bird.flapOffset) * 1.8
-      bird.mesh.material.opacity = bird.baseOpacity * fade
-      bird.mesh.scale.y = (0.72 + Math.abs(Math.sin(time * 5 + bird.flapOffset)) * 0.8) * fade
-      bird.mesh.rotation.z = Math.sin(time * 2 + bird.flapOffset) * 0.08
-    }
-  }
-
-  return { update }
-}
-
 function addUnderwaterParticles(
   scene: THREE.Scene,
   phase: TimePhase,
@@ -1569,7 +1517,6 @@ export default function GlobalBeachBackdrop({
       addSand(scene, preset, phase)
       scatterBeachDecor(scene, isMobile, preset)
     }
-    const dawnBirdFlock = false // ENABLE_DAWN_BIRDS was removed with dawn phase
     const noonCloudLayer = phase === "noon" && isSurfaceStage ? addNoonClouds(scene, isMobile) : null
     const noonSunLayer = phase === "noon" && isSurfaceStage ? addNoonSun(scene) : null
     const noonShipLayer = ENABLE_NOON_SHIP && phase === "noon" && isSurfaceStage
@@ -1703,8 +1650,6 @@ export default function GlobalBeachBackdrop({
           // Section 3: Dark - contacts section (0.80+)
           if (stageDepth < 0.65) {
             // Light section - extended to testimonials
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            const lightProgress = (stageDepth - 0.4) / 0.25
             dynamicClearColor.copy(lightWaterColor)
           } else if (stageDepth < 0.80) {
             // Medium section - testimonials

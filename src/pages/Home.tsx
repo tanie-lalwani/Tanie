@@ -173,7 +173,7 @@ export default function Home({ phase }: HomeProps) {
           eyebrow="What I Have Built"
           title="Client testimonials"
           description=""
-          className="**:text-sky-100"
+          className="**:text-white"
         />
 
         <div className="relative mx-auto w-full max-w-4xl">
@@ -283,7 +283,7 @@ export default function Home({ phase }: HomeProps) {
           eyebrow="Contact"
           title="Let's start building"
           description={`Fill out the form and I will get back to you at ${RECIPIENT_EMAIL}.`}
-          className="**:text-sky-100"
+          className="**:text-white"
         />
 
         <motion.form
