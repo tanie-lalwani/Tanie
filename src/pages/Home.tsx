@@ -74,7 +74,7 @@ export default function Home({ phase }: HomeProps) {
   const [submitMessage, setSubmitMessage] = useState("")
 
   const { scrollYProgress } = useScroll()
-  const worldDiveProgress = useTransform(scrollYProgress, [0, 0.36], [0, 1])
+  const worldDiveProgress = useTransform(scrollYProgress, [0, 0.4], [0, 1])
 
   const updateField = (key: keyof ContactFields, value: string) => {
     setFields((prev) => ({ ...prev, [key]: value }))
@@ -139,12 +139,12 @@ export default function Home({ phase }: HomeProps) {
       {/* Hero Section */}
       <motion.section
         id="home"
-        className="relative isolate flex min-h-[calc(100svh-2.75rem)] w-full items-start overflow-hidden px-4 pb-8 pt-16 sm:min-h-[calc(100vh-3rem)] sm:px-6 sm:pb-14 sm:pt-24"
+        className="relative isolate flex min-h-[200svh] w-full items-start overflow-hidden px-4 pb-8 pt-16 sm:min-h-[200svh] sm:px-6 sm:pb-14 sm:pt-24"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
       >
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_45%,rgba(15,23,42,0)_0%,rgba(15,23,42,0.12)_72%,rgba(15,23,42,0.26)_100%)] in-data-[phase=noon]:bg-[radial-gradient(circle_at_50%_45%,rgba(39,39,42,0)_0%,rgba(39,39,42,0.08)_72%,rgba(39,39,42,0.18)_100%)]" />
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_45%,rgba(39,39,42,0)_0%,rgba(39,39,42,0.08)_72%,rgba(39,39,42,0.18)_100%)]" />
         <motion.div
           className="relative z-10 mx-auto w-full max-w-6xl"
           initial={{ opacity: 0, y: 22 }}
@@ -152,11 +152,11 @@ export default function Home({ phase }: HomeProps) {
           transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
         >
           <div className="relative max-w-2xl">
-            <h1 className="text-4xl font-black leading-tight tracking-tight text-white in-data-[phase=noon]:text-slate-950 sm:text-6xl lg:text-7xl">
+            <h1 className="text-4xl font-black leading-tight tracking-tight text-sky-950 sm:text-6xl lg:text-7xl" style={{ fontFamily: 'var(--font-display)' }}>
               I'm Tanisha.
             </h1>
 
-            <p className="mt-4 max-w-xl text-sm leading-relaxed text-slate-200 in-data-[phase=dawn]:text-sky-100 in-data-[phase=noon]:text-slate-900 in-data-[phase=night]:text-slate-300 sm:text-base">
+            <p className="mt-4 max-w-xl text-sm leading-relaxed text-sky-900 sm:text-base">
               Full-stack developer building immersive, creative experiences. Portfolios, games, dashboards, and everything in between. Scroll to see my work or jump to the contact form.
             </p>
           </div>
@@ -173,28 +173,28 @@ export default function Home({ phase }: HomeProps) {
           eyebrow="What I Have Built"
           title="Client testimonials"
           description=""
-          className="in-data-[phase=noon]:**:text-sky-100"
+          className="**:text-sky-100"
         />
 
         <div className="relative mx-auto w-full max-w-4xl">
-          <div className="relative mb-2 flex flex-wrap items-center justify-between gap-2.5 border-b border-white/8 pb-2.5 in-data-[phase=noon]:border-sky-700/24 sm:mb-3 sm:pb-3">
-            <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-slate-300 in-data-[phase=noon]:text-sky-300">
+          <div className="relative mb-2 flex flex-wrap items-center justify-between gap-2.5 border-b border-sky-700/30 pb-2.5 sm:mb-3 sm:pb-3">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-sky-900">
               {String(activeIndex + 1).padStart(2, "0")} / {String(projects.length).padStart(2, "0")}
             </p>
-            <div className="flex items-center gap-1.5">
+            <div className="flex items-center gap-2 sm:gap-3">
               <button
                 type="button"
                 onClick={goToPrev}
-                className="rounded-md border border-white/28 bg-transparent px-2.5 py-1 text-[11px] font-semibold text-slate-100 transition hover:bg-white/8 in-data-[phase=noon]:border-sky-700/35 in-data-[phase=noon]:text-sky-100 in-data-[phase=noon]:hover:bg-sky-900/20"
+                className="inline-flex items-center justify-center rounded-lg border border-sky-700/30 bg-sky-50 px-3 py-2 text-sm font-semibold text-sky-950 transition-all duration-200 hover:bg-sky-100 focus:outline-none focus:ring-2 focus:ring-sky-300 focus:ring-offset-0 active:bg-sky-200/50 disabled:cursor-not-allowed disabled:opacity-50"
               >
-                Previous
+                ← Previous
               </button>
               <button
                 type="button"
                 onClick={goToNext}
-                className="rounded-md border border-white/28 bg-transparent px-2.5 py-1 text-[11px] font-semibold text-slate-100 transition hover:bg-white/8 in-data-[phase=noon]:border-sky-700/35 in-data-[phase=noon]:text-sky-100 in-data-[phase=noon]:hover:bg-sky-900/20"
+                className="inline-flex items-center justify-center rounded-lg border border-sky-700/30 bg-sky-50 px-3 py-2 text-sm font-semibold text-sky-950 transition-all duration-200 hover:bg-sky-100 focus:outline-none focus:ring-2 focus:ring-sky-300 focus:ring-offset-0 active:bg-sky-200/50 disabled:cursor-not-allowed disabled:opacity-50"
               >
-                Next
+                Next →
               </button>
             </div>
           </div>
@@ -210,49 +210,49 @@ export default function Home({ phase }: HomeProps) {
                 transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
               >
                 <div className="relative flex h-full flex-col">
-                  <div className="relative overflow-hidden rounded-lg border border-white/14 bg-transparent in-data-[phase=noon]:border-sky-700/30">
-                    <div className="aspect-video bg-transparent" />
-                    <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_22%_26%,rgba(255,255,255,0.08),transparent_36%)] in-data-[phase=noon]:bg-[radial-gradient(circle_at_22%_26%,rgba(186,230,253,0.14),transparent_38%)]" />
+                  <div className="relative overflow-hidden rounded-lg border border-sky-700/25 bg-white/70 p-4 sm:p-6 shadow-sm">
+                    <div className="aspect-video rounded-lg bg-linear-to-br from-sky-100 to-sky-50" />
                   </div>
 
-                  <div className="flex flex-wrap items-center justify-between gap-2 border-b border-white/10 pb-2 in-data-[phase=noon]:border-sky-700/24">
+                  <div className="mt-4 space-y-3 sm:mt-5 sm:space-y-4">
                     <div>
-                      <p className="text-base font-semibold text-white in-data-[phase=noon]:text-sky-100">{activeProject.client}</p>
-                      <p className="mt-0.5 text-[10px] uppercase tracking-[0.16em] text-slate-300 in-data-[phase=noon]:text-sky-300">{activeProject.role}</p>
+                      <p className="text-lg font-semibold tracking-tight text-sky-950" style={{ fontFamily: 'var(--font-display)' }}>{activeProject.client}</p>
+                      <p className="mt-1 text-xs uppercase tracking-[0.12em] text-sky-700">{activeProject.role}</p>
                     </div>
-                    <div className="rounded-full border border-white/24 bg-transparent px-2.5 py-0.5 text-[9px] font-medium text-slate-200 in-data-[phase=noon]:border-sky-700/35 in-data-[phase=noon]:text-sky-200 sm:text-[10px]">
-                      {activeProject.project}
+
+                    <div className="inline-flex items-center gap-2 rounded-full border border-sky-700/25 bg-sky-50 px-3 py-1.5">
+                      <span className="text-xs font-semibold uppercase tracking-[0.08em] text-sky-900">{activeProject.project}</span>
                     </div>
                   </div>
 
-                  <div className="mt-3 flex-1 rounded-xl border border-white/14 bg-transparent p-3 in-data-[phase=noon]:border-sky-700/28 sm:p-4">
-                    <blockquote className="border-l border-white/20 pl-2 text-[13px] italic leading-snug text-slate-200 in-data-[phase=noon]:border-sky-600/35 in-data-[phase=noon]:text-sky-100">
+                  <div className="mt-4 space-y-3 border-t border-sky-700/20 pt-4 sm:mt-5 sm:space-y-4 sm:pt-5">
+                    <blockquote className="text-sm italic leading-relaxed text-sky-950">
                       &quot;{activeProject.quote}&quot;
                     </blockquote>
-                    <p className="mt-1.5 text-[12px] leading-snug text-slate-300 in-data-[phase=noon]:text-sky-200">{activeProject.outcome}</p>
+                    <p className="text-sm leading-relaxed text-sky-900">{activeProject.outcome}</p>
+                  </div>
 
-                    <div className="mt-2.5 flex flex-col gap-1.5 border-t border-white/8 pt-2.5 in-data-[phase=noon]:border-sky-700/24 sm:flex-row sm:items-center sm:justify-between">
-                      <div>
-                        <p className="text-[10px] uppercase tracking-[0.2em] text-slate-400 in-data-[phase=noon]:text-sky-300">Live website</p>
-                        <a
-                          href={activeProject.site}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="mt-0.5 inline-flex text-[11px] font-medium text-slate-100 transition hover:text-white in-data-[phase=noon]:text-sky-100 in-data-[phase=noon]:hover:text-sky-50"
-                        >
-                          {activeProject.site.replace("https://", "")}
-                        </a>
-                      </div>
+                  <div className="mt-4 flex flex-col gap-3 border-t border-sky-700/20 pt-4 sm:mt-5 sm:flex-row sm:items-center sm:justify-between sm:pt-5">
+                    <div>
+                      <p className="text-xs uppercase tracking-[0.12em] text-sky-700">Visit project</p>
                       <a
                         href={activeProject.site}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex w-full items-center justify-center gap-2 rounded-lg border border-white/24 bg-transparent px-3 py-1.5 text-[11px] font-semibold text-slate-100 transition hover:bg-white/8 in-data-[phase=noon]:border-sky-700/35 in-data-[phase=noon]:text-sky-100 in-data-[phase=noon]:hover:bg-sky-900/20 sm:w-auto"
+                        className="mt-1 inline-block text-sm font-semibold text-sky-950 underline decoration-sky-300 decoration-2 underline-offset-2 transition hover:text-sky-900"
                       >
-                        Verify Project
-                        <span aria-hidden="true">&#8599;</span>
+                        {activeProject.site.replace("https://", "")}
                       </a>
                     </div>
+                    <a
+                      href={activeProject.site}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center justify-center gap-2 rounded-lg border border-sky-700/30 bg-sky-50 px-4 py-2.5 text-sm font-semibold text-sky-950 transition-all duration-200 hover:bg-sky-100 focus:outline-none focus:ring-2 focus:ring-sky-300 active:bg-sky-200/50"
+                    >
+                      View Project
+                      <span aria-hidden="true">↗</span>
+                    </a>
                   </div>
                 </div>
               </motion.article>
@@ -265,8 +265,8 @@ export default function Home({ phase }: HomeProps) {
                 key={item.client}
                 type="button"
                 onClick={() => setActiveIndex(index)}
-                className={`h-1.5 flex-1 rounded-full border transition ${
-                  index === activeIndex ? "border-cyan-200/90 bg-cyan-200/35 in-data-[phase=noon]:border-sky-400/70 in-data-[phase=noon]:bg-sky-300/25" : "border-white/35 bg-transparent hover:bg-white/12 in-data-[phase=noon]:border-sky-500/50 in-data-[phase=noon]:hover:bg-sky-900/20"
+                className={`h-1.5 flex-1 rounded-full border border-sky-700/25 transition-all duration-200 ${
+                  index === activeIndex ? "bg-sky-400" : "bg-sky-200 hover:bg-sky-300"
                 }`}
                 aria-label={`Go to testimonial ${index + 1}`}
               />
@@ -283,7 +283,7 @@ export default function Home({ phase }: HomeProps) {
           eyebrow="Contact"
           title="Let's start building"
           description={`Fill out the form and I will get back to you at ${RECIPIENT_EMAIL}.`}
-          className="in-data-[phase=noon]:**:text-sky-100"
+          className="**:text-sky-100"
         />
 
         <motion.form
@@ -299,10 +299,10 @@ export default function Home({ phase }: HomeProps) {
                 key={preset}
                 type="button"
                 onClick={() => updateField("subject", preset)}
-                className={`rounded-full border px-3 py-1 text-[11px] font-semibold transition ${
+                className={`rounded-full px-3 py-2 text-sm font-semibold transition-all duration-200 ${
                   fields.subject === preset
-                    ? "border-white/35 bg-transparent text-slate-100 in-data-[phase=noon]:border-sky-700/35 in-data-[phase=noon]:text-sky-100"
-                    : "border-white/18 bg-transparent text-slate-300 hover:border-white/28 hover:text-slate-100 in-data-[phase=noon]:border-sky-700/30 in-data-[phase=noon]:text-sky-200 in-data-[phase=noon]:hover:border-sky-100/36 in-data-[phase=noon]:hover:text-sky-100"
+                    ? "border border-sky-700/30 bg-sky-100 text-sky-950"
+                    : "border border-sky-700/20 bg-white text-sky-900 hover:bg-sky-50"
                 }`}
               >
                 {preset}
@@ -310,91 +310,85 @@ export default function Home({ phase }: HomeProps) {
             ))}
           </div>
           <div className="relative grid grid-cols-1 gap-3.5 sm:gap-4 sm:grid-cols-2">
-            <label className="flex flex-col gap-2 text-sm text-slate-100 in-data-[phase=noon]:text-sky-100">
-              Name
+            <label className="flex flex-col gap-2">
+              <span className="text-sm font-semibold text-sky-950">Name</span>
               <input
                 type="text"
                 name="name"
                 required
                 value={fields.name}
                 onChange={(event) => updateField("name", event.target.value)}
-                className={`rounded-xl border bg-transparent px-3 py-2.5 text-slate-100 outline-none transition placeholder:text-slate-400 focus:ring-2 in-data-[phase=noon]:border-sky-700/30 in-data-[phase=noon]:bg-transparent in-data-[phase=noon]:text-sky-100 in-data-[phase=noon]:placeholder:text-sky-300/60 in-data-[phase=noon]:focus:ring-sky-900/12 ${
-                  fields.name ? "border-cyan-400/40 focus:border-cyan-300/60 focus:ring-cyan-300/20 shadow-[0_0_12px_rgba(34,211,238,0.2)] in-data-[phase=noon]:border-sky-700/35 in-data-[phase=noon]:focus:border-sky-800/45" : "border-white/20 focus:border-white/40 focus:ring-white/20 in-data-[phase=noon]:focus:border-sky-800/38"
-                }`}
-                placeholder="Your name"
+                className="rounded-lg border border-sky-700/25 bg-white px-4 py-3 text-sky-950 transition-all placeholder:text-sky-700/50 focus:outline-none focus:ring-2 focus:ring-sky-300 focus:ring-offset-0"
+                placeholder="Your full name"
               />
             </label>
 
-            <label className="flex flex-col gap-2 text-sm text-slate-100 in-data-[phase=noon]:text-sky-100">
-              Email
+            <label className="flex flex-col gap-2">
+              <span className="text-sm font-semibold text-sky-950">Email</span>
               <input
                 type="email"
                 name="email"
                 required
                 value={fields.email}
                 onChange={(event) => updateField("email", event.target.value)}
-                className={`rounded-xl border bg-transparent px-3 py-2.5 text-slate-100 outline-none transition placeholder:text-slate-400 focus:ring-2 in-data-[phase=noon]:border-sky-700/30 in-data-[phase=noon]:bg-transparent in-data-[phase=noon]:text-sky-100 in-data-[phase=noon]:placeholder:text-sky-300/60 in-data-[phase=noon]:focus:ring-sky-900/12 ${
-                  fields.email ? "border-cyan-400/40 focus:border-cyan-300/60 focus:ring-cyan-300/20 shadow-[0_0_12px_rgba(34,211,238,0.2)] in-data-[phase=noon]:border-sky-700/35 in-data-[phase=noon]:focus:border-sky-800/45" : "border-white/20 focus:border-white/40 focus:ring-white/20 in-data-[phase=noon]:focus:border-sky-800/38"
-                }`}
+                className="rounded-lg border border-sky-700/25 bg-white px-4 py-3 text-sky-950 transition-all placeholder:text-sky-700/50 focus:outline-none focus:ring-2 focus:ring-sky-300 focus:ring-offset-0"
                 placeholder="you@example.com"
               />
             </label>
           </div>
 
-          <label className="relative flex flex-col gap-2 text-sm text-slate-100 in-data-[phase=noon]:text-sky-100">
-            Subject
+          <label className="flex flex-col gap-2">
+            <span className="text-sm font-semibold text-sky-950">Subject</span>
             <input
               type="text"
               name="subject"
               value={fields.subject}
               onChange={(event) => updateField("subject", event.target.value)}
-              className={`rounded-xl border bg-transparent px-3 py-2.5 text-slate-100 outline-none transition placeholder:text-slate-400 focus:ring-2 in-data-[phase=noon]:border-sky-700/30 in-data-[phase=noon]:bg-transparent in-data-[phase=noon]:text-sky-100 in-data-[phase=noon]:placeholder:text-sky-300/60 in-data-[phase=noon]:focus:ring-sky-900/12 ${
-                fields.subject ? "border-cyan-400/40 focus:border-cyan-300/60 focus:ring-cyan-300/20 shadow-[0_0_12px_rgba(34,211,238,0.2)] in-data-[phase=noon]:border-sky-700/35 in-data-[phase=noon]:focus:border-sky-800/45" : "border-white/20 focus:border-white/40 focus:ring-white/20 in-data-[phase=noon]:focus:border-sky-800/38"
-              }`}
-              placeholder="How can I help?"
+              className="rounded-lg border border-sky-700/25 bg-white px-4 py-3 text-sky-950 transition-all placeholder:text-sky-700/50 focus:outline-none focus:ring-2 focus:ring-sky-300 focus:ring-offset-0"
+              placeholder="What's this about?"
             />
           </label>
 
-          <label className="relative flex flex-col gap-2 text-sm text-slate-100 in-data-[phase=noon]:text-sky-100">
-            Message
+          <label className="flex flex-col gap-2">
+            <span className="text-sm font-semibold text-sky-950">Message</span>
             <textarea
               name="message"
               required
               value={fields.message}
               onChange={(event) => updateField("message", event.target.value)}
               rows={6}
-              className={`rounded-xl border bg-transparent px-3 py-2.5 text-slate-100 outline-none transition placeholder:text-slate-400 focus:ring-2 in-data-[phase=noon]:border-sky-700/30 in-data-[phase=noon]:bg-transparent in-data-[phase=noon]:text-sky-100 in-data-[phase=noon]:placeholder:text-sky-300/60 in-data-[phase=noon]:focus:ring-sky-900/12 ${
-                fields.message ? "border-cyan-400/40 focus:border-cyan-300/60 focus:ring-cyan-300/20 shadow-[0_0_12px_rgba(34,211,238,0.2)] in-data-[phase=noon]:border-sky-700/35 in-data-[phase=noon]:focus:border-sky-800/45" : "border-white/20 focus:border-white/40 focus:ring-white/20 in-data-[phase=noon]:focus:border-sky-800/38"
-              }`}
-              placeholder="Tell me about your project, goals, and timeline..."
+              className="rounded-lg border border-sky-700/25 bg-white px-4 py-3 text-sky-950 transition-all placeholder:text-sky-700/50 focus:outline-none focus:ring-2 focus:ring-sky-300 focus:ring-offset-0"
+              placeholder="Tell me about your project and what you're looking for..."
             />
           </label>
 
-          <div className="relative flex flex-col gap-2.5 sm:flex-row sm:items-center sm:justify-between sm:gap-3">
-            <p className="text-xs text-slate-300 in-data-[phase=noon]:text-sky-200">Recipient: {RECIPIENT_EMAIL}</p>
-
+          <div className="flex flex-col gap-3 border-t border-sky-700/20 pt-6 sm:flex-row sm:items-center sm:justify-between">
+            <p className="text-sm text-sky-900">I'll respond to <span className="font-semibold">{RECIPIENT_EMAIL}</span></p>
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full rounded-xl border border-white/24 bg-transparent px-5 py-2.5 text-sm font-semibold text-slate-100 transition hover:bg-white/8 disabled:cursor-not-allowed disabled:opacity-70 in-data-[phase=noon]:border-sky-700/35 in-data-[phase=noon]:bg-transparent in-data-[phase=noon]:text-sky-100 in-data-[phase=noon]:hover:bg-sky-900/20 sm:w-auto"
+              className="inline-flex items-center justify-center gap-2 rounded-lg border border-sky-700/30 bg-sky-50 px-6 py-3 text-sm font-semibold text-sky-950 transition-all duration-200 hover:bg-sky-100 focus:outline-none focus:ring-2 focus:ring-sky-300 active:bg-sky-200/50 disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
             >
-              {isSubmitting ? "Sending..." : "Send Message"}
+              {isSubmitting ? (
+                <>
+                  <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-sky-300 border-t-sky-950"></span>
+                  Sending...
+                </>
+              ) : (
+                <>Send Message</>
+              )}
             </button>
           </div>
 
-          {submitMessage ? (
-            <div
-              role="status"
-              aria-live="polite"
-              className={`relative rounded-xl border px-3 py-2 text-xs ${
-                submitStatus === "success"
-                  ? "border-emerald-300/40 bg-emerald-400/10 text-emerald-200"
-                  : "border-rose-300/40 bg-rose-400/10 text-rose-200"
-              }`}
-            >
+          {submitMessage && (
+            <div className={`rounded-lg border px-4 py-3 text-sm ${
+              submitStatus === "success"
+                ? "border-emerald-300 bg-emerald-50 text-emerald-900"
+                : "border-red-300 bg-red-50 text-red-900"
+            }`}>
               {submitMessage}
             </div>
-          ) : null}
+          )}
         </motion.form>
         </div>
       </section>

@@ -52,37 +52,39 @@ type SiteFooterProps = {
 export default function SiteFooter({ className = "" }: SiteFooterProps) {
   return (
     <footer
-      className={`relative z-20 mx-auto mt-3 w-full max-w-6xl rounded-2xl border border-white/14 bg-slate-950/82 px-4 pb-8 pt-9 shadow-[0_18px_60px_rgba(2,6,23,0.42)] backdrop-blur-md sm:px-6 sm:pb-9 sm:pt-11 in-data-[phase=noon]:border-sky-700/28 in-data-[phase=noon]:bg-sky-950/88 in-data-[phase=night]:bg-slate-950/88 ${className}`}
+      className={`relative z-20 w-full border-t border-sky-700/20 bg-sky-50/95 px-4 py-8 sm:px-6 sm:py-12 backdrop-blur-sm ${className}`}
     >
-      <div className="h-px w-full bg-linear-to-r from-transparent via-slate-200/24 to-transparent in-data-[phase=dawn]:via-sky-100/26 in-data-[phase=noon]:via-sky-100/22 in-data-[phase=night]:via-slate-200/20" />
-      <div className="mt-6 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-        <div>
-          <p className="text-sm font-semibold text-slate-100 in-data-[phase=dawn]:text-sky-50 in-data-[phase=noon]:text-sky-100 in-data-[phase=night]:text-slate-100">Tanie</p>
-          <p className="mt-1 max-w-xs text-xs leading-relaxed text-slate-300 in-data-[phase=dawn]:text-sky-100/90 in-data-[phase=noon]:text-sky-200 in-data-[phase=night]:text-slate-300">Full stack developer.</p>
-        </div>
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-x-8">
-          {SOCIALS.map((s) => (
-            <a
-              key={s.label}
-              href={s.href}
-              target={s.href.startsWith("mailto") ? undefined : "_blank"}
-              rel={s.href.startsWith("mailto") ? undefined : "noopener noreferrer"}
-              className="group flex items-center gap-3 text-slate-200 transition hover:text-white in-data-[phase=noon]:text-sky-100 in-data-[phase=noon]:hover:text-sky-50"
-            >
-              <span className="flex h-8 w-8 items-center justify-center rounded-lg border border-white/18 bg-white/8 text-slate-100 transition group-hover:border-white/30 group-hover:text-white in-data-[phase=noon]:border-sky-600/36 in-data-[phase=noon]:bg-sky-900/45 in-data-[phase=noon]:text-sky-100 in-data-[phase=noon]:group-hover:border-sky-100/44 in-data-[phase=noon]:group-hover:text-sky-50">
+      <div className="mx-auto max-w-6xl">
+        <div className="h-px w-full bg-linear-to-r from-transparent via-sky-900/22 to-transparent" />
+        <div className="mt-6 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+          <div>
+            <p className="text-sm font-semibold tracking-tight text-sky-950" style={{ fontFamily: 'var(--font-display)' }}>Tanie</p>
+            <p className="mt-1 max-w-xs text-xs leading-relaxed text-sky-900">Full stack developer.</p>
+          </div>
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-x-8">
+            {SOCIALS.map((s) => (
+              <a
+                key={s.label}
+                href={s.href}
+                target={s.href.startsWith("mailto") ? undefined : "_blank"}
+                rel={s.href.startsWith("mailto") ? undefined : "noopener noreferrer"}
+                className="group flex items-center gap-3 text-sky-950 transition hover:text-sky-900"
+              >
+              <span className="flex h-8 w-8 items-center justify-center rounded-lg border border-sky-700/30 bg-sky-200/35 text-sky-950 transition group-hover:border-sky-700/50 group-hover:text-sky-900">
                 {s.icon}
               </span>
               <span className="flex flex-col">
-                <span className="text-xs font-semibold leading-none tracking-wide">{s.label}</span>
-              </span>
-            </a>
-          ))}
+                <span className="text-xs font-semibold tracking-wide leading-none">{s.label}</span>
+                </span>
+              </a>
+            ))}
+          </div>
         </div>
+        <div className="mt-6 h-px w-full bg-linear-to-r from-transparent via-sky-900/20 to-transparent" />
+        <p className="mt-3 text-center text-[11px] text-sky-900">
+          © {new Date().getFullYear()} Tanie — built with React, TypeScript and Tailwind
+        </p>
       </div>
-      <div className="mt-6 h-px w-full bg-linear-to-r from-transparent via-slate-200/14 to-transparent in-data-[phase=dawn]:via-sky-100/20 in-data-[phase=noon]:via-sky-100/20 in-data-[phase=night]:via-slate-200/16" />
-      <p className="mt-3 text-center text-[11px] text-slate-300 in-data-[phase=dawn]:text-sky-100/85 in-data-[phase=noon]:text-sky-200 in-data-[phase=night]:text-slate-300">
-        © {new Date().getFullYear()} Tanie — built with React, TypeScript and Tailwind
-      </p>
     </footer>
   )
 }
