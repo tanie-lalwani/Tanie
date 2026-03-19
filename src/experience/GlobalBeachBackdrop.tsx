@@ -678,6 +678,85 @@ function buildCausticTexture(size = 256): THREE.CanvasTexture {
   return texture
 }
 
+function buildRippleRefractionTexture(
+  size = 512,
+  variant: "rings" | "shear" = "rings",
+): THREE.CanvasTexture {
+  const canvas = document.createElement("canvas")
+  canvas.width = size
+  canvas.height = size
+  const ctx = canvas.getContext("2d")
+
+  if (!ctx) {
+    return new THREE.CanvasTexture(canvas)
+  }
+
+  ctx.clearRect(0, 0, size, size)
+  ctx.fillStyle = "rgba(0,0,0,1)"
+  ctx.fillRect(0, 0, size, size)
+
+  if (variant === "rings") {
+    const cx = size * 0.5
+    const cy = size * 0.44
+    for (let i = 0; i < 24; i++) {
+      const radius = (i + 1) * (size * 0.025 + Math.random() * 1.8)
+      const alpha = Math.max(0.035, 0.24 - i * 0.008)
+      const width = 1.2 + Math.random() * 2.4
+
+      ctx.strokeStyle = `rgba(210,245,255,${alpha})`
+      ctx.lineWidth = width
+      ctx.beginPath()
+      ctx.ellipse(
+        cx + (Math.random() - 0.5) * 14,
+        cy + (Math.random() - 0.5) * 10,
+        radius,
+        radius * (0.42 + Math.random() * 0.16),
+        (Math.random() - 0.5) * 0.45,
+        0,
+        Math.PI * 2,
+      )
+      ctx.stroke()
+    }
+  } else {
+    for (let i = 0; i < 42; i++) {
+      const y = (i / 34) * size + (Math.random() - 0.5) * 10
+      const alpha = 0.06 + Math.random() * 0.13
+      const lineWidth = 1 + Math.random() * 2.9
+
+      const gradient = ctx.createLinearGradient(0, y, size, y + (Math.random() - 0.5) * 24)
+      gradient.addColorStop(0, `rgba(205,245,255,${alpha * 0.4})`)
+      gradient.addColorStop(0.5, `rgba(230,250,255,${alpha})`)
+      gradient.addColorStop(1, `rgba(205,245,255,${alpha * 0.4})`)
+
+      ctx.strokeStyle = gradient
+      ctx.lineWidth = lineWidth
+      ctx.beginPath()
+      ctx.moveTo(0, y)
+      ctx.bezierCurveTo(
+        size * 0.2,
+        y + (Math.random() - 0.5) * 30,
+        size * 0.75,
+        y + (Math.random() - 0.5) * 22,
+        size,
+        y + (Math.random() - 0.5) * 18,
+      )
+      ctx.stroke()
+    }
+  }
+
+  const vignette = ctx.createRadialGradient(size * 0.5, size * 0.45, size * 0.08, size * 0.5, size * 0.45, size * 0.72)
+  vignette.addColorStop(0, "rgba(255,255,255,0.12)")
+  vignette.addColorStop(1, "rgba(255,255,255,0)")
+  ctx.fillStyle = vignette
+  ctx.fillRect(0, 0, size, size)
+
+  const texture = new THREE.CanvasTexture(canvas)
+  texture.wrapS = THREE.RepeatWrapping
+  texture.wrapT = THREE.RepeatWrapping
+  texture.needsUpdate = true
+  return texture
+}
+
 function addMutedTopSunlight(scene: THREE.Scene, phase: TimePhase, depthStage: "mid" | "deep") {
   const isMid = depthStage === "mid"
   const lightColor = phase === "noon" ? 0xb8dcff : 0xa8c9ea
@@ -770,6 +849,136 @@ function addUnderwaterReflections(
       planeB.position.x = Math.cos(time * 0.18) * 8
       ;(planeA.material as THREE.MeshBasicMaterial).opacity = strength + Math.sin(time * 0.7) * 0.02
       ;(planeB.material as THREE.MeshBasicMaterial).opacity = strength * 0.6 + Math.cos(time * 0.56) * 0.015
+    },
+  }
+}
+
+function addUnderwaterSurfaceWindow(
+  scene: THREE.Scene,
+  phase: TimePhase,
+  depthStage: "mid" | "deep",
+  isMobile: boolean,
+  textureA?: THREE.Texture,
+  textureB?: THREE.Texture,
+) {
+  const rippleA = textureA ?? buildRippleRefractionTexture(512, "rings")
+  const rippleB = textureB ?? buildRippleRefractionTexture(512, "shear")
+  // Higher repeat = smaller ripples in view.
+  rippleA.repeat.set(4.8, 3.2)
+  rippleB.repeat.set(5.2, 3.6)
+
+  const tint = phase === "noon" ? 0xc9f3ff : phase === "dawn" ? 0xb7e6fb : 0x9ad3ea
+  const baseOpacity = depthStage === "mid" ? 0.24 : 0.2
+
+  const surfaceSheet = new THREE.Mesh(
+    new THREE.PlaneGeometry(isMobile ? 760 : 1100, isMobile ? 620 : 820),
+    new THREE.MeshBasicMaterial({
+      map: rippleA,
+      color: tint,
+      transparent: true,
+      opacity: 0,
+      blending: THREE.AdditiveBlending,
+      alphaMap: rippleA,
+      alphaTest: 0.04,
+      depthWrite: false,
+      side: THREE.DoubleSide,
+    }),
+  )
+
+  const shimmerSheet = new THREE.Mesh(
+    new THREE.PlaneGeometry(isMobile ? 740 : 1080, isMobile ? 580 : 760),
+    new THREE.MeshBasicMaterial({
+      map: rippleB,
+      color: 0xe7fbff,
+      transparent: true,
+      opacity: 0,
+      blending: THREE.AdditiveBlending,
+      alphaMap: rippleB,
+      alphaTest: 0.04,
+      depthWrite: false,
+      side: THREE.DoubleSide,
+    }),
+  )
+
+  const shadowSheet = new THREE.Mesh(
+    new THREE.PlaneGeometry(isMobile ? 760 : 1120, isMobile ? 620 : 820),
+    new THREE.MeshBasicMaterial({
+      map: rippleB,
+      color: phase === "noon" ? 0x1b4f66 : 0x163f55,
+      transparent: true,
+      opacity: 0,
+      blending: THREE.MultiplyBlending,
+      alphaMap: rippleB,
+      alphaTest: 0.04,
+      depthWrite: false,
+      side: THREE.DoubleSide,
+    }),
+  )
+
+  const reflectionSheet = new THREE.Mesh(
+    new THREE.PlaneGeometry(isMobile ? 710 : 1040, isMobile ? 560 : 730),
+    new THREE.MeshBasicMaterial({
+      map: rippleA,
+      color: 0xf0fdff,
+      transparent: true,
+      opacity: 0,
+      blending: THREE.AdditiveBlending,
+      alphaMap: rippleA,
+      alphaTest: 0.05,
+      depthWrite: false,
+      side: THREE.DoubleSide,
+    }),
+  )
+
+  surfaceSheet.position.set(0, isMobile ? 7.8 : 9.5, -124)
+  shimmerSheet.position.set(0, isMobile ? 8.15 : 9.85, -126)
+  shadowSheet.position.set(0, isMobile ? 7.55 : 9.2, -123)
+  reflectionSheet.position.set(0, isMobile ? 8.35 : 10.15, -127)
+  surfaceSheet.rotation.x = -Math.PI / 2 - 0.1
+  shimmerSheet.rotation.x = -Math.PI / 2 - 0.14
+  shadowSheet.rotation.x = -Math.PI / 2 - 0.06
+  reflectionSheet.rotation.x = -Math.PI / 2 - 0.18
+  scene.add(surfaceSheet)
+  scene.add(shimmerSheet)
+  scene.add(shadowSheet)
+  scene.add(reflectionSheet)
+
+  return {
+    update: (_time: number, stageDepth: number, surfaceWaveTime: number) => {
+      const enterBlend = smoothstep(0.18, 0.38, stageDepth)
+      const lingerBlend = 1 - smoothstep(0.5, 0.93, stageDepth)
+      const visibility = enterBlend * lingerBlend
+
+      // Sync below-surface refraction flow with the same wave clock as the top water surface.
+      const primaryWave = surfaceWaveTime
+      const secondaryWave = surfaceWaveTime * 0.72
+      rippleA.offset.x = primaryWave * 0.035
+      rippleA.offset.y = -primaryWave * 0.019
+      rippleB.offset.x = -secondaryWave * 0.041
+      rippleB.offset.y = secondaryWave * 0.024
+
+      const shimmerDrift = Math.sin(primaryWave * 1.35) * 3.2
+      const secondaryDrift = Math.sin(primaryWave * 2.55) * 1.4
+      surfaceSheet.position.x = shimmerDrift + secondaryDrift
+      shimmerSheet.position.x = -shimmerDrift * 0.7 + secondaryDrift * 0.8
+      shadowSheet.position.x = shimmerDrift * 0.5 - secondaryDrift * 0.45
+      reflectionSheet.position.x = -shimmerDrift * 0.85 + secondaryDrift
+      surfaceSheet.position.y = (isMobile ? 7.8 : 9.5) + Math.sin(primaryWave * 1.1) * 0.28
+      shimmerSheet.position.y = (isMobile ? 8.15 : 9.85) + Math.cos(primaryWave * 1.22) * 0.24
+      shadowSheet.position.y = (isMobile ? 7.55 : 9.2) + Math.sin(primaryWave * 0.96) * 0.2
+      reflectionSheet.position.y = (isMobile ? 8.35 : 10.15) + Math.cos(primaryWave * 1.48) * 0.2
+      surfaceSheet.rotation.z = Math.sin(secondaryWave * 0.6) * 0.01
+      shimmerSheet.rotation.z = Math.cos(secondaryWave * 0.75) * 0.012
+      shadowSheet.rotation.z = Math.sin(secondaryWave * 0.5) * 0.008
+      reflectionSheet.rotation.z = Math.cos(secondaryWave * 0.84) * 0.015
+
+      const pulse = 0.9 + Math.sin(primaryWave * 2.1) * 0.1
+      const visibilityStrength = Math.pow(visibility, 0.86) * pulse
+
+      ;(surfaceSheet.material as THREE.MeshBasicMaterial).opacity = baseOpacity * visibilityStrength
+      ;(shimmerSheet.material as THREE.MeshBasicMaterial).opacity = (baseOpacity * 0.82) * visibilityStrength
+      ;(shadowSheet.material as THREE.MeshBasicMaterial).opacity = (baseOpacity * 0.42) * visibilityStrength
+      ;(reflectionSheet.material as THREE.MeshBasicMaterial).opacity = (baseOpacity * 0.55) * visibilityStrength
     },
   }
 }
@@ -1207,6 +1416,24 @@ export default function GlobalBeachBackdrop({
     bubbleSpriteTexture.wrapT = THREE.ClampToEdgeWrapping
     const birdSpriteTexture = buildBirdSpriteTexture(256)
     const fishTexture = buildFishTexture(256)
+    const tankSideTexture = supportsUnderwaterSystems ? waterNormalsTexture.clone() : null
+    const surfaceRippleTextureA = supportsUnderwaterSystems ? waterNormalsTexture.clone() : null
+    const surfaceRippleTextureB = supportsUnderwaterSystems ? waterNormalsTexture.clone() : null
+    if (tankSideTexture) {
+      tankSideTexture.repeat.set(1.8, 3.1)
+      tankSideTexture.offset.set(0, 0)
+      tankSideTexture.needsUpdate = true
+    }
+    if (surfaceRippleTextureA) {
+      surfaceRippleTextureA.repeat.set(3.1, 2.1)
+      surfaceRippleTextureA.offset.set(0, 0)
+      surfaceRippleTextureA.needsUpdate = true
+    }
+    if (surfaceRippleTextureB) {
+      surfaceRippleTextureB.repeat.set(2.5, 1.85)
+      surfaceRippleTextureB.offset.set(0.18, 0.12)
+      surfaceRippleTextureB.needsUpdate = true
+    }
 
     const camera = new THREE.PerspectiveCamera(
       50,
@@ -1223,8 +1450,9 @@ export default function GlobalBeachBackdrop({
     const theta = THREE.MathUtils.degToRad(preset.sunAzimuth)
     sun.setFromSphericalCoords(1, phi, theta)
 
+    let sky: Sky | null = null
     if (isSurfaceStage) {
-      const sky = new Sky()
+      sky = new Sky()
       sky.scale.setScalar(10000)
       scene.add(sky)
 
@@ -1262,6 +1490,42 @@ export default function GlobalBeachBackdrop({
       scene.add(water)
     }
 
+    let tankWaterVolume: THREE.Mesh<THREE.BoxGeometry, THREE.MeshPhysicalMaterial> | null = null
+    let tankGlassOverlay: THREE.Mesh<THREE.PlaneGeometry, THREE.MeshBasicMaterial> | null = null
+    if (supportsUnderwaterSystems) {
+      tankWaterVolume = new THREE.Mesh(
+        new THREE.BoxGeometry(isMobile ? 36 : 52, isMobile ? 20 : 30, isMobile ? 230 : 290),
+        new THREE.MeshPhysicalMaterial({
+          color: 0x59b7de,
+          map: tankSideTexture,
+          alphaMap: tankSideTexture,
+          transparent: true,
+          opacity: 0.09,
+          roughness: 0.24,
+          metalness: 0,
+          transmission: 0.42,
+          thickness: 1.8,
+          depthWrite: false,
+          side: THREE.DoubleSide,
+        }),
+      )
+      tankWaterVolume.position.set(0, -7.5, -142)
+      scene.add(tankWaterVolume)
+
+      tankGlassOverlay = new THREE.Mesh(
+        new THREE.PlaneGeometry(8.4, 5.2),
+        new THREE.MeshBasicMaterial({
+          color: 0x9ad7f0,
+          transparent: true,
+          opacity: 0,
+          blending: THREE.AdditiveBlending,
+          depthWrite: false,
+          side: THREE.DoubleSide,
+        }),
+      )
+      scene.add(tankGlassOverlay)
+    }
+
     if (isSurfaceStage) {
       addSand(scene, preset, phase)
       scatterBeachDecor(scene, isMobile, preset)
@@ -1276,6 +1540,16 @@ export default function GlobalBeachBackdrop({
       : null
     const mutedSunlightLayer = supportsUnderwaterSystems ? addMutedTopSunlight(scene, phase, underwaterDepthStage) : null
     const reflectionLayer = supportsUnderwaterSystems ? addUnderwaterReflections(scene, phase, underwaterDepthStage) : null
+    const surfaceWindowLayer = supportsUnderwaterSystems
+      ? addUnderwaterSurfaceWindow(
+        scene,
+        phase,
+        underwaterDepthStage,
+        isMobile,
+        surfaceRippleTextureA ?? undefined,
+        surfaceRippleTextureB ?? undefined,
+      )
+      : null
     const fishLayer = depthStage === "mid" || usesContinuousDive ? addMidDepthFish(scene, isMobile, phase, fishTexture) : null
     const deepFishLayer = depthStage === "deep" || usesContinuousDive ? addDeepFish(scene, isMobile, phase, fishTexture) : null
 
@@ -1329,8 +1603,18 @@ export default function GlobalBeachBackdrop({
     const fog = scene.fog as THREE.FogExp2
     const stageFogColor = fogColor.clone()
     const stageClearColor = submergedClearColor.clone()
-    const deepFog = fogColor.clone().offsetHSL(phase === "noon" ? -0.01 : 0.006, -0.08, -0.2)
-    const deepClear = submergedClearColor.clone().offsetHSL(phase === "noon" ? -0.006 : 0.01, -0.1, -0.25)
+    const deepFog = fogColor.clone().offsetHSL(phase === "noon" ? -0.008 : 0.005, -0.05, -0.12)
+    const deepClear = submergedClearColor.clone().offsetHSL(phase === "noon" ? -0.004 : 0.008, -0.07, -0.15)
+    
+    // Create a lighter blue underwater surface color (still getting light refraction from above)
+    const surfaceUnderwaterColor = new THREE.Color()
+    surfaceUnderwaterColor.setHSL(
+      0.54,
+      0.58,
+      0.52
+    )
+    const midUnderwaterColor = stageClearColor.clone().lerp(surfaceUnderwaterColor, 0.36)
+    
     const dynamicFogColor = stageFogColor.clone()
     const dynamicClearColor = stageClearColor.clone()
 
@@ -1350,25 +1634,77 @@ export default function GlobalBeachBackdrop({
       const targetDepthBlend = usesContinuousDive ? controlledProgress : getDepthBlend(depthStage, controlledProgress)
       smoothedDepthBlend = THREE.MathUtils.lerp(smoothedDepthBlend, targetDepthBlend, usesContinuousDive ? 0.2 : 0.065)
       const stageDepth = usesContinuousDive || !isSurfaceStage ? clamp01(smoothedDepthBlend) : smoothedDepthBlend
+      const surfaceWaveTime = elapsed * 0.45
 
       const exposureMultiplier = THREE.MathUtils.lerp(1, depthProfile.exposureMultiplier, stageDepth)
-      renderer.toneMappingExposure = Math.max(0.2, preset.exposure * exposureMultiplier)
+      // Keep exposure brighter longer so the descent remains airy and not abruptly dark.
+      const depthExposureFactor = stageDepth < 0.6 ? THREE.MathUtils.lerp(1, 0.82, stageDepth / 0.6) : 1
+      renderer.toneMappingExposure = Math.max(0.2, preset.exposure * exposureMultiplier * depthExposureFactor)
 
       if (!isSurfaceStage || usesContinuousDive) {
-        dynamicFogColor.copy(stageFogColor).lerp(deepFog, smoothstep(0.25, 1, stageDepth))
-        dynamicClearColor.copy(stageClearColor).lerp(deepClear, smoothstep(0.2, 1, stageDepth))
+        // Wide, multi-stop blend: surface blue -> mid blue -> deep blue.
+        const entryBlend = smoothstep(0.02, 0.72, stageDepth)
+        const midBlend = smoothstep(0.22, 0.86, stageDepth)
+        const deepBlend = smoothstep(0.62, 1.0, stageDepth)
+        
+        // Keep transitions smooth and ensure the deepest point stays lighter than before.
+        dynamicClearColor.copy(surfaceUnderwaterColor)
+          .lerp(midUnderwaterColor, entryBlend)
+          .lerp(stageClearColor, midBlend * 0.72)
+          .lerp(deepClear, deepBlend * 0.66)
+        
+        dynamicFogColor.copy(surfaceUnderwaterColor)
+          .lerp(midUnderwaterColor, entryBlend)
+          .lerp(stageFogColor, midBlend * 0.72)
+          .lerp(deepFog, deepBlend * 0.66)
+        
         fog.color.copy(dynamicFogColor)
-        const startFogDensity = usesContinuousDive ? 1 : 1.8
-        fog.density = preset.fogDensity * THREE.MathUtils.lerp(startFogDensity, depthProfile.fogDensityMultiplier, stageDepth)
+        
+        // Fog density: lighter near surface, increases with depth for layered effect
+        const startFogDensity = usesContinuousDive ? 0.48 : 1.8
+        const baseDensity = THREE.MathUtils.lerp(startFogDensity, depthProfile.fogDensityMultiplier, stageDepth)
+        fog.density = preset.fogDensity * baseDensity
+        
         renderer.setClearColor(dynamicClearColor, 1)
       }
 
-      const diveCurve = usesContinuousDive ? smoothstep(0.02, 0.84, stageDepth) : stageDepth
-      camera.position.y = THREE.MathUtils.lerp(11.5, depthProfile.cameraY, diveCurve)
-      camera.position.z = THREE.MathUtils.lerp(88, depthProfile.cameraZ, diveCurve)
-      cameraLookAt.y = THREE.MathUtils.lerp(1.8, depthProfile.lookAtY, diveCurve)
-      cameraLookAt.z = THREE.MathUtils.lerp(-140, depthProfile.lookAtZ, diveCurve)
+      const diveCurve = usesContinuousDive ? smoothstep(0.06, 0.48, stageDepth) : stageDepth
+      const sideViewBlend = usesContinuousDive ? smoothstep(0.24, 0.94, stageDepth) : 0
+      const baseY = THREE.MathUtils.lerp(11.5, depthProfile.cameraY - 3.2, diveCurve)
+      const baseZ = THREE.MathUtils.lerp(88, depthProfile.cameraZ - 12, diveCurve)
+
+      camera.position.x = THREE.MathUtils.lerp(0, isMobile ? -9 : -13.5, sideViewBlend)
+      camera.position.y = THREE.MathUtils.lerp(baseY, baseY - (isMobile ? 0.6 : 1.1), sideViewBlend)
+      camera.position.z = THREE.MathUtils.lerp(baseZ, isMobile ? 6 : 2.5, sideViewBlend)
+
+      cameraLookAt.x = THREE.MathUtils.lerp(0, isMobile ? 7.5 : 11.5, sideViewBlend)
+      cameraLookAt.y = THREE.MathUtils.lerp(1.8, depthProfile.lookAtY - 2.8, diveCurve)
+      cameraLookAt.z = THREE.MathUtils.lerp(-140, depthProfile.lookAtZ + 18, diveCurve)
       camera.lookAt(cameraLookAt)
+
+      const targetFov = THREE.MathUtils.lerp(50, isMobile ? 76 : 68, sideViewBlend)
+      if (Math.abs(camera.fov - targetFov) > 0.01) {
+        camera.fov = targetFov
+        camera.updateProjectionMatrix()
+      }
+
+      if (tankWaterVolume) {
+        tankWaterVolume.position.x = THREE.MathUtils.lerp(0, isMobile ? 2 : 3.2, sideViewBlend)
+        tankWaterVolume.rotation.y = THREE.MathUtils.lerp(0, isMobile ? -0.04 : -0.06, sideViewBlend)
+        tankWaterVolume.material.opacity = THREE.MathUtils.lerp(0.05, 0.14, sideViewBlend)
+
+        if (tankSideTexture) {
+          tankSideTexture.offset.y = (surfaceWaveTime * 0.055) % 1
+          tankSideTexture.offset.x = (Math.sin(surfaceWaveTime * 0.88) * 0.09 + 1) % 1
+        }
+      }
+
+      if (tankGlassOverlay) {
+        const viewDirection = new THREE.Vector3(0, 0, -1).applyQuaternion(camera.quaternion)
+        tankGlassOverlay.position.copy(camera.position).add(viewDirection.multiplyScalar(1.85))
+        tankGlassOverlay.quaternion.copy(camera.quaternion)
+        tankGlassOverlay.material.opacity = usesContinuousDive ? sideViewBlend * 0.085 : 0
+      }
 
       const lightMultiplier = THREE.MathUtils.lerp(1, depthProfile.lightMultiplier, stageDepth)
       ambientLight.intensity = preset.ambientIntensity * lightMultiplier
@@ -1378,8 +1714,16 @@ export default function GlobalBeachBackdrop({
       if (rimLight) rimLight.intensity = preset.rimIntensity * lightMultiplier
 
       if (water) {
-        water.material.uniforms["time"].value = elapsed * 0.45
+        water.material.uniforms["time"].value = surfaceWaveTime
         water.position.y = -0.05 - smoothstep(0.1, 0.92, stageDepth) * 4.9
+        // Fade out water surface visibility as we dive deeper
+        if (usesContinuousDive) {
+          water.visible = smoothstep(0.4, 0.12, stageDepth) > 0.1
+        }
+      }
+      // Control sky visibility during continuous dive
+      if (sky && usesContinuousDive) {
+        sky.visible = smoothstep(0.35, 0.15, stageDepth) > 0.05
       }
       dawnBirdFlock?.update(elapsed, stageDepth)
       noonCloudLayer?.update(elapsed)
@@ -1388,6 +1732,7 @@ export default function GlobalBeachBackdrop({
       underwaterLayer?.update(elapsed, delta)
       mutedSunlightLayer?.update(elapsed)
       reflectionLayer?.update(elapsed)
+      surfaceWindowLayer?.update(elapsed, stageDepth, surfaceWaveTime)
       fishLayer?.update(elapsed, stageDepth)
       deepFishLayer?.update(elapsed, stageDepth)
       renderer.render(scene, camera)
@@ -1414,6 +1759,9 @@ export default function GlobalBeachBackdrop({
       bubbleSpriteTexture.dispose()
       birdSpriteTexture.dispose()
       fishTexture.dispose()
+      tankSideTexture?.dispose()
+      surfaceRippleTextureA?.dispose()
+      surfaceRippleTextureB?.dispose()
       water?.geometry.dispose()
       water?.material.dispose()
       disposeScene(scene)
