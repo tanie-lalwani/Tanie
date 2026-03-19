@@ -74,7 +74,7 @@ export default function Home({ phase }: HomeProps) {
   const [submitMessage, setSubmitMessage] = useState("")
 
   const { scrollYProgress } = useScroll()
-  const worldDiveProgress = useTransform(scrollYProgress, [0, 0.72], [0, 1])
+  const worldDiveProgress = useTransform(scrollYProgress, [0, 0.36], [0, 1])
 
   const updateField = (key: keyof ContactFields, value: string) => {
     setFields((prev) => ({ ...prev, [key]: value }))
