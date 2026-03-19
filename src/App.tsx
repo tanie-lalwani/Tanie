@@ -62,7 +62,6 @@ export default function App() {
   }
 
   const showNavbar = location.pathname !== "/interview-me"
-  const showFooter = location.pathname !== "/interview-me"
 
   return (
     <main
@@ -78,7 +77,7 @@ export default function App() {
             <Route path="/interview-me" element={<InterviewMe />} />
           </Routes>
         </Suspense>
-        {showFooter ? <SiteFooter /> : null}
+        <SiteFooter />
       </div>
     </main>
   );
