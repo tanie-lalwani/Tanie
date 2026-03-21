@@ -32,7 +32,6 @@ const PROJECTS: Project[] = [
   },
 ]
 
-const RECIPIENT_EMAIL = "contact@tanie.me"
 
 type HomeProps = {
   phase: TimePhase
@@ -109,6 +108,7 @@ export default function Home({ phase }: HomeProps) {
           <PageHeader
             eyebrow="Contact"
             title=""
+            description=""
             className="**:text-white"
           />
 

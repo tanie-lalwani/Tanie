@@ -2,7 +2,6 @@ import { motion } from "framer-motion"
 import type { FormEvent } from "react"
 import { useState } from "react"
 
-const SUBJECT_PRESETS = ["New project", "Contract role", "Collaboration", "Quick question"]
 const FORM_ENDPOINT = import.meta.env.VITE_FORMSPREE_ENDPOINT ?? ""
 
 interface ContactFields {
