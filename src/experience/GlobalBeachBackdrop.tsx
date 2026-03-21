@@ -175,15 +175,17 @@ function addNoonClouds(scene: THREE.Scene, isMobile: boolean) {
   const cloudCount = isMobile ? 10 : 20
 
   for (let i = 0; i < cloudCount; i++) {
+    const baseOpacity = 0.36 + Math.random() * 0.24
     const sprite = new THREE.Sprite(
       new THREE.SpriteMaterial({
         map: texture,
         color: 0xffffff,
         transparent: true,
-        opacity: 0.36 + Math.random() * 0.24,
+        opacity: baseOpacity,
         depthWrite: false,
       }),
     )
+    sprite.userData.baseOpacity = baseOpacity
 
     sprite.position.set(
       -340 + Math.random() * 680,
@@ -197,12 +199,17 @@ function addNoonClouds(scene: THREE.Scene, isMobile: boolean) {
 
   scene.add(group)
 
-  const update = (time: number) => {
+  const update = (time: number, fade = 1) => {
     group.children.forEach((child, index) => {
       child.position.x += 0.02 + (index % 3) * 0.005
       if (child.position.x > 380) child.position.x = -380
       child.position.y += Math.sin(time * 0.16 + index * 0.7) * 0.004
+
+      const material = (child as THREE.Sprite).material as THREE.SpriteMaterial
+      material.opacity = (child.userData.baseOpacity ?? 0.45) * fade
     })
+
+    group.visible = fade > 0.01
   }
 
   return { group, update }
@@ -389,6 +396,108 @@ function addUnderwaterParticles(
   return { particles, update }
 }
 
+function addUnderwaterBed(
+  scene: THREE.Scene,
+  phase: TimePhase,
+  depthStage: "mid" | "deep",
+  isMobile: boolean,
+) {
+  const bedTexture = buildSandTexture(256, "default")
+  bedTexture.repeat.set(depthStage === "deep" ? 18 : 16, depthStage === "deep" ? 16 : 13)
+  bedTexture.colorSpace = THREE.SRGBColorSpace
+
+  const bedGeometry = new THREE.PlaneGeometry(
+    isMobile ? 340 : 520,
+    depthStage === "deep" ? 540 : 460,
+    isMobile ? 34 : 52,
+    depthStage === "deep" ? 66 : 54,
+  )
+  const positions = bedGeometry.attributes.position as THREE.BufferAttribute
+
+  for (let i = 0; i < positions.count; i++) {
+    const x = positions.getX(i)
+    const y = positions.getY(i)
+    const dune =
+      Math.sin(x * 0.055) * 1.6 +
+      Math.cos(y * 0.032) * 2.1 +
+      Math.sin((x + y) * 0.02) * 1.1
+    const ripple = Math.sin(x * 0.24 + y * 0.08) * 0.45
+    positions.setZ(i, dune + ripple)
+  }
+
+  bedGeometry.computeVertexNormals()
+
+  const bedMaterial = new THREE.MeshStandardMaterial({
+    color: phase === "noon" ? 0x9b7a58 : 0x86654a,
+    map: bedTexture,
+    transparent: true,
+    opacity: depthStage === "deep" ? 0.74 : 0.82,
+    roughness: 1,
+    metalness: 0.02,
+    emissive: phase === "noon" ? 0x5c4632 : 0x493829,
+    emissiveIntensity: depthStage === "deep" ? 0.05 : 0.08,
+  })
+
+  const bed = new THREE.Mesh(bedGeometry, bedMaterial)
+  bed.rotation.x = -Math.PI / 2
+  bed.position.set(0, depthStage === "deep" ? -24 : -18, depthStage === "deep" ? -210 : -178)
+  bed.receiveShadow = true
+
+  const ridgeMaterial = new THREE.MeshStandardMaterial({
+    color: phase === "noon" ? 0x7e6144 : 0x694f39,
+    roughness: 1,
+    metalness: 0.01,
+    transparent: true,
+    opacity: depthStage === "deep" ? 0.22 : 0.3,
+  })
+
+  const group = new THREE.Group()
+  group.add(bed)
+
+  const ridgeCount = isMobile ? 4 : 7
+  for (let i = 0; i < ridgeCount; i++) {
+    const ridge = new THREE.Mesh(
+      new THREE.SphereGeometry(1, 12, 12),
+      ridgeMaterial.clone(),
+    )
+    ridge.scale.set(
+      10 + Math.random() * 12,
+      1.2 + Math.random() * 1.2,
+      4 + Math.random() * 6,
+    )
+    ridge.position.set(
+      (Math.random() - 0.5) * (isMobile ? 130 : 210),
+      bed.position.y + 0.8 + Math.random() * 1.4,
+      bed.position.z - 40 - Math.random() * 180,
+    )
+    ridge.rotation.y = Math.random() * Math.PI
+    group.add(ridge)
+  }
+
+  scene.add(group)
+
+  return {
+    group,
+    update: (time: number, stageDepth: number) => {
+      const reveal = smoothstep(0.22, 0.5, stageDepth)
+      const deepen = THREE.MathUtils.lerp(1, depthStage === "deep" ? 0.82 : 0.9, smoothstep(0.55, 0.92, stageDepth))
+      const visibility = reveal * deepen
+      group.visible = visibility > 0.02
+      bedMaterial.opacity = (depthStage === "deep" ? 0.74 : 0.82) * visibility
+      bedMaterial.emissiveIntensity =
+        (depthStage === "deep" ? 0.05 : 0.08) + Math.sin(time * 0.32) * 0.008
+      bedTexture.offset.x = Math.sin(time * 0.018) * 0.02
+      bedTexture.offset.y = -time * 0.006
+
+      group.position.y = Math.sin(time * 0.14) * 0.35
+      group.position.x = Math.sin(time * 0.1) * 1.6
+    },
+    dispose: () => {
+      bedTexture.dispose()
+    },
+  }
+}
+
 function buildSunHazeTexture(size = 256): THREE.CanvasTexture {
   const canvas = document.createElement("canvas")
   canvas.width = size
@@ -531,6 +640,76 @@ function buildRippleRefractionTexture(
   return texture
 }
 
+function buildWaterVeilTexture(size = 512, variant: "soft" | "streaks" = "soft"): THREE.CanvasTexture {
+  const canvas = document.createElement("canvas")
+  canvas.width = size
+  canvas.height = size
+  const ctx = canvas.getContext("2d")
+
+  if (!ctx) {
+    return new THREE.CanvasTexture(canvas)
+  }
+
+  ctx.clearRect(0, 0, size, size)
+
+  for (let i = 0; i < (variant === "soft" ? 16 : 26); i++) {
+    const x = Math.random() * size
+    const y = Math.random() * size
+    const radius = variant === "soft" ? 60 + Math.random() * 120 : 32 + Math.random() * 74
+    const gradient = ctx.createRadialGradient(x, y, radius * 0.05, x, y, radius)
+    const alpha = variant === "soft" ? 0.08 + Math.random() * 0.08 : 0.04 + Math.random() * 0.06
+    gradient.addColorStop(0, `rgba(220,245,255,${alpha})`)
+    gradient.addColorStop(0.55, `rgba(140,210,240,${alpha * 0.45})`)
+    gradient.addColorStop(1, "rgba(20,45,60,0)")
+    ctx.fillStyle = gradient
+    ctx.beginPath()
+    ctx.arc(x, y, radius, 0, Math.PI * 2)
+    ctx.fill()
+  }
+
+  for (let i = 0; i < (variant === "soft" ? 18 : 34); i++) {
+    const y = (i / 20) * size + (Math.random() - 0.5) * 30
+    const alpha = variant === "soft" ? 0.035 + Math.random() * 0.04 : 0.04 + Math.random() * 0.07
+    const lineWidth = variant === "soft" ? 12 + Math.random() * 18 : 6 + Math.random() * 12
+    const gradient = ctx.createLinearGradient(0, y, size, y + (Math.random() - 0.5) * 45)
+    gradient.addColorStop(0, `rgba(170,220,245,${alpha * 0.25})`)
+    gradient.addColorStop(0.5, `rgba(215,245,255,${alpha})`)
+    gradient.addColorStop(1, `rgba(120,190,220,${alpha * 0.2})`)
+    ctx.strokeStyle = gradient
+    ctx.lineWidth = lineWidth
+    ctx.beginPath()
+    ctx.moveTo(0, y)
+    ctx.bezierCurveTo(
+      size * 0.22,
+      y + (Math.random() - 0.5) * 40,
+      size * 0.72,
+      y + (Math.random() - 0.5) * 36,
+      size,
+      y + (Math.random() - 0.5) * 28,
+    )
+    ctx.stroke()
+  }
+
+  for (let i = 0; i < (variant === "soft" ? 140 : 220); i++) {
+    const x = Math.random() * size
+    const y = Math.random() * size
+    const radius = variant === "soft" ? 0.8 + Math.random() * 2.2 : 0.6 + Math.random() * 1.8
+    const alpha = variant === "soft" ? 0.12 + Math.random() * 0.18 : 0.08 + Math.random() * 0.14
+
+    ctx.fillStyle = `rgba(232,248,255,${alpha})`
+    ctx.beginPath()
+    ctx.arc(x, y, radius, 0, Math.PI * 2)
+    ctx.fill()
+  }
+
+  const texture = new THREE.CanvasTexture(canvas)
+  texture.wrapS = THREE.RepeatWrapping
+  texture.wrapT = THREE.RepeatWrapping
+  texture.repeat.set(2.4, 2.1)
+  texture.needsUpdate = true
+  return texture
+}
+
 function addMutedTopSunlight(scene: THREE.Scene, phase: TimePhase, depthStage: "mid" | "deep") {
   const isMid = depthStage === "mid"
   const lightColor = phase === "noon" ? 0xb8dcff : 0xa8c9ea
@@ -628,6 +807,208 @@ function addUnderwaterReflections(
       planeB.position.x = Math.cos(time * 0.18) * 8
       ;(planeA.material as THREE.MeshBasicMaterial).opacity = strength + Math.sin(time * 0.7) * 0.02
       ;(planeB.material as THREE.MeshBasicMaterial).opacity = strength * 0.6 + Math.cos(time * 0.56) * 0.015
+    },
+  }
+}
+
+function addUnderwaterVolumeTexture(
+  scene: THREE.Scene,
+  phase: TimePhase,
+  depthStage: "mid" | "deep",
+  isMobile: boolean,
+  sedimentTexture?: THREE.Texture,
+) {
+  const veilTextureA = buildWaterVeilTexture(512, "soft")
+  const veilTextureB = buildWaterVeilTexture(512, "streaks")
+  veilTextureA.repeat.set(2.6, 2.2)
+  veilTextureB.repeat.set(3.3, 2.8)
+  if (sedimentTexture) {
+    sedimentTexture.wrapS = THREE.RepeatWrapping
+    sedimentTexture.wrapT = THREE.RepeatWrapping
+    sedimentTexture.repeat.set(1.6, 1.25)
+    sedimentTexture.colorSpace = THREE.SRGBColorSpace
+    sedimentTexture.needsUpdate = true
+  }
+
+  const baseWaterColor = new THREE.Color(MOOD_PRESETS[phase].waterColor)
+  const shadowColor = baseWaterColor.clone().lerp(new THREE.Color(0x0e2438), 0.38)
+
+  const frontVeil = new THREE.Mesh(
+    new THREE.PlaneGeometry(isMobile ? 720 : 980, isMobile ? 520 : 700),
+    new THREE.MeshBasicMaterial({
+      map: veilTextureA,
+      alphaMap: veilTextureA,
+      color: 0xb8e8ff,
+      transparent: true,
+      opacity: 0,
+      blending: THREE.AdditiveBlending,
+      alphaTest: 0.02,
+      depthWrite: false,
+      side: THREE.DoubleSide,
+    }),
+  )
+
+  const midVeil = new THREE.Mesh(
+    new THREE.PlaneGeometry(isMobile ? 760 : 1060, isMobile ? 580 : 760),
+    new THREE.MeshBasicMaterial({
+      map: veilTextureB,
+      alphaMap: veilTextureB,
+      color: shadowColor,
+      transparent: true,
+      opacity: 0,
+      blending: THREE.MultiplyBlending,
+      premultipliedAlpha: true,
+      alphaTest: 0.02,
+      depthWrite: false,
+      side: THREE.DoubleSide,
+    }),
+  )
+
+  const sedimentVeil = sedimentTexture
+    ? new THREE.Mesh(
+      new THREE.PlaneGeometry(isMobile ? 700 : 940, isMobile ? 500 : 660),
+      new THREE.MeshBasicMaterial({
+        map: sedimentTexture,
+        color: 0x8f7558,
+        transparent: true,
+        opacity: 0,
+        blending: THREE.MultiplyBlending,
+        depthWrite: false,
+        side: THREE.DoubleSide,
+      }),
+    )
+    : null
+
+  frontVeil.position.set(0, isMobile ? 2.5 : 3.5, -78)
+  midVeil.position.set(0, isMobile ? 0.5 : 1.2, -112)
+  sedimentVeil?.position.set(0, isMobile ? 1.5 : 2.1, -92)
+  frontVeil.rotation.x = -0.04
+  midVeil.rotation.x = 0.03
+  if (sedimentVeil) sedimentVeil.rotation.x = -0.02
+
+  const group = new THREE.Group()
+  group.add(frontVeil)
+  group.add(midVeil)
+  if (sedimentVeil) group.add(sedimentVeil)
+  scene.add(group)
+
+  return {
+    group,
+    update: (time: number, stageDepth: number) => {
+      // The veil textures should start appearing around 28% depth, be fully visible by 47%, and then start settling down after 88%, becoming mostly settled by 100%.
+      
+      const enterBlend = smoothstep(0.28, 0.47, stageDepth)
+      const settleBlend = 1 - smoothstep(0.88, 1, stageDepth)
+      const visibility = enterBlend * settleBlend
+
+      veilTextureA.offset.x = time * 0.012
+      veilTextureA.offset.y = -time * 0.008
+      veilTextureB.offset.x = -time * 0.018
+      veilTextureB.offset.y = time * 0.011
+      if (sedimentTexture) {
+        sedimentTexture.offset.x = Math.sin(time * 0.028) * 0.03
+        sedimentTexture.offset.y = -time * 0.01
+      }
+
+      frontVeil.position.x = Math.sin(time * 0.16) * 3.4
+      frontVeil.position.y = (isMobile ? 2.5 : 3.5) + Math.sin(time * 0.22) * 0.8
+      midVeil.position.x = Math.cos(time * 0.11) * 4.2
+      midVeil.position.y = (isMobile ? 0.5 : 1.2) + Math.cos(time * 0.19) * 0.9
+      if (sedimentVeil) {
+        sedimentVeil.position.x = Math.sin(time * 0.13) * 2.8
+        sedimentVeil.position.y = (isMobile ? 1.5 : 2.1) + Math.cos(time * 0.17) * 0.55
+        sedimentVeil.rotation.z = Math.sin(time * 0.05) * 0.016
+      }
+      frontVeil.rotation.z = Math.sin(time * 0.08) * 0.02
+      midVeil.rotation.z = Math.cos(time * 0.07) * 0.018
+
+      ;(frontVeil.material as THREE.MeshBasicMaterial).opacity =
+        (depthStage === "deep" ? 0.18 : 0.26) * visibility
+      ;(midVeil.material as THREE.MeshBasicMaterial).opacity =
+        (depthStage === "deep" ? 0.12 : 0.18) * visibility
+      if (sedimentVeil) {
+        ;(sedimentVeil.material as THREE.MeshBasicMaterial).opacity =
+          (depthStage === "deep" ? 0.1 : 0.16) * visibility
+      }
+      group.visible = visibility > 0.02
+    },
+    dispose: () => {
+      veilTextureA.dispose()
+      veilTextureB.dispose()
+    },
+  }
+}
+
+function addUnderwaterSilt(
+  scene: THREE.Scene,
+  depthStage: "mid" | "deep",
+  isMobile: boolean,
+  particleTexture?: THREE.Texture,
+) {
+  const count = isMobile ? (depthStage === "deep" ? 120 : 150) : depthStage === "deep" ? 220 : 280
+  const positions = new Float32Array(count * 3)
+  const sizes = new Float32Array(count)
+  const offsets = new Float32Array(count)
+  const driftX = new Float32Array(count)
+  const driftY = new Float32Array(count)
+
+  for (let i = 0; i < count; i++) {
+    const idx = i * 3
+    positions[idx] = (Math.random() - 0.5) * (isMobile ? 120 : 170)
+    positions[idx + 1] = -18 + Math.random() * 42
+    positions[idx + 2] = -36 - Math.random() * 95
+    sizes[i] = 0.25 + Math.random() * (depthStage === "deep" ? 0.55 : 0.8)
+    offsets[i] = Math.random() * Math.PI * 2
+    driftX[i] = (Math.random() - 0.5) * 0.18
+    driftY[i] = 0.025 + Math.random() * 0.04
+  }
+
+  const geometry = new THREE.BufferGeometry()
+  geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3))
+  geometry.setAttribute("aSize", new THREE.BufferAttribute(sizes, 1))
+
+  const material = new THREE.PointsMaterial({
+    color: 0xd9c6a7,
+    size: depthStage === "deep" ? 0.8 : 1.05,
+    sizeAttenuation: true,
+    transparent: true,
+    opacity: depthStage === "deep" ? 0.16 : 0.24,
+    depthWrite: false,
+    map: particleTexture,
+    alphaMap: particleTexture,
+    alphaTest: particleTexture ? 0.03 : 0,
+    blending: THREE.NormalBlending,
+  })
+
+  const points = new THREE.Points(geometry, material)
+  scene.add(points)
+
+  return {
+    points,
+    update: (time: number, delta: number, stageDepth: number) => {
+      const visibleStrength = smoothstep(0.15, 0.46, stageDepth)
+      points.visible = visibleStrength > 0.02
+      material.opacity = (depthStage === "deep" ? 0.16 : 0.24) * visibleStrength
+
+      const pos = geometry.getAttribute("position") as THREE.BufferAttribute
+      const arr = pos.array as Float32Array
+      const frameScale = delta * 60
+
+      for (let i = 0; i < count; i++) {
+        const idx = i * 3
+        arr[idx] += (driftX[i] + Math.sin(time * 0.45 + offsets[i]) * 0.03) * frameScale
+        arr[idx + 1] += (driftY[i] + Math.cos(time * 0.35 + offsets[i]) * 0.015) * frameScale
+        arr[idx + 2] += Math.sin(time * 0.25 + offsets[i]) * 0.01 * frameScale
+
+        if (arr[idx] > (isMobile ? 70 : 95)) arr[idx] = -(isMobile ? 70 : 95)
+        if (arr[idx] < -(isMobile ? 70 : 95)) arr[idx] = isMobile ? 70 : 95
+        if (arr[idx + 1] > 26) {
+          arr[idx + 1] = -18 - Math.random() * 8
+          arr[idx + 2] = -36 - Math.random() * 95
+        }
+      }
+
+      pos.needsUpdate = true
     },
   }
 }
@@ -735,7 +1116,8 @@ function addUnderwaterSurfaceWindow(
   return {
     group,
     update: (_time: number, stageDepth: number, surfaceWaveTime: number) => {
-      const enterBlend = smoothstep(0.24, 0.46, stageDepth)
+      // The surface window should start appearing around 20% depth, be fully visible by 46%, and then start losing intensity after 50%, becoming mostly faded by 93%. This is to allow the surface ripples to sync up with the underwater volume textures and silt, which are more effective at conveying depth and movement in the mid and deep stages.
+      const enterBlend = smoothstep(0.2, 0.46, stageDepth)
       const lingerBlend = 1 - smoothstep(0.5, 0.93, stageDepth)
       const visibility = enterBlend * lingerBlend
 
@@ -997,6 +1379,10 @@ export default function GlobalBeachBackdrop({
     const bubbleSpriteTexture = textureLoader.load("/textures/bubble-circle.png")
     bubbleSpriteTexture.wrapS = THREE.ClampToEdgeWrapping
     bubbleSpriteTexture.wrapT = THREE.ClampToEdgeWrapping
+    const siltParticleTexture = textureLoader.load("/textures/micro-particle.png")
+    siltParticleTexture.wrapS = THREE.ClampToEdgeWrapping
+    siltParticleTexture.wrapT = THREE.ClampToEdgeWrapping
+    const sedimentOverlayTexture = textureLoader.load("/textures/coast-sand-01-diff-1k.jpg")
     const surfaceRippleTextureA = supportsUnderwaterSystems ? waterNormalsTexture.clone() : null
     const surfaceRippleTextureB = supportsUnderwaterSystems ? waterNormalsTexture.clone() : null
     if (surfaceRippleTextureA) {
@@ -1102,6 +1488,15 @@ export default function GlobalBeachBackdrop({
     const underwaterLayer = supportsUnderwaterSystems
       ? addUnderwaterParticles(scene, phase, underwaterDepthStage, isMobile, bubbleSpriteTexture)
       : null
+    const underwaterBedLayer = supportsUnderwaterSystems
+      ? addUnderwaterBed(scene, phase, underwaterDepthStage, isMobile)
+      : null
+    const underwaterVolumeLayer = supportsUnderwaterSystems
+      ? addUnderwaterVolumeTexture(scene, phase, underwaterDepthStage, isMobile, sedimentOverlayTexture)
+      : null
+    const underwaterSiltLayer = supportsUnderwaterSystems
+      ? addUnderwaterSilt(scene, underwaterDepthStage, isMobile, siltParticleTexture)
+      : null
     const mutedSunlightLayer = supportsUnderwaterSystems ? addMutedTopSunlight(scene, phase, underwaterDepthStage) : null
     const reflectionLayer = supportsUnderwaterSystems ? addUnderwaterReflections(scene, phase, underwaterDepthStage) : null
     const surfaceWindowLayer = supportsUnderwaterSystems
@@ -1189,50 +1584,40 @@ export default function GlobalBeachBackdrop({
       const exposureMultiplier = THREE.MathUtils.lerp(1, depthProfile.exposureMultiplier, stageDepth)
       // Keep exposure brighter longer so the descent remains airy and not abruptly dark.
       const depthExposureFactor = stageDepth < 0.6 ? THREE.MathUtils.lerp(1, 0.82, stageDepth / 0.6) : 1
-      renderer.toneMappingExposure = Math.max(0.2, preset.exposure * exposureMultiplier * depthExposureFactor)
+      const textureOnsetDimmer = THREE.MathUtils.lerp(1, 0.72, smoothstep(0.1, 0.5, stageDepth))
+      renderer.toneMappingExposure = Math.max(
+        0.2,
+        preset.exposure * exposureMultiplier * depthExposureFactor * textureOnsetDimmer,
+      )
 
       if (!isSurfaceStage || usesContinuousDive) {
-        // Phase 1 (0-0.35): Keep sky colors while water zooms in
-        // Phase 2 (0.35+): Switch to underwater color for the dive
-        const underwaterPhase = smoothstep(0.3, 0.4, stageDepth)
-        
-        // Blend from sky to underwater color based on phase
-        if (underwaterPhase < 1) {
-          // Still in water zoom phase - keep lighter background
-          dynamicClearColor.setHex(0xb8def2) // Keep sky-ish tone
+        const skyTransitionColor = new THREE.Color(0xb8def2)
+        const underwaterPhase = smoothstep(0.1, 0.5, stageDepth)
+
+        const baseHsl = { h: 0, s: 0, l: 0 }
+        baseUnderwaterColor.getHSL(baseHsl)
+
+        const lightWaterColor = new THREE.Color()
+        lightWaterColor.setHSL(baseHsl.h, baseHsl.s, Math.min(1, baseHsl.l + 0.17))
+
+        const mediumWaterColor = new THREE.Color()
+        mediumWaterColor.setHSL(baseHsl.h, baseHsl.s, Math.min(1, baseHsl.l + 0.08))
+
+        const darkWaterColor = baseUnderwaterColor.clone()
+
+        if (stageDepth < 0.65) {
+          dynamicClearColor.copy(lightWaterColor)
+        } else if (stageDepth < 0.80) {
+          const mediumProgress = (stageDepth - 0.65) / 0.15
+          dynamicClearColor.copy(lightWaterColor)
+          dynamicClearColor.lerp(mediumWaterColor, mediumProgress)
         } else {
-          // Fully in underwater phase - three-part gradient: light, medium, dark
-          const baseHsl = { h: 0, s: 0, l: 0 }
-          baseUnderwaterColor.getHSL(baseHsl)
-          
-          // Define the three gradient levels
-          const lightWaterColor = new THREE.Color()
-          lightWaterColor.setHSL(baseHsl.h, baseHsl.s, Math.min(1, baseHsl.l + 0.17))
-          
-          const mediumWaterColor = new THREE.Color()
-          mediumWaterColor.setHSL(baseHsl.h, baseHsl.s, Math.min(1, baseHsl.l + 0.08))
-          
-          const darkWaterColor = baseUnderwaterColor.clone()
-          
-          // Divide underwater depth into three sections
-          // Section 1: Light (0.4-0.65)
-          // Section 2: Medium - testimonials section (0.65-0.80)
-          // Section 3: Dark - contacts section (0.80+)
-          if (stageDepth < 0.65) {
-            // Light section - extended to testimonials
-            dynamicClearColor.copy(lightWaterColor)
-          } else if (stageDepth < 0.80) {
-            // Medium section - testimonials
-            const mediumProgress = (stageDepth - 0.65) / 0.15
-            dynamicClearColor.copy(lightWaterColor)
-            dynamicClearColor.lerp(mediumWaterColor, mediumProgress)
-          } else {
-            // Dark section - contacts
-            const darkProgress = Math.min(1, (stageDepth - 0.80) / 0.25)
-            dynamicClearColor.copy(mediumWaterColor)
-            dynamicClearColor.lerp(darkWaterColor, darkProgress)
-          }
+          const darkProgress = Math.min(1, (stageDepth - 0.80) / 0.25)
+          dynamicClearColor.copy(mediumWaterColor)
+          dynamicClearColor.lerp(darkWaterColor, darkProgress)
         }
+
+        dynamicClearColor.lerpColors(skyTransitionColor, dynamicClearColor.clone(), underwaterPhase)
         
         dynamicFogColor.copy(baseUnderwaterColor)
 
@@ -1330,12 +1715,14 @@ export default function GlobalBeachBackdrop({
       if (sky && usesContinuousDive) {
         sky.visible = smoothstep(0.45, 0.3, stageDepth) > 0.05
       }
-      // Control clouds visibility with long smooth fade effect
+      // Fade clouds out before the darker transition window kicks in.
       if (noonCloudLayer && usesContinuousDive) {
-        noonCloudLayer.group.visible = smoothstep(0.45, 0.3, stageDepth) > 0.05
+        const cloudFade = 1 - smoothstep(0.2, 0.34, stageDepth)
+        noonCloudLayer.update(elapsed, cloudFade)
+      } else {
+        noonCloudLayer?.update(elapsed)
       }
       // dawnBirdFlock?.update(elapsed, stageDepth) // Removed: dawn phase no longer exists
-      noonCloudLayer?.update(elapsed)
       noonSunLayer?.update()
       
       // Only show underwater effects after water zoom completes (stageDepth > 0.2)
@@ -1343,6 +1730,9 @@ export default function GlobalBeachBackdrop({
         underwaterLayer.particles.visible = stageDepth > 0.2
         underwaterLayer.update(elapsed, delta)
       }
+      underwaterBedLayer?.update(elapsed, stageDepth)
+      underwaterVolumeLayer?.update(elapsed, stageDepth)
+      underwaterSiltLayer?.update(elapsed, delta, stageDepth)
       if (mutedSunlightLayer) {
         mutedSunlightLayer.update(elapsed)
       }
@@ -1376,8 +1766,12 @@ export default function GlobalBeachBackdrop({
       proceduralWaterNormals.dispose()
       waterNormalsTexture.dispose()
       bubbleSpriteTexture.dispose()
+      siltParticleTexture.dispose()
+      sedimentOverlayTexture.dispose()
       surfaceRippleTextureA?.dispose()
       surfaceRippleTextureB?.dispose()
+      underwaterBedLayer?.dispose()
+      underwaterVolumeLayer?.dispose()
       water?.geometry.dispose()
       water?.material.dispose()
       disposeScene(scene)
