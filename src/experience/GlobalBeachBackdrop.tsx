@@ -8,10 +8,6 @@ import type { TimePhase } from "./timePhase"
 import { MOOD_PRESETS, type BeachMoodPreset } from "./moods"
 
 const GLOBAL_OCEAN_START = performance.now() * 0.001
-const ENABLE_DAWN_BIRDS = false
-const ENABLE_NOON_SHIP = false
-const ENABLE_FISH = false
-const ENABLE_GLASS_TANK_EFFECT = false
 
 function buildNormalMap(size = 256): THREE.DataTexture {
   const data = new Uint8Array(size * size * 4)
@@ -173,97 +169,6 @@ function buildCloudTexture(size = 128): THREE.CanvasTexture {
   return texture
 }
 
-function buildBirdSpriteTexture(size = 256): THREE.CanvasTexture {
-  const canvas = document.createElement("canvas")
-  canvas.width = size
-  canvas.height = size
-  const ctx = canvas.getContext("2d")
-
-  if (!ctx) {
-    return new THREE.CanvasTexture(canvas)
-  }
-
-  ctx.clearRect(0, 0, size, size)
-  const wingGradient = ctx.createLinearGradient(0, size * 0.34, size, size * 0.58)
-  wingGradient.addColorStop(0, "rgba(255,255,255,0.98)")
-  wingGradient.addColorStop(0.5, "rgba(212,228,245,0.95)")
-  wingGradient.addColorStop(1, "rgba(160,184,205,0.88)")
-
-  ctx.fillStyle = wingGradient
-  ctx.beginPath()
-  ctx.moveTo(size * 0.08, size * 0.56)
-  ctx.quadraticCurveTo(size * 0.28, size * 0.26, size * 0.5, size * 0.5)
-  ctx.quadraticCurveTo(size * 0.72, size * 0.26, size * 0.92, size * 0.56)
-  ctx.quadraticCurveTo(size * 0.7, size * 0.47, size * 0.5, size * 0.56)
-  ctx.quadraticCurveTo(size * 0.3, size * 0.47, size * 0.08, size * 0.56)
-  ctx.closePath()
-  ctx.fill()
-
-  ctx.strokeStyle = "rgba(116,145,170,0.58)"
-  ctx.lineWidth = size * 0.02
-  ctx.beginPath()
-  ctx.moveTo(size * 0.2, size * 0.54)
-  ctx.quadraticCurveTo(size * 0.5, size * 0.43, size * 0.8, size * 0.54)
-  ctx.stroke()
-
-  const texture = new THREE.CanvasTexture(canvas)
-  texture.needsUpdate = true
-  texture.minFilter = THREE.LinearMipmapLinearFilter
-  texture.magFilter = THREE.LinearFilter
-  return texture
-}
-
-function buildFishTexture(size = 256): THREE.CanvasTexture {
-  const canvas = document.createElement("canvas")
-  canvas.width = size
-  canvas.height = size
-  const ctx = canvas.getContext("2d")
-
-  if (!ctx) {
-    return new THREE.CanvasTexture(canvas)
-  }
-
-  ctx.clearRect(0, 0, size, size)
-  const bodyGradient = ctx.createLinearGradient(size * 0.1, size * 0.2, size * 0.92, size * 0.82)
-  bodyGradient.addColorStop(0, "rgba(214,241,255,0.98)")
-  bodyGradient.addColorStop(0.45, "rgba(132,184,216,0.95)")
-  bodyGradient.addColorStop(1, "rgba(54,102,136,0.9)")
-
-  ctx.fillStyle = bodyGradient
-  ctx.beginPath()
-  ctx.moveTo(size * 0.08, size * 0.5)
-  ctx.quadraticCurveTo(size * 0.22, size * 0.18, size * 0.68, size * 0.35)
-  ctx.quadraticCurveTo(size * 0.92, size * 0.42, size * 0.96, size * 0.5)
-  ctx.quadraticCurveTo(size * 0.92, size * 0.58, size * 0.68, size * 0.65)
-  ctx.quadraticCurveTo(size * 0.22, size * 0.82, size * 0.08, size * 0.5)
-  ctx.closePath()
-  ctx.fill()
-
-  ctx.fillStyle = "rgba(38,81,115,0.88)"
-  ctx.beginPath()
-  ctx.moveTo(size * 0.02, size * 0.5)
-  ctx.lineTo(size * 0.16, size * 0.34)
-  ctx.lineTo(size * 0.16, size * 0.66)
-  ctx.closePath()
-  ctx.fill()
-
-  ctx.strokeStyle = "rgba(255,255,255,0.2)"
-  ctx.lineWidth = size * 0.018
-  for (let i = 0; i < 5; i++) {
-    const x = size * (0.24 + i * 0.12)
-    ctx.beginPath()
-    ctx.moveTo(x, size * 0.38)
-    ctx.quadraticCurveTo(x + size * 0.03, size * 0.5, x, size * 0.62)
-    ctx.stroke()
-  }
-
-  const texture = new THREE.CanvasTexture(canvas)
-  texture.needsUpdate = true
-  texture.minFilter = THREE.LinearMipmapLinearFilter
-  texture.magFilter = THREE.LinearFilter
-  return texture
-}
-
 function addNoonClouds(scene: THREE.Scene, isMobile: boolean) {
   const group = new THREE.Group()
   const texture = buildCloudTexture(128)
@@ -312,89 +217,6 @@ function addNoonSun(scene: THREE.Scene) {
   return {
     update: () => {
       // Static overhead light, no animation needed
-    },
-  }
-}
-
-function addNoonShipIllusion(scene: THREE.Scene, isMobile: boolean) {
-  const ship = new THREE.Group()
-
-  const hull = new THREE.Mesh(
-    new THREE.BoxGeometry(10, 1.3, 2.5),
-    new THREE.MeshStandardMaterial({ color: 0x402f27, roughness: 0.86 }),
-  )
-  hull.position.y = 0.15
-  ship.add(hull)
-
-  const bow = new THREE.Mesh(
-    new THREE.ConeGeometry(1.25, 2.5, 4),
-    new THREE.MeshStandardMaterial({ color: 0x3a2b23, roughness: 0.86 }),
-  )
-  bow.rotation.z = -Math.PI / 2
-  bow.position.set(5.1, 0.12, 0)
-  ship.add(bow)
-
-  const mast = new THREE.Mesh(
-    new THREE.CylinderGeometry(0.08, 0.1, 3.6, 8),
-    new THREE.MeshStandardMaterial({ color: 0x5f4836, roughness: 0.8 }),
-  )
-  mast.position.set(-0.3, 2.1, 0)
-  ship.add(mast)
-
-  const sailShape = new THREE.Shape()
-  sailShape.moveTo(0, 0)
-  sailShape.lineTo(2.25, 1.05)
-  sailShape.lineTo(0, 2.05)
-  sailShape.closePath()
-
-  const sail = new THREE.Mesh(
-    new THREE.ShapeGeometry(sailShape),
-    new THREE.MeshStandardMaterial({
-      color: 0xf6f3e7,
-      roughness: 0.92,
-      side: THREE.DoubleSide,
-      transparent: true,
-      opacity: 0.95,
-    }),
-  )
-  sail.position.set(-0.2, 1.1, 0)
-  sail.rotation.y = -0.06
-  ship.add(sail)
-
-  const wakePieces: THREE.Mesh[] = []
-  for (let i = 0; i < 4; i++) {
-    const wake = new THREE.Mesh(
-      new THREE.PlaneGeometry(2.1 + i * 1.05, 0.42 + i * 0.14),
-      new THREE.MeshBasicMaterial({
-        color: 0xbdeeff,
-        transparent: true,
-        opacity: 0.18 - i * 0.03,
-        blending: THREE.AdditiveBlending,
-        depthWrite: false,
-      }),
-    )
-    wake.rotation.x = -Math.PI / 2
-    wake.position.set(-5.8 - i * 1.8, 0.02, 0)
-    ship.add(wake)
-    wakePieces.push(wake)
-  }
-
-  ship.position.set(isMobile ? 120 : 150, 0.12, -320)
-  ship.rotation.y = -0.25
-  ship.scale.setScalar(isMobile ? 1.1 : 1.35)
-  scene.add(ship)
-
-  return {
-    update: (time: number) => {
-      ship.position.y = 0.1 + Math.sin(time * 0.95) * 0.12
-      ship.rotation.z = Math.sin(time * 0.65) * 0.028
-
-      wakePieces.forEach((wake, index) => {
-        const pulse = 0.82 + Math.sin(time * 2.4 - index * 0.7) * 0.25
-        wake.scale.x = pulse
-        const material = wake.material as THREE.MeshBasicMaterial
-        material.opacity = 0.11 + pulse * (0.08 - index * 0.012)
-      })
     },
   }
 }
@@ -950,206 +772,6 @@ function addUnderwaterSurfaceWindow(
   }
 }
 
-function addMidDepthFish(scene: THREE.Scene, isMobile: boolean, phase: TimePhase, fishTexture?: THREE.Texture) {
-  const fishCount = isMobile ? 10 : 18
-  const fishGroup = new THREE.Group()
-  const fish: Array<{
-    mesh: THREE.Group
-    materials: THREE.MeshStandardMaterial[]
-    baseOpacity: number
-    speed: number
-    offset: number
-    amplitude: number
-    baseY: number
-    baseZ: number
-    lane: number
-  }> = []
-
-  for (let i = 0; i < fishCount; i++) {
-    const fishMesh = new THREE.Group()
-
-    const body = new THREE.Mesh(
-      new THREE.SphereGeometry(0.95, 10, 8),
-      new THREE.MeshStandardMaterial({
-        color: phase === "noon" ? 0x8ec8e6 : 0x7ea9c8,
-        roughness: 0.7,
-        metalness: 0.04,
-        map: fishTexture,
-        alphaMap: fishTexture,
-        transparent: !!fishTexture,
-        alphaTest: fishTexture ? 0.08 : 0,
-      }),
-    )
-    body.scale.set(1.8, 0.8, 0.8)
-    fishMesh.add(body)
-
-    const tail = new THREE.Mesh(
-      new THREE.ConeGeometry(0.48, 0.9, 3),
-      new THREE.MeshStandardMaterial({
-        color: phase === "noon" ? 0x77b5d8 : 0x6f97b4,
-        roughness: 0.75,
-        metalness: 0.03,
-        map: fishTexture,
-        alphaMap: fishTexture,
-        transparent: !!fishTexture,
-        alphaTest: fishTexture ? 0.08 : 0,
-      }),
-    )
-    tail.rotation.z = Math.PI / 2
-    tail.position.x = -1.35
-    fishMesh.add(tail)
-
-    const fin = new THREE.Mesh(
-      new THREE.ConeGeometry(0.2, 0.5, 3),
-      new THREE.MeshStandardMaterial({
-        color: phase === "noon" ? 0xaad6ee : 0x8ab4d0,
-        roughness: 0.8,
-        map: fishTexture,
-        alphaMap: fishTexture,
-        transparent: !!fishTexture,
-        alphaTest: fishTexture ? 0.08 : 0,
-      }),
-    )
-    fin.rotation.x = Math.PI / 2
-    fin.position.set(0, 0.42, 0)
-    fishMesh.add(fin)
-
-    const lane = i % 2 === 0 ? 1 : -1
-    const baseY = -10 + Math.random() * 28
-    const baseZ = -165 - Math.random() * 95
-
-    fishMesh.position.set(lane * (70 + Math.random() * 180), baseY, baseZ)
-    fishMesh.scale.setScalar(0.65 + Math.random() * 0.65)
-    fishMesh.rotation.y = lane === 1 ? Math.PI : 0
-    fishGroup.add(fishMesh)
-
-    fish.push({
-      mesh: fishMesh,
-      materials: [body.material, tail.material, fin.material] as THREE.MeshStandardMaterial[],
-      baseOpacity: 0.9,
-      speed: 8 + Math.random() * 6,
-      offset: Math.random() * Math.PI * 2,
-      amplitude: 0.6 + Math.random() * 1.6,
-      baseY,
-      baseZ,
-      lane,
-    })
-  }
-
-  scene.add(fishGroup)
-
-  return {
-    update: (time: number, depthBlend = 1) => {
-      const fade = smoothstep(0.26, 0.58, depthBlend)
-      fishGroup.visible = fade > 0.01
-      for (const item of fish) {
-        const travel = ((time * item.speed + item.offset * 15) % 460) - 230
-        item.mesh.position.x = item.lane * travel
-        item.mesh.position.y = item.baseY + Math.sin(time * 1.1 + item.offset) * item.amplitude
-        item.mesh.position.z = item.baseZ + Math.cos(time * 0.65 + item.offset) * 14
-        item.mesh.rotation.y = item.lane === 1 ? Math.PI + Math.sin(time * 2.2 + item.offset) * 0.18 : Math.sin(time * 2.2 + item.offset) * 0.18
-        for (const material of item.materials) {
-          material.opacity = item.baseOpacity * fade
-        }
-      }
-    },
-  }
-}
-
-function addDeepFish(scene: THREE.Scene, isMobile: boolean, phase: TimePhase, fishTexture?: THREE.Texture) {
-  const fishCount = isMobile ? 6 : 10
-  const fishGroup = new THREE.Group()
-  const fish: Array<{
-    mesh: THREE.Group
-    materials: THREE.MeshStandardMaterial[]
-    baseOpacity: number
-    speed: number
-    offset: number
-    amplitude: number
-    baseY: number
-    baseZ: number
-    lane: number
-  }> = []
-
-  for (let i = 0; i < fishCount; i++) {
-    const fishMesh = new THREE.Group()
-
-    const body = new THREE.Mesh(
-      new THREE.SphereGeometry(0.78, 10, 8),
-      new THREE.MeshStandardMaterial({
-        color: phase === "noon" ? 0x6fa9ca : 0x6288a8,
-        roughness: 0.78,
-        metalness: 0.03,
-        map: fishTexture,
-        alphaMap: fishTexture,
-        transparent: !!fishTexture,
-        alphaTest: fishTexture ? 0.08 : 0,
-      }),
-    )
-    body.scale.set(1.55, 0.76, 0.76)
-    fishMesh.add(body)
-
-    const tail = new THREE.Mesh(
-      new THREE.ConeGeometry(0.38, 0.72, 3),
-      new THREE.MeshStandardMaterial({ color: phase === "noon" ? 0x5e97bb : 0x4e7492, roughness: 0.8 }),
-    )
-    tail.rotation.z = Math.PI / 2
-    tail.position.x = -1.1
-    fishMesh.add(tail)
-
-    const bodyMaterial = body.material as THREE.MeshStandardMaterial
-    const tailMaterial = tail.material as THREE.MeshStandardMaterial
-    bodyMaterial.map = fishTexture ?? null
-    bodyMaterial.alphaMap = fishTexture ?? null
-    bodyMaterial.transparent = !!fishTexture
-    bodyMaterial.alphaTest = fishTexture ? 0.08 : 0
-    tailMaterial.map = fishTexture ?? null
-    tailMaterial.alphaMap = fishTexture ?? null
-    tailMaterial.transparent = !!fishTexture
-    tailMaterial.alphaTest = fishTexture ? 0.08 : 0
-
-    const lane = i % 2 === 0 ? 1 : -1
-    const baseY = -14 + Math.random() * 30
-    const baseZ = -195 - Math.random() * 120
-
-    fishMesh.position.set(lane * (90 + Math.random() * 190), baseY, baseZ)
-    fishMesh.scale.setScalar(0.58 + Math.random() * 0.5)
-    fishMesh.rotation.y = lane === 1 ? Math.PI : 0
-    fishGroup.add(fishMesh)
-
-    fish.push({
-      mesh: fishMesh,
-      materials: [bodyMaterial, tailMaterial],
-      baseOpacity: 0.82,
-      speed: 6.8 + Math.random() * 4.2,
-      offset: Math.random() * Math.PI * 2,
-      amplitude: 0.45 + Math.random() * 1.1,
-      baseY,
-      baseZ,
-      lane,
-    })
-  }
-
-  scene.add(fishGroup)
-
-  return {
-    update: (time: number, depthBlend = 1) => {
-      const fade = smoothstep(0.5, 0.84, depthBlend)
-      fishGroup.visible = fade > 0.01
-      for (const item of fish) {
-        const travel = ((time * item.speed + item.offset * 14) % 500) - 250
-        item.mesh.position.x = item.lane * travel
-        item.mesh.position.y = item.baseY + Math.sin(time * 0.95 + item.offset) * item.amplitude
-        item.mesh.position.z = item.baseZ + Math.cos(time * 0.55 + item.offset) * 12
-        item.mesh.rotation.y = item.lane === 1 ? Math.PI + Math.sin(time * 1.8 + item.offset) * 0.16 : Math.sin(time * 1.8 + item.offset) * 0.16
-        for (const material of item.materials) {
-          material.opacity = item.baseOpacity * fade
-        }
-      }
-    },
-  }
-}
-
 function clamp01(value: number) {
   return Math.min(1, Math.max(0, value))
 }
@@ -1374,16 +996,8 @@ export default function GlobalBeachBackdrop({
     const bubbleSpriteTexture = textureLoader.load("/textures/bubble-circle.png")
     bubbleSpriteTexture.wrapS = THREE.ClampToEdgeWrapping
     bubbleSpriteTexture.wrapT = THREE.ClampToEdgeWrapping
-    const birdSpriteTexture = ENABLE_DAWN_BIRDS ? buildBirdSpriteTexture(256) : null
-    const fishTexture = ENABLE_FISH ? buildFishTexture(256) : null
-    const tankSideTexture = supportsUnderwaterSystems && ENABLE_GLASS_TANK_EFFECT ? waterNormalsTexture.clone() : null
     const surfaceRippleTextureA = supportsUnderwaterSystems ? waterNormalsTexture.clone() : null
     const surfaceRippleTextureB = supportsUnderwaterSystems ? waterNormalsTexture.clone() : null
-    if (tankSideTexture) {
-      tankSideTexture.repeat.set(1.8, 3.1)
-      tankSideTexture.offset.set(0, 0)
-      tankSideTexture.needsUpdate = true
-    }
     if (surfaceRippleTextureA) {
       surfaceRippleTextureA.repeat.set(3.1, 2.1)
       surfaceRippleTextureA.offset.set(0, 0)
@@ -1477,51 +1091,12 @@ export default function GlobalBeachBackdrop({
       scene.add(water)
     }
 
-    let tankWaterVolume: THREE.Mesh<THREE.BoxGeometry, THREE.MeshPhysicalMaterial> | null = null
-    let tankGlassOverlay: THREE.Mesh<THREE.PlaneGeometry, THREE.MeshBasicMaterial> | null = null
-    if (supportsUnderwaterSystems && ENABLE_GLASS_TANK_EFFECT) {
-      tankWaterVolume = new THREE.Mesh(
-        new THREE.BoxGeometry(isMobile ? 36 : 52, isMobile ? 20 : 30, isMobile ? 230 : 290),
-        new THREE.MeshPhysicalMaterial({
-          color: 0x59b7de,
-          map: tankSideTexture,
-          alphaMap: tankSideTexture,
-          transparent: true,
-          opacity: 0.09,
-          roughness: 0.24,
-          metalness: 0,
-          transmission: 0.42,
-          thickness: 1.8,
-          depthWrite: false,
-          side: THREE.DoubleSide,
-        }),
-      )
-      tankWaterVolume.position.set(0, -7.5, -142)
-      scene.add(tankWaterVolume)
-
-      tankGlassOverlay = new THREE.Mesh(
-        new THREE.PlaneGeometry(8.4, 5.2),
-        new THREE.MeshBasicMaterial({
-          color: 0x9ad7f0,
-          transparent: true,
-          opacity: 0,
-          blending: THREE.AdditiveBlending,
-          depthWrite: false,
-          side: THREE.DoubleSide,
-        }),
-      )
-      scene.add(tankGlassOverlay)
-    }
-
     if (isSurfaceStage && !usesContinuousDive) {
       addSand(scene, preset, phase)
       scatterBeachDecor(scene, isMobile, preset)
     }
     const noonCloudLayer = phase === "noon" && isSurfaceStage ? addNoonClouds(scene, isMobile) : null
     const noonSunLayer = phase === "noon" && isSurfaceStage ? addNoonSun(scene) : null
-    const noonShipLayer = ENABLE_NOON_SHIP && phase === "noon" && isSurfaceStage
-      ? addNoonShipIllusion(scene, isMobile)
-      : null
     const underwaterDepthStage: "mid" | "deep" = depthStage === "deep" ? "deep" : "mid"
     const underwaterLayer = supportsUnderwaterSystems
       ? addUnderwaterParticles(scene, phase, underwaterDepthStage, isMobile, bubbleSpriteTexture)
@@ -1537,12 +1112,6 @@ export default function GlobalBeachBackdrop({
         surfaceRippleTextureA ?? undefined,
         surfaceRippleTextureB ?? undefined,
       )
-      : null
-    const fishLayer = ENABLE_FISH && (depthStage === "mid" || usesContinuousDive)
-      ? addMidDepthFish(scene, isMobile, phase, fishTexture ?? undefined)
-      : null
-    const deepFishLayer = ENABLE_FISH && (depthStage === "deep" || usesContinuousDive)
-      ? addDeepFish(scene, isMobile, phase, fishTexture ?? undefined)
       : null
 
     // Configure camera layers: layer 0 (default) + layer 1 (stars for night)
@@ -1699,24 +1268,6 @@ export default function GlobalBeachBackdrop({
         camera.updateProjectionMatrix()
       }
 
-      if (tankWaterVolume) {
-        tankWaterVolume.position.x = THREE.MathUtils.lerp(0, isMobile ? 2 : 3.2, sideViewBlend)
-        tankWaterVolume.rotation.y = THREE.MathUtils.lerp(0, isMobile ? -0.04 : -0.06, sideViewBlend)
-        tankWaterVolume.material.opacity = THREE.MathUtils.lerp(0.05, 0.14, sideViewBlend)
-
-        if (tankSideTexture) {
-          tankSideTexture.offset.y = (surfaceWaveTime * 0.055) % 1
-          tankSideTexture.offset.x = (Math.sin(surfaceWaveTime * 0.88) * 0.09 + 1) % 1
-        }
-      }
-
-      if (tankGlassOverlay) {
-        const viewDirection = new THREE.Vector3(0, 0, -1).applyQuaternion(camera.quaternion)
-        tankGlassOverlay.position.copy(camera.position).add(viewDirection.multiplyScalar(1.85))
-        tankGlassOverlay.quaternion.copy(camera.quaternion)
-        tankGlassOverlay.material.opacity = usesContinuousDive ? sideViewBlend * 0.085 : 0
-      }
-
       const lightMultiplier = THREE.MathUtils.lerp(1, depthProfile.lightMultiplier, stageDepth)
       ambientLight.intensity = preset.ambientIntensity * lightMultiplier
       hemisphereLight.intensity = preset.hemisphereIntensity * lightMultiplier
@@ -1785,7 +1336,6 @@ export default function GlobalBeachBackdrop({
       // dawnBirdFlock?.update(elapsed, stageDepth) // Removed: dawn phase no longer exists
       noonCloudLayer?.update(elapsed)
       noonSunLayer?.update()
-      noonShipLayer?.update(elapsed)
       
       // Only show underwater effects after water zoom completes (stageDepth > 0.2)
       if (underwaterLayer) {
@@ -1803,8 +1353,6 @@ export default function GlobalBeachBackdrop({
         surfaceWindowLayer.group.visible = stageDepth > 0.1
         surfaceWindowLayer.update(elapsed, stageDepth, surfaceWaveTime)
       }
-      fishLayer?.update(elapsed, stageDepth)
-      deepFishLayer?.update(elapsed, stageDepth)
       renderer.render(scene, camera)
     }
     render()
@@ -1827,9 +1375,6 @@ export default function GlobalBeachBackdrop({
       proceduralWaterNormals.dispose()
       waterNormalsTexture.dispose()
       bubbleSpriteTexture.dispose()
-      birdSpriteTexture?.dispose()
-      fishTexture?.dispose()
-      tankSideTexture?.dispose()
       surfaceRippleTextureA?.dispose()
       surfaceRippleTextureB?.dispose()
       water?.geometry.dispose()
