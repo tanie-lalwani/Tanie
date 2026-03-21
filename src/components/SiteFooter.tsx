@@ -80,12 +80,13 @@ export default function SiteFooter({ className = "" }: SiteFooterProps) {
         </div>
         <div className="mt-6 h-px w-full bg-linear-to-r from-transparent via-white/12 to-transparent" />
         <p className="mt-3 text-center text-[11px] text-sky-100/68">
-          © 2026 Tanisha Lalwani. Made with Three.js and TypeScript.
+          &copy; 2026 Tanisha Lalwani. Made with Three.js and TypeScript.
         </p>
       </div>
     </footer>
   )
 }
+
 
 
 
