@@ -15,26 +15,26 @@ export function ProjectCard({ site }: ProjectCardProps) {
     >
       <div className="relative flex h-full flex-col items-center justify-center">
         <div
-          className="relative overflow-hidden rounded-2xl border border-sky-700/15 bg-white/60 shadow-sm
-            w-[90vw] max-w-xs p-2
+          className="surface-panel relative overflow-hidden
+            w-[90vw] max-w-xs p-3
             sm:w-[80vw] sm:max-w-md sm:p-4
             md:w-[70vw] md:max-w-lg
             lg:w-full lg:max-w-2xl"
         >
           <div className="w-full flex items-center justify-center">
             <div
-              className="w-full rounded-xl bg-linear-to-br from-sky-100 to-sky-50 flex items-center justify-center relative
+              className="relative flex w-full items-center justify-center rounded-[1.25rem] border border-white/10 bg-linear-to-br from-sky-950/90 to-slate-950/90
                 aspect-2/1 min-h-24
                 sm:aspect-2/1 sm:min-h-44
                 md:aspect-2/1 md:min-h-56
                 lg:aspect-video lg:min-h-96"
             >
-              <span className="text-sky-500 text-base">Project Video Placeholder</span>
+              <span className="text-sm font-medium text-sky-100/72 sm:text-base">Project Video Placeholder</span>
               <a
                 href={site}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="absolute bottom-2 right-2 inline-flex items-center justify-center rounded-lg bg-sky-900/90 px-2 py-1 text-xl font-semibold text-white shadow transition hover:bg-sky-800 focus:outline-none focus:ring-2 focus:ring-sky-400 sm:bottom-4 sm:right-4 sm:px-4 sm:py-2 sm:text-2xl"
+                className="absolute bottom-2 right-2 inline-flex items-center justify-center rounded-[1.1rem] border border-sky-200/70 bg-[#bfe4ff] px-4 py-2 text-xs font-semibold text-blue-950 shadow-[0_10px_24px_rgba(18,53,92,0.2)] transition hover:bg-[#dff3ff] focus:outline-none focus:ring-2 focus:ring-sky-300 sm:bottom-4 sm:right-4 sm:px-5 sm:py-2.5 sm:text-sm"
                 aria-label="Visit project site"
               >
                 <span aria-hidden="true">Go</span>

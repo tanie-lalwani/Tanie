@@ -25,7 +25,11 @@ body {
 	font-size: var(--type-body);
 	line-height: 1.6;
 	color: var(--color-text-main);
-	background-color: #0a223a;
+	background-color: #143b61;
+}
+
+#root {
+	min-height: 100vh;
 }
 
 h1,
@@ -62,6 +66,56 @@ a, .text-link {
 }
 a:hover, .text-link:hover {
 	color: #fff;
+}
+
+@layer components {
+	.site-shell {
+		@apply relative min-h-screen text-sky-50;
+	}
+
+	.site-container {
+		@apply mx-auto w-full max-w-6xl;
+	}
+
+	.site-section {
+		@apply relative isolate w-full px-4 py-14 sm:px-6 sm:py-20;
+	}
+
+	.section-eyebrow {
+		@apply inline-flex text-[11px] font-semibold uppercase tracking-[0.2em] text-sky-200/78;
+	}
+
+	.section-title {
+		@apply mt-3 text-3xl font-semibold tracking-tight text-white sm:text-4xl lg:text-5xl;
+	}
+
+	.section-copy {
+		@apply mt-3 max-w-2xl text-sm leading-relaxed text-sky-100/78 sm:text-base;
+	}
+
+	.surface-panel {
+		@apply rounded-[1.75rem] border border-white/12 bg-slate-950/34 shadow-[0_18px_60px_rgba(2,6,23,0.22)] backdrop-blur-xl;
+	}
+
+	.surface-panel-soft {
+		@apply rounded-2xl border border-white/10 bg-slate-950/24 shadow-[0_14px_40px_rgba(2,6,23,0.18)] backdrop-blur-lg;
+	}
+
+	.ui-label {
+		@apply text-xs font-semibold tracking-wide text-sky-100;
+	}
+
+	.ui-input {
+		@apply rounded-xl border border-white/16 bg-white/10 px-3.5 py-2.5 text-sm text-sky-50 outline-none transition placeholder:text-sky-100/45 focus:border-sky-300/55 focus:ring-2 focus:ring-sky-300/25;
+	}
+
+	.ui-button-primary {
+		@apply inline-flex items-center justify-center rounded-xl bg-sky-200 px-4 py-2.5 text-sm font-semibold text-slate-950 transition hover:bg-sky-100 disabled:cursor-not-allowed disabled:opacity-70;
+	}
+
+	.ui-icon-button {
+		@apply flex items-center justify-center rounded-full border border-white/16 bg-white/10 text-white shadow-lg backdrop-blur transition hover:bg-white/18 disabled:cursor-not-allowed disabled:opacity-35;
+	}
 }
 
 
