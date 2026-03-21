@@ -12,7 +12,7 @@ type NavbarProps = {
 export default function Navbar({ phase }: NavbarProps) {
   return (
     <header className="sticky top-0 z-40 w-full">
-      <nav className="flex h-9 w-full items-center justify-between border-b border-sky-200/40 bg-white/90 px-3 shadow-[0_6px_18px_rgba(10,37,64,0.10)] backdrop-blur-xl sm:px-5" >
+      <nav className="flex h-9 w-full items-center justify-between border-b border-sky-200/50 bg-[#b8d3e8]/90 px-3 shadow-[0_6px_18px_rgba(10,37,64,0.10)] backdrop-blur-xl sm:px-5" >
 
         <a
           href="/"
@@ -30,7 +30,7 @@ export default function Navbar({ phase }: NavbarProps) {
               {link.href.startsWith('#') ? (
                 <a
                   href={link.href}
-                  className="rounded-xl bg-sky-200 px-4 py-2 text-sm font-semibold !no-underline !text-slate-950 transition hover:bg-sky-100 hover:!text-slate-950 focus:outline-none focus:ring-2 focus:ring-sky-300"
+                  className="rounded-full border border-sky-300/80 bg-[#b9d8ef]/95 px-5 py-1.5 text-sm font-medium !no-underline !text-[#243b6b] shadow-[0_0_0_1px_rgba(125,211,252,0.25),0_0_18px_rgba(56,189,248,0.35)] transition hover:bg-[#c8e4f7] hover:!text-[#243b6b] focus:outline-none focus:ring-2 focus:ring-sky-300"
                 >
                   {link.label}
                 </a>
@@ -38,8 +38,10 @@ export default function Navbar({ phase }: NavbarProps) {
                 <NavLink
                   to={link.href}
                   className={({ isActive }) =>
-                    `rounded-xl px-4 py-2 text-sm font-semibold !no-underline transition focus:outline-none focus:ring-2 focus:ring-sky-300 ${
-                      isActive ? 'bg-sky-100 !text-slate-950 shadow' : 'bg-sky-200 !text-slate-950 hover:bg-sky-100 hover:!text-slate-950'
+                    `rounded-full border px-5 py-1.5 text-sm font-medium !no-underline transition focus:outline-none focus:ring-2 focus:ring-sky-300 ${
+                      isActive
+                        ? 'border-sky-300/90 bg-[#c8e4f7] !text-[#243b6b] shadow-[0_0_0_1px_rgba(125,211,252,0.3),0_0_18px_rgba(56,189,248,0.38)]'
+                        : 'border-sky-300/80 bg-[#b9d8ef]/95 !text-[#243b6b] shadow-[0_0_0_1px_rgba(125,211,252,0.25),0_0_18px_rgba(56,189,248,0.35)] hover:bg-[#c8e4f7] hover:!text-[#243b6b]'
                     }`
                   }
                 >
