@@ -84,7 +84,7 @@ export default function Projects() {
               transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
             >
               <div className="relative">
-                <div className="relative overflow-hidden rounded-lg border border-white/14 bg-slate-950/70 shadow-[inset_0_1px_0_rgba(255,255,255,0.16)]">
+                <div className="relative overflow-hidden rounded-lg border border-white/14 bg-slate-950/70">
                   <div className="aspect-16/10 bg-[radial-gradient(circle_at_20%_20%,rgba(255,255,255,0.1),transparent_28%),linear-gradient(160deg,#0f172a_0%,#030712_56%,#020617_100%)]" />
                   <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_40%,rgba(2,6,23,0.76)_100%)]" />
                   <div className="absolute bottom-2.5 left-2.5 right-2.5 flex flex-col items-start justify-between gap-1.5 sm:bottom-3 sm:left-3 sm:right-3 sm:flex-row sm:items-end sm:gap-2.5">

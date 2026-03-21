@@ -34,7 +34,7 @@ export function ProjectCard({ site }: ProjectCardProps) {
                 href={site}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="absolute bottom-2 right-2 inline-flex items-center justify-center rounded-full border border-sky-300/80 bg-[#b9d8ef]/95 px-4 py-2 text-xs font-medium !no-underline !text-[#243b6b] shadow-[0_0_0_1px_rgba(125,211,252,0.25),0_0_18px_rgba(56,189,248,0.35)] transition hover:bg-[#c8e4f7] hover:!text-[#243b6b] focus:outline-none focus:ring-2 focus:ring-sky-300 sm:bottom-4 sm:right-4 sm:px-5 sm:py-2.5 sm:text-sm"
+                className="absolute bottom-2 right-2 inline-flex items-center justify-center rounded-full border border-sky-300/80 bg-[#b9d8ef]/95 px-4 py-2 text-xs font-medium !no-underline !text-[#243b6b] transition hover:bg-[#c8e4f7] hover:!text-[#243b6b] focus:outline-none focus:ring-2 focus:ring-sky-300 sm:bottom-4 sm:right-4 sm:px-5 sm:py-2.5 sm:text-sm"
                 aria-label="Visit project site"
               >
                 <span aria-hidden="true">&#8599;</span>

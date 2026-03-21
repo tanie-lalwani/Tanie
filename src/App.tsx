@@ -64,7 +64,7 @@ export default function App() {
       data-phase="noon"
       className="relative flex min-h-screen w-full flex-col overflow-x-hidden text-sky-950"
     >
-      <div className="relative z-10 flex-1 readability-text-shadow">
+      <div className="relative z-10 flex-1">
         {showNavbar ? <Navbar phase={timePhase} /> : null}
         <Suspense fallback={<div className="px-4 py-10 text-center text-sm text-slate-400">Loading...</div>}>
           <Routes>

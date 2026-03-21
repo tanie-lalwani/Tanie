@@ -262,12 +262,12 @@ export default function QnA() {
 
   return (
     <div className="site-shell">
-      <nav className="fixed left-0 top-0 z-40 hidden h-full w-20 flex-col items-center justify-between border-r border-sky-200/20 bg-[#dff2ff]/12 py-8 shadow-[12px_0_40px_rgba(2,6,23,0.12)] backdrop-blur-xl md:flex">
+      <nav className="fixed left-0 top-0 z-40 hidden h-full w-20 flex-col items-center justify-between border-r border-sky-200/20 bg-[#dff2ff]/12 py-8 backdrop-blur-xl md:flex">
         <div className="flex flex-col items-center gap-8">
           <Link
             to="/"
             className={`flex w-14 flex-col items-center rounded-[1.35rem] px-2 py-3 transition-all ${
-              location.pathname === "/" ? "bg-[#bfe4ff] text-blue-950 shadow-[0_10px_24px_rgba(18,53,92,0.18)]" : "text-sky-100/80 hover:bg-white/12 hover:text-white"
+              location.pathname === "/" ? "bg-[#bfe4ff] text-blue-950" : "text-sky-100/80 hover:bg-white/12 hover:text-white"
             }`}
             title="Home"
           >
@@ -345,8 +345,8 @@ export default function QnA() {
               >
                 <div className="flex w-full items-end justify-center gap-3 md:gap-5">
                   <motion.div
-                    className="surface-panel relative w-full overflow-hidden rounded-none md:w-[min(34vw,24rem)] md:rounded-[2rem]"
-                    style={{ aspectRatio: "9 / 16", maxHeight: "100dvh" }}
+                    className="surface-panel relative w-[82vw] max-w-[18rem] overflow-hidden rounded-[1.4rem] md:w-[min(34vw,24rem)] md:max-w-none md:rounded-[2rem]"
+                    style={{ aspectRatio: "9 / 16", maxHeight: "78dvh" }}
                     initial={{ opacity: 0.55, scale: lowPowerMode ? 0.995 : 0.98, filter: lowPowerMode ? "blur(0px)" : "blur(2px)" }}
                     animate={{
                       opacity: activeIndex === index ? 1 : 0.72,
@@ -373,7 +373,7 @@ export default function QnA() {
                     </div>
                     <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-5">
                       <motion.p
-                        className="text-center text-base font-bold text-white drop-shadow-[0_3px_14px_rgba(2,6,23,0.8)] md:text-lg"
+                        className="text-center text-base font-bold text-white md:text-lg"
                         initial={{ opacity: 0, y: 14 }}
                         animate={{
                           opacity: activeIndex === index ? 1 : 0.82,
@@ -455,7 +455,7 @@ export default function QnA() {
           transition={{ duration: 0.25, ease: smoothEase }}
           className="mb-3 w-[22rem] origin-bottom-right"
         >
-          <div className="surface-panel overflow-hidden rounded-[1.6rem] bg-slate-950/90 shadow-[0_16px_60px_rgba(2,6,23,0.5)]">
+          <div className="surface-panel overflow-hidden rounded-[1.6rem] bg-slate-950/90">
             <div className="flex items-center justify-between border-b border-white/10 px-4 py-3">
               <div>
                 <div className="text-sm font-semibold text-white">Tani-bot</div>
@@ -525,7 +525,7 @@ export default function QnA() {
             setIsBotOpen((currentValue) => !currentValue)
             setShowBotToast(false)
           }}
-          className="flex h-14 w-14 items-center justify-center rounded-full border-2 border-white/20 bg-sky-200 shadow-lg transition-transform hover:scale-105"
+          className="flex h-14 w-14 items-center justify-center rounded-full border-2 border-white/20 bg-sky-200 transition-transform hover:scale-105"
         >
           <svg width="32" height="32" fill="none" viewBox="0 0 24 24" stroke="#020617" strokeWidth="2.2">
             <circle cx="12" cy="12" r="10" />
