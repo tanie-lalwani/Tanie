@@ -73,7 +73,7 @@ export default function Home({ phase }: HomeProps) {
             </h1>
 
             <p className="mt-4 max-w-xl text-sm leading-relaxed text-blue-950 sm:text-base">
-              Full-stack developer building immersive, creative experiences. Portfolios, games, dashboards, and everything in between. Scroll to see my work or jump to the contact form.
+              I'm Tanisha Lalwani, also known as Tanie, a full-stack developer building immersive, creative experiences. Portfolios, games, dashboards, and everything in between. Scroll to see my work or jump to the contact form.
             </p>
           </div>
         </motion.div>
