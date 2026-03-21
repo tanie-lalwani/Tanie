@@ -52,7 +52,7 @@ type SiteFooterProps = {
 export default function SiteFooter({ className = "" }: SiteFooterProps) {
   return (
     <footer
-      className={`relative z-20 w-full border-t border-sky-700/20 bg-sky-50/95 px-4 py-8 sm:px-6 sm:py-12 backdrop-blur-sm ${className}`}
+      className={`relative z-20 w-full border-t border-sky-700/20 bg-sky-50/95 px-4 py-4 sm:px-6 sm:py-6 backdrop-blur-sm ${className}`}
     >
       <div className="mx-auto max-w-6xl">
         <div className="h-px w-full bg-linear-to-r from-transparent via-sky-900/22 to-transparent" />
@@ -61,7 +61,7 @@ export default function SiteFooter({ className = "" }: SiteFooterProps) {
             <p className="text-sm font-semibold tracking-tight text-sky-950" style={{ fontFamily: 'var(--font-display)' }}>Tanie</p>
             <p className="mt-1 max-w-xs text-xs leading-relaxed text-sky-900">Full stack developer.</p>
           </div>
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-x-8">
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-2 sm:gap-x-8">
             {SOCIALS.map((s) => (
               <a
                 key={s.label}

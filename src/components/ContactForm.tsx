@@ -79,7 +79,7 @@ export function ContactForm() {
   return (
     <motion.form
       onSubmit={handleSubmit}
-      className="relative mx-auto w-full max-w-5xl space-y-4 sm:space-y-5"
+      className="relative w-full space-y-3 sm:space-y-4"
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.45, ease: "easeOut" }}
@@ -87,56 +87,56 @@ export function ContactForm() {
       {/* Subject presets removed as requested */}
 
       {/* Name field */}
-      <label className="flex flex-col gap-2">
-        <span className="text-sm font-semibold text-sky-950">Name</span>
+      <label className="flex flex-col gap-1">
+        <span className="text-xs font-semibold text-white">Name</span>
         <input
           type="text"
           name="name"
           required
           value={fields.name}
           onChange={(event) => updateField("name", event.target.value)}
-          className="rounded-lg border border-sky-700/25 bg-white px-4 py-3 text-sky-950 transition-all placeholder:text-sky-700/50 focus:outline-none focus:ring-2 focus:ring-sky-300 focus:ring-offset-0"
+          className="rounded-lg border border-sky-700/20 bg-white px-3 py-2 text-sky-900 text-xs transition-all placeholder:text-sky-700/40 focus:outline-none focus:ring-2 focus:ring-sky-300 focus:ring-offset-0"
           placeholder="Your name"
         />
       </label>
 
       {/* Email field */}
-      <label className="flex flex-col gap-2">
-        <span className="text-sm font-semibold text-sky-950">Email</span>
+      <label className="flex flex-col gap-1">
+        <span className="text-xs font-semibold text-white">Email</span>
         <input
           type="email"
           name="email"
           required
           value={fields.email}
           onChange={(event) => updateField("email", event.target.value)}
-          className="rounded-lg border border-sky-700/25 bg-white px-4 py-3 text-sky-950 transition-all placeholder:text-sky-700/50 focus:outline-none focus:ring-2 focus:ring-sky-300 focus:ring-offset-0"
+          className="rounded-lg border border-sky-700/20 bg-white px-3 py-2 text-sky-900 text-xs transition-all placeholder:text-sky-700/40 focus:outline-none focus:ring-2 focus:ring-sky-300 focus:ring-offset-0"
           placeholder="your@email.com"
         />
       </label>
 
       {/* Subject field */}
-      <label className="flex flex-col gap-2">
-        <span className="text-sm font-semibold text-sky-950">Subject</span>
+      <label className="flex flex-col gap-1 text-xs text-white">
+        Subject
         <input
           type="text"
           name="subject"
           value={fields.subject}
           onChange={(event) => updateField("subject", event.target.value)}
-          className="rounded-lg border border-sky-700/25 bg-white px-4 py-3 text-sky-950 transition-all placeholder:text-sky-700/50 focus:outline-none focus:ring-2 focus:ring-sky-300 focus:ring-offset-0"
+          className="rounded-lg border border-sky-700/20 bg-white px-3 py-2 text-sky-900 text-xs outline-none transition placeholder:text-sky-700/40 focus:border-sky-400 focus:ring-2 focus:ring-sky-300 focus:ring-offset-0"
           placeholder="What's this about?"
         />
       </label>
 
       {/* Message field */}
-      <label className="flex flex-col gap-2">
-        <span className="text-sm font-semibold text-sky-950">Message</span>
+      <label className="flex flex-col gap-1 text-xs text-white">
+        Message
         <textarea
           name="message"
           required
           value={fields.message}
           onChange={(event) => updateField("message", event.target.value)}
-          rows={6}
-          className="rounded-lg border border-sky-700/25 bg-white px-4 py-3 text-sky-950 transition-all placeholder:text-sky-700/50 focus:outline-none focus:ring-2 focus:ring-sky-300 focus:ring-offset-0"
+          rows={5}
+          className="rounded-lg border border-sky-700/20 bg-white px-3 py-2 text-sky-900 text-xs outline-none transition placeholder:text-sky-700/40 focus:border-sky-400 focus:ring-2 focus:ring-sky-300 focus:ring-offset-0"
           placeholder="Tell me about your project..."
         />
       </label>
@@ -145,7 +145,7 @@ export function ContactForm() {
       <button
         type="submit"
         disabled={isSubmitting}
-        className="w-full rounded-lg border border-sky-700/30 bg-sky-950 px-6 py-3 font-semibold text-white transition-all duration-200 hover:bg-sky-900 focus:outline-none focus:ring-2 focus:ring-sky-300 focus:ring-offset-0 active:bg-sky-950 disabled:cursor-not-allowed disabled:opacity-50"
+        className="w-full rounded-lg bg-sky-900 px-4 py-2 text-xs font-semibold text-white transition hover:bg-sky-800 disabled:cursor-not-allowed disabled:opacity-70 sm:w-auto"
       >
         {isSubmitting ? "Sending..." : "Send message"}
       </button>
