@@ -66,7 +66,7 @@ export default function Home({ phase }: HomeProps) {
         >
           <div className="relative max-w-none">
             <h1
-              className="mt-4 text-4xl font-bold tracking-tight text-white drop-shadow-lg sm:text-5xl md:text-6xl lg:text-7xl"
+              className="mt-4 text-4xl font-bold tracking-tight text-white sm:text-5xl md:text-6xl lg:text-7xl"
               style={{ fontFamily: "var(--font-display)" }}
             >
               I'm Tanie.
@@ -88,7 +88,7 @@ export default function Home({ phase }: HomeProps) {
             eyebrow=""
             title="Built so far."
             description=""
-            className="[&_h1]:text-4xl [&_h1]:font-bold [&_h1]:tracking-tight [&_h1]:text-white [&_h1]:drop-shadow-lg sm:[&_h1]:text-5xl md:[&_h1]:text-6xl lg:[&_h1]:text-7xl"
+            className="[&_h1]:text-4xl [&_h1]:font-bold [&_h1]:tracking-tight [&_h1]:text-white sm:[&_h1]:text-5xl md:[&_h1]:text-6xl lg:[&_h1]:text-7xl"
           />
 
           <div className="relative w-full">
@@ -106,7 +106,7 @@ export default function Home({ phase }: HomeProps) {
             eyebrow=""
             title="Let's build something."
             description=""
-            className="[&_h1]:text-4xl [&_h1]:font-bold [&_h1]:tracking-tight [&_h1]:text-white [&_h1]:drop-shadow-lg sm:[&_h1]:text-5xl md:[&_h1]:text-6xl lg:[&_h1]:text-7xl"
+            className="[&_h1]:text-4xl [&_h1]:font-bold [&_h1]:tracking-tight [&_h1]:text-white sm:[&_h1]:text-5xl md:[&_h1]:text-6xl lg:[&_h1]:text-7xl"
           />
 
           <div className="relative mb-4 flex flex-wrap items-center justify-between gap-2.5 border-b border-white/12 pb-3 sm:mb-5" />

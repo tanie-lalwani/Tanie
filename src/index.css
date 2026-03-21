@@ -51,7 +51,6 @@ h6 {
 	font-family: var(--font-display);
 	letter-spacing: -0.03em;
 	color: var(--color-text-heading);
-	text-shadow: 0 2px 8px rgba(0,0,0,0.18);
 }
 
 button,
@@ -59,13 +58,6 @@ input,
 textarea,
 select {
 	font: inherit;
-}
-
-.readability-text-shadow {
-	text-shadow:
-		0 1px 2px rgba(2, 6, 23, 0.6),
-		0 4px 14px rgba(2, 6, 23, 0.5),
-		0 0 22px rgba(125, 211, 252, 0.18);
 }
 
 a, .text-link {
@@ -104,11 +96,11 @@ a:hover, .text-link:hover {
 	}
 
 	.surface-panel {
-		@apply rounded-[1.75rem] border border-white/12 bg-slate-950/34 shadow-[0_18px_60px_rgba(2,6,23,0.22)] backdrop-blur-xl;
+		@apply rounded-[1.75rem] border border-white/12 bg-slate-950/34 backdrop-blur-xl;
 	}
 
 	.surface-panel-soft {
-		@apply rounded-2xl border border-white/10 bg-slate-950/24 shadow-[0_14px_40px_rgba(2,6,23,0.18)] backdrop-blur-lg;
+		@apply rounded-2xl border border-white/10 bg-slate-950/24 backdrop-blur-lg;
 	}
 
 	.ui-label {
@@ -120,11 +112,11 @@ a:hover, .text-link:hover {
 	}
 
 	.ui-button-primary {
-		@apply inline-flex items-center justify-center rounded-full border border-sky-300/80 bg-[#b9d8ef]/95 px-5 py-2 text-sm font-medium text-[#243b6b] shadow-[0_0_0_1px_rgba(125,211,252,0.25),0_0_18px_rgba(56,189,248,0.35)] transition hover:bg-[#c8e4f7] hover:text-[#243b6b] focus:outline-none focus:ring-2 focus:ring-sky-300 disabled:cursor-not-allowed disabled:opacity-70;
+		@apply inline-flex items-center justify-center rounded-full border border-sky-300/80 bg-[#b9d8ef]/95 px-5 py-2 text-sm font-medium text-[#243b6b] transition hover:bg-[#c8e4f7] hover:text-[#243b6b] focus:outline-none focus:ring-2 focus:ring-sky-300 disabled:cursor-not-allowed disabled:opacity-70;
 	}
 
 	.ui-icon-button {
-		@apply flex items-center justify-center rounded-full border border-white/16 bg-white/10 text-white shadow-lg backdrop-blur transition hover:bg-white/18 disabled:cursor-not-allowed disabled:opacity-35;
+		@apply flex items-center justify-center rounded-full border border-white/16 bg-white/10 text-white backdrop-blur transition hover:bg-white/18 disabled:cursor-not-allowed disabled:opacity-35;
 	}
 }
 
