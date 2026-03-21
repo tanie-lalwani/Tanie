@@ -4,9 +4,7 @@ import { motion } from "framer-motion"
 interface ProjectCardProps {
   site: string
 }
-
-  site,
-}: ProjectCardProps) {
+export function ProjectCard({ site }: ProjectCardProps) {
   return (
     <motion.article
       className="relative h-full"
