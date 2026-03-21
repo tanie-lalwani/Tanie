@@ -110,7 +110,7 @@ a:hover, .text-link:hover {
 	}
 
 	.ui-button-primary {
-		@apply inline-flex items-center justify-center rounded-xl bg-sky-200 px-4 py-2.5 text-sm font-semibold text-slate-950 transition hover:bg-sky-100 disabled:cursor-not-allowed disabled:opacity-70;
+		@apply inline-flex items-center justify-center rounded-full border border-sky-300/80 bg-[#b9d8ef]/95 px-5 py-2 text-sm font-medium text-[#243b6b] shadow-[0_0_0_1px_rgba(125,211,252,0.25),0_0_18px_rgba(56,189,248,0.35)] transition hover:bg-[#c8e4f7] hover:text-[#243b6b] focus:outline-none focus:ring-2 focus:ring-sky-300 disabled:cursor-not-allowed disabled:opacity-70;
 	}
 
 	.ui-icon-button {
