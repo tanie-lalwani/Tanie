@@ -78,58 +78,58 @@ export function ContactForm() {
   return (
     <motion.form
       onSubmit={handleSubmit}
-      className="relative w-full space-y-3 sm:space-y-4"
+      className="surface-panel relative mx-auto w-full max-w-5xl space-y-4 p-5 sm:space-y-5 sm:p-6"
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.45, ease: "easeOut" }}
     >
       <label className="flex flex-col gap-1">
-        <span className="text-xs font-semibold text-white">Name</span>
+        <span className="ui-label">Name</span>
         <input
           type="text"
           name="name"
           required
           value={fields.name}
           onChange={(event) => updateField("name", event.target.value)}
-          className="rounded-lg border border-sky-700/20 bg-white px-3 py-2 text-sky-900 text-xs transition-all placeholder:text-sky-700/40 focus:outline-none focus:ring-2 focus:ring-sky-300 focus:ring-offset-0"
+          className="ui-input"
           placeholder="Your name"
         />
       </label>
 
       <label className="flex flex-col gap-1">
-        <span className="text-xs font-semibold text-white">Email</span>
+        <span className="ui-label">Email</span>
         <input
           type="email"
           name="email"
           required
           value={fields.email}
           onChange={(event) => updateField("email", event.target.value)}
-          className="rounded-lg border border-sky-700/20 bg-white px-3 py-2 text-sky-900 text-xs transition-all placeholder:text-sky-700/40 focus:outline-none focus:ring-2 focus:ring-sky-300 focus:ring-offset-0"
+          className="ui-input"
           placeholder="your@email.com"
         />
       </label>
 
-      <label className="flex flex-col gap-1 text-xs text-white">
-        Subject
+      <label className="flex flex-col gap-1">
+        <span className="ui-label">Subject</span>
         <input
           type="text"
           name="subject"
           value={fields.subject}
           onChange={(event) => updateField("subject", event.target.value)}
-          className="rounded-lg border border-sky-700/20 bg-white px-3 py-2 text-sky-900 text-xs outline-none transition placeholder:text-sky-700/40 focus:border-sky-400 focus:ring-2 focus:ring-sky-300 focus:ring-offset-0"
+          className="ui-input"
           placeholder="What's this about?"
         />
       </label>
 
-      <label className="flex flex-col gap-1 text-xs text-white">
-        Message
+      <label className="flex flex-col gap-1">
+        <span className="ui-label">Message</span>
         <textarea
           name="message"
           required
           value={fields.message}
           onChange={(event) => updateField("message", event.target.value)}
           rows={5}
-          className="rounded-lg border border-sky-700/20 bg-white px-3 py-2 text-sky-900 text-xs outline-none transition placeholder:text-sky-700/40 focus:border-sky-400 focus:ring-2 focus:ring-sky-300 focus:ring-offset-0"
+          className="ui-input min-h-32 resize-y"
           placeholder="Tell me about your project..."
         />
       </label>
@@ -137,7 +137,7 @@ export function ContactForm() {
       <button
         type="submit"
         disabled={isSubmitting}
-        className="w-full rounded-lg bg-sky-900 px-4 py-2 text-xs font-semibold text-white transition hover:bg-sky-800 disabled:cursor-not-allowed disabled:opacity-70 sm:w-auto"
+        className="ui-button-primary w-full sm:w-auto"
       >
         {isSubmitting ? "Sending..." : "Send message"}
       </button>
@@ -145,7 +145,7 @@ export function ContactForm() {
       {submitStatus !== "idle" && (
         <motion.p
           className={`text-sm font-medium ${
-            submitStatus === "success" ? "text-green-600" : "text-red-600"
+            submitStatus === "success" ? "text-emerald-300" : "text-rose-300"
           }`}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}

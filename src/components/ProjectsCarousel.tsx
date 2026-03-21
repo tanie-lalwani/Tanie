@@ -44,8 +44,8 @@ export function ProjectsCarousel({ projects }: ProjectsCarouselProps) {
 
   return (
     <div className="relative w-full">
-      <div className="relative mb-2 flex flex-wrap items-center justify-between gap-2.5 border-b border-sky-700/30 pb-2.5 sm:mb-3 sm:pb-3">
-        <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-sky-900">
+      <div className="relative mb-4 flex flex-wrap items-center justify-between gap-2.5 border-b border-white/12 pb-3 sm:mb-5">
+        <p className="section-eyebrow">
           {String(activeIndex + 1).padStart(2, "0")} / {String(projects.length).padStart(2, "0")}
         </p>
       </div>
@@ -61,7 +61,7 @@ export function ProjectsCarousel({ projects }: ProjectsCarouselProps) {
             type="button"
             onClick={goToPrev}
             aria-label="Previous project"
-            className="absolute left-0 z-10 flex h-8 w-8 sm:h-10 sm:w-10 md:h-12 md:w-12 items-center justify-center rounded-full bg-white/80 text-sky-900 text-lg sm:text-xl md:text-2xl shadow hover:bg-white focus:outline-none focus:ring-2 focus:ring-sky-400"
+            className="ui-icon-button absolute left-0 z-10 h-8 w-8 text-lg sm:h-10 sm:w-10 sm:text-xl md:h-12 md:w-12 md:text-2xl"
             style={{ top: '50%', transform: 'translateY(-50%)' }}
           >
             {'<'}
@@ -77,7 +77,7 @@ export function ProjectsCarousel({ projects }: ProjectsCarouselProps) {
             type="button"
             onClick={goToNext}
             aria-label="Next project"
-            className="absolute right-0 z-10 flex h-8 w-8 sm:h-10 sm:w-10 md:h-12 md:w-12 items-center justify-center rounded-full bg-white/80 text-sky-900 text-lg sm:text-xl md:text-2xl shadow hover:bg-white focus:outline-none focus:ring-2 focus:ring-sky-400"
+            className="ui-icon-button absolute right-0 z-10 h-8 w-8 text-lg sm:h-10 sm:w-10 sm:text-xl md:h-12 md:w-12 md:text-2xl"
             style={{ top: '50%', transform: 'translateY(-50%)' }}
           >
             {'>'}
@@ -89,7 +89,7 @@ export function ProjectsCarousel({ projects }: ProjectsCarouselProps) {
             type="button"
             onClick={goToPrev}
             aria-label="Previous project"
-            className="flex h-8 w-8 items-center justify-center rounded-full bg-white/80 text-sky-900 text-lg shadow hover:bg-white focus:outline-none focus:ring-2 focus:ring-sky-400"
+            className="ui-icon-button h-9 w-9 text-lg"
           >
             {'<'}
           </button>
@@ -97,7 +97,7 @@ export function ProjectsCarousel({ projects }: ProjectsCarouselProps) {
             type="button"
             onClick={goToNext}
             aria-label="Next project"
-            className="flex h-8 w-8 items-center justify-center rounded-full bg-white/80 text-sky-900 text-lg shadow hover:bg-white focus:outline-none focus:ring-2 focus:ring-sky-400"
+            className="ui-icon-button h-9 w-9 text-lg"
           >
             {'>'}
           </button>

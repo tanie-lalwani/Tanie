@@ -62,7 +62,7 @@ export default function App() {
   return (
     <main
       data-phase="noon"
-      className="relative flex min-h-screen w-full flex-col overflow-x-hidden bg-blue-950 text-sky-950"
+      className="relative flex min-h-screen w-full flex-col overflow-x-hidden text-sky-950"
     >
       <div className="relative z-10 flex-1 readability-text-shadow">
         {showNavbar ? <Navbar phase={timePhase} /> : null}

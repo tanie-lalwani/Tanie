@@ -42,7 +42,7 @@ export default function Home({ phase }: HomeProps) {
   const worldDiveProgress = useTransform(scrollYProgress, [0, 0.4], [0, 1])
 
   return (
-    <main className="relative px-2 sm:px-4">
+    <main className="relative">
       <GlobalBeachBackdrop
         phase={phase}
         position="fixed"
@@ -51,7 +51,6 @@ export default function Home({ phase }: HomeProps) {
         diveProgressValue={worldDiveProgress}
       />
 
-      {/* Hero Section */}
       <motion.section
         id="home"
         className="relative isolate flex min-h-[140svh] w-full items-start overflow-hidden px-4 pb-8 pt-16 sm:min-h-[140svh] sm:px-6 sm:pb-14 sm:pt-24"
@@ -60,37 +59,36 @@ export default function Home({ phase }: HomeProps) {
         transition={{ duration: 0.5 }}
       >
         <motion.div
-          className="relative z-10 w-full max-w-[98vw]"
+          className="site-container relative z-10"
           initial={{ opacity: 0, y: 22 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
         >
           <div className="relative max-w-none">
             <h1
-              className="text-4xl font-bold tracking-tight text-white sm:text-5xl md:text-6xl lg:text-7xl drop-shadow-lg"
+              className="mt-4 text-4xl font-bold tracking-tight text-white drop-shadow-lg sm:text-5xl md:text-6xl lg:text-7xl"
               style={{ fontFamily: "var(--font-display)" }}
             >
               I'm Tanisha.
             </h1>
 
-            <p className="mt-4 max-w-xl text-sm leading-relaxed text-sky-900 sm:text-base">
+            <p className="mt-4 max-w-xl text-sm leading-relaxed text-blue-950 sm:text-base">
               Full-stack developer building immersive, creative experiences. Portfolios, games, dashboards, and everything in between. Scroll to see my work or jump to the contact form.
             </p>
           </div>
         </motion.div>
       </motion.section>
 
-      {/* Projects Section */}
       <section
         id="projects"
         className="relative isolate flex min-h-[80svh] w-full items-start overflow-hidden px-2 pb-8 pt-6 sm:min-h-[80vh] sm:px-4 sm:pb-10 sm:pt-10"
       >
-        <div className="relative z-10 w-full max-w-7xl mx-auto">
+        <div className="relative z-10 mx-auto w-full max-w-7xl">
           <PageHeader
-            eyebrow="What I Have Built"
-            title=""
+            eyebrow=""
+            title="Built so far."
             description=""
-            className="**:text-white"
+            className="[&_h1]:text-4xl [&_h1]:font-bold [&_h1]:tracking-tight [&_h1]:text-white [&_h1]:drop-shadow-lg sm:[&_h1]:text-5xl md:[&_h1]:text-6xl lg:[&_h1]:text-7xl"
           />
 
           <div className="relative w-full">
@@ -99,17 +97,16 @@ export default function Home({ phase }: HomeProps) {
         </div>
       </section>
 
-      {/* Contact Section */}
       <section
         id="contact"
         className="relative isolate flex min-h-[calc(100svh-2.75rem)] w-full items-start overflow-hidden px-4 pb-8 pt-16 sm:min-h-[calc(100vh-3rem)] sm:px-6 sm:pb-14 sm:pt-24"
       >
         <div className="relative z-10 w-full max-w-[98vw]">
           <PageHeader
-            eyebrow="Contact"
-            title=""
+            eyebrow=""
+            title="Let's build something."
             description=""
-            className="**:text-white"
+            className="[&_h1]:text-4xl [&_h1]:font-bold [&_h1]:tracking-tight [&_h1]:text-white [&_h1]:drop-shadow-lg sm:[&_h1]:text-5xl md:[&_h1]:text-6xl lg:[&_h1]:text-7xl"
           />
 
           <ContactForm />

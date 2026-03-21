@@ -16,9 +16,9 @@ export default function Navbar({ phase }: NavbarProps) {
 
   return (
     <header className="sticky top-0 z-40 w-full">
-      <nav className="flex h-12 w-full items-center justify-between border-b border-sky-700/20 bg-sky-50/95 px-4 backdrop-blur-sm sm:h-14 sm:px-6" >
+      <nav className="flex h-12 w-full items-center justify-between border-b border-sky-200/40 bg-[#d7efff]/92 px-4 shadow-[0_10px_30px_rgba(10,37,64,0.12)] backdrop-blur-xl sm:px-6" >
 
-        <a href="/" className="relative text-base font-semibold tracking-tight text-sky-950 transition hover:text-sky-900 sm:text-lg" style={{ fontFamily: 'var(--font-display)' }} onClick={closeMenu} data-phase={phase}>
+        <a href="/" className="relative text-base font-semibold tracking-tight text-blue-950 transition hover:text-blue-900 sm:text-lg" style={{ fontFamily: 'var(--font-display)' }} onClick={closeMenu} data-phase={phase}>
           Tanie
         </a>
 
@@ -28,7 +28,7 @@ export default function Navbar({ phase }: NavbarProps) {
               {link.href.startsWith('#') ? (
                 <a
                   href={link.href}
-                  className="rounded-lg px-3 py-2 text-sm font-medium text-sky-900 transition-all hover:text-sky-950 hover:bg-sky-100 focus:outline-none focus:ring-2 focus:ring-sky-300 focus:ring-offset-0"
+                  className="rounded-full px-4 py-2 text-sm font-medium text-blue-950 transition-all hover:bg-white/40 hover:text-blue-900 focus:outline-none focus:ring-2 focus:ring-sky-300 focus:ring-offset-0"
                 >
                   {link.label}
                 </a>
@@ -36,8 +36,8 @@ export default function Navbar({ phase }: NavbarProps) {
                 <NavLink
                   to={link.href}
                   className={({ isActive }) =>
-                    `rounded-lg px-3 py-2 text-sm font-medium transition-all focus:outline-none focus:ring-2 focus:ring-sky-300 focus:ring-offset-0 ${
-                      isActive ? "bg-sky-100 text-sky-950" : "text-sky-900 hover:text-sky-950 hover:bg-sky-100"
+                    `rounded-full px-4 py-2 text-sm font-medium transition-all focus:outline-none focus:ring-2 focus:ring-sky-300 focus:ring-offset-0 ${
+                      isActive ? "bg-white/55 text-blue-950 shadow-[inset_0_1px_0_rgba(255,255,255,0.55)]" : "text-blue-950 hover:bg-white/40 hover:text-blue-900"
                     }`
                   }
                 >
@@ -50,7 +50,7 @@ export default function Navbar({ phase }: NavbarProps) {
 
         <button
           type="button"
-          className="relative inline-flex items-center justify-center rounded-lg border border-sky-700/25 bg-sky-50 px-3 py-2 text-sm font-semibold text-sky-950 transition-all hover:bg-sky-100 focus:outline-none focus:ring-2 focus:ring-sky-300 active:bg-sky-200/50 md:hidden"
+          className="relative inline-flex items-center justify-center rounded-full border border-sky-300/60 bg-[#bfe4ff] px-4 py-2 text-sm font-semibold text-blue-950 shadow-[0_8px_24px_rgba(21,54,92,0.16)] transition-all hover:bg-[#dff3ff] focus:outline-none focus:ring-2 focus:ring-sky-300 active:bg-[#a9d9ff] md:hidden"
           onClick={() => setIsMenuOpen((prev) => !prev)}
           aria-label="Toggle menu"
           aria-expanded={isMenuOpen}
@@ -62,16 +62,16 @@ export default function Navbar({ phase }: NavbarProps) {
         {isMenuOpen && (
           <div
             id="mobile-nav-menu"
-            className="absolute inset-x-0 top-full border-b border-sky-700/20 bg-sky-50/95 backdrop-blur-sm md:hidden"
+            className="absolute inset-x-0 top-full border-b border-sky-200/40 bg-[#dff2ff]/95 shadow-[0_18px_36px_rgba(10,37,64,0.12)] backdrop-blur-xl md:hidden"
           >
-            <ul className="flex flex-col gap-0 text-sm font-medium text-sky-950">
+            <ul className="flex flex-col gap-0 text-sm font-medium text-blue-950">
               {navLinks.map((link) => (
-                <li key={link.label} className="border-b border-sky-700/10 last:border-b-0">
+                <li key={link.label} className="border-b border-sky-300/30 last:border-b-0">
                   {link.href.startsWith('#') ? (
                     <a
                       href={link.href}
                       onClick={closeMenu}
-                      className="block px-4 py-3 text-sky-900 transition hover:bg-sky-100 hover:text-sky-950"
+                      className="block px-4 py-3 text-blue-950 transition hover:bg-white/35 hover:text-blue-900"
                     >
                       {link.label}
                     </a>
@@ -80,7 +80,7 @@ export default function Navbar({ phase }: NavbarProps) {
                       to={link.href}
                       onClick={closeMenu}
                       className={({ isActive }) =>
-                        `block rounded-lg px-3 py-2 transition ${isActive ? 'bg-sky-200/35 text-sky-950' : 'text-sky-950 hover:bg-sky-200/82 hover:text-sky-950'}`
+                        `block rounded-2xl px-4 py-3 transition ${isActive ? 'bg-white/45 text-blue-950' : 'text-blue-950 hover:bg-white/35 hover:text-blue-900'}`
                       }
                     >
                       {link.label}

@@ -261,13 +261,13 @@ export default function QnA() {
   }, [botInput])
 
   return (
-    <div className="relative min-h-screen bg-blue-950 text-white">
-      <nav className="fixed left-0 top-0 z-40 hidden h-full w-16 flex-col items-center justify-between border-r border-sand-200/10 bg-blue-950/80 py-8 backdrop-blur-lg md:flex">
+    <div className="site-shell">
+      <nav className="fixed left-0 top-0 z-40 hidden h-full w-20 flex-col items-center justify-between border-r border-sky-200/20 bg-[#dff2ff]/12 py-8 shadow-[12px_0_40px_rgba(2,6,23,0.12)] backdrop-blur-xl md:flex">
         <div className="flex flex-col items-center gap-8">
           <Link
             to="/"
-            className={`flex flex-col items-center group ${
-              location.pathname === "/" ? "text-white" : "text-white/70 hover:text-white"
+            className={`flex w-14 flex-col items-center rounded-[1.35rem] px-2 py-3 transition-all ${
+              location.pathname === "/" ? "bg-[#bfe4ff] text-blue-950 shadow-[0_10px_24px_rgba(18,53,92,0.18)]" : "text-sky-100/80 hover:bg-white/12 hover:text-white"
             }`}
             title="Home"
           >
@@ -276,7 +276,7 @@ export default function QnA() {
             </svg>
             <span className="text-xs font-semibold">Home</span>
           </Link>
-          <Link to="/#contact" className="flex flex-col items-center group text-white/70 hover:text-white" title="Contact">
+          <Link to="/#contact" className="flex w-14 flex-col items-center rounded-[1.35rem] px-2 py-3 text-sky-100/80 transition-all hover:bg-white/12 hover:text-white" title="Contact">
             <svg width="28" height="28" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.7" className="mb-1">
               <path strokeLinecap="round" strokeLinejoin="round" d="M21 10.5V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2h7.5" />
               <path strokeLinecap="round" strokeLinejoin="round" d="M21 10.5l-9 6.5-9-6.5" />
@@ -284,18 +284,18 @@ export default function QnA() {
             <span className="text-xs font-semibold">Contact</span>
           </Link>
         </div>
-        <div className="mb-2 flex flex-col items-center gap-6">
-          <a href="https://github.com/taniehq" target="_blank" rel="noopener" className="text-white/70 transition-colors duration-150 hover:text-white" title="GitHub">
+        <div className="mb-2 flex flex-col items-center gap-4">
+          <a href="https://github.com/taniehq" target="_blank" rel="noopener" className="flex h-12 w-12 items-center justify-center rounded-[1.1rem] border border-sky-200/20 bg-white/8 text-sky-100/80 transition-colors duration-150 hover:bg-white/14 hover:text-white" title="GitHub">
             <svg viewBox="0 0 24 24" fill="currentColor" className="h-6 w-6">
               <path d="M12 2C6.477 2 2 6.484 2 12.021c0 4.428 2.865 8.185 6.839 9.504.5.092.682-.217.682-.482 0-.237-.009-.868-.013-1.703-2.782.605-3.369-1.342-3.369-1.342-.454-1.154-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.339-2.221-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844a9.59 9.59 0 0 1 2.504.337c1.909-1.296 2.747-1.026 2.747-1.026.546 1.378.202 2.397.1 2.65.64.7 1.028 1.595 1.028 2.688 0 3.848-2.337 4.695-4.566 4.944.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.203 22 16.447 22 12.021 22 6.484 17.523 2 12 2z" />
             </svg>
           </a>
-          <a href="https://instagram.com/tanie.mp3" target="_blank" rel="noopener" className="text-white/70 transition-colors duration-150 hover:text-white" title="Instagram">
+          <a href="https://instagram.com/tanie.mp3" target="_blank" rel="noopener" className="flex h-12 w-12 items-center justify-center rounded-[1.1rem] border border-sky-200/20 bg-white/8 text-sky-100/80 transition-colors duration-150 hover:bg-white/14 hover:text-white" title="Instagram">
             <svg viewBox="0 0 24 24" fill="currentColor" className="h-6 w-6">
               <path d="M12 2.163c3.204 0 3.584.012 4.85.07 1.366.062 2.633.334 3.608 1.308.974.975 1.246 2.242 1.308 3.608.058 1.266.07 1.646.07 4.851s-.012 3.584-.07 4.85c-.062 1.366-.334 2.633-1.308 3.608-.975.974-2.242 1.246-3.608 1.308-1.266.058-1.646.07-4.85.07s-3.584-.012-4.85-.07c-1.366-.062-2.633-.334-3.608-1.308-.974-.975-1.246-2.242-1.308-3.608C2.175 15.584 2.163 15.204 2.163 12s.012-3.584.07-4.85c.062-1.366.334-2.633 1.308-3.608.975-.974 2.242-1.246 3.608-1.308C8.416 2.175 8.796 2.163 12 2.163zm0-2.163C8.741 0 8.332.014 7.052.072 5.197.157 3.355.673 2.014 2.014.673 3.355.157 5.197.072 7.052.014 8.332 0 8.741 0 12c0 3.259.014 3.668.072 4.948.085 1.855.601 3.697 1.942 5.038 1.341 1.341 3.183 1.857 5.038 1.942C8.332 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 1.855-.085 3.697-.601 5.038-1.942 1.341-1.341 1.857-3.183 1.942-5.038.058-1.28.072-1.689.072-4.948 0-3.259-.014-3.668-.072-4.948-.085-1.855-.601-3.697-1.942-5.038C20.645.673 18.803.157 16.948.072 15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zm0 10.162a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z" />
             </svg>
           </a>
-          <a href="https://linkedin.com/in/tanisha-lalwani/" target="_blank" rel="noopener" className="text-white/70 transition-colors duration-150 hover:text-white" title="LinkedIn">
+          <a href="https://linkedin.com/in/tanisha-lalwani/" target="_blank" rel="noopener" className="flex h-12 w-12 items-center justify-center rounded-[1.1rem] border border-sky-200/20 bg-white/8 text-sky-100/80 transition-colors duration-150 hover:bg-white/14 hover:text-white" title="LinkedIn">
             <svg viewBox="0 0 24 24" fill="currentColor" className="h-6 w-6">
               <path d="M20.447 20.452H16.89v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a1.98 1.98 0 1 1 0-3.96 1.98 1.98 0 0 1 0 3.96zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
             </svg>
@@ -308,7 +308,7 @@ export default function QnA() {
           type="button"
           aria-label="Previous question"
           onClick={() => moveToNeighbor("up")}
-          className="flex h-12 w-12 items-center justify-center rounded-full border border-white/20 bg-black/30 text-white shadow-lg backdrop-blur transition hover:bg-black/45 disabled:cursor-not-allowed disabled:opacity-35"
+          className="ui-icon-button h-12 w-12"
           disabled={activeIndex === 0}
         >
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
@@ -319,7 +319,7 @@ export default function QnA() {
           type="button"
           aria-label="Next question"
           onClick={() => moveToNeighbor("down")}
-          className="flex h-12 w-12 items-center justify-center rounded-full border border-white/20 bg-black/30 text-white shadow-lg backdrop-blur transition hover:bg-black/45 disabled:cursor-not-allowed disabled:opacity-35"
+          className="ui-icon-button h-12 w-12"
           disabled={activeIndex === totalQuestions - 1}
         >
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
@@ -333,7 +333,7 @@ export default function QnA() {
         className="h-screen snap-y snap-mandatory overflow-y-auto overscroll-y-contain touch-pan-y [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
         style={{ WebkitOverflowScrolling: "touch", scrollBehavior: "smooth" }}
       >
-        <div className="mx-auto flex min-h-full max-w-7xl items-stretch justify-center px-0 py-0 md:px-6 md:py-8 md:pl-24 md:pr-24">
+        <div className="site-container mx-auto flex min-h-full items-stretch justify-center px-0 py-0 md:px-6 md:py-8 md:pl-24 md:pr-24">
           <div className="w-full max-w-3xl">
             {questions.map((question, index) => (
               <article
@@ -345,7 +345,7 @@ export default function QnA() {
               >
                 <div className="flex w-full items-end justify-center gap-3 md:gap-5">
                   <motion.div
-                    className="relative w-full overflow-hidden border border-sky-100/15 bg-blue-950 shadow-[0_24px_80px_rgba(2,6,23,0.72)] md:w-[min(34vw,24rem)] md:rounded-[2rem]"
+                    className="surface-panel relative w-full overflow-hidden rounded-none md:w-[min(34vw,24rem)] md:rounded-[2rem]"
                     style={{ aspectRatio: "9 / 16", maxHeight: "100dvh" }}
                     initial={{ opacity: 0.55, scale: lowPowerMode ? 0.995 : 0.98, filter: lowPowerMode ? "blur(0px)" : "blur(2px)" }}
                     animate={{
@@ -359,14 +359,14 @@ export default function QnA() {
                         : { type: "spring", stiffness: 160, damping: 24, mass: 0.9 }
                     }
                   >
-                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_22%_12%,rgba(255,255,255,0.2),transparent_30%),linear-gradient(160deg,#1f2937_0%,#111827_38%,#020617_100%)]" />
+                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_22%_12%,rgba(255,255,255,0.16),transparent_30%),linear-gradient(160deg,#1e293b_0%,#0f172a_42%,#020617_100%)]" />
                     <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_0%,transparent_54%,rgba(0,0,0,0.84)_100%)]" />
                     <div className="absolute inset-0 grid place-items-center">
                       <motion.div
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: lowPowerMode ? 0.15 : 0.35, ease: lowPowerMode ? "linear" : smoothEase }}
-                        className="rounded-full border border-sand-200/30 bg-sand-100/10 px-4 py-2 text-[11px] font-bold uppercase tracking-[0.18em] text-white backdrop-blur"
+                        className="rounded-full border border-white/14 bg-white/8 px-4 py-2 text-[11px] font-bold uppercase tracking-[0.18em] text-sky-50 backdrop-blur"
                       >
                         Video Placeholder
                       </motion.div>
@@ -431,7 +431,7 @@ export default function QnA() {
           className="pointer-events-none absolute bottom-2 right-16 w-[16.5rem] origin-bottom-right"
         >
           <div
-            className="relative rounded-[1.75rem] border border-sky-100/20 bg-white/92 px-5 py-4 text-blue-950 shadow-2xl backdrop-blur-md"
+            className="surface-panel-soft relative rounded-[1.75rem] bg-white/92 px-5 py-4 text-slate-950"
             style={{ boxShadow: "0 10px 32px rgba(15, 23, 42, 0.24)" }}
           >
             <div className="absolute bottom-5 -right-3 h-6 w-6 rotate-45 rounded-[0.45rem] border-r border-t border-sky-100/20 bg-white/92" />
@@ -455,7 +455,7 @@ export default function QnA() {
           transition={{ duration: 0.25, ease: smoothEase }}
           className="mb-3 w-[22rem] origin-bottom-right"
         >
-          <div className="overflow-hidden rounded-[1.6rem] border border-sky-100/15 bg-slate-950/90 shadow-[0_16px_60px_rgba(2,6,23,0.5)] backdrop-blur-xl">
+          <div className="surface-panel overflow-hidden rounded-[1.6rem] bg-slate-950/90 shadow-[0_16px_60px_rgba(2,6,23,0.5)]">
             <div className="flex items-center justify-between border-b border-white/10 px-4 py-3">
               <div>
                 <div className="text-sm font-semibold text-white">Tani-bot</div>
@@ -525,7 +525,7 @@ export default function QnA() {
             setIsBotOpen((currentValue) => !currentValue)
             setShowBotToast(false)
           }}
-          className="flex h-14 w-14 items-center justify-center rounded-full border-2 border-white bg-sand-200 shadow-lg transition-transform hover:scale-105"
+          className="flex h-14 w-14 items-center justify-center rounded-full border-2 border-white/20 bg-sky-200 shadow-lg transition-transform hover:scale-105"
         >
           <svg width="32" height="32" fill="none" viewBox="0 0 24 24" stroke="#020617" strokeWidth="2.2">
             <circle cx="12" cy="12" r="10" />
