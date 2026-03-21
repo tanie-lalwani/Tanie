@@ -14,6 +14,7 @@ An immersive, interactive portfolio website featuring a submarine-inspired scrol
 - **Client Testimonials** — Interactive carousel showcasing project experiences
 - **Contact Form** — Fully functional contact form with form validation
 - **Performance Optimized** — Mobile device detection to scale Three.js complexity; efficient particle systems
+- **SEO Optimized** — Full search engine optimization for "tanisha lalwani" and related developer queries
 
 ## Tech Stack
 
@@ -109,6 +110,8 @@ src/
 
 public/
 ├── CNAME                            # Custom domain configuration
+├── robots.txt                       # Search engine crawling directives
+├── sitemap.xml                      # XML sitemap for search engines
 └── textures/                        # Three.js texture assets
 
 Config Files
@@ -118,7 +121,8 @@ Config Files
 ├── tsconfig.node.json               # Node-specific TypeScript rules
 ├── eslint.config.js                 # ESLint rules & standards
 ├── package.json                     # Dependencies & scripts
-└── index.html                       # HTML entry point
+├── index.html                       # HTML entry point
+└── SEO.md                           # Search engine optimization guide
 ```
 
 ## Development
@@ -246,6 +250,30 @@ Note: Three.js and WebGL required for full experience
 - Forms: Light backgrounds with subtle borders
 - Cards: White/translucent with shadows
 - Interactive: Smooth transitions (duration-200)
+
+## Search Engine Optimization (SEO)
+
+This portfolio is fully optimized for search visibility under the query **"tanisha lalwani"** and related developer searches.
+
+### Key Optimizations
+
+- **Meta Tags** — Optimized title, description, and keywords
+- **Structured Data** — JSON-LD schema for Google rich snippets
+- **Social Media Tags** — Open Graph and Twitter Card configuration
+- **Semantic HTML** — Proper heading hierarchy and semantic elements
+- **Sitemap** — XML sitemap at `/sitemap.xml` for search engine crawling
+- **Robots Configuration** — `robots.txt` configured for optimal indexing
+- **Mobile-First** — Responsive design for mobile search ranking
+- **Performance** — Core Web Vitals optimization for better SERP ranking
+
+### Monitoring Search Performance
+
+See [SEO.md](SEO.md) for complete search engine optimization documentation, including:
+
+- Google Search Console setup
+- Keyword strategy
+- Backlink building
+- Analytics monitoring
 
 ## Timeline & Phases
 
