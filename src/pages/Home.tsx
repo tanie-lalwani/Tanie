@@ -91,7 +91,7 @@ export default function Home({ phase }: HomeProps) {
         <div className="relative z-10 mx-auto w-full max-w-6xl">
           <PageHeader
             eyebrow="What I Have Built"
-            title="Client testimonials"
+            title="  "
             description=""
             className="**:text-white"
           />
@@ -110,8 +110,7 @@ export default function Home({ phase }: HomeProps) {
         <div className="relative z-10 mx-auto w-full max-w-6xl">
           <PageHeader
             eyebrow="Contact"
-            title="Let's start building"
-            description={`Fill out the form and I will get back to you at ${RECIPIENT_EMAIL}.`}
+            title=""
             className="**:text-white"
           />
 
