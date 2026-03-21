@@ -693,6 +693,7 @@ function addUnderwaterSurfaceWindow(
       transparent: true,
       opacity: 0,
       blending: THREE.MultiplyBlending,
+      premultipliedAlpha: true,
       alphaMap: rippleB,
       alphaTest: 0.04,
       depthWrite: false,
