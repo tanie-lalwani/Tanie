@@ -8,7 +8,7 @@ import Home from "./pages/Home";
 import { useCursorTrail } from "./hooks/useCursorTrail";
 import { useClickRipple } from "./hooks/useClickRipple";
 
-const InterviewMe = lazy(() => import("./pages/InterviewMe.tsx"));
+const QnA = lazy(() => import("./pages/InterviewMe.tsx")); // file is now QnA component
 
 export default function App() {
   const location = useLocation();
@@ -57,24 +57,22 @@ export default function App() {
     }
   }, [location.pathname])
 
-  const showNavbar = location.pathname !== "/interview-me"
+  const showNavbar = location.pathname !== "/qna"
 
   return (
     <main
       data-phase="noon"
       className="relative flex min-h-screen w-full flex-col overflow-x-hidden bg-blue-950 text-sky-950"
     >
-      <div className="pointer-events-none fixed inset-0 z-0 bg-[radial-gradient(circle_at_50%_44%,rgba(2,30,58,0)_0%,rgba(2,30,58,0.08)_72%,rgba(2,6,23,0.24)_100%)]" />
       <div className="relative z-10 flex-1 readability-text-shadow">
         {showNavbar ? <Navbar phase={timePhase} /> : null}
         <Suspense fallback={<div className="px-4 py-10 text-center text-sm text-slate-400">Loading...</div>}>
           <Routes>
-            <Route path="/" element={<Home phase={timePhase} />} />
-            <Route path="/interview-me" element={<InterviewMe />} />
+            <Route path="/" element={<><Home phase={timePhase} /><SiteFooter /></>} />
+            <Route path="/qna" element={<QnA />} />
           </Routes>
         </Suspense>
       </div>
-      <SiteFooter />
     </main>
   );
 }
