@@ -17,14 +17,17 @@ export function useCursorTrail() {
     lastTimeRef.current = Date.now()
     const container = document.createElement("div")
     container.style.position = "fixed"
-    container.style.top = "0"
-    container.style.left = "0"
+    container.style.inset = "0"
+    container.style.width = "100vw"
+    container.style.height = "100vh"
+    container.style.overflow = "visible"
     container.style.pointerEvents = "none"
-    container.style.zIndex = "5"
+    container.style.zIndex = "9999"
     document.body.appendChild(container)
     containerRef.current = container
 
-    const handleMouseMove = (e: MouseEvent) => {
+    const handlePointerMove = (e: PointerEvent) => {
+      if (e.pointerType === "touch") return
       const now = Date.now()
       
       // Throttle particle creation to every 40ms
@@ -45,12 +48,12 @@ export function useCursorTrail() {
       el.style.position = "fixed"
       el.style.left = particle.x + "px"
       el.style.top = particle.y + "px"
-      el.style.width = "6px"
-      el.style.height = "6px"
+      el.style.width = "10px"
+      el.style.height = "10px"
       el.style.borderRadius = "50%"
       el.style.pointerEvents = "none"
-      el.style.background = `radial-gradient(circle, rgba(34,211,238,0.6), rgba(34,211,238,0.1))`
-      el.style.boxShadow = "0 0 8px rgba(34,211,238,0.4)"
+      el.style.background = "radial-gradient(circle, rgba(232,248,255,0.95) 0%, rgba(158,223,255,0.82) 42%, rgba(82,189,243,0.2) 100%)"
+      el.style.boxShadow = "0 0 18px rgba(82,189,243,0.75)"
       el.style.transform = "translate(-50%, -50%)"
       el.id = `particle-${particle.id}`
       container.appendChild(el)
@@ -73,10 +76,10 @@ export function useCursorTrail() {
       animate()
     }
 
-    window.addEventListener("mousemove", handleMouseMove)
+    window.addEventListener("pointermove", handlePointerMove)
 
     return () => {
-      window.removeEventListener("mousemove", handleMouseMove)
+      window.removeEventListener("pointermove", handlePointerMove)
       if (containerRef.current?.parentNode) {
         containerRef.current.parentNode.removeChild(containerRef.current)
       }
