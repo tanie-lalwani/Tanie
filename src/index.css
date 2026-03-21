@@ -18,6 +18,7 @@ html {
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 	color: var(--color-text-main);
+	cursor: url("/water-cursor.svg") 16 5, auto;
 }
 
 body {
@@ -26,6 +27,15 @@ body {
 	line-height: 1.6;
 	color: var(--color-text-main);
 	background-color: #143b61;
+}
+
+a,
+button,
+input,
+textarea,
+select,
+label {
+	cursor: url("/water-cursor.svg") 16 5, pointer;
 }
 
 #root {
