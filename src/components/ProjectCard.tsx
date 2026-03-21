@@ -1,16 +1,10 @@
 import { motion } from "framer-motion"
 
+
 interface ProjectCardProps {
-  client: string
-  role: string
-  project: string
   site: string
 }
 
-export function ProjectCard({
-  client,
-  role,
-  project,
   site,
 }: ProjectCardProps) {
   return (
