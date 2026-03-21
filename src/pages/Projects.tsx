@@ -42,14 +42,14 @@ export default function Projects() {
   }
 
   return (
-    <section className="mx-auto w-full max-w-6xl px-4 pb-6 pt-8 sm:px-6 sm:pb-10 sm:pt-12">
+    <section className="mx-auto w-full max-w-6xl px-4 pb-6 pt-8 sm:px-6 sm:pb-10 sm:pt-12 flex flex-col items-center justify-center text-center">
       <PageHeader
         eyebrow="What I Have Built"
         title=""
         description=""
       />
 
-      <div className="relative">
+      <div className="relative w-full max-w-xl flex flex-col items-center justify-center">
 
         <div className="relative mb-3 flex flex-wrap items-center justify-between gap-2.5 border-b border-white/8 pb-2.5 sm:mb-4 sm:pb-3">
           <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-slate-400">

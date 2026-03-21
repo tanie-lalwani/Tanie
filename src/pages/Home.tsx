@@ -55,7 +55,7 @@ export default function Home({ phase }: HomeProps) {
       {/* Hero Section */}
       <motion.section
         id="home"
-        className="relative isolate flex min-h-[200svh] w-full items-start overflow-hidden px-4 pb-8 pt-16 sm:min-h-[200svh] sm:px-6 sm:pb-14 sm:pt-24"
+        className="relative isolate flex min-h-[140svh] w-full items-start overflow-hidden px-4 pb-8 pt-16 sm:min-h-[140svh] sm:px-6 sm:pb-14 sm:pt-24"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
@@ -84,9 +84,9 @@ export default function Home({ phase }: HomeProps) {
       {/* Projects Section */}
       <section
         id="projects"
-        className="relative isolate flex min-h-[calc(100svh-2.75rem)] w-full items-start overflow-hidden px-4 pb-8 pt-16 sm:min-h-[calc(100vh-3rem)] sm:px-6 sm:pb-14 sm:pt-24"
+        className="relative isolate flex min-h-[80svh] w-full items-start overflow-hidden px-2 pb-8 pt-6 sm:min-h-[80vh] sm:px-4 sm:pb-10 sm:pt-10"
       >
-        <div className="relative z-10 w-full max-w-6xl">
+        <div className="relative z-10 w-full max-w-7xl mx-auto">
           <PageHeader
             eyebrow="What I Have Built"
             title="  "
