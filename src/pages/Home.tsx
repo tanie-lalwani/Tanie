@@ -88,7 +88,7 @@ export default function Home({ phase }: HomeProps) {
         <div className="relative z-10 w-full max-w-7xl mx-auto">
           <PageHeader
             eyebrow="What I Have Built"
-            title="  "
+            title=""
             description=""
             className="**:text-white"
           />

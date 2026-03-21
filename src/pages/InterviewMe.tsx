@@ -16,6 +16,11 @@ const totalQuestions = questions.length
 const smoothEase: [number, number, number, number] = [0.22, 1, 0.36, 1]
 
 type ScrollDirection = "up" | "down"
+type ChatMessage = {
+  id: number
+  sender: "bot" | "user"
+  text: string
+}
 
 export default function QnA() {
   const location = useLocation()
@@ -30,14 +35,14 @@ export default function QnA() {
   const lastSnapTimeRef = useRef(0)
   const [activeQuestion, setActiveQuestion] = useState(0)
   const [isAnimating, setIsAnimating] = useState(false)
-  const [showBotToast, setShowBotToast] = useState(false)
+  const [showBotToast, setShowBotToast] = useState(() => !isMobile)
   const [isBotOpen, setIsBotOpen] = useState(false)
   const [botInput, setBotInput] = useState("")
-  const [botMessages, setBotMessages] = useState([
+  const [botMessages, setBotMessages] = useState<ChatMessage[]>([
     {
       id: 1,
-      sender: "bot" as const,
-      text: "Hey, I’m Tani-bot. Ask me about projects, skills, or experience.",
+      sender: "bot",
+      text: "Hey, I'm Tani-bot. Ask me about projects, skills, or experience.",
     },
   ])
 
@@ -74,44 +79,48 @@ export default function QnA() {
     return nearestIndex
   }, [])
 
+  const alignToIndex = useCallback((targetIndex: number, behavior: ScrollBehavior = "smooth") => {
+    const container = scrollContainerRef.current
+    const targetCard = cardRefs.current[targetIndex]
+    if (!container || !targetCard) return
+
+    container.scrollTo({
+      top:
+        targetCard.offsetTop -
+        (container.clientHeight - targetCard.offsetHeight) / 2,
+      behavior,
+    })
+  }, [])
+
   const scrollToIndex = useCallback(
     (targetIndex: number, behavior: ScrollBehavior = "smooth") => {
-      const container = scrollContainerRef.current
-      const targetCard = cardRefs.current[targetIndex]
-      if (!container || !targetCard) return
-
       const boundedIndex = Math.min(Math.max(targetIndex, 0), totalQuestions - 1)
       setActiveQuestion(boundedIndex)
       setIsAnimating(true)
       lastSnapTimeRef.current = Date.now()
       wheelGestureRef.current.delta = 0
 
-      container.scrollTo({
-        top:
-          targetCard.offsetTop -
-          (container.clientHeight - targetCard.offsetHeight) / 2,
-        behavior,
-      })
-
+      alignToIndex(boundedIndex, behavior)
       window.setTimeout(() => setIsAnimating(false), behavior === "smooth" ? 420 : 0)
     },
-    [],
+    [alignToIndex],
   )
 
   const moveToNeighbor = useCallback(
     (direction: ScrollDirection) => {
+      const currentIndex = getNearestIndex()
       const nextIndex =
         direction === "down"
-          ? Math.min(activeIndex + 1, totalQuestions - 1)
-          : Math.max(activeIndex - 1, 0)
+          ? Math.min(currentIndex + 1, totalQuestions - 1)
+          : Math.max(currentIndex - 1, 0)
 
-      if (nextIndex !== activeIndex) {
+      if (nextIndex !== currentIndex) {
         scrollToIndex(nextIndex)
       } else {
-        scrollToIndex(activeIndex)
+        scrollToIndex(currentIndex)
       }
     },
-    [activeIndex, scrollToIndex],
+    [getNearestIndex, scrollToIndex],
   )
 
   useEffect(() => {
@@ -219,31 +228,31 @@ export default function QnA() {
 
   useEffect(() => {
     const behavior = lowPowerMode ? "auto" : "smooth"
-    scrollToIndex(0, behavior)
-  }, [lowPowerMode, scrollToIndex])
+    alignToIndex(0, behavior)
+  }, [alignToIndex, lowPowerMode])
 
   useEffect(() => {
-    if (isMobile) return
+    if (isMobile || !showBotToast) return
 
-    setShowBotToast(true)
     const timeoutId = window.setTimeout(() => {
       setShowBotToast(false)
     }, 3200)
 
     return () => window.clearTimeout(timeoutId)
-  }, [isMobile])
+  }, [isMobile, showBotToast])
 
   const handleBotSubmit = useCallback(() => {
     const trimmedInput = botInput.trim()
     if (!trimmedInput) return
 
+    const now = Date.now()
     setBotMessages((currentMessages) => [
       ...currentMessages,
-      { id: Date.now(), sender: "user", text: trimmedInput },
+      { id: now, sender: "user", text: trimmedInput },
       {
-        id: Date.now() + 1,
+        id: now + 1,
         sender: "bot",
-        text: "I’m still a lightweight demo bot, but I can be wired to answer questions about Tanisha’s work, stack, and projects.",
+        text: "I'm still a lightweight demo bot, but I can be wired to answer questions about Tanisha's work, stack, and projects.",
       },
     ])
     setBotInput("")
@@ -294,12 +303,12 @@ export default function QnA() {
         </div>
       </nav>
 
-      <div className="pointer-events-none fixed right-4 top-1/2 z-40 hidden -translate-y-1/2 flex-col gap-3 md:flex md:right-8">
+      <div className="fixed right-4 top-1/2 z-40 hidden -translate-y-1/2 flex-col gap-3 md:flex md:right-8">
         <button
           type="button"
           aria-label="Previous question"
           onClick={() => moveToNeighbor("up")}
-          className="pointer-events-auto flex h-12 w-12 items-center justify-center rounded-full border border-white/20 bg-black/30 text-white shadow-lg backdrop-blur transition hover:bg-black/45 disabled:cursor-not-allowed disabled:opacity-35"
+          className="flex h-12 w-12 items-center justify-center rounded-full border border-white/20 bg-black/30 text-white shadow-lg backdrop-blur transition hover:bg-black/45 disabled:cursor-not-allowed disabled:opacity-35"
           disabled={activeIndex === 0}
         >
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
@@ -310,7 +319,7 @@ export default function QnA() {
           type="button"
           aria-label="Next question"
           onClick={() => moveToNeighbor("down")}
-          className="pointer-events-auto flex h-12 w-12 items-center justify-center rounded-full border border-white/20 bg-black/30 text-white shadow-lg backdrop-blur transition hover:bg-black/45 disabled:cursor-not-allowed disabled:opacity-35"
+          className="flex h-12 w-12 items-center justify-center rounded-full border border-white/20 bg-black/30 text-white shadow-lg backdrop-blur transition hover:bg-black/45 disabled:cursor-not-allowed disabled:opacity-35"
           disabled={activeIndex === totalQuestions - 1}
         >
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">

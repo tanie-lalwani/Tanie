@@ -12,10 +12,8 @@ export default defineConfig({
           router: ["react-router-dom"],
           motion: ["framer-motion"],
           three: ["three"],
-          gsap: ["gsap"],
         },
       },
     },
   },
 })
-

@@ -10,7 +10,7 @@ type NavbarProps = {
   phase: TimePhase
 }
 
-export default function Navbar({ phase: _phase }: NavbarProps) {
+export default function Navbar({ phase }: NavbarProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const closeMenu = () => setIsMenuOpen(false)
 
@@ -18,7 +18,7 @@ export default function Navbar({ phase: _phase }: NavbarProps) {
     <header className="sticky top-0 z-40 w-full">
       <nav className="flex h-12 w-full items-center justify-between border-b border-sky-700/20 bg-sky-50/95 px-4 backdrop-blur-sm sm:h-14 sm:px-6" >
 
-        <a href="/" className="relative text-base font-semibold tracking-tight text-sky-950 transition hover:text-sky-900 sm:text-lg" style={{ fontFamily: 'var(--font-display)' }} onClick={closeMenu}>
+        <a href="/" className="relative text-base font-semibold tracking-tight text-sky-950 transition hover:text-sky-900 sm:text-lg" style={{ fontFamily: 'var(--font-display)' }} onClick={closeMenu} data-phase={phase}>
           Tanie
         </a>
 

@@ -4,11 +4,11 @@ import Lenis from "lenis";
 import Navbar from "./components/Navbar.tsx";
 import SiteFooter from "./components/SiteFooter";
 import { type TimePhase } from "./experience/timePhase";
-import Home from "./pages/Home";
 import { useCursorTrail } from "./hooks/useCursorTrail";
 import { useClickRipple } from "./hooks/useClickRipple";
 
-const QnA = lazy(() => import("./pages/InterviewMe.tsx")); // file is now QnA component
+const Home = lazy(() => import("./pages/Home"));
+const QnA = lazy(() => import("./pages/InterviewMe.tsx"));
 
 export default function App() {
   const location = useLocation();
@@ -22,7 +22,7 @@ export default function App() {
   useEffect(() => {
     if (typeof window === "undefined") return
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return
-    if (location.pathname === "/interview-me") {
+    if (location.pathname === "/qna") {
       lenisRef.current?.destroy()
       lenisRef.current = null
       return
@@ -76,4 +76,3 @@ export default function App() {
     </main>
   );
 }
-
