@@ -56,8 +56,9 @@
 **Lines Removed:** ~490 lines of dead code from GlobalBeachBackdrop.tsx
 
 ### Removed Functions & Code:
+
 1. `buildBirdSpriteTexture()` — Canvas texture generation for bird sprites
-2. `buildFishTexture()` — Canvas texture generation for fish sprites  
+2. `buildFishTexture()` — Canvas texture generation for fish sprites
 3. `addNoonShipIllusion()` — Complete ship scene with hull, sail, mast, wake effects
 4. `addMidDepthFish()` — Mid-depth fish school with animation logic
 5. `addDeepFish()` — Deep-water fish school with darker coloration
@@ -81,13 +82,13 @@
 
 ## Codebase Statistics
 
-| Metric                      | Before | After | Change     |
-| --------------------------- | ------ | ----- | ---------- |
-| Home.tsx lines              | ~450   | ~145  | -68%       |
-| LeafReveal.tsx lines        | ~163   | ~80   | -51%       |
-| GlobalBeachBackdrop.tsx     | ~1640  | ~1150 | -30%       |
-| Total dead code removed     | ~890   | 0     | ✅ 100%    |
-| Component count             | 12     | 14    | +2 new     |
+| Metric                  | Before | After | Change  |
+| ----------------------- | ------ | ----- | ------- |
+| Home.tsx lines          | ~450   | ~145  | -68%    |
+| LeafReveal.tsx lines    | ~163   | ~80   | -51%    |
+| GlobalBeachBackdrop.tsx | ~1640  | ~1150 | -30%    |
+| Total dead code removed | ~890   | 0     | ✅ 100% |
+| Component count         | 12     | 14    | +2 new  |
 
 ## Summary of All Changes
 
@@ -96,6 +97,7 @@
 **Files refactored:** 3 (Home.tsx, LeafReveal.tsx, GlobalBeachBackdrop.tsx)
 
 ### Active Code Preserved:
+
 - Water shader system (buildWaterNormals, water material variables)
 - Sand terrain (buildSandTexture, addSand)
 - Beach decorations (createShell, createStarfish, scatterBeachDecor)
