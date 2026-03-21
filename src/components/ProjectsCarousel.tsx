@@ -1,31 +1,46 @@
-import { AnimatePresence } from "framer-motion"
-import { useState } from "react"
-import { ProjectCard } from "./ProjectCard"
+import { AnimatePresence } from "framer-motion";
+import { useState, useRef } from "react";
+import { ProjectCard } from "./ProjectCard";
+
 
 export interface Project {
-  client: string
-  role: string
-  project: string
-  site: string
-  quote: string
-  outcome: string
+  client: string;
+  role: string;
+  project: string;
+  site: string;
+  quote: string;
+  outcome: string;
 }
 
 interface ProjectsCarouselProps {
-  projects: Project[]
+  projects: Project[];
 }
 
 export function ProjectsCarousel({ projects }: ProjectsCarouselProps) {
-  const [activeIndex, setActiveIndex] = useState(0)
-  const activeProject = projects[activeIndex]
+  const [activeIndex, setActiveIndex] = useState(0);
+  const activeProject = projects[activeIndex];
+
+  // Touch/swipe support
+  const touchStartX = useRef(0);
+  const touchEndX = useRef(0);
 
   const goToNext = () => {
-    setActiveIndex((prev) => (prev + 1) % projects.length)
-  }
+    setActiveIndex((prev) => (prev + 1) % projects.length);
+  };
 
   const goToPrev = () => {
-    setActiveIndex((prev) => (prev - 1 + projects.length) % projects.length)
-  }
+    setActiveIndex((prev) => (prev - 1 + projects.length) % projects.length);
+  };
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.changedTouches[0].screenX;
+  };
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    touchEndX.current = e.changedTouches[0].screenX;
+    const delta = touchEndX.current - touchStartX.current;
+    if (delta > 50) goToPrev();
+    else if (delta < -50) goToNext();
+  };
 
   return (
     <div className="relative w-full">
@@ -33,29 +48,61 @@ export function ProjectsCarousel({ projects }: ProjectsCarouselProps) {
         <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-sky-900">
           {String(activeIndex + 1).padStart(2, "0")} / {String(projects.length).padStart(2, "0")}
         </p>
-        <div className="flex items-center gap-2 sm:gap-3">
+      </div>
+
+      <div
+        className="relative min-h-72 sm:min-h-80 flex items-center justify-center"
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
+      >
+        {/* Large screens: chevrons at sides */}
+        <div className="hidden sm:block">
           <button
             type="button"
             onClick={goToPrev}
-            className="inline-flex items-center justify-center rounded-lg border border-sky-700/30 bg-sky-50 px-3 py-2 text-sm font-semibold text-sky-950 transition-all duration-200 hover:bg-sky-100 focus:outline-none focus:ring-2 focus:ring-sky-300 focus:ring-offset-0 active:bg-sky-200/50 disabled:cursor-not-allowed disabled:opacity-50"
+            aria-label="Previous project"
+            className="absolute left-0 z-10 flex h-12 w-12 items-center justify-center rounded-full bg-white/80 text-sky-900 text-2xl shadow hover:bg-white focus:outline-none focus:ring-2 focus:ring-sky-400"
+            style={{ top: '50%', transform: 'translateY(-50%)' }}
           >
-            ← Previous
+            {'<'}
+          </button>
+        </div>
+        <div className="w-full flex items-center justify-center">
+          <AnimatePresence mode="wait">
+            <ProjectCard key={activeProject.site} {...activeProject} />
+          </AnimatePresence>
+        </div>
+        <div className="hidden sm:block">
+          <button
+            type="button"
+            onClick={goToNext}
+            aria-label="Next project"
+            className="absolute right-0 z-10 flex h-12 w-12 items-center justify-center rounded-full bg-white/80 text-sky-900 text-2xl shadow hover:bg-white focus:outline-none focus:ring-2 focus:ring-sky-400"
+            style={{ top: '50%', transform: 'translateY(-50%)' }}
+          >
+            {'>'}
+          </button>
+        </div>
+        {/* Small screens: chevrons below video */}
+        <div className="absolute left-0 right-0 -bottom-16 flex items-center justify-center gap-8 sm:hidden">
+          <button
+            type="button"
+            onClick={goToPrev}
+            aria-label="Previous project"
+            className="flex h-10 w-10 items-center justify-center rounded-full bg-white/80 text-sky-900 text-xl shadow hover:bg-white focus:outline-none focus:ring-2 focus:ring-sky-400"
+          >
+            {'<'}
           </button>
           <button
             type="button"
             onClick={goToNext}
-            className="inline-flex items-center justify-center rounded-lg border border-sky-700/30 bg-sky-50 px-3 py-2 text-sm font-semibold text-sky-950 transition-all duration-200 hover:bg-sky-100 focus:outline-none focus:ring-2 focus:ring-sky-300 focus:ring-offset-0 active:bg-sky-200/50 disabled:cursor-not-allowed disabled:opacity-50"
+            aria-label="Next project"
+            className="flex h-10 w-10 items-center justify-center rounded-full bg-white/80 text-sky-900 text-xl shadow hover:bg-white focus:outline-none focus:ring-2 focus:ring-sky-400"
           >
-            Next →
+            {'>'}
           </button>
         </div>
       </div>
-
-      <div className="relative min-h-72 sm:min-h-80">
-        <AnimatePresence mode="wait">
-          <ProjectCard key={activeProject.site} {...activeProject} />
-        </AnimatePresence>
-      </div>
     </div>
-  )
+  );
 }

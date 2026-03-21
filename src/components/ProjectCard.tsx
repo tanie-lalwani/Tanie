@@ -22,9 +22,9 @@ export function ProjectCard({
       transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
     >
       <div className="relative flex h-full flex-col">
-        <div className="relative overflow-hidden rounded-2xl border border-sky-700/15 bg-white/60 p-4 shadow-sm w-full flex flex-col items-center">
-          {/* Larger video area with View Project button inside, bottom-right, full width */}
-          <div className="aspect-[16/9] w-full rounded-xl bg-linear-to-br from-sky-100 to-sky-50 flex items-center justify-center relative">
+        <div className="relative overflow-hidden rounded-2xl border border-sky-700/15 bg-white/60 p-4 shadow-sm max-w-xl mx-auto flex flex-col items-center">
+          {/* Large video area with View Project button inside, bottom-right */}
+          <div className="aspect-[16/9] w-full max-w-xl min-h-[260px] rounded-xl bg-linear-to-br from-sky-100 to-sky-50 flex items-center justify-center relative">
             {/* Replace with <video> or <img> as needed */}
             <span className="text-sky-500 text-base">Project Video Placeholder</span>
             <a

@@ -43,7 +43,7 @@ export default function Home({ phase }: HomeProps) {
   const worldDiveProgress = useTransform(scrollYProgress, [0, 0.4], [0, 1])
 
   return (
-    <main className="relative">
+    <main className="relative px-2 sm:px-4">
       <GlobalBeachBackdrop
         phase={phase}
         position="fixed"
@@ -60,24 +60,22 @@ export default function Home({ phase }: HomeProps) {
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
       >
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_45%,rgba(39,39,42,0)_0%,rgba(39,39,42,0.08)_72%,rgba(39,39,42,0.18)_100%)]" />
         <motion.div
-          className="relative z-10 mx-auto w-full max-w-6xl"
+          className="relative z-10 w-full max-w-[98vw]"
           initial={{ opacity: 0, y: 22 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
         >
-          <div className="relative max-w-2xl">
+          <div className="relative max-w-none">
             <h1
-              className="text-4xl font-black leading-tight tracking-tight text-sky-950 sm:text-6xl lg:text-7xl"
+              className="text-4xl font-bold tracking-tight text-white sm:text-5xl md:text-6xl lg:text-7xl drop-shadow-lg"
               style={{ fontFamily: "var(--font-display)" }}
             >
               I'm Tanisha.
             </h1>
 
             <p className="mt-4 max-w-xl text-sm leading-relaxed text-sky-900 sm:text-base">
-              Full-stack developer building immersive, creative experiences. Portfolios, games, dashboards, and everything in
-              between. Scroll to see my work or jump to the contact form.
+              Full-stack developer building immersive, creative experiences. Portfolios, games, dashboards, and everything in between. Scroll to see my work or jump to the contact form.
             </p>
           </div>
         </motion.div>
@@ -88,7 +86,7 @@ export default function Home({ phase }: HomeProps) {
         id="projects"
         className="relative isolate flex min-h-[calc(100svh-2.75rem)] w-full items-start overflow-hidden px-4 pb-8 pt-16 sm:min-h-[calc(100vh-3rem)] sm:px-6 sm:pb-14 sm:pt-24"
       >
-        <div className="relative z-10 mx-auto w-full max-w-6xl">
+        <div className="relative z-10 w-full max-w-6xl">
           <PageHeader
             eyebrow="What I Have Built"
             title="  "
@@ -96,7 +94,7 @@ export default function Home({ phase }: HomeProps) {
             className="**:text-white"
           />
 
-          <div className="relative mx-auto w-full max-w-4xl">
+          <div className="relative w-full">
             <ProjectsCarousel projects={PROJECTS} />
           </div>
         </div>
@@ -107,7 +105,7 @@ export default function Home({ phase }: HomeProps) {
         id="contact"
         className="relative isolate flex min-h-[calc(100svh-2.75rem)] w-full items-start overflow-hidden px-4 pb-8 pt-16 sm:min-h-[calc(100vh-3rem)] sm:px-6 sm:pb-14 sm:pt-24"
       >
-        <div className="relative z-10 mx-auto w-full max-w-6xl">
+        <div className="relative z-10 w-full max-w-[98vw]">
           <PageHeader
             eyebrow="Contact"
             title=""
