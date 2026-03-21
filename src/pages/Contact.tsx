@@ -19,7 +19,6 @@ const initialFields: ContactFields = {
   message: "",
 }
 
-const SUBJECT_PRESETS = ["New project", "Contract role", "Collaboration", "Quick question"]
 
 export default function Contact() {
   const [fields, setFields] = useState<ContactFields>(initialFields)
@@ -92,22 +91,7 @@ export default function Contact() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.45, ease: "easeOut" }}
       >
-        <div className="relative flex flex-wrap gap-2">
-          {SUBJECT_PRESETS.map((preset) => (
-            <button
-              key={preset}
-              type="button"
-              onClick={() => updateField("subject", preset)}
-              className={`rounded-full border px-3 py-1 text-[11px] font-semibold transition ${
-                fields.subject === preset
-                  ? "border-white/35 bg-white/20 text-slate-100"
-                  : "border-white/18 bg-white/8 text-slate-300 hover:border-white/28 hover:text-slate-100"
-              }`}
-            >
-              {preset}
-            </button>
-          ))}
-        </div>
+        {/* Subject preset buttons removed as requested */}
         <div className="relative grid grid-cols-1 gap-3.5 sm:gap-4 sm:grid-cols-2">
           <label className="flex flex-col gap-2 text-sm text-slate-100">
             Name

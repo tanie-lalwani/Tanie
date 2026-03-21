@@ -84,23 +84,7 @@ export function ContactForm() {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.45, ease: "easeOut" }}
     >
-      {/* Subject presets */}
-      <div className="relative flex flex-wrap gap-2">
-        {SUBJECT_PRESETS.map((preset) => (
-          <button
-            key={preset}
-            type="button"
-            onClick={() => updateField("subject", preset)}
-            className={`rounded-full px-3 py-2 text-sm font-semibold transition-all duration-200 ${
-              fields.subject === preset
-                ? "border border-sky-700/30 bg-sky-100 text-sky-950"
-                : "border border-sky-700/20 bg-white text-sky-900 hover:bg-sky-50"
-            }`}
-          >
-            {preset}
-          </button>
-        ))}
-      </div>
+      {/* Subject presets removed as requested */}
 
       {/* Name field */}
       <label className="flex flex-col gap-2">

@@ -45,7 +45,7 @@ export default function Projects() {
     <section className="mx-auto w-full max-w-6xl px-4 pb-6 pt-8 sm:px-6 sm:pb-10 sm:pt-12">
       <PageHeader
         eyebrow="What I Have Built"
-        title="Client testimonials"
+        title=""
         description=""
       />
 
