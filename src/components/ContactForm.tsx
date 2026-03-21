@@ -83,9 +83,6 @@ export function ContactForm() {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.45, ease: "easeOut" }}
     >
-      {/* Subject presets removed as requested */}
-
-      {/* Name field */}
       <label className="flex flex-col gap-1">
         <span className="text-xs font-semibold text-white">Name</span>
         <input
@@ -99,7 +96,6 @@ export function ContactForm() {
         />
       </label>
 
-      {/* Email field */}
       <label className="flex flex-col gap-1">
         <span className="text-xs font-semibold text-white">Email</span>
         <input
@@ -113,7 +109,6 @@ export function ContactForm() {
         />
       </label>
 
-      {/* Subject field */}
       <label className="flex flex-col gap-1 text-xs text-white">
         Subject
         <input
@@ -126,7 +121,6 @@ export function ContactForm() {
         />
       </label>
 
-      {/* Message field */}
       <label className="flex flex-col gap-1 text-xs text-white">
         Message
         <textarea
@@ -140,7 +134,6 @@ export function ContactForm() {
         />
       </label>
 
-      {/* Submit button */}
       <button
         type="submit"
         disabled={isSubmitting}
@@ -149,7 +142,6 @@ export function ContactForm() {
         {isSubmitting ? "Sending..." : "Send message"}
       </button>
 
-      {/* Status messages */}
       {submitStatus !== "idle" && (
         <motion.p
           className={`text-sm font-medium ${

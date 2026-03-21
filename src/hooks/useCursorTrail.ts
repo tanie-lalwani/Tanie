@@ -9,11 +9,12 @@ interface Particle {
 
 export function useCursorTrail() {
   const particlesRef = useRef<Particle[]>([])
-  const lastTimeRef = useRef(Date.now())
+  const lastTimeRef = useRef(0)
   const particleIdRef = useRef(0)
   const containerRef = useRef<HTMLDivElement | null>(null)
 
   useEffect(() => {
+    lastTimeRef.current = Date.now()
     const container = document.createElement("div")
     container.style.position = "fixed"
     container.style.top = "0"

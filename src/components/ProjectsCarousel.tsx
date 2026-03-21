@@ -51,7 +51,7 @@ export function ProjectsCarousel({ projects }: ProjectsCarouselProps) {
       </div>
 
       <div
-        className="relative min-h-72 sm:min-h-80 flex items-center justify-center"
+        className="relative flex min-h-72 flex-col items-center justify-center gap-4 sm:min-h-80 sm:block"
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
       >
@@ -67,7 +67,7 @@ export function ProjectsCarousel({ projects }: ProjectsCarouselProps) {
             {'<'}
           </button>
         </div>
-        <div className="w-full flex items-center justify-center">
+        <div className="flex w-full items-center justify-center">
           <AnimatePresence mode="wait">
             <ProjectCard key={activeProject.site} {...activeProject} />
           </AnimatePresence>
@@ -84,7 +84,7 @@ export function ProjectsCarousel({ projects }: ProjectsCarouselProps) {
           </button>
         </div>
         {/* Small screens: chevrons below video */}
-        <div className="absolute left-0 right-0 -bottom-6 flex items-center justify-center gap-4 sm:hidden">
+        <div className="flex items-center justify-center gap-4 sm:hidden">
           <button
             type="button"
             onClick={goToPrev}

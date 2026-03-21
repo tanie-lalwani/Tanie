@@ -52,43 +52,39 @@ type SiteFooterProps = {
 export default function SiteFooter({ className = "" }: SiteFooterProps) {
   return (
     <footer
-      className={`relative z-20 w-full border-t border-sky-700/20 bg-sky-50/95 px-4 py-4 sm:px-6 sm:py-6 backdrop-blur-sm ${className}`}
+      className={`relative z-20 w-full border-t border-sky-700/20 bg-sky-50/95 px-4 py-4 backdrop-blur-sm sm:px-6 sm:py-6 ${className}`}
     >
       <div className="mx-auto max-w-6xl">
         <div className="h-px w-full bg-linear-to-r from-transparent via-sky-900/22 to-transparent" />
         <div className="mt-6 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div>
-            <p className="text-sm font-semibold tracking-tight text-sky-950" style={{ fontFamily: 'var(--font-display)' }}>Tanie</p>
+            <p className="text-sm font-semibold tracking-tight text-sky-950" style={{ fontFamily: "var(--font-display)" }}>
+              Tanie
+            </p>
             <p className="mt-1 max-w-xs text-xs leading-relaxed text-sky-900">Full stack developer.</p>
           </div>
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-2 sm:gap-x-8">
-            {SOCIALS.map((s) => (
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-x-8">
+            {SOCIALS.map((social) => (
               <a
-                key={s.label}
-                href={s.href}
-                target={s.href.startsWith("mailto") ? undefined : "_blank"}
-                rel={s.href.startsWith("mailto") ? undefined : "noopener noreferrer"}
+                key={social.label}
+                href={social.href}
+                target={social.href.startsWith("mailto") ? undefined : "_blank"}
+                rel={social.href.startsWith("mailto") ? undefined : "noopener noreferrer"}
                 className="group flex items-center gap-3 text-sky-950 transition hover:text-sky-900"
               >
-              <span className="flex h-8 w-8 items-center justify-center rounded-lg border border-sky-700/30 bg-sky-200/35 text-sky-950 transition group-hover:border-sky-700/50 group-hover:text-sky-900">
-                {s.icon}
-              </span>
-              <span className="flex flex-col">
-                <span className="text-xs font-semibold tracking-wide leading-none">{s.label}</span>
+                <span className="flex h-8 w-8 items-center justify-center rounded-lg border border-sky-700/30 bg-sky-200/35 text-sky-950 transition group-hover:border-sky-700/50 group-hover:text-sky-900">
+                  {social.icon}
                 </span>
+                <span className="text-xs font-semibold tracking-wide leading-none">{social.label}</span>
               </a>
             ))}
           </div>
         </div>
         <div className="mt-6 h-px w-full bg-linear-to-r from-transparent via-sky-900/20 to-transparent" />
         <p className="mt-3 text-center text-[11px] text-sky-900">
-          © {new Date().getFullYear()} Tanie — built with React, TypeScript and Tailwind
+          � {new Date().getFullYear()} Tanie - built with React, TypeScript and Tailwind
         </p>
       </div>
     </footer>
   )
 }
-
-
-
-

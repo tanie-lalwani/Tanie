@@ -1,9 +1,9 @@
 import { motion } from "framer-motion"
 
-
 interface ProjectCardProps {
   site: string
 }
+
 export function ProjectCard({ site }: ProjectCardProps) {
   return (
     <motion.article
@@ -21,10 +21,7 @@ export function ProjectCard({ site }: ProjectCardProps) {
             md:w-[70vw] md:max-w-lg
             lg:w-full lg:max-w-2xl"
         >
-          {/* Responsive video area, always centered */}
-          <div
-            className="w-full flex items-center justify-center"
-          >
+          <div className="w-full flex items-center justify-center">
             <div
               className="w-full rounded-xl bg-linear-to-br from-sky-100 to-sky-50 flex items-center justify-center relative
                 aspect-2/1 min-h-24
@@ -32,22 +29,19 @@ export function ProjectCard({ site }: ProjectCardProps) {
                 md:aspect-2/1 md:min-h-56
                 lg:aspect-video lg:min-h-96"
             >
-              {/* Replace with <video> or <img> as needed */}
               <span className="text-sky-500 text-base">Project Video Placeholder</span>
               <a
                 href={site}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="absolute bottom-2 right-2 sm:bottom-4 sm:right-4 inline-flex items-center justify-center rounded-lg bg-sky-900/90 px-2 py-1 text-xl sm:px-4 sm:py-2 sm:text-2xl font-semibold text-white shadow transition hover:bg-sky-800 focus:outline-none focus:ring-2 focus:ring-sky-400"
+                className="absolute bottom-2 right-2 inline-flex items-center justify-center rounded-lg bg-sky-900/90 px-2 py-1 text-xl font-semibold text-white shadow transition hover:bg-sky-800 focus:outline-none focus:ring-2 focus:ring-sky-400 sm:bottom-4 sm:right-4 sm:px-4 sm:py-2 sm:text-2xl"
                 aria-label="Visit project site"
               >
-                <span aria-hidden="true">↗</span>
+                <span aria-hidden="true">Go</span>
               </a>
             </div>
           </div>
         </div>
-        {/* All content below video removed as requested */}
-        {/* Testimonial quote, outcome, and site link removed as requested */}
       </div>
     </motion.article>
   )
