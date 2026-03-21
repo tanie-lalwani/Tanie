@@ -1,9 +1,8 @@
-import { useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import type { TimePhase } from '../experience/timePhase'
 
 const navLinks = [
-  { label: 'Quick Q&A', href: '/qna' },
+  { label: 'QnA', href: '/qna' },
 ]
 
 type NavbarProps = {
@@ -11,24 +10,27 @@ type NavbarProps = {
 }
 
 export default function Navbar({ phase }: NavbarProps) {
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const closeMenu = () => setIsMenuOpen(false)
-
   return (
     <header className="sticky top-0 z-40 w-full">
-      <nav className="flex h-12 w-full items-center justify-between border-b border-sky-200/40 bg-[#d7efff]/92 px-4 shadow-[0_10px_30px_rgba(10,37,64,0.12)] backdrop-blur-xl sm:px-6" >
+      <nav className="flex h-9 w-full items-center justify-between border-b border-sky-200/40 bg-white/90 px-3 shadow-[0_6px_18px_rgba(10,37,64,0.10)] backdrop-blur-xl sm:px-5" >
 
-        <a href="/" className="relative text-base font-semibold tracking-tight text-blue-950 transition hover:text-blue-900 sm:text-lg" style={{ fontFamily: 'var(--font-display)' }} onClick={closeMenu} data-phase={phase}>
-          Tanie
+        <a
+          href="/"
+          className="relative inline-flex h-4 w-4 items-center justify-center !no-underline"
+          data-phase={phase}
+          aria-label="Home"
+        >
+          <span className="absolute inline-flex h-4 w-4 animate-ping rounded-full bg-sky-200/75" aria-hidden="true" />
+          <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-sky-200 shadow-[0_0_18px_rgba(191,228,255,0.9)]" aria-hidden="true" />
         </a>
 
-        <ul className="relative hidden items-center gap-1 text-sm font-medium md:flex">
+        <ul className="relative flex items-center gap-1 text-sm font-medium">
           {navLinks.map((link) => (
             <li key={link.label}>
               {link.href.startsWith('#') ? (
                 <a
                   href={link.href}
-                  className="rounded-full px-4 py-2 text-sm font-medium text-blue-950 transition-all hover:bg-white/40 hover:text-blue-900 focus:outline-none focus:ring-2 focus:ring-sky-300 focus:ring-offset-0"
+                  className="rounded-xl bg-sky-200 px-4 py-2 text-sm font-semibold !no-underline !text-slate-950 transition hover:bg-sky-100 hover:!text-slate-950 focus:outline-none focus:ring-2 focus:ring-sky-300"
                 >
                   {link.label}
                 </a>
@@ -36,8 +38,8 @@ export default function Navbar({ phase }: NavbarProps) {
                 <NavLink
                   to={link.href}
                   className={({ isActive }) =>
-                    `rounded-full px-4 py-2 text-sm font-medium transition-all focus:outline-none focus:ring-2 focus:ring-sky-300 focus:ring-offset-0 ${
-                      isActive ? "bg-white/55 text-blue-950 shadow-[inset_0_1px_0_rgba(255,255,255,0.55)]" : "text-blue-950 hover:bg-white/40 hover:text-blue-900"
+                    `rounded-xl px-4 py-2 text-sm font-semibold !no-underline transition focus:outline-none focus:ring-2 focus:ring-sky-300 ${
+                      isActive ? 'bg-sky-100 !text-slate-950 shadow' : 'bg-sky-200 !text-slate-950 hover:bg-sky-100 hover:!text-slate-950'
                     }`
                   }
                 >
@@ -47,55 +49,7 @@ export default function Navbar({ phase }: NavbarProps) {
             </li>
           ))}
         </ul>
-
-        <button
-          type="button"
-          className="relative inline-flex items-center justify-center rounded-full border border-sky-300/60 bg-[#bfe4ff] px-4 py-2 text-sm font-semibold text-blue-950 shadow-[0_8px_24px_rgba(21,54,92,0.16)] transition-all hover:bg-[#dff3ff] focus:outline-none focus:ring-2 focus:ring-sky-300 active:bg-[#a9d9ff] md:hidden"
-          onClick={() => setIsMenuOpen((prev) => !prev)}
-          aria-label="Toggle menu"
-          aria-expanded={isMenuOpen}
-          aria-controls="mobile-nav-menu"
-        >
-          Menu
-        </button>
-
-        {isMenuOpen && (
-          <div
-            id="mobile-nav-menu"
-            className="absolute inset-x-0 top-full border-b border-sky-200/40 bg-[#dff2ff]/95 shadow-[0_18px_36px_rgba(10,37,64,0.12)] backdrop-blur-xl md:hidden"
-          >
-            <ul className="flex flex-col gap-0 text-sm font-medium text-blue-950">
-              {navLinks.map((link) => (
-                <li key={link.label} className="border-b border-sky-300/30 last:border-b-0">
-                  {link.href.startsWith('#') ? (
-                    <a
-                      href={link.href}
-                      onClick={closeMenu}
-                      className="block px-4 py-3 text-blue-950 transition hover:bg-white/35 hover:text-blue-900"
-                    >
-                      {link.label}
-                    </a>
-                  ) : (
-                    <NavLink
-                      to={link.href}
-                      onClick={closeMenu}
-                      className={({ isActive }) =>
-                        `block rounded-2xl px-4 py-3 transition ${isActive ? 'bg-white/45 text-blue-950' : 'text-blue-950 hover:bg-white/35 hover:text-blue-900'}`
-                      }
-                    >
-                      {link.label}
-                    </NavLink>
-                  )}
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
       </nav>
     </header>
   )
 }
-
-
-
-

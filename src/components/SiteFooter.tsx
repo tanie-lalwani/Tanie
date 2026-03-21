@@ -61,14 +61,14 @@ export default function SiteFooter({ className = "" }: SiteFooterProps) {
             </p>
             <p className="mt-1 max-w-xs text-sm leading-relaxed text-sky-100/72">Full stack developer.</p>
           </div>
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-x-8">
+          <div className="grid grid-cols-2 gap-3 gap-x-4 sm:gap-x-8">
             {SOCIALS.map((social) => (
               <a
                 key={social.label}
                 href={social.href}
                 target={social.href.startsWith("mailto") ? undefined : "_blank"}
                 rel={social.href.startsWith("mailto") ? undefined : "noopener noreferrer"}
-                className="group flex items-center gap-3 text-sky-50 transition hover:text-white"
+                className="group flex items-center gap-3 !no-underline text-sky-50 transition hover:!no-underline hover:text-white"
               >
                 <span className="flex h-8 w-8 items-center justify-center rounded-lg border border-white/10 bg-white/8 text-sky-50 transition group-hover:border-sky-200/35 group-hover:bg-white/12">
                   {social.icon}
@@ -80,9 +80,14 @@ export default function SiteFooter({ className = "" }: SiteFooterProps) {
         </div>
         <div className="mt-6 h-px w-full bg-linear-to-r from-transparent via-white/12 to-transparent" />
         <p className="mt-3 text-center text-[11px] text-sky-100/68">
-          © {new Date().getFullYear()} Tanie - built with React, TypeScript and Tailwind
+          © Tanisha Lalwani 2026 : Made with Three.js and TypeScript
         </p>
       </div>
     </footer>
   )
 }
+
+
+
+
+
