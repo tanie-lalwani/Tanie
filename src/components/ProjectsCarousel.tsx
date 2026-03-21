@@ -61,7 +61,7 @@ export function ProjectsCarousel({ projects }: ProjectsCarouselProps) {
             type="button"
             onClick={goToPrev}
             aria-label="Previous project"
-            className="absolute left-0 z-10 flex h-12 w-12 items-center justify-center rounded-full bg-white/80 text-sky-900 text-2xl shadow hover:bg-white focus:outline-none focus:ring-2 focus:ring-sky-400"
+            className="absolute left-0 z-10 flex h-8 w-8 sm:h-10 sm:w-10 md:h-12 md:w-12 items-center justify-center rounded-full bg-white/80 text-sky-900 text-lg sm:text-xl md:text-2xl shadow hover:bg-white focus:outline-none focus:ring-2 focus:ring-sky-400"
             style={{ top: '50%', transform: 'translateY(-50%)' }}
           >
             {'<'}
@@ -77,19 +77,19 @@ export function ProjectsCarousel({ projects }: ProjectsCarouselProps) {
             type="button"
             onClick={goToNext}
             aria-label="Next project"
-            className="absolute right-0 z-10 flex h-12 w-12 items-center justify-center rounded-full bg-white/80 text-sky-900 text-2xl shadow hover:bg-white focus:outline-none focus:ring-2 focus:ring-sky-400"
+            className="absolute right-0 z-10 flex h-8 w-8 sm:h-10 sm:w-10 md:h-12 md:w-12 items-center justify-center rounded-full bg-white/80 text-sky-900 text-lg sm:text-xl md:text-2xl shadow hover:bg-white focus:outline-none focus:ring-2 focus:ring-sky-400"
             style={{ top: '50%', transform: 'translateY(-50%)' }}
           >
             {'>'}
           </button>
         </div>
         {/* Small screens: chevrons below video */}
-        <div className="absolute left-0 right-0 -bottom-16 flex items-center justify-center gap-8 sm:hidden">
+        <div className="absolute left-0 right-0 -bottom-6 flex items-center justify-center gap-4 sm:hidden">
           <button
             type="button"
             onClick={goToPrev}
             aria-label="Previous project"
-            className="flex h-10 w-10 items-center justify-center rounded-full bg-white/80 text-sky-900 text-xl shadow hover:bg-white focus:outline-none focus:ring-2 focus:ring-sky-400"
+            className="flex h-8 w-8 items-center justify-center rounded-full bg-white/80 text-sky-900 text-lg shadow hover:bg-white focus:outline-none focus:ring-2 focus:ring-sky-400"
           >
             {'<'}
           </button>
@@ -97,7 +97,7 @@ export function ProjectsCarousel({ projects }: ProjectsCarouselProps) {
             type="button"
             onClick={goToNext}
             aria-label="Next project"
-            className="flex h-10 w-10 items-center justify-center rounded-full bg-white/80 text-sky-900 text-xl shadow hover:bg-white focus:outline-none focus:ring-2 focus:ring-sky-400"
+            className="flex h-8 w-8 items-center justify-center rounded-full bg-white/80 text-sky-900 text-lg shadow hover:bg-white focus:outline-none focus:ring-2 focus:ring-sky-400"
           >
             {'>'}
           </button>

@@ -3,9 +3,7 @@ import { NavLink } from 'react-router-dom'
 import type { TimePhase } from '../experience/timePhase'
 
 const navLinks = [
-  { label: 'Built So Far', href: '#projects' },
-  { label: 'Let\'s Start Building', href: '#contact' },
-  { label: 'Interview Me', href: '/interview-me' },
+  { label: 'Quick Q&A', href: '/qna' },
 ]
 
 type NavbarProps = {

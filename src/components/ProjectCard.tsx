@@ -13,16 +13,24 @@ export function ProjectCard({ site }: ProjectCardProps) {
       exit={{ opacity: 0, x: -36 }}
       transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
     >
-      <div className="relative flex h-full flex-col">
-        <div className="relative overflow-hidden rounded-2xl border border-sky-700/15 bg-white/60 p-4 shadow-sm max-w-2xl mx-auto flex flex-col items-center">
-          {/* Extra small mobile: smaller card and video area */}
-          <div className="w-full max-w-xs p-2 sm:max-w-2xl sm:p-4 mx-auto flex flex-col items-center">
+      <div className="relative flex h-full flex-col items-center justify-center">
+        <div
+          className="relative overflow-hidden rounded-2xl border border-sky-700/15 bg-white/60 shadow-sm
+            w-[90vw] max-w-xs p-2
+            sm:w-[80vw] sm:max-w-md sm:p-4
+            md:w-[70vw] md:max-w-lg
+            lg:w-full lg:max-w-2xl"
+        >
+          {/* Responsive video area, always centered */}
+          <div
+            className="w-full flex items-center justify-center"
+          >
             <div
               className="w-full rounded-xl bg-linear-to-br from-sky-100 to-sky-50 flex items-center justify-center relative
-                aspect-[16/8] min-h-[120px]
-                sm:aspect-[16/8] sm:min-h-[220px] sm:max-w-lg
-                md:aspect-[16/8] md:min-h-[260px] md:max-w-xl
-                lg:aspect-[16/9] lg:min-h-[390px] lg:max-w-2xl"
+                aspect-2/1 min-h-24
+                sm:aspect-2/1 sm:min-h-44
+                md:aspect-2/1 md:min-h-56
+                lg:aspect-video lg:min-h-96"
             >
               {/* Replace with <video> or <img> as needed */}
               <span className="text-sky-500 text-base">Project Video Placeholder</span>
@@ -30,22 +38,12 @@ export function ProjectCard({ site }: ProjectCardProps) {
                 href={site}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="absolute bottom-4 right-4 inline-flex items-center rounded-lg bg-sky-900/90 px-4 py-2 text-sm font-semibold text-white shadow transition hover:bg-sky-800 focus:outline-none focus:ring-2 focus:ring-sky-400"
+                className="absolute bottom-2 right-2 sm:bottom-4 sm:right-4 inline-flex items-center justify-center rounded-lg bg-sky-900/90 px-2 py-1 text-xl sm:px-4 sm:py-2 sm:text-2xl font-semibold text-white shadow transition hover:bg-sky-800 focus:outline-none focus:ring-2 focus:ring-sky-400"
+                aria-label="Visit project site"
               >
-                View Project
+                <span aria-hidden="true">↗</span>
               </a>
             </div>
-          </div>
-            {/* Replace with <video> or <img> as needed */}
-            <span className="text-sky-500 text-base">Project Video Placeholder</span>
-            <a
-              href={site}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="absolute bottom-4 right-4 inline-flex items-center rounded-lg bg-sky-900/90 px-4 py-2 text-sm font-semibold text-white shadow transition hover:bg-sky-800 focus:outline-none focus:ring-2 focus:ring-sky-400"
-            >
-              View Project
-            </a>
           </div>
         </div>
         {/* All content below video removed as requested */}
