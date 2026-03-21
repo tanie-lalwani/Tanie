@@ -1,6 +1,6 @@
 export type TimePhase = "noon"
 
-export function getLocalTimePhase(date = new Date()): TimePhase {
+export function getLocalTimePhase(): TimePhase {
   return "noon"
 }
 

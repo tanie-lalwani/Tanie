@@ -12,7 +12,7 @@ type NavbarProps = {
   phase: TimePhase
 }
 
-export default function Navbar({ phase }: NavbarProps) {
+export default function Navbar({ phase: _phase }: NavbarProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const closeMenu = () => setIsMenuOpen(false)
 
