@@ -34,10 +34,10 @@ export function ProjectCard({ site }: ProjectCardProps) {
                 href={site}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="absolute bottom-2 right-2 inline-flex items-center justify-center rounded-[1.1rem] border border-sky-200/70 bg-[#bfe4ff] px-4 py-2 text-xs font-semibold text-blue-950 shadow-[0_10px_24px_rgba(18,53,92,0.2)] transition hover:bg-[#dff3ff] focus:outline-none focus:ring-2 focus:ring-sky-300 sm:bottom-4 sm:right-4 sm:px-5 sm:py-2.5 sm:text-sm"
+                className="absolute bottom-2 right-2 inline-flex items-center justify-center rounded-xl bg-sky-200 px-4 py-2 text-xs font-semibold !no-underline !text-slate-950 shadow transition hover:bg-sky-100 hover:!text-slate-950 focus:outline-none focus:ring-2 focus:ring-sky-300 sm:bottom-4 sm:right-4 sm:px-5 sm:py-2.5 sm:text-sm"
                 aria-label="Visit project site"
               >
-                <span aria-hidden="true">Go</span>
+                <span aria-hidden="true">&#8599;</span>
               </a>
             </div>
           </div>

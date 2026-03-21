@@ -69,7 +69,7 @@ export default function Home({ phase }: HomeProps) {
               className="mt-4 text-4xl font-bold tracking-tight text-white drop-shadow-lg sm:text-5xl md:text-6xl lg:text-7xl"
               style={{ fontFamily: "var(--font-display)" }}
             >
-              I'm Tanisha.
+              I'm Tanie.
             </h1>
 
             <p className="mt-4 max-w-xl text-sm leading-relaxed text-blue-950 sm:text-base">
@@ -81,9 +81,9 @@ export default function Home({ phase }: HomeProps) {
 
       <section
         id="projects"
-        className="relative isolate flex min-h-[80svh] w-full items-start overflow-hidden px-2 pb-8 pt-6 sm:min-h-[80vh] sm:px-4 sm:pb-10 sm:pt-10"
+        className="relative isolate flex min-h-[80svh] w-full items-start overflow-hidden px-4 pb-8 pt-6 sm:min-h-[80vh] sm:px-6 sm:pb-10 sm:pt-10"
       >
-        <div className="relative z-10 mx-auto w-full max-w-7xl">
+        <div className="site-container relative z-10">
           <PageHeader
             eyebrow=""
             title="Built so far."
@@ -101,13 +101,15 @@ export default function Home({ phase }: HomeProps) {
         id="contact"
         className="relative isolate flex min-h-[calc(100svh-2.75rem)] w-full items-start overflow-hidden px-4 pb-8 pt-16 sm:min-h-[calc(100vh-3rem)] sm:px-6 sm:pb-14 sm:pt-24"
       >
-        <div className="relative z-10 w-full max-w-[98vw]">
+        <div className="site-container relative z-10">
           <PageHeader
             eyebrow=""
             title="Let's build something."
             description=""
             className="[&_h1]:text-4xl [&_h1]:font-bold [&_h1]:tracking-tight [&_h1]:text-white [&_h1]:drop-shadow-lg sm:[&_h1]:text-5xl md:[&_h1]:text-6xl lg:[&_h1]:text-7xl"
           />
+
+          <div className="relative mb-4 flex flex-wrap items-center justify-between gap-2.5 border-b border-white/12 pb-3 sm:mb-5" />
 
           <ContactForm />
         </div>
