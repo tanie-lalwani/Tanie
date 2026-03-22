@@ -1,5 +1,5 @@
 import { Suspense, lazy, useEffect, useRef } from "react";
-import { Route, Routes, useLocation } from "react-router-dom";
+import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import Lenis from "lenis";
 import Navbar from "./components/Navbar.tsx";
 import SiteFooter from "./components/SiteFooter";
@@ -12,8 +12,18 @@ const QnA = lazy(() => import("./pages/InterviewMe.tsx"));
 
 export default function App() {
   const location = useLocation();
+  const navigate = useNavigate();
   const timePhase: TimePhase = "noon"
   const lenisRef = useRef<Lenis | null>(null)
+  // Handle GitHub Pages SPA redirect (?redirect=...)
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const params = new URLSearchParams(window.location.search);
+    const redirect = params.get('redirect');
+    if (redirect && window.location.pathname === '/index.html') {
+      navigate(redirect, { replace: true });
+    }
+  }, [navigate]);
 
   // Animation hooks
   useCursorTrail()
