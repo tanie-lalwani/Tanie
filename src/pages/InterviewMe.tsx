@@ -202,8 +202,17 @@ export default function QnA() {
 
       <section
         ref={scrollContainerRef}
-        className="h-screen overflow-y-auto overscroll-y-contain touch-pan-y [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden snap-y snap-mandatory"
-        style={{ WebkitOverflowScrolling: "touch", scrollBehavior: "smooth", scrollSnapType: 'y mandatory', scrollPaddingTop: '10vh', scrollPaddingBottom: '10vh' }}
+        className={
+          // Always apply scroll snap and smooth scrolling for both mobile and desktop
+          "h-screen overflow-y-auto overscroll-y-contain touch-pan-y [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden snap-y snap-mandatory"
+        }
+        style={{
+          WebkitOverflowScrolling: "touch",
+          scrollBehavior: "smooth",
+          scrollSnapType: "y mandatory",
+          scrollPaddingTop: "10vh",
+          scrollPaddingBottom: "10vh"
+        }}
       >
         <div className="site-container mx-auto flex min-h-full items-stretch justify-center px-0 py-0 md:px-6 md:py-8 md:pl-24 md:pr-24">
           <div className="w-full max-w-3xl">
@@ -211,7 +220,11 @@ export default function QnA() {
               <article
                 key={question}
                 className="flex min-h-[90vh] items-center justify-center py-0 md:py-6 snap-center transition-all duration-300"
-                style={{ scrollSnapAlign: 'center', scrollMarginTop: '10vh', scrollMarginBottom: '10vh' }}
+                style={{
+                  scrollSnapAlign: "center",
+                  scrollMarginTop: "10vh",
+                  scrollMarginBottom: "10vh"
+                }}
               >
                 <div className="flex w-full items-end justify-center gap-3 md:gap-5">
                   <div
