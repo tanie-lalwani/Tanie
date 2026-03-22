@@ -203,19 +203,20 @@ export default function QnA() {
       <section
         ref={scrollContainerRef}
         className="h-screen overflow-y-auto overscroll-y-contain touch-pan-y [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden snap-y snap-mandatory"
-        style={{ WebkitOverflowScrolling: "touch", scrollBehavior: "smooth" }}
+        style={{ WebkitOverflowScrolling: "touch", scrollBehavior: "smooth", scrollSnapType: 'y mandatory', scrollPaddingTop: '10vh', scrollPaddingBottom: '10vh' }}
       >
         <div className="site-container mx-auto flex min-h-full items-stretch justify-center px-0 py-0 md:px-6 md:py-8 md:pl-24 md:pr-24">
           <div className="w-full max-w-3xl">
             {questions.map((question) => (
               <article
                 key={question}
-                className="flex min-h-[110vh] items-center justify-center py-0 md:py-6 snap-center"
+                className="flex min-h-[90vh] items-center justify-center py-0 md:py-6 snap-center transition-all duration-300"
+                style={{ scrollSnapAlign: 'center', scrollMarginTop: '10vh', scrollMarginBottom: '10vh' }}
               >
                 <div className="flex w-full items-end justify-center gap-3 md:gap-5">
                   <div
                     className="surface-panel relative w-[82vw] max-w-[18rem] overflow-hidden rounded-[1.4rem] md:w-[min(34vw,24rem)] md:max-w-none md:rounded-4xl"
-                    style={{ aspectRatio: "9 / 16", maxHeight: "92vh" }}
+                    style={{ aspectRatio: "9 / 16", maxHeight: "92vh", transition: 'box-shadow 0.3s cubic-bezier(0.22,1,0.36,1)' }}
                   >
                     <div className="absolute inset-0 bg-[radial-gradient(circle_at_22%_12%,rgba(255,255,255,0.16),transparent_30%),linear-gradient(160deg,#1e293b_0%,#0f172a_42%,#020617_100%)]" />
                     <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_0%,transparent_54%,rgba(0,0,0,0.84)_100%)]" />
