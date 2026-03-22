@@ -25,7 +25,7 @@ export default function QnA() {
   // Track which card is centered in the viewport
   const [scrolling, setScrolling] = useState(false);
   const activeIndex = useMemo(() => {
-    const cards = Array.from(document.querySelectorAll('article[style*="scrollSnapAlign"]'));
+    const cards = Array.from(document.querySelectorAll('article.qna-card'));
     if (!cards.length) return 0;
     const viewportCenter = window.innerHeight / 2;
     let minDist = Infinity;
@@ -53,7 +53,7 @@ export default function QnA() {
     const onKeyDown = (event: KeyboardEvent) => {
       if (["ArrowDown", "PageDown", "ArrowUp", "PageUp"].includes(event.key)) {
         event.preventDefault();
-        const cards = Array.from(document.querySelectorAll('article[style*="scrollSnapAlign"]'));
+        const cards = Array.from(document.querySelectorAll('article.qna-card'));
         if (event.key === 'ArrowDown' || event.key === 'PageDown') {
           if (activeIndex < questions.length - 1) {
             (cards[activeIndex + 1] as HTMLElement)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -181,7 +181,7 @@ export default function QnA() {
             {questions.map((question) => (
               <article
                 key={question}
-                className="flex min-h-[90vh] items-center justify-center py-0 md:py-6 snap-center transition-all duration-300"
+                className="qna-card flex min-h-[90vh] items-center justify-center py-0 md:py-6 snap-center transition-all duration-300"
                 style={{
                   scrollSnapAlign: "center",
                   scrollMarginTop: "10vh",
