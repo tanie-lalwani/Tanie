@@ -1,4 +1,21 @@
 import { Suspense, lazy, useEffect, useRef } from "react";
+import React from "react";
+import WavySparkleRingLoader from "./components/WavySparkleRingLoader";
+
+// DelayedLoader: shows the loader for at least minDelay ms
+// This fallback always shows the loader for at least minDelay ms, even if Suspense resolves sooner
+function DelayedLoader({ minDelay = 3500 }) {
+  const [ready, setReady] = React.useState(false);
+  React.useEffect(() => {
+    const t = setTimeout(() => setReady(true), minDelay);
+    return () => clearTimeout(t);
+  }, [minDelay]);
+  if (!ready) {
+    return <div className="flex items-center justify-center py-16"><WavySparkleRingLoader size={64} /></div>;
+  }
+  // Once ready, render nothing so Suspense can show the loaded content
+  return null;
+}
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import Lenis from "lenis";
 import Navbar from "./components/Navbar.tsx";
@@ -76,7 +93,7 @@ export default function App() {
     >
       <div className="relative z-10 flex-1">
         {showNavbar ? <Navbar phase={timePhase} /> : null}
-        <Suspense fallback={<div className="px-4 py-10 text-center text-sm text-slate-400">Loading...</div>}>
+        <Suspense fallback={<DelayedLoader minDelay={3500} />}> 
           <Routes>
             <Route path="/" element={<><Home phase={timePhase} /><SiteFooter /></>} />
             <Route path="/qna" element={<QnA />} />
