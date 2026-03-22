@@ -1,0 +1,31 @@
+<!--
+  GitHub Pages 404.html redirect for React Router SPA
+  This script redirects all unknown routes to index.html so client-side routing works.
+-->
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Redirecting...</title>
+    <meta http-equiv="refresh" content="0; url=/" />
+    <script>
+      // If not already at root, rewrite to root with hash for client-side router
+      var l = window.location;
+      var path = l.pathname.replace(/^\//, "");
+      if (path && path !== "index.html" && path !== "404.html") {
+        window.location.replace(
+          l.origin +
+            l.pathname.replace(path, "") +
+            "#" +
+            path +
+            l.search +
+            l.hash,
+        );
+      }
+    </script>
+  </head>
+  <body>
+    <h1>Redirecting…</h1>
+    <p>If you are not redirected, <a href="/">click here</a>.</p>
+  </body>
+</html>
