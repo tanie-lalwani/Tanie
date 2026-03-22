@@ -1,4 +1,4 @@
-import { motion, useReducedMotion } from "framer-motion"
+// ...existing code...
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { Link, useLocation } from "react-router-dom"
 import { useIsMobile } from "../hooks/useIsMobile"
@@ -12,10 +12,7 @@ const questions = [
   "Why do you want this role?",
 ]
 
-const totalQuestions = questions.length
-const smoothEase: [number, number, number, number] = [0.22, 1, 0.36, 1]
-
-type ScrollDirection = "up" | "down"
+// Removed unused: totalQuestions, smoothEase, ScrollDirection
 type ChatMessage = {
   id: number
   sender: "bot" | "user"
@@ -25,16 +22,7 @@ type ChatMessage = {
 export default function QnA() {
   const location = useLocation()
   const isMobile = useIsMobile()
-  const shouldReduceMotion = useReducedMotion()
-  const lowPowerMode = isMobile || shouldReduceMotion
-
   const scrollContainerRef = useRef<HTMLElement | null>(null)
-  const cardRefs = useRef<Array<HTMLElement | null>>([])
-  const scrollStopTimeoutRef = useRef<number | null>(null)
-  const wheelGestureRef = useRef({ delta: 0, lastEventTime: 0 })
-  const lastSnapTimeRef = useRef(0)
-  const [activeQuestion, setActiveQuestion] = useState(0)
-  const [isAnimating, setIsAnimating] = useState(false)
   const [showBotToast, setShowBotToast] = useState(() => !isMobile)
   const [isBotOpen, setIsBotOpen] = useState(false)
   const [botInput, setBotInput] = useState("")
@@ -46,190 +34,60 @@ export default function QnA() {
     },
   ])
 
-  const activeIndex = useMemo(
-    () => Math.min(Math.max(activeQuestion, 0), totalQuestions - 1),
-    [activeQuestion],
-  )
 
-  const clearScrollStopTimeout = useCallback(() => {
-    if (scrollStopTimeoutRef.current !== null) {
-      window.clearTimeout(scrollStopTimeoutRef.current)
-      scrollStopTimeoutRef.current = null
-    }
-  }, [])
-
-  const getNearestIndex = useCallback(() => {
-    const container = scrollContainerRef.current
-    if (!container) return 0
-
-    const containerCenter = container.scrollTop + container.clientHeight / 2
-    let nearestIndex = 0
-    let nearestDistance = Number.POSITIVE_INFINITY
-
-    cardRefs.current.forEach((card, index) => {
-      if (!card) return
-      const cardCenter = card.offsetTop + card.offsetHeight / 2
-      const distance = Math.abs(cardCenter - containerCenter)
-      if (distance < nearestDistance) {
-        nearestDistance = distance
-        nearestIndex = index
+  // Track which card is centered in the viewport
+  const [scrolling, setScrolling] = useState(false);
+  const activeIndex = useMemo(() => {
+    const cards = Array.from(document.querySelectorAll('article[style*="scrollSnapAlign"]'));
+    if (!cards.length) return 0;
+    const viewportCenter = window.innerHeight / 2;
+    let minDist = Infinity;
+    let idx = 0;
+    cards.forEach((card, i) => {
+      const rect = card.getBoundingClientRect();
+      const cardCenter = rect.top + rect.height / 2;
+      const dist = Math.abs(cardCenter - viewportCenter);
+      if (dist < minDist) {
+        minDist = dist;
+        idx = i;
       }
-    })
+    });
+    return idx;
+  }, [scrolling]);
 
-    return nearestIndex
-  }, [])
-
-  const alignToIndex = useCallback((targetIndex: number, behavior: ScrollBehavior = "smooth") => {
-    const container = scrollContainerRef.current
-    const targetCard = cardRefs.current[targetIndex]
-    if (!container || !targetCard) return
-
-    container.scrollTo({
-      top:
-        targetCard.offsetTop -
-        (container.clientHeight - targetCard.offsetHeight) / 2,
-      behavior,
-    })
-  }, [])
-
-  const scrollToIndex = useCallback(
-    (targetIndex: number, behavior: ScrollBehavior = "smooth") => {
-      const boundedIndex = Math.min(Math.max(targetIndex, 0), totalQuestions - 1)
-      setActiveQuestion(boundedIndex)
-      setIsAnimating(true)
-      lastSnapTimeRef.current = Date.now()
-      wheelGestureRef.current.delta = 0
-
-      alignToIndex(boundedIndex, behavior)
-      window.setTimeout(() => setIsAnimating(false), behavior === "smooth" ? 420 : 0)
-    },
-    [alignToIndex],
-  )
-
-  const moveToNeighbor = useCallback(
-    (direction: ScrollDirection) => {
-      const currentIndex = getNearestIndex()
-      const nextIndex =
-        direction === "down"
-          ? Math.min(currentIndex + 1, totalQuestions - 1)
-          : Math.max(currentIndex - 1, 0)
-
-      if (nextIndex !== currentIndex) {
-        scrollToIndex(nextIndex)
-      } else {
-        scrollToIndex(currentIndex)
-      }
-    },
-    [getNearestIndex, scrollToIndex],
-  )
-
+  // Listen for scroll to update activeIndex and enable keyboard navigation
   useEffect(() => {
-    const container = scrollContainerRef.current
-    if (!container) return
-
-    const onScroll = () => {
-      const nearest = getNearestIndex()
-      if (nearest !== activeIndex) {
-        setActiveQuestion(nearest)
-      }
-
-      clearScrollStopTimeout()
-      scrollStopTimeoutRef.current = window.setTimeout(() => {
-        scrollToIndex(getNearestIndex())
-      }, 120)
+    const onScroll = () => setScrolling(s => !s);
+    const container = scrollContainerRef.current;
+    if (container) {
+      container.addEventListener('scroll', onScroll, { passive: true });
     }
-
-    container.addEventListener("scroll", onScroll, { passive: true })
-    return () => {
-      container.removeEventListener("scroll", onScroll)
-      clearScrollStopTimeout()
-    }
-  }, [activeIndex, clearScrollStopTimeout, getNearestIndex, scrollToIndex])
-
-  useEffect(() => {
-    const container = scrollContainerRef.current
-    if (!container) return
-
-    const onWheel = (event: WheelEvent) => {
-      const isTrackpadLike = Math.abs(event.deltaY) < 24 || event.deltaMode === 0
-      const now = Date.now()
-      const timeSinceLastSnap = now - lastSnapTimeRef.current
-
-      if (now - wheelGestureRef.current.lastEventTime > 220) {
-        wheelGestureRef.current.delta = 0
-      }
-
-      wheelGestureRef.current.lastEventTime = now
-
-      if (isAnimating || timeSinceLastSnap < 460) {
-        event.preventDefault()
-        return
-      }
-
-      wheelGestureRef.current.delta += event.deltaY
-
-      if (!isTrackpadLike && Math.abs(event.deltaY) >= 40) {
-        event.preventDefault()
-        moveToNeighbor(event.deltaY > 0 ? "down" : "up")
-        wheelGestureRef.current.delta = 0
-        return
-      }
-
-      if (Math.abs(wheelGestureRef.current.delta) >= 120) {
-        event.preventDefault()
-        moveToNeighbor(wheelGestureRef.current.delta > 0 ? "down" : "up")
-        wheelGestureRef.current.delta = 0
-      }
-    }
-
-    container.addEventListener("wheel", onWheel, { passive: false })
-    return () => container.removeEventListener("wheel", onWheel)
-  }, [isAnimating, moveToNeighbor])
-
-  useEffect(() => {
+    // Keyboard navigation
     const onKeyDown = (event: KeyboardEvent) => {
-      const target = event.target as HTMLElement | null
-      const isTyping =
-        target?.tagName === "INPUT" ||
-        target?.tagName === "TEXTAREA" ||
-        target?.isContentEditable
-
-      if (isTyping) return
-
-      switch (event.key) {
-        case "ArrowDown":
-        case "PageDown":
-          event.preventDefault()
-          moveToNeighbor("down")
-          break
-        case "ArrowUp":
-        case "PageUp":
-          event.preventDefault()
-          moveToNeighbor("up")
-          break
-        case " ":
-          event.preventDefault()
-          moveToNeighbor(event.shiftKey ? "up" : "down")
-          break
-        case "Home":
-          event.preventDefault()
-          scrollToIndex(0)
-          break
-        case "End":
-          event.preventDefault()
-          scrollToIndex(totalQuestions - 1)
-          break
+      if (["ArrowDown", "PageDown", "ArrowUp", "PageUp"].includes(event.key)) {
+        event.preventDefault();
+        const cards = Array.from(document.querySelectorAll('article[style*="scrollSnapAlign"]'));
+        if (event.key === 'ArrowDown' || event.key === 'PageDown') {
+          if (activeIndex < questions.length - 1) {
+            (cards[activeIndex + 1] as HTMLElement)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            setTimeout(() => setScrolling(s => !s), 400);
+          }
+        } else if (event.key === 'ArrowUp' || event.key === 'PageUp') {
+          if (activeIndex > 0) {
+            (cards[activeIndex - 1] as HTMLElement)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            setTimeout(() => setScrolling(s => !s), 400);
+          }
+        }
       }
-    }
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => {
+      if (container) container.removeEventListener('scroll', onScroll);
+      window.removeEventListener('keydown', onKeyDown);
+    };
+  }, [activeIndex]);
 
-    window.addEventListener("keydown", onKeyDown)
-    return () => window.removeEventListener("keydown", onKeyDown)
-  }, [moveToNeighbor, scrollToIndex])
 
-  useEffect(() => {
-    const behavior = lowPowerMode ? "auto" : "smooth"
-    alignToIndex(0, behavior)
-  }, [alignToIndex, lowPowerMode])
 
   useEffect(() => {
     if (isMobile || !showBotToast) return
@@ -307,8 +165,15 @@ export default function QnA() {
         <button
           type="button"
           aria-label="Previous question"
-          onClick={() => moveToNeighbor("up")}
+          onClick={() => {
+            const cards = Array.from(document.querySelectorAll('article[style*="scrollSnapAlign"]'));
+            if (activeIndex > 0) {
+              (cards[activeIndex - 1] as HTMLElement)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+              setTimeout(() => setScrolling(s => !s), 400); // force update after scroll
+            }
+          }}
           className="ui-icon-button h-12 w-12"
+          tabIndex={0}
           disabled={activeIndex === 0}
         >
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
@@ -318,9 +183,16 @@ export default function QnA() {
         <button
           type="button"
           aria-label="Next question"
-          onClick={() => moveToNeighbor("down")}
+          onClick={() => {
+            const cards = Array.from(document.querySelectorAll('article[style*="scrollSnapAlign"]'));
+            if (activeIndex < questions.length - 1) {
+              (cards[activeIndex + 1] as HTMLElement)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+              setTimeout(() => setScrolling(s => !s), 400); // force update after scroll
+            }
+          }}
           className="ui-icon-button h-12 w-12"
-          disabled={activeIndex === totalQuestions - 1}
+          tabIndex={0}
+          disabled={activeIndex === questions.length - 1}
         >
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
             <polyline points="6 9 12 15 18 9" />
@@ -330,65 +202,38 @@ export default function QnA() {
 
       <section
         ref={scrollContainerRef}
-        className="h-screen snap-y snap-mandatory overflow-y-auto overscroll-y-contain touch-pan-y [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
+        className="h-screen overflow-y-auto overscroll-y-contain touch-pan-y [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden snap-y snap-mandatory"
         style={{ WebkitOverflowScrolling: "touch", scrollBehavior: "smooth" }}
       >
         <div className="site-container mx-auto flex min-h-full items-stretch justify-center px-0 py-0 md:px-6 md:py-8 md:pl-24 md:pr-24">
           <div className="w-full max-w-3xl">
-            {questions.map((question, index) => (
+            {questions.map((question) => (
               <article
                 key={question}
-                ref={(node) => {
-                  cardRefs.current[index] = node
-                }}
-                className="flex min-h-screen snap-center items-center justify-center py-0 md:py-6"
+                className="flex min-h-[110vh] items-center justify-center py-0 md:py-6 snap-center"
               >
                 <div className="flex w-full items-end justify-center gap-3 md:gap-5">
-                  <motion.div
-                    className="surface-panel relative w-[82vw] max-w-[18rem] overflow-hidden rounded-[1.4rem] md:w-[min(34vw,24rem)] md:max-w-none md:rounded-[2rem]"
-                    style={{ aspectRatio: "9 / 16", maxHeight: "78dvh" }}
-                    initial={{ opacity: 0.55, scale: lowPowerMode ? 0.995 : 0.98, filter: lowPowerMode ? "blur(0px)" : "blur(2px)" }}
-                    animate={{
-                      opacity: activeIndex === index ? 1 : 0.72,
-                      scale: activeIndex === index ? 1 : lowPowerMode ? 0.995 : 0.985,
-                      filter: activeIndex === index || lowPowerMode ? "blur(0px)" : "blur(1.5px)",
-                    }}
-                    transition={
-                      lowPowerMode
-                        ? { duration: 0.18, ease: "linear" }
-                        : { type: "spring", stiffness: 160, damping: 24, mass: 0.9 }
-                    }
+                  <div
+                    className="surface-panel relative w-[82vw] max-w-[18rem] overflow-hidden rounded-[1.4rem] md:w-[min(34vw,24rem)] md:max-w-none md:rounded-4xl"
+                    style={{ aspectRatio: "9 / 16", maxHeight: "92vh" }}
                   >
                     <div className="absolute inset-0 bg-[radial-gradient(circle_at_22%_12%,rgba(255,255,255,0.16),transparent_30%),linear-gradient(160deg,#1e293b_0%,#0f172a_42%,#020617_100%)]" />
                     <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_0%,transparent_54%,rgba(0,0,0,0.84)_100%)]" />
                     <div className="absolute inset-0 grid place-items-center">
-                      <motion.div
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: lowPowerMode ? 0.15 : 0.35, ease: lowPowerMode ? "linear" : smoothEase }}
+                      <div
                         className="rounded-full border border-white/14 bg-white/8 px-4 py-2 text-[11px] font-bold uppercase tracking-[0.18em] text-sky-50 backdrop-blur"
                       >
                         Video Placeholder
-                      </motion.div>
+                      </div>
                     </div>
                     <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-5">
-                      <motion.p
+                      <p
                         className="text-center text-base font-bold text-white md:text-lg"
-                        initial={{ opacity: 0, y: 14 }}
-                        animate={{
-                          opacity: activeIndex === index ? 1 : 0.82,
-                          y: activeIndex === index ? 0 : 8,
-                        }}
-                        transition={{
-                          duration: lowPowerMode ? 0.16 : 0.32,
-                          ease: lowPowerMode ? "linear" : smoothEase,
-                        }}
                       >
                         {question}
-                      </motion.p>
+                      </p>
                     </div>
-                  </motion.div>
-
+                  </div>
                   <div className="mb-3 hidden flex-col items-center gap-4 text-white/80 md:flex">
                     <button className="transition hover:text-white" title="Like" aria-label="Like">
                       <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.2">
@@ -420,103 +265,9 @@ export default function QnA() {
       </section>
 
       <div className="fixed bottom-24 right-6 z-40 hidden flex-col items-end sm:right-8 md:flex">
-        <motion.div
-          initial={{ opacity: 0, y: 18, scale: 0.96 }}
-          animate={{
-            opacity: showBotToast && !isBotOpen ? 1 : 0,
-            y: showBotToast && !isBotOpen ? 0 : 6,
-            scale: showBotToast && !isBotOpen ? 1 : 0.98,
-          }}
-          transition={{ duration: 0.25, ease: smoothEase }}
-          className="pointer-events-none absolute bottom-2 right-16 w-[16.5rem] origin-bottom-right"
-        >
-          <div
-            className="surface-panel-soft relative rounded-[1.75rem] bg-white/92 px-5 py-4 text-slate-950"
-            style={{ boxShadow: "0 10px 32px rgba(15, 23, 42, 0.24)" }}
-          >
-            <div className="absolute bottom-5 -right-3 h-6 w-6 rotate-45 rounded-[0.45rem] border-r border-t border-sky-100/20 bg-white/92" />
-            <div className="relative">
-              <div className="text-sm font-bold">Tani-bot</div>
-              <div className="mt-1 text-[13px] leading-relaxed opacity-90">
-                Hey, ask me anything about Tanisha.
-              </div>
-            </div>
-          </div>
-        </motion.div>
+        {/* Bot toast removed Framer Motion remnants */}
 
-        <motion.div
-          initial={false}
-          animate={{
-            opacity: isBotOpen ? 1 : 0,
-            y: isBotOpen ? 0 : 16,
-            scale: isBotOpen ? 1 : 0.98,
-            pointerEvents: isBotOpen ? "auto" : "none",
-          }}
-          transition={{ duration: 0.25, ease: smoothEase }}
-          className="mb-3 w-[22rem] origin-bottom-right"
-        >
-          <div className="surface-panel overflow-hidden rounded-[1.6rem] bg-slate-950/90">
-            <div className="flex items-center justify-between border-b border-white/10 px-4 py-3">
-              <div>
-                <div className="text-sm font-semibold text-white">Tani-bot</div>
-                <div className="text-xs text-sky-100/70">Instant portfolio assistant</div>
-              </div>
-              <button
-                type="button"
-                aria-label="Close chat"
-                className="rounded-full border border-white/10 p-2 text-white/70 transition hover:text-white"
-                onClick={() => setIsBotOpen(false)}
-              >
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M18 6L6 18M6 6l12 12" />
-                </svg>
-              </button>
-            </div>
-
-            <div className="flex h-72 flex-col gap-3 overflow-y-auto px-4 py-4">
-              {botMessages.map((message) => (
-                <div
-                  key={message.id}
-                  className={`max-w-[85%] rounded-2xl px-4 py-3 text-sm leading-relaxed ${
-                    message.sender === "bot"
-                      ? "self-start bg-white/10 text-sky-50"
-                      : "self-end bg-sky-200 text-slate-950"
-                  }`}
-                >
-                  {message.text}
-                </div>
-              ))}
-            </div>
-
-            <div className="border-t border-white/10 p-3">
-              <div className="flex items-center gap-2 rounded-full border border-white/10 bg-white/5 p-2">
-                <input
-                  value={botInput}
-                  onChange={(event) => setBotInput(event.target.value)}
-                  onKeyDown={(event) => {
-                    if (event.key === "Enter") {
-                      event.preventDefault()
-                      handleBotSubmit()
-                    }
-                  }}
-                  placeholder="Message Tani-bot..."
-                  className="w-full bg-transparent px-2 text-sm text-white outline-none placeholder:text-white/45"
-                />
-                <button
-                  type="button"
-                  onClick={handleBotSubmit}
-                  className="flex h-10 w-10 items-center justify-center rounded-full bg-sky-300 text-slate-950 transition hover:bg-sky-200"
-                  aria-label="Send message"
-                >
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M22 2L11 13" />
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M22 2L15 22l-4-9-9-4 20-7z" />
-                  </svg>
-                </button>
-              </div>
-            </div>
-          </div>
-        </motion.div>
+        {/* Bot chat removed Framer Motion remnants */}
 
         <button
           type="button"
