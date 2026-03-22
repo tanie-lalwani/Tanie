@@ -71,7 +71,7 @@ const WavySparkleRingLoader: React.FC<WavySparkleRingLoaderProps> = ({
             r={thickness * 0.45 + Math.sin(phase + i) * 1.2}
             fill="url(#sparkle-gradient)"
             opacity={0.7 + 0.3 * Math.sin(phase + i)}
-            style={{ filter: "drop-shadow(0 0 10px #52bdf3)" }}
+            // No drop-shadow for a cleaner look
           />
         ))}
         <defs>

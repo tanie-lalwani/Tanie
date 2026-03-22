@@ -11,7 +11,19 @@ function DelayedLoader({ minDelay = 3500 }) {
     return () => clearTimeout(t);
   }, [minDelay]);
   if (!ready) {
-    return <div className="flex items-center justify-center py-16"><WavySparkleRingLoader size={64} /></div>;
+    return (
+      <div style={{
+        position: 'fixed',
+        inset: 0,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        zIndex: 10000,
+        background: 'rgba(255,255,255,0.01)', // subtle overlay, can be removed if not wanted
+      }}>
+        <WavySparkleRingLoader size={64} />
+      </div>
+    );
   }
   // Once ready, render nothing so Suspense can show the loaded content
   return null;
