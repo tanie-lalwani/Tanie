@@ -1,7 +1,7 @@
 // ...existing code...
-import { useCallback, useEffect, useMemo, useRef, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import { Link, useLocation } from "react-router-dom"
-import { useIsMobile } from "../hooks/useIsMobile"
+
 
 const questions = [
   "Tell me about yourself.",
@@ -13,26 +13,13 @@ const questions = [
 ]
 
 // Removed unused: totalQuestions, smoothEase, ScrollDirection
-type ChatMessage = {
-  id: number
-  sender: "bot" | "user"
-  text: string
-}
+
 
 export default function QnA() {
   const location = useLocation()
-  const isMobile = useIsMobile()
+  // Removed unused isMobile
   const scrollContainerRef = useRef<HTMLElement | null>(null)
-  const [showBotToast, setShowBotToast] = useState(() => !isMobile)
-  const [isBotOpen, setIsBotOpen] = useState(false)
-  const [botInput, setBotInput] = useState("")
-  const [botMessages, setBotMessages] = useState<ChatMessage[]>([
-    {
-      id: 1,
-      sender: "bot",
-      text: "Hey, I'm Tani-bot. Ask me about projects, skills, or experience.",
-    },
-  ])
+  // Removed unused bot-related state
 
 
   // Track which card is centered in the viewport
@@ -89,34 +76,9 @@ export default function QnA() {
 
 
 
-  useEffect(() => {
-    if (isMobile || !showBotToast) return
 
-    const timeoutId = window.setTimeout(() => {
-      setShowBotToast(false)
-    }, 3200)
 
-    return () => window.clearTimeout(timeoutId)
-  }, [isMobile, showBotToast])
-
-  const handleBotSubmit = useCallback(() => {
-    const trimmedInput = botInput.trim()
-    if (!trimmedInput) return
-
-    const now = Date.now()
-    setBotMessages((currentMessages) => [
-      ...currentMessages,
-      { id: now, sender: "user", text: trimmedInput },
-      {
-        id: now + 1,
-        sender: "bot",
-        text: "I'm still a lightweight demo bot, but I can be wired to answer questions about Tanisha's work, stack, and projects.",
-      },
-    ])
-    setBotInput("")
-    setIsBotOpen(true)
-    setShowBotToast(false)
-  }, [botInput])
+  // Removed unused handleBotSubmit
 
   return (
     <div className="site-shell">
@@ -278,27 +240,7 @@ export default function QnA() {
         </div>
       </section>
 
-      <div className="fixed bottom-24 right-6 z-40 hidden flex-col items-end sm:right-8 md:flex">
-        {/* Bot toast removed Framer Motion remnants */}
-
-        {/* Bot chat removed Framer Motion remnants */}
-
-        <button
-          type="button"
-          aria-label="Open Tani-bot"
-          onClick={() => {
-            setIsBotOpen((currentValue) => !currentValue)
-            setShowBotToast(false)
-          }}
-          className="flex h-14 w-14 items-center justify-center rounded-full border-2 border-white/20 bg-sky-200 transition-transform hover:scale-105"
-        >
-          <svg width="32" height="32" fill="none" viewBox="0 0 24 24" stroke="#020617" strokeWidth="2.2">
-            <circle cx="12" cy="12" r="10" />
-            <path strokeLinecap="round" strokeLinejoin="round" d="M8 15s1.5 2 4 2 4-2 4-2" />
-            <path strokeLinecap="round" strokeLinejoin="round" d="M9 9h.01M15 9h.01" />
-          </svg>
-        </button>
-      </div>
+      {/* Bot UI removed */}
     </div>
   )
 }
