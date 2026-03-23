@@ -69,11 +69,11 @@ export default function Home({ phase }: HomeProps) {
               className="mt-4 text-4xl font-bold tracking-tight text-white sm:text-5xl md:text-6xl lg:text-7xl"
               style={{ fontFamily: "var(--font-display)" }}
             >
-              I'm Tanie.
+              I'm Tanie!
             </h1>
 
             <p className="mt-4 max-w-xl text-sm leading-relaxed text-blue-950 sm:text-base">
-              I'm Tanisha Lalwani, also known as Tanie, a full-stack developer building immersive, creative experiences. Portfolios, games, dashboards, and everything in between. Scroll to see my work or jump to the contact form.
+              I make animated experiences and practical solutions. Scroll to see my work or jump to the contact form.
             </p>
           </div>
         </motion.div>
