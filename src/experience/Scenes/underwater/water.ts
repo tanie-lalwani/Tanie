@@ -47,7 +47,8 @@ function addUnderwaterBed(
 
   const bed = new THREE.Mesh(bedGeometry, bedMaterial)
   bed.rotation.x = -Math.PI / 2
-  bed.position.set(0, depthStage === "deep" ? -24 : -18, depthStage === "deep" ? -210 : -178)
+  // Lower the sea bed for both mid and deep stages to make it appear deeper
+  bed.position.set(0, depthStage === "deep" ? -38 : -32, depthStage === "deep" ? -260 : -220)
   bed.receiveShadow = true
 
   const ridgeMaterial = new THREE.MeshStandardMaterial({
