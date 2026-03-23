@@ -8,10 +8,16 @@ export default defineConfig({
   build: {
     rollupOptions: {
       output: {
-        manualChunks: {
-          router: ["react-router-dom"],
-          motion: ["framer-motion"],
-          three: ["three"],
+        manualChunks(id) {
+          if (id.includes('node_modules')) {
+            if (id.includes('react-router-dom')) return 'router';
+            if (id.includes('framer-motion')) return 'motion';
+            if (id.includes('three')) return 'three';
+            if (id.includes('react')) return 'react-vendor';
+            if (id.includes('@mui')) return 'mui';
+            // Add more libraries as needed
+            return 'vendor';
+          }
         },
       },
     },

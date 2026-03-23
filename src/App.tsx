@@ -1,4 +1,4 @@
-import { Suspense, lazy, useEffect, useRef } from "react";
+import { Suspense, lazy, useEffect } from "react";
 import React from "react";
 import WavySparkleRingLoader from "./components/WavySparkleRingLoader";
 
