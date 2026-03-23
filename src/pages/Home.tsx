@@ -2,7 +2,7 @@ import { motion, useScroll, useTransform } from "framer-motion"
 import PageHeader from "../components/PageHeader"
 import { ProjectsCarousel, type Project } from "../components/ProjectsCarousel"
 import { ContactForm } from "../components/ContactForm"
-import GlobalBeachBackdrop from "../experience/GlobalBeachBackdrop"
+import GlobalBeachBackdrop from "../experience/Scenes/GlobalBeachBackdrop"
 import type { TimePhase } from "../experience/timePhase"
 
 const PROJECTS: Project[] = [
