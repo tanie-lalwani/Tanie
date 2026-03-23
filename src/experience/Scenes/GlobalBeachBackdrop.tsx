@@ -200,7 +200,7 @@ export default function GlobalBeachBackdrop({
     renderer.toneMapping = THREE.ACESFilmicToneMapping
     renderer.toneMappingExposure = Math.max(0.28, preset.exposure * depthProfile.exposureMultiplier)
     if (isSurfaceStage && !usesContinuousDive) {
-      renderer.setClearAlpha(0)
+      renderer.setClearColor(0x000000, 0) // Transparent background
     } else {
       renderer.setClearColor(submergedClearColor, 1)
     }
@@ -287,6 +287,11 @@ export default function GlobalBeachBackdrop({
       })
       water.rotation.x = -Math.PI / 2
       water.position.y = -0.05
+
+            // Ensure water is visible from below
+            if (water.material) {
+              water.material.side = THREE.DoubleSide;
+            }
       
       // Enhanced water material with transition effects
       if (water.material && water.material.uniforms) {
@@ -308,7 +313,23 @@ export default function GlobalBeachBackdrop({
           waveLayer += cos(vUv.y * 8.0 + uTime * 1.5) * 0.05;
           vec3 enhancedColor = mix(waterColor, sunColor, pow(sunFade, 3.0));
           enhancedColor += waveLayer * sunColor * 0.3;
-          gl_FragColor = vec4(enhancedColor, 1.0);
+
+          // Enhanced animated soft mask for water edge
+          float edgeNoise = sin(vUv.x * 40.0 + uTime * 0.7) * 0.04;
+          edgeNoise += sin(vUv.x * 80.0 - uTime * 1.2) * 0.02;
+          edgeNoise += cos(vUv.x * 24.0 + uTime * 0.3) * 0.03;
+          edgeNoise += sin((vUv.x + vUv.y) * 60.0 + uTime * 0.9) * 0.025;
+          // Variable fade height for more organic edge
+          float fadeHeight = 0.14 + 0.06 * sin(vUv.x * 6.0 + uTime * 0.5);
+          float edge = vUv.y + edgeNoise;
+          float fade = smoothstep(0.0, fadeHeight, edge); // fade out at the bottom, animated and variable
+          // Soften the very bottom edge further
+          float softEdge = smoothstep(0.0, 0.06, edge);
+          fade *= softEdge;
+          // Subtle color blend at the bottom for smoother transition (blend to blue)
+          vec3 bottomBlue = vec3(0.18, 0.38, 0.65); // soft blue
+          vec3 bottomBlend = mix(bottomBlue, enhancedColor, fade); // blend to blue
+          gl_FragColor = vec4(bottomBlend, fade);
           `
         )
       }
@@ -323,30 +344,16 @@ export default function GlobalBeachBackdrop({
     const noonCloudLayer = phase === "noon" && isSurfaceStage ? addNoonClouds(scene, isMobile) : null
     const noonSunLayer = phase === "noon" && isSurfaceStage ? addNoonSun(scene) : null
     const underwaterDepthStage: "mid" | "deep" = depthStage === "deep" ? "deep" : "mid"
-    const underwaterLayer = supportsUnderwaterSystems
-      ? addUnderwaterParticles(scene, phase, underwaterDepthStage, isMobile, bubbleSpriteTexture)
-      : null
-    const underwaterBedLayer = supportsUnderwaterSystems
-      ? addUnderwaterBed(scene, phase, underwaterDepthStage, isMobile)
-      : null
-    const underwaterVolumeLayer = supportsUnderwaterSystems
-      ? addUnderwaterVolumeTexture(scene, phase, underwaterDepthStage, isMobile, sedimentOverlayTexture)
-      : null
-    const underwaterSiltLayer = supportsUnderwaterSystems
-      ? addUnderwaterSilt(scene, underwaterDepthStage, isMobile, siltParticleTexture)
-      : null
-    const mutedSunlightLayer = supportsUnderwaterSystems ? addMutedTopSunlight(scene, phase, underwaterDepthStage) : null
-    const reflectionLayer = supportsUnderwaterSystems ? addUnderwaterReflections(scene, phase, underwaterDepthStage) : null
-    const surfaceWindowLayer = supportsUnderwaterSystems
-      ? addUnderwaterSurfaceWindow(
-        scene,
-        phase,
-        underwaterDepthStage,
-        isMobile,
-        surfaceRippleTextureA ?? undefined,
-        surfaceRippleTextureB ?? undefined,
-      )
-      : null
+    /*
+*/
+    // UNDERWATER SCENE LAYERS RESTORED
+    const underwaterLayer = supportsUnderwaterSystems ? addUnderwaterParticles(scene, phase, isMobile) : null;
+    const underwaterBedLayer = supportsUnderwaterSystems ? addUnderwaterBed(scene, phase) : null;
+    const underwaterVolumeLayer = supportsUnderwaterSystems ? addUnderwaterVolumeTexture(scene, phase) : null;
+    const underwaterSiltLayer = supportsUnderwaterSystems ? addUnderwaterSilt(scene, phase) : null;
+    const mutedSunlightLayer = supportsUnderwaterSystems ? addMutedTopSunlight(scene, phase) : null;
+    const reflectionLayer = supportsUnderwaterSystems ? addUnderwaterReflections(scene, phase) : null;
+    const surfaceWindowLayer = supportsUnderwaterSystems ? addUnderwaterSurfaceWindow(scene, phase) : null;
 
     // Configure camera layers: layer 0 (default) + layer 1 (stars for night)
     camera.layers.enable(1)
@@ -577,7 +584,7 @@ export default function GlobalBeachBackdrop({
       }
       if (surfaceWindowLayer) {
         surfaceWindowLayer.group.visible = stageDepth > 0.1
-        surfaceWindowLayer.update()
+        surfaceWindowLayer.update(elapsed)
       }
       renderer.render(scene, camera)
     }
