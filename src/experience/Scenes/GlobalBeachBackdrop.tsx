@@ -21,8 +21,9 @@ import {
   addUnderwaterVolumeTexture,
   addMutedTopSunlight,
   addUnderwaterReflections,
-  addUnderwaterSurfaceWindow,
 } from "../Scenes/underwater/water"
+
+import { addUnderwaterSurfaceWindow } from "../Scenes/underwater/particles"
 
 import { useEffect, useMemo, useRef } from "react"
 import * as THREE from "three"
@@ -31,7 +32,16 @@ import { Water } from "three/examples/jsm/objects/Water.js"
 import { Sky } from "three/examples/jsm/objects/Sky.js"
 import { useIsMobile } from "../../hooks/useIsMobile"
 import type { TimePhase } from "../timePhase"
-import { MOOD_PRESETS, type BeachMoodPreset } from "../moods"
+import { MOOD_PRESETS } from "../moods"
+
+
+type GlobalBeachBackdropProps = {
+  phase: TimePhase
+  position?: "fixed" | "absolute"
+  depthStage?: "surface" | "mid" | "deep"
+  enableContinuousDive?: boolean
+  diveProgressValue?: MotionValue<number>
+}
 
 const GLOBAL_OCEAN_START = performance.now() * 0.001
 

@@ -1,3 +1,5 @@
+import * as THREE from "three"
+
 export function disposeScene(scene: THREE.Scene) {
   scene.traverse((object) => {
     const mesh = object as THREE.Mesh
@@ -16,10 +18,3 @@ export function disposeScene(scene: THREE.Scene) {
   })
 }
 
-type GlobalBeachBackdropProps = {
-  phase: TimePhase
-  position?: "fixed" | "absolute"
-  depthStage?: "surface" | "mid" | "deep"
-  enableContinuousDive?: boolean
-  diveProgressValue?: MotionValue<number>
-} //end of maths section

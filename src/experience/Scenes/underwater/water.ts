@@ -1,3 +1,5 @@
+
+export { addUnderwaterBed, addUnderwaterVolumeTexture, addMutedTopSunlight, addUnderwaterReflections };
 function addUnderwaterBed(
   scene: THREE.Scene,
   phase: TimePhase,

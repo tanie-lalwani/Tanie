@@ -161,7 +161,7 @@ export function addUnderwaterSilt( //section 4 particle layer start
   }
 }
 
-function addUnderwaterSurfaceWindow(
+export function addUnderwaterSurfaceWindow(
   scene: THREE.Scene,
   phase: TimePhase,
   depthStage: "mid" | "deep",
@@ -260,3 +260,10 @@ function addUnderwaterSurfaceWindow(
   group.add(shadowSheet)
   group.add(reflectionSheet)
   scene.add(group)
+
+  return {
+    group,
+    update: (elapsed: number, stageDepth: number, surfaceWaveTime: number) => {
+      // Add update logic here or keep as a no-op if not implemented
+    },
+  }
