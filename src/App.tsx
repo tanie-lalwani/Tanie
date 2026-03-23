@@ -29,7 +29,6 @@ function DelayedLoader({ minDelay = 3500 }) {
   return null;
 }
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
-import Lenis from "lenis";
 import Navbar from "./components/Navbar.tsx";
 import SiteFooter from "./components/SiteFooter";
 import { type TimePhase } from "./experience/timePhase";
@@ -43,7 +42,6 @@ export default function App() {
   const location = useLocation();
   const navigate = useNavigate();
   const timePhase: TimePhase = "noon"
-  const lenisRef = useRef<Lenis | null>(null)
   // Handle GitHub Pages SPA redirect (?redirect=...)
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -58,43 +56,6 @@ export default function App() {
   useCursorTrail()
   useClickRipple()
 
-  useEffect(() => {
-    if (typeof window === "undefined") return
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return
-    if (location.pathname === "/qna") {
-      lenisRef.current?.destroy()
-      lenisRef.current = null
-      return
-    }
-
-    lenisRef.current?.destroy()
-
-    const lenis = new Lenis({
-      duration: 1.1,
-      smoothWheel: true,
-      wheelMultiplier: 0.9,
-      touchMultiplier: 1,
-    })
-    lenisRef.current = lenis
-
-    let rafId = 0
-    const raf = (time: number) => {
-      lenis.raf(time)
-      rafId = window.requestAnimationFrame(raf)
-    }
-
-    rafId = window.requestAnimationFrame(raf)
-
-    return () => {
-      window.cancelAnimationFrame(rafId)
-      if (lenisRef.current === lenis) {
-        lenisRef.current.destroy()
-        lenisRef.current = null
-      } else {
-        lenis.destroy()
-      }
-    }
-  }, [location.pathname])
 
   const showNavbar = location.pathname !== "/qna"
 
