@@ -1,4 +1,9 @@
-export function buildNormalMap(size = 256): THREE.DataTexture {
+
+// ...removed duplicate import...
+
+import * as THREE from "three";
+
+export function buildNormalMap(size = 256): THREE.Texture {
   const data = new Uint8Array(size * size * 4)
 
   for (let y = 0; y < size; y++) {
@@ -73,7 +78,7 @@ export function buildNormalMap(size = 256): THREE.DataTexture {
   return texture
 }
 
-function buildSandTexture(size = 256, variant: "default" | "noon" = "default"): THREE.DataTexture {
+export function buildSandTexture(size = 256, variant: "default" | "noon" = "default"): THREE.DataTexture {
   const data = new Uint8Array(size * size * 3)
 
   for (let y = 0; y < size; y++) {

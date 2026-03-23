@@ -1,4 +1,8 @@
-
+import * as THREE from "three";
+import { MOOD_PRESETS } from "../../moods";
+import type { TimePhase } from "../../timePhase";
+import { buildSandTexture } from "../surface/textures";
+import { smoothstep } from "../math";
 export { addUnderwaterBed, addUnderwaterVolumeTexture, addMutedTopSunlight, addUnderwaterReflections };
 function addUnderwaterBed(
   scene: THREE.Scene,
@@ -8,7 +12,6 @@ function addUnderwaterBed(
 ) {
   const bedTexture = buildSandTexture(256, "default")
   bedTexture.repeat.set(depthStage === "deep" ? 18 : 16, depthStage === "deep" ? 16 : 13)
-  bedTexture.colorSpace = THREE.SRGBColorSpace
 
   const bedGeometry = new THREE.PlaneGeometry(
     isMobile ? 340 : 520,
@@ -165,7 +168,7 @@ function buildCausticTexture(size = 256): THREE.CanvasTexture {
   return texture
 }
 
-function buildRippleRefractionTexture(
+export function buildRippleRefractionTexture(
   size = 512,
   variant: "rings" | "shear" = "rings",
 ): THREE.CanvasTexture {
@@ -542,3 +545,4 @@ function addUnderwaterVolumeTexture(
     },
   }
 }
+

@@ -1,3 +1,8 @@
+import * as THREE from "three"
+import type { BeachMoodPreset } from "../../moods"
+import type { TimePhase } from "../../timePhase"
+import { buildSandTexture } from "./textures"
+
 export function addSand(scene: THREE.Scene, preset: BeachMoodPreset, phase: TimePhase) {
   const geometry = new THREE.PlaneGeometry(1200, 84, 48, 22)
   const pos = geometry.attributes.position as THREE.BufferAttribute
@@ -27,7 +32,7 @@ export function addSand(scene: THREE.Scene, preset: BeachMoodPreset, phase: Time
   scene.add(sand)
 }
 
-function buildCloudTexture(size = 128): THREE.CanvasTexture {
+export function buildCloudTexture(size = 128): THREE.CanvasTexture {
   const canvas = document.createElement("canvas")
   canvas.width = size
   canvas.height = size

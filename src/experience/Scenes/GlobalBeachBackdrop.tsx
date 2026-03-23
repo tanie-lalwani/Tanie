@@ -1,7 +1,7 @@
 
 // utils (same folder as component)
-import { clamp01, smoothstep, getSectionScrollProgress, getDepthBlend } from "../math"
-import { disposeScene } from "../three"
+import { clamp01, smoothstep, getSectionScrollProgress, getDepthBlend } from "./math"
+import { disposeScene } from "./three"
 
 // textures
 import { buildNormalMap } from "../Scenes/surface/textures"
@@ -145,12 +145,14 @@ export default function GlobalBeachBackdrop({
     const color = new THREE.Color(preset.waterColor)
     const hsl = { h: 0, s: 0, l: 0 }
     color.getHSL(hsl)
-    const phaseShift =
-      phase === "noon"
-        ? { h: 0.012, s: 0.05, l: 0.01 }
-        : { h: 0.02, s: -0.04, l: -0.02 }
-          ? { h: -0.008, s: 0.12, l: 0.015 }
-          : { h: 0.02, s: -0.04, l: -0.02 }
+    let phaseShift: { h: number; s: number; l: number }
+    if (phase === "noon") {
+      phaseShift = { h: 0.012, s: 0.05, l: 0.01 }
+    } else if (phase === "sunset") {
+      phaseShift = { h: -0.008, s: 0.12, l: 0.015 }
+    } else {
+      phaseShift = { h: 0.02, s: -0.04, l: -0.02 }
+    }
     const phaseExtraDrop = phase === "noon" ? 0.04 : 0.03
     const shiftedHue = (hsl.h + phaseShift.h + 1) % 1
     color.setHSL(
@@ -380,7 +382,6 @@ export default function GlobalBeachBackdrop({
     }
 
     let raf = 0
-    let lastElapsed = performance.now() * 0.001 - GLOBAL_OCEAN_START
     let smoothedDepthBlend = getDepthBlend(depthStage, 0.2)
     let isSceneVisible = true
 
@@ -402,8 +403,6 @@ export default function GlobalBeachBackdrop({
     const render = () => {
       raf = requestAnimationFrame(render)
       const elapsed = performance.now() * 0.001 - GLOBAL_OCEAN_START
-      const delta = Math.min(0.05, Math.max(0.001, elapsed - lastElapsed))
-      lastElapsed = elapsed
 
       if (!isSceneVisible) {
         return
@@ -564,11 +563,11 @@ export default function GlobalBeachBackdrop({
       // Only show underwater effects after water zoom completes (stageDepth > 0.2)
       if (underwaterLayer) {
         underwaterLayer.particles.visible = stageDepth > 0.2
-        underwaterLayer.update(elapsed, delta)
+        underwaterLayer.update()
       }
       underwaterBedLayer?.update(elapsed, stageDepth)
       underwaterVolumeLayer?.update(elapsed, stageDepth)
-      underwaterSiltLayer?.update(elapsed, delta, stageDepth)
+      underwaterSiltLayer?.update()
       if (mutedSunlightLayer) {
         mutedSunlightLayer.update(elapsed)
       }
@@ -578,7 +577,7 @@ export default function GlobalBeachBackdrop({
       }
       if (surfaceWindowLayer) {
         surfaceWindowLayer.group.visible = stageDepth > 0.1
-        surfaceWindowLayer.update(elapsed, stageDepth, surfaceWaveTime)
+        surfaceWindowLayer.update()
       }
       renderer.render(scene, camera)
     }

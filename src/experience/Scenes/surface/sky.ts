@@ -1,3 +1,6 @@
+import * as THREE from "three"
+import { buildCloudTexture } from "./beach"
+
 export function addNoonClouds(scene: THREE.Scene, isMobile: boolean) {
   const group = new THREE.Group()
   const texture = buildCloudTexture(128)
