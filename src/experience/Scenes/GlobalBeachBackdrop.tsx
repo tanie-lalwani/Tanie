@@ -344,16 +344,14 @@ export default function GlobalBeachBackdrop({
     const noonCloudLayer = phase === "noon" && isSurfaceStage ? addNoonClouds(scene, isMobile) : null
     const noonSunLayer = phase === "noon" && isSurfaceStage ? addNoonSun(scene) : null
     const underwaterDepthStage: "mid" | "deep" = depthStage === "deep" ? "deep" : "mid"
-    /*
-*/
     // UNDERWATER SCENE LAYERS RESTORED
-    const underwaterLayer = supportsUnderwaterSystems ? addUnderwaterParticles(scene, phase, isMobile) : null;
-    const underwaterBedLayer = supportsUnderwaterSystems ? addUnderwaterBed(scene, phase) : null;
-    const underwaterVolumeLayer = supportsUnderwaterSystems ? addUnderwaterVolumeTexture(scene, phase) : null;
-    const underwaterSiltLayer = supportsUnderwaterSystems ? addUnderwaterSilt(scene, phase) : null;
-    const mutedSunlightLayer = supportsUnderwaterSystems ? addMutedTopSunlight(scene, phase) : null;
-    const reflectionLayer = supportsUnderwaterSystems ? addUnderwaterReflections(scene, phase) : null;
-    const surfaceWindowLayer = supportsUnderwaterSystems ? addUnderwaterSurfaceWindow(scene, phase) : null;
+    const underwaterLayer: ReturnType<typeof addUnderwaterParticles> | null = supportsUnderwaterSystems ? addUnderwaterParticles(scene, phase, underwaterDepthStage, isMobile) : null;
+    const underwaterBedLayer: ReturnType<typeof addUnderwaterBed> | null = supportsUnderwaterSystems ? addUnderwaterBed(scene, phase, underwaterDepthStage, isMobile) : null;
+    const underwaterVolumeLayer: ReturnType<typeof addUnderwaterVolumeTexture> | null = supportsUnderwaterSystems ? addUnderwaterVolumeTexture(scene, phase, underwaterDepthStage, isMobile) : null;
+    const underwaterSiltLayer: ReturnType<typeof addUnderwaterSilt> | null = supportsUnderwaterSystems ? addUnderwaterSilt(scene, underwaterDepthStage, isMobile) : null;
+    const mutedSunlightLayer: ReturnType<typeof addMutedTopSunlight> | null = supportsUnderwaterSystems ? addMutedTopSunlight(scene, phase, underwaterDepthStage) : null;
+    const reflectionLayer: ReturnType<typeof addUnderwaterReflections> | null = supportsUnderwaterSystems ? addUnderwaterReflections(scene, phase, underwaterDepthStage) : null;
+    const surfaceWindowLayer: ReturnType<typeof addUnderwaterSurfaceWindow> | null = supportsUnderwaterSystems ? addUnderwaterSurfaceWindow(scene, phase, underwaterDepthStage, isMobile) : null;
 
     // Configure camera layers: layer 0 (default) + layer 1 (stars for night)
     camera.layers.enable(1)

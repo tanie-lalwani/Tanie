@@ -1,6 +1,5 @@
 import * as THREE from "three";
 import type { TimePhase } from "../../timePhase";
-import { MOOD_PRESETS } from "../../moods";
 
 export function addUnderwaterParticles(
   _scene?: THREE.Scene,
@@ -46,11 +45,6 @@ export function addUnderwaterSurfaceWindow(
   const texA = textureA ?? new THREE.Texture();
   const texB = textureB ?? new THREE.Texture();
   texB.repeat?.set?.(3.6, 2.8);
-
-  // Use mood presets for color
-  const baseWaterColor = (typeof MOOD_PRESETS !== 'undefined' && MOOD_PRESETS[phase]?.waterColor)
-    ? new THREE.Color(MOOD_PRESETS[phase].waterColor)
-    : new THREE.Color(0x4a90e2);
   // DEBUG: Use a bright green color for visibility
   const color = new THREE.Color(0x00ff00); // Bright green for debug
   const strength = depthStage === "mid" ? 0.11 : 0.075;

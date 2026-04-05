@@ -28,9 +28,12 @@ export function createUnderwaterEnvironment({
   surfaceRippleTextureA,
   surfaceRippleTextureB,
 }: CreateUnderwaterEnvironmentOptions) {
+  const depthStage: "mid" | "deep" = "mid"
+
   const particlesLayer = addUnderwaterParticles(
     scene,
     phase,
+    depthStage,
     isMobile,
     bubbleSpriteTexture,
   )
@@ -41,7 +44,7 @@ export function createUnderwaterEnvironment({
     isMobile,
     sedimentOverlayTexture,
   )
-  const siltLayer = addUnderwaterSilt(scene, isMobile, siltParticleTexture)
+  const siltLayer = addUnderwaterSilt(scene, depthStage, isMobile, siltParticleTexture)
   const subsurfaceSunlightLayer = addSubsurfaceSunlight(scene, phase)
   const reflectionLayer = addCausticReflections(
     scene,
@@ -52,9 +55,10 @@ export function createUnderwaterEnvironment({
   const surfaceWindowLayer = addUnderwaterSurfaceWindow(
     scene,
     phase,
+    depthStage,
     isMobile,
-    surfaceRippleTextureA,
-    surfaceRippleTextureB,
+    surfaceRippleTextureA ?? undefined,
+    surfaceRippleTextureB ?? undefined,
   )
 
   return {
@@ -74,7 +78,7 @@ export function createUnderwaterEnvironment({
       siltLayer.dispose()
       subsurfaceSunlightLayer.dispose()
       reflectionLayer.dispose()
-      surfaceWindowLayer.dispose()
+      surfaceWindowLayer.dispose?.()
     },
   }
 }
