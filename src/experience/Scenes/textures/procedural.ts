@@ -1,5 +1,10 @@
+/**
+ * File summary: Generates procedural textures used by the ocean and underwater scenes.
+ * Scope: Builds data/canvas textures for wave normals, sand, clouds, sun haze, caustics, and volumetric veil effects.
+ */
 import * as THREE from "three"
 
+// Purpose: Generate a repeatable water normal map for animated ocean surface distortion.
 export function buildNormalMap(size = 256): THREE.DataTexture {
   const data = new Uint8Array(size * size * 4)
 
@@ -74,22 +79,23 @@ export function buildNormalMap(size = 256): THREE.DataTexture {
   return texture
 }
 
-export function buildSandTexture(size = 256, variant: "default" | "noon" = "default"): THREE.DataTexture {
+// Purpose: Generate a repeatable grainy sand texture for seafloor materials.
+export function buildSandTexture(size = 256): THREE.DataTexture {
   const data = new Uint8Array(size * size * 3)
 
   for (let y = 0; y < size; y++) {
     for (let x = 0; x < size; x++) {
       const idx = (y * size + x) * 3
-      const grain = variant === "noon" ? 0.84 + Math.random() * 0.28 : 0.8 + Math.random() * 0.2
-      const waveFrequency = variant === "noon" ? 14 : 10
-      const secondaryFrequency = variant === "noon" ? 5 : 3
+      const grain = 0.8 + Math.random() * 0.2
+      const waveFrequency = 10
+      const secondaryFrequency = 3
       const wave =
         0.5 +
         0.5 * Math.sin((x / size) * Math.PI * waveFrequency + (y / size) * Math.PI * secondaryFrequency)
 
-      const rBase = variant === "noon" ? 224 : 212
-      const gBase = variant === "noon" ? 199 : 188
-      const bBase = variant === "noon" ? 149 : 142
+      const rBase = 212
+      const gBase = 188
+      const bBase = 142
 
       data[idx] = Math.min(255, Math.round((rBase + wave * 16) * grain))
       data[idx + 1] = Math.min(255, Math.round((gBase + wave * 13) * grain))
@@ -104,6 +110,7 @@ export function buildSandTexture(size = 256, variant: "default" | "noon" = "defa
   return texture
 }
 
+// Purpose: Generate a radial cloud sprite texture for the surface sky layer.
 export function buildCloudTexture(size = 128): THREE.CanvasTexture {
   const canvas = document.createElement("canvas")
   canvas.width = size
@@ -127,6 +134,7 @@ export function buildCloudTexture(size = 128): THREE.CanvasTexture {
   return texture
 }
 
+// Purpose: Generate a vertical haze texture used for underwater sun shafts.
 export function buildSunHazeTexture(size = 256): THREE.CanvasTexture {
   const canvas = document.createElement("canvas")
   canvas.width = size
@@ -150,6 +158,7 @@ export function buildSunHazeTexture(size = 256): THREE.CanvasTexture {
   return texture
 }
 
+// Purpose: Generate animated-looking caustic streaks for underwater reflection overlays.
 export function buildCausticTexture(size = 256): THREE.CanvasTexture {
   const canvas = document.createElement("canvas")
   canvas.width = size
@@ -190,6 +199,7 @@ export function buildCausticTexture(size = 256): THREE.CanvasTexture {
   return texture
 }
 
+// Purpose: Generate soft or streaked water-veil textures for volumetric underwater layers.
 export function buildWaterVeilTexture(size = 512, variant: "soft" | "streaks" = "soft"): THREE.CanvasTexture {
   const canvas = document.createElement("canvas")
   canvas.width = size

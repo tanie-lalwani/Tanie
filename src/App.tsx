@@ -41,7 +41,7 @@ const QnA = lazy(() => import("./pages/InterviewMe.tsx"));
 export default function App() {
   const location = useLocation();
   const navigate = useNavigate();
-  const timePhase: TimePhase = "noon"
+  const timePhase: TimePhase = "default"
   // Handle GitHub Pages SPA redirect (?redirect=...)
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -61,7 +61,7 @@ export default function App() {
 
   return (
     <main
-      data-phase="noon"
+      data-phase="default"
       className="relative flex min-h-screen w-full flex-col overflow-x-hidden text-sky-950"
     >
       <div className="relative z-10 flex-1">

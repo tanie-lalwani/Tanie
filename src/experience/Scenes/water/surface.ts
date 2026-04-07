@@ -1,3 +1,7 @@
+/**
+ * File summary: Builds the animated ocean surface plane and shader enhancements.
+ * Scope: Creates the Three.js Water object, configures normals and colors, injects custom fade/wave shader code, and exposes update/dispose hooks.
+ */
 import * as THREE from "three"
 import { Water } from "three/examples/jsm/objects/Water.js"
 import { smoothstep } from "../math"
@@ -19,6 +23,7 @@ type CreateOceanSurfaceOptions = {
   waterNormalsTexture?: THREE.Texture
 }
 
+// Purpose: Extend the Three.js Water shader with custom wave highlights and a soft dive fade edge.
 function enhanceWaterMaterial(material: WaterShaderMaterial) {
   material.uniforms.size.value = 1.2
   material.uniforms.uProgress = { value: 0 }
@@ -51,6 +56,7 @@ function enhanceWaterMaterial(material: WaterShaderMaterial) {
   material.needsUpdate = true
 }
 
+// Purpose: Create the ocean surface mesh and lifecycle hooks used by the scene animation loop.
 export function createOceanSurface({
   distortionScale,
   isMobile,
@@ -92,6 +98,7 @@ export function createOceanSurface({
 
   return {
     water,
+    // Purpose: Animate shader uniforms and lower or hide the water plane during the dive transition.
     update: (elapsed: number, stageDepth: number) => {
       const surfaceWaveTime = elapsed * 0.45
 
@@ -104,6 +111,7 @@ export function createOceanSurface({
         water.visible = smoothstep(0.82, 0.34, stageDepth) > 0.05
       }
     },
+    // Purpose: Release procedural normals, geometry, and shader material owned by the water surface.
     dispose: () => {
       proceduralNormals?.dispose()
       geometry.dispose()

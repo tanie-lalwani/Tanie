@@ -1,37 +1,5 @@
-import type { BeachMoodPreset } from "./types"
-
-export const noonMood: BeachMoodPreset = {
-  exposure: 0.44,
-  fogColor: 0xb7def3,
-  fogDensity: 0.00066,
-  turbidity: 3.2,
-  rayleigh: 2.65,
-  mieCoefficient: 0.0064,
-  mieDirectionalG: 0.72,
-  sunElevation: 23,
-  sunAzimuth: 20,
-  sunColor: 0xffdd99,
-  waterColor: 0x3d5f7f,
-  ambientColor: 0xffe8c4,
-  ambientIntensity: 0.44,
-  hemisphereSkyColor: 0x8fd8ff,
-  hemisphereGroundColor: 0xffc99a,
-  hemisphereIntensity: 0.26,
-  sunlightColor: 0xffdd99,
-  sunlightIntensity: 0.72,
-  sunlightDistance: 500,
-  fillColor: 0x7fc6ff,
-  fillIntensity: 0.28,
-  fillPosition: [-170, 98, 116],
-  rimColor: 0xffb08a,
-  rimIntensity: 0.22,
-  rimPosition: [210, 40, -230],
-  sandColor: 0xf0d7a3,
-  sandRoughness: 0.96,
-  sandEmissive: 0x000000,
-  sandEmissiveIntensity: 0,
-  waterDistortion: 4.2,
-  shellEmissiveIntensity: 0,
-  starfishEmissiveIntensity: 0,
-  birdColor: 0x1f2d3a,
-}
+/**
+ * File summary: Maintains the legacy noon mood export path.
+ * Scope: Re-exports the default ocean mood so older imports keep resolving to the active preset.
+ */
+export { defaultOceanMood } from "./defaultOceanMood"

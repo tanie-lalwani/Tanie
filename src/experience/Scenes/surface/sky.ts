@@ -1,7 +1,12 @@
+/**
+ * File summary: Builds lightweight surface sky elements for the ocean scene.
+ * Scope: Creates animated cloud sprites and an overhead directional sunlight rig.
+ */
 import * as THREE from "three"
-import { buildCloudTexture } from "./beach"
+import { buildCloudTexture } from "../textures"
 
-export function addNoonClouds(scene: THREE.Scene, isMobile: boolean) {
+// Purpose: Add a drifting cloud sprite layer that can be animated by the scene loop.
+export function addSurfaceCloudLayer(scene: THREE.Scene, isMobile: boolean) {
   const group = new THREE.Group()
   const texture = buildCloudTexture(128)
   const cloudCount = isMobile ? 10 : 20
@@ -31,7 +36,9 @@ export function addNoonClouds(scene: THREE.Scene, isMobile: boolean) {
 
   scene.add(group)
 
+  // Purpose: Animate cloud drift, bobbing, and opacity for the current fade amount.
   const update = (time: number, fade = 1) => {
+    // Purpose: Move each cloud sprite and keep its material opacity in sync with fade.
     group.children.forEach((child, index) => {
       child.position.x += 0.02 + (index % 3) * 0.005
       if (child.position.x > 380) child.position.x = -380
@@ -47,13 +54,15 @@ export function addNoonClouds(scene: THREE.Scene, isMobile: boolean) {
   return { group, update }
 }
 
-export function addNoonSun(scene: THREE.Scene) {
+// Purpose: Add a static overhead directional light for the surface scene.
+export function addSurfaceSunLight(scene: THREE.Scene) {
   // Overhead directional light creating sharp white-to-lavender illusion
-  const noonOverheadLight = new THREE.DirectionalLight(0xf5f2ff, 0.8)
-  noonOverheadLight.position.set(0, 300, 200)
-  scene.add(noonOverheadLight)
+  const overheadSunLight = new THREE.DirectionalLight(0xf5f2ff, 0.8)
+  overheadSunLight.position.set(0, 300, 200)
+  scene.add(overheadSunLight)
 
   return {
+    // Purpose: Satisfy the layer update contract for a light that does not animate.
     update: () => {
       // Static overhead light, no animation needed
     },

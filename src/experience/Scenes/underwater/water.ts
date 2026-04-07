@@ -1,16 +1,22 @@
+/**
+ * File summary: Provides legacy underwater water-layer builders and procedural ripple textures.
+ * Scope: Creates seabed, sunlight, reflection, and volume-texture effects for mid/deep underwater stages with animation hooks.
+ */
 import * as THREE from "three";
-import { MOOD_PRESETS } from "../../moods";
+import { OCEAN_SCENE_PRESETS } from "../../moods";
 import type { TimePhase } from "../../timePhase";
-import { buildSandTexture } from "../surface/textures";
+import { buildCausticTexture, buildSandTexture, buildSunHazeTexture } from "../textures";
 import { smoothstep } from "../math";
 export { addUnderwaterBed, addUnderwaterVolumeTexture, addMutedTopSunlight, addUnderwaterReflections };
+
+// Purpose: Add a stage-specific underwater bed with animated texture movement and ridge details.
 function addUnderwaterBed(
   scene: THREE.Scene,
-  phase: TimePhase,
+  _phase: TimePhase,
   depthStage: "mid" | "deep",
   isMobile: boolean,
 ) {
-  const bedTexture = buildSandTexture(256, "default")
+  const bedTexture = buildSandTexture(256)
   bedTexture.repeat.set(depthStage === "deep" ? 18 : 16, depthStage === "deep" ? 16 : 13)
 
   const bedGeometry = new THREE.PlaneGeometry(
@@ -35,13 +41,13 @@ function addUnderwaterBed(
   bedGeometry.computeVertexNormals()
 
   const bedMaterial = new THREE.MeshStandardMaterial({
-    color: phase === "noon" ? 0x9b7a58 : 0x86654a,
+    color: 0x9b7a58,
     map: bedTexture,
     transparent: true,
     opacity: depthStage === "deep" ? 0.74 : 0.82,
     roughness: 1,
     metalness: 0.02,
-    emissive: phase === "noon" ? 0x5c4632 : 0x493829,
+    emissive: 0x5c4632,
     emissiveIntensity: depthStage === "deep" ? 0.05 : 0.08,
   })
 
@@ -52,7 +58,7 @@ function addUnderwaterBed(
   bed.receiveShadow = true
 
   const ridgeMaterial = new THREE.MeshStandardMaterial({
-    color: phase === "noon" ? 0x7e6144 : 0x694f39,
+    color: 0x7e6144,
     roughness: 1,
     metalness: 0.01,
     transparent: true,
@@ -86,6 +92,7 @@ function addUnderwaterBed(
 
   return {
     group,
+    // Purpose: Reveal the seabed and animate subtle movement as the viewer descends.
     update: (time: number, stageDepth: number) => {
       const reveal = smoothstep(0.22, 0.5, stageDepth)
       const deepen = THREE.MathUtils.lerp(1, depthStage === "deep" ? 0.82 : 0.9, smoothstep(0.55, 0.92, stageDepth))
@@ -100,75 +107,14 @@ function addUnderwaterBed(
       group.position.y = Math.sin(time * 0.14) * 0.35
       group.position.x = Math.sin(time * 0.1) * 1.6
     },
+    // Purpose: Dispose the generated bed texture owned by this layer.
     dispose: () => {
       bedTexture.dispose()
     },
   }
 }
 
-function buildSunHazeTexture(size = 256): THREE.CanvasTexture {
-  const canvas = document.createElement("canvas")
-  canvas.width = size
-  canvas.height = size
-  const ctx = canvas.getContext("2d")
-
-  if (!ctx) {
-    return new THREE.CanvasTexture(canvas)
-  }
-
-  ctx.clearRect(0, 0, size, size)
-  const gradient = ctx.createLinearGradient(0, 0, 0, size)
-  gradient.addColorStop(0, "rgba(190,230,255,0.85)")
-  gradient.addColorStop(0.35, "rgba(170,220,255,0.35)")
-  gradient.addColorStop(1, "rgba(150,210,255,0)")
-  ctx.fillStyle = gradient
-  ctx.fillRect(0, 0, size, size)
-
-  const texture = new THREE.CanvasTexture(canvas)
-  texture.needsUpdate = true
-  return texture
-}
-
-function buildCausticTexture(size = 256): THREE.CanvasTexture {
-  const canvas = document.createElement("canvas")
-  canvas.width = size
-  canvas.height = size
-  const ctx = canvas.getContext("2d")
-
-  if (!ctx) {
-    return new THREE.CanvasTexture(canvas)
-  }
-
-  ctx.clearRect(0, 0, size, size)
-  ctx.fillStyle = "rgba(0,0,0,1)"
-  ctx.fillRect(0, 0, size, size)
-
-  for (let i = 0; i < 24; i++) {
-    const y = (i / 24) * size + (Math.random() - 0.5) * 12
-    const width = 1 + Math.random() * 2.8
-    const alpha = 0.05 + Math.random() * 0.08
-
-    const gradient = ctx.createLinearGradient(0, y, size, y + Math.random() * 16 - 8)
-    gradient.addColorStop(0, `rgba(255,255,255,${alpha * 0.2})`)
-    gradient.addColorStop(0.5, `rgba(255,255,255,${alpha})`)
-    gradient.addColorStop(1, `rgba(255,255,255,${alpha * 0.2})`)
-
-    ctx.strokeStyle = gradient
-    ctx.lineWidth = width
-    ctx.beginPath()
-    ctx.moveTo(0, y)
-    ctx.quadraticCurveTo(size * 0.38, y + (Math.random() - 0.5) * 20, size, y + (Math.random() - 0.5) * 14)
-    ctx.stroke()
-  }
-
-  const texture = new THREE.CanvasTexture(canvas)
-  texture.wrapS = THREE.RepeatWrapping
-  texture.wrapT = THREE.RepeatWrapping
-  texture.repeat.set(2.8, 2.4)
-  texture.needsUpdate = true
-  return texture
-}
-
+// Purpose: Generate ring or shear ripple textures for underwater refraction-style overlays.
 export function buildRippleRefractionTexture(
   size = 512,
   variant: "rings" | "shear" = "rings",
@@ -248,6 +194,7 @@ export function buildRippleRefractionTexture(
   return texture
 }
 
+// Purpose: Generate local soft or streaked veil textures for the legacy underwater volume layer.
 function buildWaterVeilTexture(size = 512, variant: "soft" | "streaks" = "soft"): THREE.CanvasTexture {
   const canvas = document.createElement("canvas")
   canvas.width = size
@@ -318,10 +265,11 @@ function buildWaterVeilTexture(size = 512, variant: "soft" | "streaks" = "soft")
   return texture
 }
 
-function addMutedTopSunlight(scene: THREE.Scene, phase: TimePhase, depthStage: "mid" | "deep") {
+// Purpose: Add a muted top-light and haze plane for mid or deep underwater stages.
+function addMutedTopSunlight(scene: THREE.Scene, _phase: TimePhase, depthStage: "mid" | "deep") {
   const isMid = depthStage === "mid"
-  const lightColor = phase === "noon" ? 0xb8dcff : 0xa8c9ea
-  const topLight = new THREE.DirectionalLight(lightColor, phase === "noon" ? (isMid ? 0.19 : 0.13) : isMid ? 0.15 : 0.1)
+  const lightColor = 0xb8dcff
+  const topLight = new THREE.DirectionalLight(lightColor, isMid ? 0.19 : 0.13)
   topLight.position.set(0, 112, 38)
   topLight.target.position.set(0, 6, -138)
   scene.add(topLight)
@@ -333,7 +281,7 @@ function addMutedTopSunlight(scene: THREE.Scene, phase: TimePhase, depthStage: "
     new THREE.MeshBasicMaterial({
       map: hazeTexture,
       transparent: true,
-      opacity: phase === "noon" ? (isMid ? 0.1 : 0.07) : isMid ? 0.08 : 0.055,
+      opacity: isMid ? 0.1 : 0.07,
       blending: THREE.AdditiveBlending,
       depthWrite: false,
       side: THREE.DoubleSide,
@@ -345,15 +293,17 @@ function addMutedTopSunlight(scene: THREE.Scene, phase: TimePhase, depthStage: "
   scene.add(haze)
 
   return {
+    // Purpose: Animate the haze plane position and opacity around the static muted light.
     update: (time: number) => {
       haze.position.x = Math.sin(time * 0.12) * 16
       haze.position.y = 28 + Math.sin(time * 0.2) * 1.8
       const material = haze.material as THREE.MeshBasicMaterial
-      material.opacity = (phase === "noon" ? (isMid ? 0.1 : 0.07) : isMid ? 0.082 : 0.055) + Math.sin(time * 0.55) * 0.009
+      material.opacity = (isMid ? 0.1 : 0.07) + Math.sin(time * 0.55) * 0.009
     },
   }
 }
 
+// Purpose: Add moving caustic reflection planes for a mid or deep underwater stage.
 function addUnderwaterReflections(
   scene: THREE.Scene,
   phase: TimePhase,
@@ -365,8 +315,9 @@ function addUnderwaterReflections(
   const textureB = causticTextureB ?? buildCausticTexture(256)
   textureB.repeat.set(3.6, 2.8)
 
-  const baseWaterColor = new THREE.Color(MOOD_PRESETS[phase].waterColor)
-  const color = baseWaterColor.clone()
+  const baseWaterColor = new THREE.Color(OCEAN_SCENE_PRESETS[phase].waterColor)
+  const skyTintColor = new THREE.Color(0xb8dcff)
+  const color = skyTintColor.clone().lerp(baseWaterColor, 0.45)
   const strength = depthStage === "mid" ? 0.11 : 0.075
 
   const planeA = new THREE.Mesh(
@@ -405,20 +356,31 @@ function addUnderwaterReflections(
 
   return {
     group,
-    update: (time: number) => {
+    // Purpose: Animate reflection texture offsets, color blending, plane drift, and visibility.
+    update: (time: number, stageDepth = 1) => {
+      const depthVisibility = smoothstep(0.08, 0.34, stageDepth) * (1 - smoothstep(0.9, 1, stageDepth))
+      const colorMix = smoothstep(0.14, 0.72, stageDepth)
+      const materialA = planeA.material as THREE.MeshBasicMaterial
+      const materialB = planeB.material as THREE.MeshBasicMaterial
+
       textureA.offset.x = time * 0.033
       textureA.offset.y = -time * 0.018
       textureB.offset.x = -time * 0.027
       textureB.offset.y = time * 0.015
 
+      color.copy(skyTintColor).lerp(baseWaterColor, colorMix)
+      materialA.color.copy(color)
+      materialB.color.copy(color)
+      group.visible = depthVisibility > 0.01
       planeA.position.x = Math.sin(time * 0.22) * 10
       planeB.position.x = Math.cos(time * 0.18) * 8
-      ;(planeA.material as THREE.MeshBasicMaterial).opacity = strength + Math.sin(time * 0.7) * 0.02
-      ;(planeB.material as THREE.MeshBasicMaterial).opacity = strength * 0.6 + Math.cos(time * 0.56) * 0.015
+      materialA.opacity = (strength + Math.sin(time * 0.7) * 0.02) * depthVisibility
+      materialB.opacity = (strength * 0.6 + Math.cos(time * 0.56) * 0.015) * depthVisibility
     },
   }
 }
 
+// Purpose: Add layered underwater veil and sediment planes for a mid or deep stage.
 function addUnderwaterVolumeTexture(
   scene: THREE.Scene,
   phase: TimePhase,
@@ -438,7 +400,7 @@ function addUnderwaterVolumeTexture(
     sedimentTexture.needsUpdate = true
   }
 
-  const baseWaterColor = new THREE.Color(MOOD_PRESETS[phase].waterColor)
+  const baseWaterColor = new THREE.Color(OCEAN_SCENE_PRESETS[phase].waterColor)
   const shadowColor = baseWaterColor.clone().lerp(new THREE.Color(0x0e2438), 0.38)
 
   const frontVeil = new THREE.Mesh(
@@ -502,6 +464,7 @@ function addUnderwaterVolumeTexture(
 
   return {
     group,
+    // Purpose: Animate veil texture offsets, drift, opacity, and sediment movement through the dive.
     update: (time: number, stageDepth: number) => {
       // The veil textures should start appearing around 28% depth, be fully visible by 47%, and then start settling down after 88%, becoming mostly settled by 100%.
       
@@ -540,6 +503,7 @@ function addUnderwaterVolumeTexture(
       }
       group.visible = visibility > 0.02
     },
+    // Purpose: Dispose generated veil textures owned by this legacy volume layer.
     dispose: () => {
       veilTextureA.dispose()
       veilTextureB.dispose()

@@ -1,3 +1,7 @@
+/**
+ * File summary: Composes the underwater scene environment from reusable layer builders.
+ * Scope: Instantiates particles, seabed, volume veil, silt, sunlight, caustics, and surface-window layers with shared update/dispose orchestration.
+ */
 import * as THREE from "three"
 import type { TimePhase } from "../../timePhase"
 import { addCausticReflections, addSeabedTerrain, addSubsurfaceSunlight, addUnderwaterVolumeVeil } from "./scenery"
@@ -18,6 +22,7 @@ type CreateUnderwaterEnvironmentOptions = {
   surfaceRippleTextureB: THREE.Texture | null
 }
 
+// Purpose: Create all underwater visual layers and return a unified lifecycle controller.
 export function createUnderwaterEnvironment({
   bubbleSpriteTexture,
   isMobile,
@@ -62,6 +67,7 @@ export function createUnderwaterEnvironment({
   )
 
   return {
+    // Purpose: Advance every underwater layer using the current elapsed time and dive depth.
     update: (elapsed: number, stageDepth: number) => {
       particlesLayer.update(elapsed, stageDepth)
       seabedLayer.update(elapsed, stageDepth)
@@ -71,6 +77,7 @@ export function createUnderwaterEnvironment({
       reflectionLayer.update(elapsed, stageDepth)
       surfaceWindowLayer.update(elapsed, stageDepth)
     },
+    // Purpose: Dispose all underwater layer resources owned by this environment controller.
     dispose: () => {
       particlesLayer.dispose()
       seabedLayer.dispose()

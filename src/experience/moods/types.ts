@@ -1,4 +1,9 @@
-export type BeachMoodPreset = {
+/**
+ * File summary: Defines the shape of ocean scene preset data.
+ * Scope: Documents all atmospheric, lighting, seafloor, water, and decorative tuning values consumed by scene builders.
+ */
+export type OceanScenePreset = {
+  // Exposure and atmosphere.
   exposure: number
   fogColor: number
   fogDensity: number
@@ -10,6 +15,7 @@ export type BeachMoodPreset = {
   sunAzimuth: number
   sunColor: number
   waterColor: number
+  // Lighting rig.
   ambientColor: number
   ambientIntensity: number
   hemisphereSkyColor: number
@@ -24,12 +30,14 @@ export type BeachMoodPreset = {
   rimColor: number
   rimIntensity: number
   rimPosition: [number, number, number]
-  sandColor: number
-  sandRoughness: number
-  sandEmissive: number
-  sandEmissiveIntensity: number
+  // Seafloor look.
+  seafloorColor: number
+  seafloorRoughness: number
+  seafloorEmissive: number
+  seafloorEmissiveIntensity: number
+  // Surface wave distortion and micro-detail brightness.
   waterDistortion: number
-  shellEmissiveIntensity: number
+  seashellEmissiveIntensity: number
   starfishEmissiveIntensity: number
   birdColor: number
 }

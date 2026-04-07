@@ -1,3 +1,7 @@
+/**
+ * File summary: Loads and configures image-backed textures for the experience scene.
+ * Scope: Creates reusable texture handles, optional underwater ripple clones, and a single disposal contract for loaded assets.
+ */
 import * as THREE from "three"
 
 export type ExperienceTextures = {
@@ -7,14 +11,17 @@ export type ExperienceTextures = {
   surfaceRippleTextureA: THREE.Texture | null
   surfaceRippleTextureB: THREE.Texture | null
   waterNormalsTexture: THREE.Texture
+  // Purpose: Release all textures held by the loaded experience texture bundle.
   dispose: () => void
 }
 
+// Purpose: Configure a texture to clamp at its edges so sprite-like assets do not tile.
 function clampTexture(texture: THREE.Texture) {
   texture.wrapS = THREE.ClampToEdgeWrapping
   texture.wrapT = THREE.ClampToEdgeWrapping
 }
 
+// Purpose: Load all external textures required by the ocean experience and prepare optional underwater variants.
 export function loadExperienceTextures(
   textureLoader: THREE.TextureLoader,
   supportsUnderwaterSystems: boolean,
@@ -54,6 +61,7 @@ export function loadExperienceTextures(
     surfaceRippleTextureA,
     surfaceRippleTextureB,
     waterNormalsTexture,
+    // Purpose: Release every texture owned by the experience asset bundle.
     dispose: () => {
       waterNormalsTexture.dispose()
       bubbleSpriteTexture.dispose()
