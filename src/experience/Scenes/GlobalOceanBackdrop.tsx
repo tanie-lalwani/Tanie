@@ -1,5 +1,3 @@
-import { LAYERS, toggleLayerVisibility } from "./layers"
-
 // utils (same folder as component)
 import { clamp01, smoothstep, getSectionScrollProgress, getDepthBlend } from "./math"
 import { disposeScene } from "./three"
@@ -55,6 +53,8 @@ export default function GlobalOceanBackdrop({
   diveProgressValue,
 }: GlobalOceanBackdropProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
+  const transitionVeilRef = useRef<HTMLDivElement | null>(null)
+  const transitionWashRef = useRef<HTMLDivElement | null>(null)
   const externalDiveProgressRef = useRef<number | null>(null)
   const isMobile = useIsMobile()
   const scenePreset = useMemo(() => OCEAN_SCENE_PRESETS[phase], [phase])
@@ -209,12 +209,6 @@ export default function GlobalOceanBackdrop({
     const scene = new THREE.Scene()
     scene.fog = new THREE.FogExp2(fogColor, scenePreset.fogDensity * depthTuning.fogDensityMultiplier)
 
-    // DEMO: Turn off SEAFLOOR layer (layer 1) so it's not visible
-    // You can remove this after testing
-    setTimeout(() => {
-      toggleLayerVisibility(scene, LAYERS.SEAFLOOR, false)
-    }, 1000)
-
     const textureLoader = new THREE.TextureLoader()
     const proceduralWaterNormals = buildNormalMap()
     const waterNormalsTexture = textureLoader.load("/textures/waternormals.jpg")
@@ -313,14 +307,20 @@ export default function GlobalOceanBackdrop({
         const originalFragmentShader = water.material.fragmentShader
         
         // Add more wave layers to fragment shader for richer transitions
-        water.material.fragmentShader = originalFragmentShader.replace(
+        water.material.fragmentShader = `
+          uniform float uProgress;
+          uniform float uTime;
+        ${originalFragmentShader.replace(
           'gl_FragColor = vec4( mix( waterColor, sunColor, pow( sunFade, 3.0 ) ), 1.0 );',
           `
           // Enhanced wave layers for transition
           float waveLayer = sin(vUv.x * 12.0 + uTime * 2.0) * 0.05;
           waveLayer += cos(vUv.y * 8.0 + uTime * 1.5) * 0.05;
           vec3 enhancedColor = mix(waterColor, sunColor, pow(sunFade, 3.0));
-          enhancedColor += waveLayer * sunColor * 0.3;
+          enhancedColor += waveLayer * sunColor * 0.18;
+          float submergeBlend = smoothstep(0.18, 0.64, uProgress);
+          vec3 underwaterTint = vec3(0.09, 0.30, 0.42);
+          enhancedColor = mix(enhancedColor, underwaterTint, submergeBlend * 0.84);
 
           // Enhanced animated soft mask for water edge
           float edgeNoise = sin(vUv.x * 40.0 + uTime * 0.7) * 0.04;
@@ -335,11 +335,15 @@ export default function GlobalOceanBackdrop({
           float softEdge = smoothstep(0.0, 0.06, edge);
           fade *= softEdge;
           // Subtle color blend at the bottom for smoother transition (blend to blue)
-          vec3 bottomBlue = vec3(0.18, 0.38, 0.65); // soft blue
+          vec3 bottomBlue = mix(vec3(0.60, 0.69, 0.72), vec3(0.10, 0.29, 0.40), smoothstep(0.22, 0.72, uProgress)); // soft bridge tint
           vec3 bottomBlend = mix(bottomBlue, enhancedColor, fade); // blend to blue
-          gl_FragColor = vec4(bottomBlend, fade);
+          float surfaceAlpha = fade * (1.0 - smoothstep(0.46, 0.86, uProgress));
+          gl_FragColor = vec4(bottomBlend, surfaceAlpha);
           `
-        )
+        )}`
+        water.material.transparent = true
+        water.material.depthWrite = false
+        water.material.needsUpdate = true
       }
       
       scene.add(water)
@@ -428,6 +432,29 @@ export default function GlobalOceanBackdrop({
       smoothedDepthBlend = THREE.MathUtils.lerp(smoothedDepthBlend, targetDepthBlend, usesContinuousDive ? 0.2 : 0.5)
       const stageDepth = usesContinuousDive || !isSurfaceStage ? clamp01(smoothedDepthBlend) : smoothedDepthBlend
       const surfaceWaveTime = elapsed * 0.45
+      const transitionVeil = transitionVeilRef.current
+      const transitionWash = transitionWashRef.current
+
+      if (transitionVeil) {
+        const veilIn = smoothstep(0.14, 0.34, stageDepth)
+        const veilOut = 1 - smoothstep(0.84, 1, stageDepth)
+        const veilOpacity = usesContinuousDive ? veilIn * veilOut * 0.78 : 0
+        const veilHeight = THREE.MathUtils.lerp(42, 92, smoothstep(0.22, 0.68, stageDepth))
+        const veilLift = THREE.MathUtils.lerp(-18, -3, veilIn)
+
+        transitionVeil.style.opacity = veilOpacity.toFixed(3)
+        transitionVeil.style.height = `${veilHeight.toFixed(2)}%`
+        transitionVeil.style.transform = `translateY(${veilLift.toFixed(2)}%)`
+      }
+      if (transitionWash) {
+        const washIn = smoothstep(0.2, 0.42, stageDepth)
+        const washOut = 1 - smoothstep(0.88, 1, stageDepth)
+        const washOpacity = usesContinuousDive ? washIn * washOut * 0.86 : 0
+        const washLift = THREE.MathUtils.lerp(10, -9, smoothstep(0.28, 0.86, stageDepth))
+
+        transitionWash.style.opacity = washOpacity.toFixed(3)
+        transitionWash.style.transform = `translateY(${washLift.toFixed(2)}%)`
+      }
 
       const exposureMultiplier = THREE.MathUtils.lerp(1, depthTuning.exposureMultiplier, stageDepth)
       // Keep exposure brighter longer so the descent remains airy and not abruptly dark.
@@ -466,8 +493,12 @@ export default function GlobalOceanBackdrop({
         }
 
         dynamicClearColor.lerpColors(skyTransitionColor, dynamicClearColor.clone(), underwaterPhase)
+        const bridgeHazeColor = new THREE.Color(0x657981)
+        const bridgeHazeStrength = smoothstep(0.42, 0.72, stageDepth) * (1 - smoothstep(0.92, 1, stageDepth)) * 0.58
+        dynamicClearColor.lerp(bridgeHazeColor, bridgeHazeStrength)
         
         dynamicFogColor.copy(baseUnderwaterColor)
+        dynamicFogColor.lerp(bridgeHazeColor, bridgeHazeStrength * 0.62)
 
         fog.color.copy(dynamicFogColor)
 
@@ -554,22 +585,22 @@ export default function GlobalOceanBackdrop({
           water.material.uniforms.uProgress.value = stageDepth
         }
         // TUNE: Waterline drop curve. First value = start depth, second = fully submerged point.
-        water.position.y = -0.05 - smoothstep(0.1, 0.92, stageDepth) * 4.9
+        water.position.y = -0.05 - smoothstep(0.1, 0.88, stageDepth) * 5.05
         // Water stays fully visible during zoom phase (0-0.4), then fades as you go deeper
         if (usesContinuousDive) {
           // TUNE: Water surface visibility window during dive.
-          water.visible = smoothstep(0.55, 0.35, stageDepth) > 0.05
+          water.visible = smoothstep(0.94, 0.74, stageDepth) > 0.01
         }
       }
       // Control sky visibility during continuous dive - long smooth fade
       if (sky && usesContinuousDive) {
         // TUNE: Sky fade window as camera transitions underwater.
-        sky.visible = smoothstep(0.45, 0.3, stageDepth) > 0.05
+        sky.visible = smoothstep(0.68, 0.42, stageDepth) > 0.03
       }
       // Fade clouds out before the darker transition window kicks in.
       if (surfaceCloudLayer && usesContinuousDive) {
-        // TUNE: Cloud fade starts at 0.2 depth and is gone by 0.34.
-        const cloudFade = 1 - smoothstep(0.2, 0.34, stageDepth)
+        // TUNE: Cloud fade starts at 0.2 depth and is gone by 0.44.
+        const cloudFade = 1 - smoothstep(0.2, 0.44, stageDepth)
         surfaceCloudLayer.update(elapsed, cloudFade)
       } else {
         surfaceCloudLayer?.update(elapsed)
@@ -631,11 +662,35 @@ export default function GlobalOceanBackdrop({
   const positionClass = position === "absolute" ? "absolute" : "fixed"
 
   return (
-    <div className={`pointer-events-none ${positionClass} inset-0 z-0`}>
+    <div className={`pointer-events-none ${positionClass} inset-0 z-0 overflow-hidden`}>
       <canvas
         ref={canvasRef}
         className="h-full w-full"
         style={{ display: "block" }}
+        aria-hidden="true"
+      />
+      <div
+        ref={transitionVeilRef}
+        className="pointer-events-none absolute inset-x-0 top-0 opacity-0"
+        style={{
+          background:
+            "linear-gradient(180deg, rgba(4, 16, 24, 0.94) 0%, rgba(12, 34, 48, 0.76) 42%, rgba(93, 124, 132, 0.42) 76%, rgba(93, 124, 132, 0) 100%)",
+          height: "48%",
+          transform: "translateY(-16%)",
+          willChange: "height, opacity, transform",
+        }}
+        aria-hidden="true"
+      />
+      <div
+        ref={transitionWashRef}
+        className="pointer-events-none absolute inset-x-0 top-[34%] h-[72%] opacity-0"
+        style={{
+          background:
+            "linear-gradient(180deg, rgba(184, 203, 208, 0) 0%, rgba(190, 207, 210, 0.64) 20%, rgba(116, 145, 153, 0.5) 43%, rgba(24, 52, 64, 0.34) 68%, rgba(5, 17, 25, 0) 100%)",
+          backdropFilter: "blur(10px) saturate(90%)",
+          WebkitBackdropFilter: "blur(10px) saturate(90%)",
+          willChange: "opacity, transform",
+        }}
         aria-hidden="true"
       />
     </div>

@@ -466,10 +466,10 @@ function addUnderwaterVolumeTexture(
     group,
     // Purpose: Animate veil texture offsets, drift, opacity, and sediment movement through the dive.
     update: (time: number, stageDepth: number) => {
-      // The veil textures should start appearing around 28% depth, be fully visible by 47%, and then start settling down after 88%, becoming mostly settled by 100%.
+      // The veil textures bridge the surface handoff, then settle slowly so the light wash does not drop out.
       
-      const enterBlend = smoothstep(0.28, 0.47, stageDepth)
-      const settleBlend = 1 - smoothstep(0.88, 1, stageDepth)
+      const enterBlend = smoothstep(0.24, 0.44, stageDepth)
+      const settleBlend = 1 - smoothstep(0.72, 1, stageDepth)
       const visibility = enterBlend * settleBlend
 
       veilTextureA.offset.x = time * 0.012
@@ -501,7 +501,7 @@ function addUnderwaterVolumeTexture(
         ;(sedimentVeil.material as THREE.MeshBasicMaterial).opacity =
           (depthStage === "deep" ? 0.1 : 0.16) * visibility
       }
-      group.visible = visibility > 0.02
+      group.visible = visibility > 0.005
     },
     // Purpose: Dispose generated veil textures owned by this legacy volume layer.
     dispose: () => {
