@@ -112,7 +112,7 @@ export function addUnderwaterSurfaceWindow(
     group,
     // Purpose: Animate caustic offsets, color, visibility, and layer drift through the dive.
     update: (time = 0, stageDepth = 1) => {
-      const depthVisibility = smoothstep(0.02, 0.2, stageDepth) * (1 - smoothstep(0.82, 1, stageDepth));
+      const depthVisibility = smoothstep(0.02, 0.2, stageDepth) * (1 - smoothstep(0.66, 0.88, stageDepth));
       const colorMix = smoothstep(0.08, 0.68, stageDepth);
       const materialA = planeA.material as THREE.MeshBasicMaterial;
       const materialB = planeB.material as THREE.MeshBasicMaterial;

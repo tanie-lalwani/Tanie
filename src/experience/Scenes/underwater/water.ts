@@ -269,7 +269,9 @@ function buildWaterVeilTexture(size = 512, variant: "soft" | "streaks" = "soft")
 function addMutedTopSunlight(scene: THREE.Scene, _phase: TimePhase, depthStage: "mid" | "deep") {
   const isMid = depthStage === "mid"
   const lightColor = 0xb8dcff
-  const topLight = new THREE.DirectionalLight(lightColor, isMid ? 0.19 : 0.13)
+  const baseLightIntensity = isMid ? 0.19 : 0.13
+  const baseHazeOpacity = isMid ? 0.1 : 0.07
+  const topLight = new THREE.DirectionalLight(lightColor, baseLightIntensity)
   topLight.position.set(0, 112, 38)
   topLight.target.position.set(0, 6, -138)
   scene.add(topLight)
@@ -281,7 +283,7 @@ function addMutedTopSunlight(scene: THREE.Scene, _phase: TimePhase, depthStage: 
     new THREE.MeshBasicMaterial({
       map: hazeTexture,
       transparent: true,
-      opacity: isMid ? 0.1 : 0.07,
+      opacity: baseHazeOpacity,
       blending: THREE.AdditiveBlending,
       depthWrite: false,
       side: THREE.DoubleSide,
@@ -293,12 +295,16 @@ function addMutedTopSunlight(scene: THREE.Scene, _phase: TimePhase, depthStage: 
   scene.add(haze)
 
   return {
-    // Purpose: Animate the haze plane position and opacity around the static muted light.
-    update: (time: number) => {
+    // Purpose: Animate the top light while fading the surface-source view out at depth.
+    update: (time: number, stageDepth = 1) => {
+      const visibility = smoothstep(0.04, 0.24, stageDepth) * (1 - smoothstep(0.64, 0.88, stageDepth))
       haze.position.x = Math.sin(time * 0.12) * 16
       haze.position.y = 28 + Math.sin(time * 0.2) * 1.8
       const material = haze.material as THREE.MeshBasicMaterial
-      material.opacity = (isMid ? 0.1 : 0.07) + Math.sin(time * 0.55) * 0.009
+      material.opacity = (baseHazeOpacity + Math.sin(time * 0.55) * 0.009) * visibility
+      haze.visible = visibility > 0.005
+      topLight.intensity = baseLightIntensity * visibility
+      topLight.visible = visibility > 0.005
     },
   }
 }
@@ -358,7 +364,7 @@ function addUnderwaterReflections(
     group,
     // Purpose: Animate reflection texture offsets, color blending, plane drift, and visibility.
     update: (time: number, stageDepth = 1) => {
-      const depthVisibility = smoothstep(0.08, 0.34, stageDepth) * (1 - smoothstep(0.9, 1, stageDepth))
+      const depthVisibility = smoothstep(0.08, 0.34, stageDepth) * (1 - smoothstep(0.7, 0.9, stageDepth))
       const colorMix = smoothstep(0.14, 0.72, stageDepth)
       const materialA = planeA.material as THREE.MeshBasicMaterial
       const materialB = planeB.material as THREE.MeshBasicMaterial
@@ -469,7 +475,7 @@ function addUnderwaterVolumeTexture(
       // The veil textures bridge the surface handoff, then settle slowly so the light wash does not drop out.
       
       const enterBlend = smoothstep(0.24, 0.44, stageDepth)
-      const settleBlend = 1 - smoothstep(0.72, 1, stageDepth)
+      const settleBlend = 1 - smoothstep(0.68, 0.9, stageDepth)
       const visibility = enterBlend * settleBlend
 
       veilTextureA.offset.x = time * 0.012

@@ -57,14 +57,16 @@ export function addSurfaceCloudLayer(scene: THREE.Scene, isMobile: boolean) {
 // Purpose: Add a static overhead directional light for the surface scene.
 export function addSurfaceSunLight(scene: THREE.Scene) {
   // Overhead directional light creating sharp white-to-lavender illusion
-  const overheadSunLight = new THREE.DirectionalLight(0xf5f2ff, 0.8)
+  const baseIntensity = 0.8
+  const overheadSunLight = new THREE.DirectionalLight(0xf5f2ff, baseIntensity)
   overheadSunLight.position.set(0, 300, 200)
   scene.add(overheadSunLight)
 
   return {
-    // Purpose: Satisfy the layer update contract for a light that does not animate.
-    update: () => {
-      // Static overhead light, no animation needed
+    // Purpose: Keep the surface light in sync with the scroll-driven surface fade.
+    update: (_time?: number, fade = 1) => {
+      overheadSunLight.intensity = baseIntensity * fade
+      overheadSunLight.visible = fade > 0.01
     },
   }
 }

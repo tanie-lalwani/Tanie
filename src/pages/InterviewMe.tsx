@@ -1,5 +1,5 @@
 // ...existing code...
-import { useEffect, useMemo, useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { Link, useLocation } from "react-router-dom"
 
 
@@ -14,6 +14,28 @@ const questions = [
 
 // Removed unused: totalQuestions, smoothEase, ScrollDirection
 
+function getCenteredCardIndex() {
+  const cards = Array.from(document.querySelectorAll('article.qna-card'));
+  if (!cards.length) return 0;
+
+  const viewportCenter = window.innerHeight / 2;
+  let minDist = Infinity;
+  let idx = 0;
+
+  cards.forEach((card, i) => {
+    const rect = card.getBoundingClientRect();
+    const cardCenter = rect.top + rect.height / 2;
+    const dist = Math.abs(cardCenter - viewportCenter);
+
+    if (dist < minDist) {
+      minDist = dist;
+      idx = i;
+    }
+  });
+
+  return idx;
+}
+
 
 export default function QnA() {
   const location = useLocation()
@@ -23,28 +45,11 @@ export default function QnA() {
 
 
   // Track which card is centered in the viewport
-  const [scrolling, setScrolling] = useState(false);
-  const activeIndex = useMemo(() => {
-    const cards = Array.from(document.querySelectorAll('article.qna-card'));
-    if (!cards.length) return 0;
-    const viewportCenter = window.innerHeight / 2;
-    let minDist = Infinity;
-    let idx = 0;
-    cards.forEach((card, i) => {
-      const rect = card.getBoundingClientRect();
-      const cardCenter = rect.top + rect.height / 2;
-      const dist = Math.abs(cardCenter - viewportCenter);
-      if (dist < minDist) {
-        minDist = dist;
-        idx = i;
-      }
-    });
-    return idx;
-  }, [scrolling]);
+  const [activeIndex, setActiveIndex] = useState(0);
 
   // Listen for scroll to update activeIndex and enable keyboard navigation
   useEffect(() => {
-    const onScroll = () => setScrolling(s => !s);
+    const onScroll = () => setActiveIndex(getCenteredCardIndex());
     const container = scrollContainerRef.current;
     if (container) {
       container.addEventListener('scroll', onScroll, { passive: true });
@@ -57,12 +62,12 @@ export default function QnA() {
         if (event.key === 'ArrowDown' || event.key === 'PageDown') {
           if (activeIndex < questions.length - 1) {
             (cards[activeIndex + 1] as HTMLElement)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            setTimeout(() => setScrolling(s => !s), 400);
+            setTimeout(() => setActiveIndex(getCenteredCardIndex()), 400);
           }
         } else if (event.key === 'ArrowUp' || event.key === 'PageUp') {
           if (activeIndex > 0) {
             (cards[activeIndex - 1] as HTMLElement)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            setTimeout(() => setScrolling(s => !s), 400);
+            setTimeout(() => setActiveIndex(getCenteredCardIndex()), 400);
           }
         }
       }
@@ -131,7 +136,7 @@ export default function QnA() {
             const cards = Array.from(document.querySelectorAll('article[style*="scrollSnapAlign"]'));
             if (activeIndex > 0) {
               (cards[activeIndex - 1] as HTMLElement)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-              setTimeout(() => setScrolling(s => !s), 400); // force update after scroll
+              setTimeout(() => setActiveIndex(getCenteredCardIndex()), 400); // force update after scroll
             }
           }}
           className="ui-icon-button h-12 w-12"
@@ -149,7 +154,7 @@ export default function QnA() {
             const cards = Array.from(document.querySelectorAll('article[style*="scrollSnapAlign"]'));
             if (activeIndex < questions.length - 1) {
               (cards[activeIndex + 1] as HTMLElement)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-              setTimeout(() => setScrolling(s => !s), 400); // force update after scroll
+              setTimeout(() => setActiveIndex(getCenteredCardIndex()), 400); // force update after scroll
             }
           }}
           className="ui-icon-button h-12 w-12"
