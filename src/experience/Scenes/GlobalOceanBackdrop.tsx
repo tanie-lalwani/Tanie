@@ -468,7 +468,7 @@ export default function GlobalOceanBackdrop({
       )
 
       if (!isSurfaceStage || usesContinuousDive) {
-        const skyTransitionColor = new THREE.Color(0xb8def2)
+        const skyTransitionColor = new THREE.Color(0x8ab8cc)
         const underwaterPhase = smoothstep(0.1, 0.5, stageDepth)
 
         const baseHsl = { h: 0, s: 0, l: 0 }
@@ -495,7 +495,7 @@ export default function GlobalOceanBackdrop({
         }
 
         dynamicClearColor.lerpColors(skyTransitionColor, dynamicClearColor.clone(), underwaterPhase)
-        const bridgeHazeColor = new THREE.Color(0x657981)
+        const bridgeHazeColor = new THREE.Color(0x385a68)
         const bridgeHazeStrength = smoothstep(0.42, 0.68, stageDepth) * (1 - smoothstep(0.82, 0.96, stageDepth)) * 0.58
         dynamicClearColor.lerp(bridgeHazeColor, bridgeHazeStrength)
         
@@ -680,7 +680,7 @@ export default function GlobalOceanBackdrop({
         className="pointer-events-none absolute inset-x-0 top-0 opacity-0"
         style={{
           background:
-            "linear-gradient(180deg, rgba(4, 16, 24, 0.94) 0%, rgba(12, 34, 48, 0.76) 42%, rgba(93, 124, 132, 0.42) 76%, rgba(93, 124, 132, 0) 100%)",
+            "linear-gradient(180deg, rgba(4, 16, 24, 0.94) 0%, rgba(12, 34, 48, 0.76) 42%, rgba(46, 81, 96, 0.44) 76%, rgba(46, 81, 96, 0) 100%)",
           height: "48%",
           transform: "translateY(-16%)",
           willChange: "height, opacity, transform",
@@ -692,7 +692,7 @@ export default function GlobalOceanBackdrop({
         className="pointer-events-none absolute inset-x-0 top-[34%] h-[72%] opacity-0"
         style={{
           background:
-            "linear-gradient(180deg, rgba(184, 203, 208, 0) 0%, rgba(190, 207, 210, 0.64) 20%, rgba(116, 145, 153, 0.5) 43%, rgba(24, 52, 64, 0.34) 68%, rgba(5, 17, 25, 0) 100%)",
+            "linear-gradient(180deg, rgba(98, 132, 148, 0) 0%, rgba(105, 144, 161, 0.58) 20%, rgba(61, 99, 117, 0.52) 43%, rgba(16, 46, 64, 0.38) 68%, rgba(5, 17, 25, 0) 100%)",
           backdropFilter: "blur(10px) saturate(90%)",
           WebkitBackdropFilter: "blur(10px) saturate(90%)",
           willChange: "opacity, transform",
