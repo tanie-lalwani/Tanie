@@ -609,8 +609,8 @@ export default function GlobalOceanBackdrop({
       }
       // Control sky visibility during continuous dive - long smooth fade
       if (sky && usesContinuousDive) {
-        // TUNE: Sky fade window as camera transitions underwater.
-        sky.visible = smoothstep(0.34, 0.18, stageDepth) > 0.03
+        // TUNE: Keep ambient sky light alive after the surface band starts clearing.
+        sky.visible = smoothstep(0.58, 0.34, stageDepth) > 0.03
       }
       // Fade clouds out before the darker transition window kicks in.
       if (surfaceCloudLayer && usesContinuousDive) {
@@ -620,7 +620,7 @@ export default function GlobalOceanBackdrop({
       } else {
         surfaceCloudLayer?.update(elapsed)
       }
-      surfaceSunLayer?.update(elapsed, usesContinuousDive ? 1 - smoothstep(0.1, 0.28, stageDepth) : 1)
+      surfaceSunLayer?.update(elapsed, usesContinuousDive ? 1 - smoothstep(0.24, 0.58, stageDepth) : 1)
       
       // Only show underwater effects after water zoom completes (stageDepth > 0.2)
       if (underwaterLayer) {
