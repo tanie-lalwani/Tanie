@@ -26,7 +26,7 @@ body {
 	font-size: var(--type-body);
 	line-height: 1.6;
 	color: var(--color-text-main);
-	background-color: #143b61;
+	background-color: transparent;
 }
 
 a,

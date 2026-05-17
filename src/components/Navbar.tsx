@@ -77,7 +77,7 @@ export default function Navbar({ phase }: NavbarProps) {
     <header className="sticky top-0 z-40 w-full">
       <nav
         className="flex h-9 w-full items-center justify-between border-b px-3 backdrop-blur-xl transition-colors duration-200 sm:px-5"
-        style={{ backgroundColor: navBackground, borderColor: navBorder }}
+        style={{ backgroundColor: 'transparent', borderColor: navBorder }}
       >
 
         <a

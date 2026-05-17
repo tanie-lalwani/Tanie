@@ -17,7 +17,7 @@ const QnA = lazy(loadQnA);
 function RouteLoadingVeil() {
   return (
     <motion.div
-      className="fixed inset-0 z-[10000] grid place-items-center bg-[#143b61]/35 backdrop-blur-[2px]"
+      className="fixed inset-0 z-[10000] grid place-items-center bg-transparent backdrop-blur-[2px]"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
