@@ -35,9 +35,10 @@ const PROJECTS: Project[] = [
 
 type HomeProps = {
   phase: TimePhase
+  onSceneReady?: () => void
 }
 
-export default function Home({ phase }: HomeProps) {
+export default function Home({ phase, onSceneReady }: HomeProps) {
   const { scrollYProgress } = useScroll()
   const worldDiveProgress = useTransform(scrollYProgress, [0, 0.4], [0, 1])
 
@@ -45,6 +46,7 @@ export default function Home({ phase }: HomeProps) {
     <main className="relative">
       <GlobalOceanBackdrop
         phase={phase}
+        onReady={onSceneReady}
         position="fixed"
         depthStage="surface"
         enableContinuousDive
