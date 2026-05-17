@@ -1,9 +1,8 @@
-import { Suspense, lazy, useEffect, type ReactNode } from "react";
+import { Suspense, lazy, useCallback, useEffect, useState, type ReactNode } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import Navbar from "./components/Navbar.tsx";
 import SiteFooter from "./components/SiteFooter";
-import WavySparkleRingLoader from "./components/WavySparkleRingLoader";
 import { type TimePhase } from "./experience/timePhase";
 import { useCursorTrail } from "./hooks/useCursorTrail";
 import { useClickRipple } from "./hooks/useClickRipple";
@@ -14,15 +13,49 @@ const loadQnA = () => import("./pages/InterviewMe.tsx");
 const Home = lazy(loadHome);
 const QnA = lazy(loadQnA);
 
-function RouteLoadingVeil() {
+function AppLoadingVeil() {
   return (
     <motion.div
-      className="fixed inset-0 z-[10000] grid place-items-center bg-transparent backdrop-blur-[2px]"
+      className="fixed inset-0 z-[10000] grid place-items-center overflow-hidden px-6 backdrop-blur-[12px]"
+      style={{
+        background:
+          "linear-gradient(180deg, rgba(183, 222, 243, 0.38) 0%, rgba(143, 216, 255, 0.26) 24%, rgba(61, 95, 127, 0.38) 56%, rgba(8, 36, 58, 0.62) 100%)",
+      }}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
       transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
+      aria-live="polite"
+      aria-busy="true"
+      role="status"
     >
-      <WavySparkleRingLoader size={64} />
+      <div
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background:
+            "radial-gradient(circle at 17% 18%, rgba(127, 198, 255, 0.34), rgba(127, 198, 255, 0) 34%), radial-gradient(circle at 78% 16%, rgba(183, 222, 243, 0.22), rgba(183, 222, 243, 0) 30%), linear-gradient(180deg, rgba(255, 221, 153, 0.08) 0%, rgba(255, 221, 153, 0) 22%, rgba(61, 95, 127, 0.18) 48%, rgba(4, 16, 24, 0.28) 100%)",
+        }}
+        aria-hidden="true"
+      />
+      <motion.div
+        className="relative flex flex-col items-center text-center"
+        initial={{ opacity: 0, y: 8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.16, ease: [0.22, 1, 0.36, 1] }}
+      >
+        <motion.div
+          className="mb-4 h-8 w-8 rounded-full border border-sky-50/30 border-t-white/90"
+          animate={{ rotate: 360 }}
+          transition={{ duration: 0.9, ease: "linear", repeat: Infinity }}
+          aria-hidden="true"
+        />
+        <div
+          className="flex text-xl font-bold leading-none tracking-normal text-white drop-shadow-[0_8px_28px_rgba(4,16,24,0.34)] sm:text-2xl"
+          style={{ fontFamily: "var(--font-body)" }}
+        >
+          Welcome
+        </div>
+      </motion.div>
     </motion.div>
   );
 }
@@ -44,6 +77,7 @@ function PageShell({ children }: { children: ReactNode }) {
 export default function App() {
   const location = useLocation();
   const navigate = useNavigate();
+  const [readyOceanLocationKey, setReadyOceanLocationKey] = useState<string | null>(null);
   const timePhase: TimePhase = "default"
   // Handle GitHub Pages SPA redirect (?redirect=...)
   useEffect(() => {
@@ -60,12 +94,17 @@ export default function App() {
     void loadQnA();
   }, []);
 
+  const handleOceanSceneReady = useCallback(() => {
+    setReadyOceanLocationKey(location.key);
+  }, [location.key]);
+
   // Animation hooks
   useCursorTrail()
   useClickRipple()
 
 
   const showNavbar = location.pathname !== "/qna"
+  const isWaitingForOceanScene = location.pathname === "/" && readyOceanLocationKey !== location.key;
 
   return (
     <main
@@ -87,14 +126,14 @@ export default function App() {
           ) : null}
         </AnimatePresence>
 
-        <Suspense fallback={<RouteLoadingVeil />}>
+        <Suspense fallback={<AppLoadingVeil />}>
           <AnimatePresence mode="wait" initial={false}>
             <Routes location={location} key={location.pathname}>
               <Route
                 path="/"
                 element={
                   <PageShell>
-                    <Home phase={timePhase} />
+                    <Home phase={timePhase} onSceneReady={handleOceanSceneReady} />
                     <SiteFooter />
                   </PageShell>
                 }
@@ -111,6 +150,9 @@ export default function App() {
           </AnimatePresence>
         </Suspense>
       </div>
+      <AnimatePresence>
+        {isWaitingForOceanScene ? <AppLoadingVeil key="app-loading-veil" /> : null}
+      </AnimatePresence>
     </main>
   );
 }

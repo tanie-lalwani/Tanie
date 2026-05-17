@@ -36,6 +36,7 @@ import { OCEAN_SCENE_PRESETS } from "../moods"
 
 type GlobalOceanBackdropProps = {
   phase: TimePhase
+  onReady?: () => void
   position?: "fixed" | "absolute"
   depthStage?: "surface" | "mid" | "deep"
   enableContinuousDive?: boolean
@@ -55,6 +56,7 @@ function getPostTransitionFade(stageDepth: number) {
 
 export default function GlobalOceanBackdrop({
   phase,
+  onReady,
   position = "fixed",
   depthStage = "surface",
   enableContinuousDive = false,
@@ -217,7 +219,23 @@ export default function GlobalOceanBackdrop({
     const scene = new THREE.Scene()
     scene.fog = new THREE.FogExp2(fogColor, scenePreset.fogDensity * depthTuning.fogDensityMultiplier)
 
-    const textureLoader = new THREE.TextureLoader()
+    let hasNotifiedReady = false
+    let hasRenderedFirstFrame = false
+    let haveTexturesLoaded = false
+    let isDisposed = false
+    const notifyReady = () => {
+      if (isDisposed || hasNotifiedReady || !hasRenderedFirstFrame || !haveTexturesLoaded) return
+      hasNotifiedReady = true
+      onReady?.()
+    }
+
+    const loadingManager = new THREE.LoadingManager()
+    loadingManager.onLoad = () => {
+      haveTexturesLoaded = true
+      notifyReady()
+    }
+
+    const textureLoader = new THREE.TextureLoader(loadingManager)
     const proceduralWaterNormals = buildNormalMap()
     const waterNormalsTexture = textureLoader.load("/textures/waternormals.jpg")
     waterNormalsTexture.wrapS = THREE.RepeatWrapping
@@ -640,6 +658,10 @@ export default function GlobalOceanBackdrop({
         surfaceWindowLayer.update(elapsed, stageDepth, postTransitionFade)
       }
       renderer.render(scene, camera)
+      if (!hasRenderedFirstFrame) {
+        hasRenderedFirstFrame = true
+        notifyReady()
+      }
     }
     render()
 
@@ -655,6 +677,7 @@ export default function GlobalOceanBackdrop({
     resizeObserver.observe(parent)
 
     return () => {
+      isDisposed = true
       cancelAnimationFrame(raf)
       resizeObserver.disconnect()
       visibilityObserver.disconnect()
@@ -672,7 +695,7 @@ export default function GlobalOceanBackdrop({
       disposeScene(scene)
       renderer.dispose()
     }
-  }, [depthTuning, fogColor, isMobile, isSurfaceStage, phase, scenePreset, submergedClearColor, sunColor, waterColor, depthStage, usesContinuousDive, supportsUnderwaterSystems])
+  }, [depthTuning, fogColor, isMobile, isSurfaceStage, onReady, phase, scenePreset, submergedClearColor, sunColor, waterColor, depthStage, usesContinuousDive, supportsUnderwaterSystems])
 
   const positionClass = position === "absolute" ? "absolute" : "fixed"
 

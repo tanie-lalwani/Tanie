@@ -59,7 +59,6 @@ export default function Navbar({ phase }: NavbarProps) {
     }
   }, [])
 
-  const navBackground = rgba([184, 211, 232, 0.9], [5, 18, 27, 0.74], diveProgress)
   const navBorder = rgba([186, 230, 253, 0.5], [130, 162, 172, 0.18], diveProgress)
   const linkBackground = rgba([185, 216, 239, 0.95], [10, 32, 46, 0.64], diveProgress)
   const activeBackground = rgba([200, 228, 247, 0.96], [18, 48, 66, 0.76], diveProgress)
