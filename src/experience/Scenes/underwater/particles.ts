@@ -54,7 +54,7 @@ export function addUnderwaterSurfaceWindow(
     return {
       group: { visible: true },
       // Purpose: Preserve the surface-window update contract when required scene data is missing.
-      update: (_time?: number, _stageDepth?: number) => {},
+      update: (_time?: number, _stageDepth?: number, _postTransitionFade?: number) => {},
       // Purpose: Preserve the surface-window disposal contract when required scene data is missing.
       dispose: () => {},
     };
@@ -111,7 +111,7 @@ export function addUnderwaterSurfaceWindow(
   return {
     group,
     // Purpose: Animate caustic offsets, color, visibility, and layer drift through the dive.
-    update: (time = 0, stageDepth = 1) => {
+    update: (time = 0, stageDepth = 1, postTransitionFade = 1) => {
       const depthVisibility = smoothstep(0.02, 0.2, stageDepth) * (1 - smoothstep(0.66, 0.88, stageDepth));
       const colorMix = smoothstep(0.08, 0.68, stageDepth);
       const materialA = planeA.material as THREE.MeshBasicMaterial;
@@ -129,11 +129,12 @@ export function addUnderwaterSurfaceWindow(
       color.copy(skyTintColor).lerp(baseWaterColor, colorMix);
       materialA.color.copy(color);
       materialB.color.copy(color);
-      group.visible = depthVisibility > 0.01;
+      const fadedVisibility = depthVisibility * postTransitionFade;
+      group.visible = fadedVisibility > 0.01;
       planeA.position.x = Math.sin(time * 0.22) * 10;
       planeB.position.x = Math.cos(time * 0.18) * 8;
-      materialA.opacity = (strength + Math.sin(time * 0.7) * 0.01) * depthVisibility;
-      materialB.opacity = (strength * 0.5 + Math.cos(time * 0.56) * 0.008) * depthVisibility;
+      materialA.opacity = (strength + Math.sin(time * 0.7) * 0.01) * fadedVisibility;
+      materialB.opacity = (strength * 0.5 + Math.cos(time * 0.56) * 0.008) * fadedVisibility;
     },
     // Purpose: Dispose generated caustic textures while leaving caller-owned textures intact.
     dispose: () => {

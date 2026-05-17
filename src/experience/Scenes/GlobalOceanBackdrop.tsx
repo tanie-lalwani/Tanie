@@ -43,6 +43,14 @@ type GlobalOceanBackdropProps = {
 }
 
 const GLOBAL_OCEAN_START = performance.now() * 0.001
+const OVERLAY_CLEAR_START = 0.55
+const OVERLAY_CLEAR_STEP = 0.04
+const OVERLAY_CLEAR_DROP = 0.15
+
+function getPostTransitionFade(stageDepth: number) {
+  const scrollStepsAfterStart = Math.max(0, (stageDepth - OVERLAY_CLEAR_START) / OVERLAY_CLEAR_STEP)
+  return clamp01(1 - scrollStepsAfterStart * OVERLAY_CLEAR_DROP)
+}
 
 
 export default function GlobalOceanBackdrop({
@@ -436,11 +444,12 @@ export default function GlobalOceanBackdrop({
       const surfaceWaveTime = elapsed * 0.45
       const transitionVeil = transitionVeilRef.current
       const transitionWash = transitionWashRef.current
+      const postTransitionFade = usesContinuousDive ? getPostTransitionFade(stageDepth) : 1
 
       if (transitionVeil) {
         const veilIn = smoothstep(0.14, 0.34, stageDepth)
         const veilOut = 1 - smoothstep(0.76, 0.94, stageDepth)
-        const veilOpacity = usesContinuousDive ? veilIn * veilOut * 0.78 : 0
+        const veilOpacity = usesContinuousDive ? veilIn * veilOut * postTransitionFade * 0.78 : 0
         const veilHeight = THREE.MathUtils.lerp(42, 92, smoothstep(0.22, 0.62, stageDepth))
         const veilLift = THREE.MathUtils.lerp(-18, -3, veilIn)
 
@@ -451,7 +460,7 @@ export default function GlobalOceanBackdrop({
       if (transitionWash) {
         const washIn = smoothstep(0.2, 0.42, stageDepth)
         const washOut = 1 - smoothstep(0.78, 0.94, stageDepth)
-        const washOpacity = usesContinuousDive ? washIn * washOut * 0.86 : 0
+        const washOpacity = usesContinuousDive ? washIn * washOut * postTransitionFade * 0.86 : 0
         const washLift = THREE.MathUtils.lerp(10, -9, smoothstep(0.28, 0.74, stageDepth))
 
         transitionWash.style.opacity = washOpacity.toFixed(3)
@@ -579,7 +588,7 @@ export default function GlobalOceanBackdrop({
 
       if (water) {
         water.material.uniforms["time"].value = surfaceWaveTime
-        const surfaceFade = usesContinuousDive ? 1 - smoothstep(0.38, 0.76, stageDepth) : 1
+        const surfaceFade = usesContinuousDive ? 1 - smoothstep(0.18, 0.42, stageDepth) : 1
         // Update enhanced transition uniforms
         if (water.material.uniforms.uTime) {
           water.material.uniforms.uTime.value = elapsed
@@ -591,7 +600,7 @@ export default function GlobalOceanBackdrop({
           water.material.uniforms.uSurfaceFade.value = surfaceFade
         }
         // TUNE: Waterline drop curve. First value = start depth, second = fully submerged point.
-        water.position.y = -0.05 - smoothstep(0.1, 0.78, stageDepth) * 5.05
+        water.position.y = -0.05 - smoothstep(0.08, 0.48, stageDepth) * 5.05
         // Water stays fully visible during zoom phase (0-0.4), then fades as you go deeper
         if (usesContinuousDive) {
           // TUNE: Water surface visibility window during dive.
@@ -601,17 +610,17 @@ export default function GlobalOceanBackdrop({
       // Control sky visibility during continuous dive - long smooth fade
       if (sky && usesContinuousDive) {
         // TUNE: Sky fade window as camera transitions underwater.
-        sky.visible = smoothstep(0.58, 0.34, stageDepth) > 0.03
+        sky.visible = smoothstep(0.34, 0.18, stageDepth) > 0.03
       }
       // Fade clouds out before the darker transition window kicks in.
       if (surfaceCloudLayer && usesContinuousDive) {
-        // TUNE: Cloud fade starts at 0.2 depth and is gone by 0.44.
-        const cloudFade = 1 - smoothstep(0.2, 0.44, stageDepth)
+        // TUNE: Cloud fade starts early so the overhead surface clears before projects.
+        const cloudFade = 1 - smoothstep(0.08, 0.24, stageDepth)
         surfaceCloudLayer.update(elapsed, cloudFade)
       } else {
         surfaceCloudLayer?.update(elapsed)
       }
-      surfaceSunLayer?.update(elapsed, usesContinuousDive ? 1 - smoothstep(0.24, 0.58, stageDepth) : 1)
+      surfaceSunLayer?.update(elapsed, usesContinuousDive ? 1 - smoothstep(0.1, 0.28, stageDepth) : 1)
       
       // Only show underwater effects after water zoom completes (stageDepth > 0.2)
       if (underwaterLayer) {
@@ -628,7 +637,7 @@ export default function GlobalOceanBackdrop({
         reflectionLayer.update(elapsed, stageDepth)
       }
       if (surfaceWindowLayer) {
-        surfaceWindowLayer.update(elapsed, stageDepth)
+        surfaceWindowLayer.update(elapsed, stageDepth, postTransitionFade)
       }
       renderer.render(scene, camera)
     }
