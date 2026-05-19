@@ -70,6 +70,7 @@ export default function GlobalOceanBackdrop({
   const scenePreset = useMemo(() => OCEAN_SCENE_PRESETS[phase], [phase])
   const isSurfaceStage = depthStage === "surface"
   const usesContinuousDive = enableContinuousDive
+  const useReducedMobileScene = isMobile && usesContinuousDive
   const supportsUnderwaterSystems = !isSurfaceStage || usesContinuousDive
 
   useEffect(() => {
@@ -199,14 +200,20 @@ export default function GlobalOceanBackdrop({
     const canvas = canvasRef.current
     if (!canvas) return
 
-    const renderer = new THREE.WebGLRenderer({
-      canvas,
-      antialias: !isMobile,
-      alpha: true,
-      powerPreference: "high-performance",
-    })
+    let renderer: THREE.WebGLRenderer
+    try {
+      renderer = new THREE.WebGLRenderer({
+        canvas,
+        antialias: !isMobile,
+        alpha: true,
+        powerPreference: isMobile ? "default" : "high-performance",
+      })
+    } catch {
+      onReady?.()
+      return
+    }
 
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobile ? 1.4 : 1.8))
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobile ? 0.9 : 1.8))
     renderer.setSize(canvas.clientWidth, canvas.clientHeight, false)
     renderer.toneMapping = THREE.ACESFilmicToneMapping
     renderer.toneMappingExposure = Math.max(0.28, scenePreset.exposure * depthTuning.exposureMultiplier)
@@ -234,6 +241,19 @@ export default function GlobalOceanBackdrop({
       haveTexturesLoaded = true
       notifyReady()
     }
+    loadingManager.onError = () => {
+      haveTexturesLoaded = true
+      notifyReady()
+    }
+
+    const readyFallback = window.setTimeout(
+      () => {
+        hasRenderedFirstFrame = true
+        haveTexturesLoaded = true
+        notifyReady()
+      },
+      isMobile ? 2500 : 5000,
+    )
 
     const textureLoader = new THREE.TextureLoader(loadingManager)
     const proceduralWaterNormals = buildNormalMap()
@@ -294,15 +314,15 @@ export default function GlobalOceanBackdrop({
     const waterGeometry = new THREE.PlaneGeometry(
       12000,
       12000,
-      isMobile ? 96 : 192,
-      isMobile ? 96 : 192,
+      isMobile ? 48 : 192,
+      isMobile ? 48 : 192,
     )
 
     let water: Water | null = null
     if (isSurfaceStage) {
       water = new Water(waterGeometry, {
-        textureWidth: 1024,
-        textureHeight: 1024,
+        textureWidth: isMobile ? 384 : 1024,
+        textureHeight: isMobile ? 384 : 1024,
         waterNormals: waterNormalsTexture ?? proceduralWaterNormals,
         sunDirection: new THREE.Vector3().copy(sun).normalize(),
         sunColor,
@@ -387,11 +407,11 @@ export default function GlobalOceanBackdrop({
     // UNDERWATER SCENE LAYERS RESTORED
     const underwaterLayer: ReturnType<typeof addUnderwaterParticles> | null = supportsUnderwaterSystems ? addUnderwaterParticles(scene, phase, underwaterDepthStage, isMobile) : null;
     const underwaterBedLayer: ReturnType<typeof addUnderwaterBed> | null = supportsUnderwaterSystems ? addUnderwaterBed(scene, phase, underwaterDepthStage, isMobile) : null;
-    const underwaterVolumeLayer: ReturnType<typeof addUnderwaterVolumeTexture> | null = supportsUnderwaterSystems ? addUnderwaterVolumeTexture(scene, phase, underwaterDepthStage, isMobile) : null;
+    const underwaterVolumeLayer: ReturnType<typeof addUnderwaterVolumeTexture> | null = supportsUnderwaterSystems && !useReducedMobileScene ? addUnderwaterVolumeTexture(scene, phase, underwaterDepthStage, isMobile) : null;
     const underwaterSiltLayer: ReturnType<typeof addUnderwaterSilt> | null = supportsUnderwaterSystems ? addUnderwaterSilt(scene, underwaterDepthStage, isMobile) : null;
     const mutedSunlightLayer: ReturnType<typeof addMutedTopSunlight> | null = supportsUnderwaterSystems ? addMutedTopSunlight(scene, phase, underwaterDepthStage) : null;
-    const reflectionLayer: ReturnType<typeof addUnderwaterReflections> | null = supportsUnderwaterSystems ? addUnderwaterReflections(scene, phase, underwaterDepthStage) : null;
-    const surfaceWindowLayer: ReturnType<typeof addUnderwaterSurfaceWindow> | null = supportsUnderwaterSystems ? addUnderwaterSurfaceWindow(scene, phase, underwaterDepthStage, isMobile) : null;
+    const reflectionLayer: ReturnType<typeof addUnderwaterReflections> | null = supportsUnderwaterSystems && !useReducedMobileScene ? addUnderwaterReflections(scene, phase, underwaterDepthStage) : null;
+    const surfaceWindowLayer: ReturnType<typeof addUnderwaterSurfaceWindow> | null = supportsUnderwaterSystems && !useReducedMobileScene ? addUnderwaterSurfaceWindow(scene, phase, underwaterDepthStage, isMobile) : null;
 
     // Configure camera layers.
     camera.layers.enable(1)
@@ -678,6 +698,7 @@ export default function GlobalOceanBackdrop({
 
     return () => {
       isDisposed = true
+      window.clearTimeout(readyFallback)
       cancelAnimationFrame(raf)
       resizeObserver.disconnect()
       visibilityObserver.disconnect()
@@ -695,7 +716,7 @@ export default function GlobalOceanBackdrop({
       disposeScene(scene)
       renderer.dispose()
     }
-  }, [depthTuning, fogColor, isMobile, isSurfaceStage, onReady, phase, scenePreset, submergedClearColor, sunColor, waterColor, depthStage, usesContinuousDive, supportsUnderwaterSystems])
+  }, [depthTuning, fogColor, isMobile, isSurfaceStage, onReady, phase, scenePreset, submergedClearColor, sunColor, waterColor, depthStage, usesContinuousDive, useReducedMobileScene, supportsUnderwaterSystems])
 
   const positionClass = position === "absolute" ? "absolute" : "fixed"
 
