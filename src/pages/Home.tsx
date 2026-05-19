@@ -3,6 +3,7 @@ import PageHeader from "../components/PageHeader"
 import { ProjectsCarousel, type Project } from "../components/ProjectsCarousel"
 import { ContactForm } from "../components/ContactForm"
 import GlobalOceanBackdrop from "../experience/Scenes/GlobalOceanBackdrop"
+import { useIsMobile } from "../hooks/useIsMobile"
 import type { TimePhase } from "../experience/timePhase"
 
 const PROJECTS: Project[] = [
@@ -39,8 +40,9 @@ type HomeProps = {
 }
 
 export default function Home({ phase, onSceneReady }: HomeProps) {
+  const isMobile = useIsMobile()
   const { scrollYProgress } = useScroll()
-  const worldDiveProgress = useTransform(scrollYProgress, [0, 0.4], [0, 1])
+  const worldDiveProgress = useTransform(scrollYProgress, [0, isMobile ? 0.65 : 0.4], [0, 1])
 
   return (
     <main className="relative">
@@ -55,7 +57,7 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
 
       <motion.section
         id="home"
-        className="relative isolate flex min-h-[140svh] w-full items-start overflow-hidden px-4 pb-8 pt-16 sm:min-h-[140svh] sm:px-6 sm:pb-14 sm:pt-24"
+        className="relative isolate flex min-h-[165svh] w-full items-start overflow-hidden px-4 pb-8 pt-16 sm:min-h-[140svh] sm:px-6 sm:pb-14 sm:pt-24"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
@@ -83,7 +85,7 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
 
       <section
         id="projects"
-        className="relative isolate flex min-h-[80svh] w-full items-start overflow-hidden px-4 pb-8 pt-6 sm:min-h-[80vh] sm:px-6 sm:pb-10 sm:pt-10"
+        className="relative isolate flex min-h-[95svh] w-full items-start overflow-hidden px-4 pb-8 pt-6 sm:min-h-[80vh] sm:px-6 sm:pb-10 sm:pt-10"
       >
         <div className="site-container relative z-10">
           <PageHeader
