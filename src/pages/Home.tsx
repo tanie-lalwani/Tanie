@@ -1,36 +1,40 @@
 import { motion, useScroll, useTransform } from "framer-motion"
 import { Link } from "react-router-dom"
 import PageHeader from "../components/PageHeader"
-import { ProjectsCarousel, type Project } from "../components/ProjectsCarousel"
+import { ProjectsCarousel } from "../components/ProjectsCarousel"
 import { ContactForm } from "../components/ContactForm"
 import GlobalOceanBackdrop from "../experience/Scenes/GlobalOceanBackdrop"
 import { useIsMobile } from "../hooks/useIsMobile"
 import type { TimePhase } from "../experience/timePhase"
 
+type Project = {
+  title: string
+  description: string
+  techStack: string[]
+  site: string
+}
+
 const PROJECTS: Project[] = [
   {
-    client: "Brightlane",
-    role: "Founder",
-    project: "SaaS Dashboard Redesign",
+    title: "SaaS Dashboard Redesign — Brightlane",
+    description:
+      "This project explores interactive frontend development with a focus on usability, motion, performance, and modern web experiences using React and TypeScript.",
+    techStack: ["React", "TypeScript", "CSS"],
     site: "https://brightlane.example",
-    quote: "The product finally feels obvious to first-time users.",
-    outcome: "Onboarding clarity improved and support friction dropped in early sessions.",
   },
   {
-    client: "FinchPay",
-    role: "Product Team",
-    project: "Checkout Performance Overhaul",
+    title: "Checkout Performance Overhaul — FinchPay",
+    description:
+      "This project explores interactive frontend development with a focus on usability, motion, performance, and modern web experiences using React and TypeScript.",
+    techStack: ["React", "TypeScript", "Node.js"],
     site: "https://finchpay.example",
-    quote: "We saw a noticeable lift in successful completions after launch.",
-    outcome: "Payment flow became clearer and completion quality improved across mobile.",
   },
   {
-    client: "Leafline",
-    role: "CTO",
-    project: "Marketing Site Rebuild",
+    title: "Marketing Site Rebuild — Leafline",
+    description:
+      "This project explores interactive frontend development with a focus on usability, motion, performance, and modern web experiences using React and TypeScript.",
+    techStack: ["React", "TypeScript", "Design"],
     site: "https://leafline.example",
-    quote: "The new site tells the story in half the clicks.",
-    outcome: "Storytelling sharpened with a cleaner path from landing to conversion.",
   },
 ]
 
@@ -77,8 +81,8 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
               I'm Tanie!
             </h1>
 
-            <p className="mt-4 max-w-xl text-sm leading-relaxed text-blue-950 sm:text-base">
-              I make animated experiences and practical solutions. Scroll to see my work or jump to the contact form.
+            <p className="mt-5 max-w-2xl text-sm leading-relaxed text-blue-950 sm:text-base">
+              I’m Tanisha Lalwani (Tanie), a creative developer and full-stack web developer building interactive websites, immersive web experiences, and modern web applications. Scroll to see my work or jump to the contact section.
             </p>
           </div>
         </motion.div>
@@ -86,21 +90,21 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
 
       <section
         id="projects"
-        className="relative isolate flex min-h-[95svh] w-full items-start overflow-hidden px-4 pb-8 pt-6 sm:min-h-[80vh] sm:px-6 sm:pb-10 sm:pt-10"
+        className="relative isolate flex min-h-[88svh] w-full items-start overflow-hidden px-4 pb-7 pt-6 sm:min-h-[76vh] sm:px-6 sm:pb-9 sm:pt-9"
       >
         <div className="site-container relative z-10">
           <PageHeader
             eyebrow=""
             title="Built so far."
             description=""
-            className="[&_h1]:text-4xl [&_h1]:font-bold [&_h1]:tracking-tight [&_h1]:text-white sm:[&_h1]:text-5xl md:[&_h1]:text-6xl lg:[&_h1]:text-7xl"
+            className="mb-4 max-w-2xl [&_h2]:text-3xl [&_h2]:font-semibold [&_h2]:tracking-tight [&_h2]:text-white/94 sm:[&_h2]:text-4xl md:[&_h2]:text-5xl"
           />
 
-          <div className="mt-4 flex flex-wrap gap-2">
+          <div className="mt-3 flex flex-wrap gap-1.5">
             {"React, TypeScript, Three.js, Node.js".split(", ").map((tech) => (
               <span
                 key={tech}
-                className="rounded-full border border-white/14 bg-white/8 px-2 py-0.5 text-[9px] font-semibold uppercase tracking-[0.14em] text-white/75"
+                className="rounded-full border border-white/10 bg-white/5 px-2 py-0.5 text-[8px] font-medium uppercase tracking-[0.16em] text-white/48"
               >
                 {tech}
               </span>
@@ -115,46 +119,56 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
 
       <section
         id="about"
-        className="relative isolate flex min-h-[95svh] w-full items-start overflow-hidden px-4 pb-8 pt-6 sm:min-h-[80vh] sm:px-6 sm:pb-10 sm:pt-10"
+        className="relative isolate flex min-h-[88svh] w-full items-start overflow-hidden px-4 pb-7 pt-6 sm:min-h-[76vh] sm:px-6 sm:pb-9 sm:pt-9"
       >
         <div className="site-container relative z-10">
           <PageHeader
             eyebrow=""
-            title="Hey there!"
+            title="About me."
             description=""
-            className="[&_h1]:text-4xl [&_h1]:font-bold [&_h1]:tracking-tight [&_h1]:text-white sm:[&_h1]:text-5xl md:[&_h1]:text-6xl lg:[&_h1]:text-7xl"
+            className="mb-3 max-w-xl [&_h2]:text-3xl [&_h2]:font-semibold [&_h2]:tracking-tight [&_h2]:text-white/94 sm:[&_h2]:text-4xl md:[&_h2]:text-5xl"
           />
 
-          <h2 className="mt-2 max-w-2xl text-xs font-medium tracking-[0.12em] !text-slate-200/40 sm:text-sm">
-            About Tanisha Lalwani (Tanie) :   Creative Developer
-          </h2>
+          <p className="mt-1 max-w-lg text-[10px] font-medium uppercase tracking-[0.18em] text-slate-200/34 sm:text-[11px]">
+            Creative Developer · Full-Stack & Frontend Web Developer
+          </p>
 
-          <div className="relative mb-6 flex flex-wrap items-center justify-between gap-2.5 border-b border-white/12 pb-3 sm:mb-8" />
+          <div className="relative mb-4 flex flex-wrap items-center justify-between gap-2.5 border-b border-white/8 pb-2.5 sm:mb-5" />
 
-          <div className="mt-6 grid gap-8 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:items-center">
+          <div className="mt-5 grid gap-6 lg:grid-cols-[minmax(0,1.05fr)_minmax(18rem,0.85fr)] lg:items-center">
             <div>
-              <p className="text-sm leading-relaxed text-white/90 sm:text-base">
-                Hi, I’m Tanisha Lalwani (Tanie), a full-stack developer and 3D website developer building interactive
-                websites and modern web applications. I create immersive digital experiences, portfolio websites, and
-                practical products with a focus on performance, usability, and clean design. I’m open to working on
-                creative and business projects, helping turn ideas into fast, engaging websites and apps.
+              <p className="max-w-[36rem] text-[0.82rem] leading-6 text-white/62 sm:text-sm">
+                Hi, I’m Tanisha Lalwani (Tanie), a creative developer, full-stack developer, and frontend web developer building interactive websites and modern web applications. I create immersive digital experiences, portfolio websites, and practical products with a focus on usability, performance, and thoughtful interaction design. Using React, TypeScript, Node.js, and Three.js, I enjoy turning ideas into engaging and technically strong web experiences. I’m open to working on creative, portfolio, and business web projects.
               </p>
 
-              <div className="mt-6">
-                <Link
-                  to="/qna"
-                  className="ui-button-link animate-pulse"
-                >
+              <div className="mt-4 flex max-w-xl flex-wrap gap-1.5">
+                {[
+                  "React",
+                  "TypeScript",
+                  "Three.js",
+                  "Node.js",
+                  "Frontend Development",
+                  "Interactive Websites",
+                ].map((t) => (
+                  <span key={t} className="rounded-full border border-white/9 bg-white/4 px-2 py-0.5 text-[10px] font-medium text-sky-100/50">
+                    {t}
+                  </span>
+                ))}
+              </div>
+
+              <div className="mt-4">
+                <Link to="/qna" className="ui-button-link">
                   Know more
                 </Link>
               </div>
             </div>
 
             <div
-              className="relative h-64 w-full overflow-hidden rounded-3xl border border-white/12 bg-white/5 sm:h-72"
+              className="relative h-56 w-full overflow-hidden rounded-2xl border border-white/10 bg-white/5 sm:h-64"
               aria-label="About me image placeholder"
             >
-              <div className="absolute inset-0 grid place-items-center text-xs font-semibold uppercase tracking-[0.22em] text-white/60">
+              <div className="absolute inset-0 bg-linear-to-br from-white/9 via-sky-100/5 to-slate-950/20" />
+              <div className="absolute inset-0 grid place-items-center text-xs font-semibold uppercase tracking-[0.22em] text-white/55">
                 Image Placeholder
               </div>
             </div>
@@ -164,21 +178,21 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
 
       <section
         id="contact"
-        className="relative isolate flex min-h-[calc(100svh-2.75rem)] w-full items-start overflow-hidden px-4 pb-8 pt-16 sm:min-h-[calc(100vh-3rem)] sm:px-6 sm:pb-14 sm:pt-24"
+        className="relative isolate flex min-h-[90svh] w-full items-start overflow-hidden px-4 pb-8 pt-12 sm:min-h-[86vh] sm:px-6 sm:pb-12 sm:pt-16"
       >
         <div className="site-container relative z-10">
           <PageHeader
             eyebrow=""
             title="Let's build something."
             description=""
-            className="[&_h1]:text-4xl [&_h1]:font-bold [&_h1]:tracking-tight [&_h1]:text-white sm:[&_h1]:text-5xl md:[&_h1]:text-6xl lg:[&_h1]:text-7xl"
+            className="mb-3 max-w-2xl [&_h2]:text-3xl [&_h2]:font-semibold [&_h2]:tracking-tight [&_h2]:text-white/94 sm:[&_h2]:text-4xl md:[&_h2]:text-5xl"
           />
 
-          <h2 className="mt-2 max-w-2xl text-xs font-medium tracking-[0.12em] !text-slate-200/40 sm:text-sm">
-            Open to work with your projects
-          </h2>
+          <p className="mt-4 max-w-xl text-xs font-medium text-slate-200/36 sm:text-sm">
+            Open to creative, portfolio, and business web projects.
+          </p>
 
-          <div className="relative mb-4 flex flex-wrap items-center justify-between gap-2.5 border-b border-white/12 pb-3 sm:mb-5" />
+          <div className="relative mb-5 flex flex-wrap items-center justify-between gap-2.5 border-b border-white/10 pb-3 sm:mb-5" />
 
           <ContactForm />
         </div>

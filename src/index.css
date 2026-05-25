@@ -49,7 +49,7 @@ h4,
 h5,
 h6 {
 	font-family: var(--font-display);
-	letter-spacing: -0.03em;
+	letter-spacing: -0.02em;
 	color: var(--color-text-heading);
 }
 
@@ -84,44 +84,73 @@ a:hover, .text-link:hover {
 	}
 
 	.section-eyebrow {
-		@apply inline-flex text-[11px] font-semibold uppercase tracking-[0.2em] text-sky-200/78;
+		@apply inline-flex text-[10px] font-medium uppercase tracking-[0.2em] text-sky-200/55;
 	}
 
 	.section-title {
-		@apply mt-3 text-3xl font-semibold tracking-tight text-white sm:text-4xl lg:text-5xl;
+		@apply mt-3 text-3xl font-semibold tracking-tight text-white/94 sm:text-4xl lg:text-5xl;
 	}
 
 	.section-copy {
-		@apply mt-3 max-w-2xl text-sm leading-relaxed text-sky-100/78 sm:text-base;
+		@apply mt-3 max-w-xl text-sm leading-6 text-sky-100/56;
 	}
 
 	.surface-panel {
-		@apply rounded-[1.75rem] border border-white/12 bg-slate-950/34 backdrop-blur-xl;
+		@apply rounded-2xl border border-white/10 bg-slate-950/30 backdrop-blur-xl;
 	}
 
 	.surface-panel-soft {
-		@apply rounded-2xl border border-white/10 bg-slate-950/24 backdrop-blur-lg;
+		@apply rounded-2xl border border-white/8 bg-slate-950/18 backdrop-blur-lg;
 	}
 
 	.ui-label {
-		@apply text-xs font-semibold tracking-wide text-sky-100;
+		@apply text-xs font-semibold tracking-wide text-sky-100/76;
 	}
 
 	.ui-input {
-		@apply rounded-xl border border-white/16 bg-white/10 px-3.5 py-2.5 text-sm text-sky-50 outline-none transition placeholder:text-sky-100/45 focus:border-sky-300/55 focus:ring-2 focus:ring-sky-300/25;
+		@apply rounded-xl border border-white/16 bg-white/10 px-4 py-2.5 text-sm text-sky-50/88 outline-none transition placeholder:text-sky-100/40 focus:border-sky-300/55 focus:ring-2 focus:ring-sky-300/25;
 	}
 
 	.ui-button-primary {
-		@apply inline-flex items-center justify-center rounded-full border border-sky-300/80 bg-[#b9d8ef]/95 px-5 py-2 text-sm font-medium text-[#243b6b] transition hover:bg-[#c8e4f7] hover:text-[#243b6b] focus:outline-none focus:ring-2 focus:ring-sky-300 disabled:cursor-not-allowed disabled:opacity-70;
+		@apply inline-flex items-center justify-center rounded-full border border-sky-300/80 bg-[#b9d8ef]/95 px-4 py-1.5 text-xs font-medium text-[#243b6b] transition hover:bg-[#c8e4f7] hover:text-[#243b6b] focus:outline-none focus:ring-2 focus:ring-sky-300 disabled:cursor-not-allowed disabled:opacity-70;
 	}
 
 	.ui-button-link {
-		@apply inline-flex items-center justify-center rounded-full border border-sky-300/80 bg-[#b9d8ef]/95 px-5 py-2 text-sm font-medium text-black transition hover:bg-[#c8e4f7] hover:text-black focus:outline-none focus:ring-2 focus:ring-sky-300 disabled:cursor-not-allowed disabled:opacity-70 no-underline w-full sm:w-auto;
+		@apply inline-flex items-center justify-center rounded-full border border-sky-300/55 bg-[#b9d8ef]/82 px-4 py-1.5 text-xs font-medium text-black transition hover:bg-[#c8e4f7] hover:text-black focus:outline-none focus:ring-2 focus:ring-sky-300 disabled:cursor-not-allowed disabled:opacity-70 no-underline w-full sm:w-auto;
 	}
 
 	.ui-icon-button {
-		@apply flex items-center justify-center rounded-full border border-white/16 bg-white/10 text-white backdrop-blur transition hover:bg-white/18 disabled:cursor-not-allowed disabled:opacity-35;
+		@apply flex items-center justify-center rounded-full border border-white/12 bg-white/7 text-white/72 backdrop-blur transition hover:bg-white/12 hover:text-white disabled:cursor-not-allowed disabled:opacity-35;
+	}
+
+	.copy-clamp {
+		display: -webkit-box;
+		-webkit-box-orient: vertical;
+		-webkit-line-clamp: 3;
+		overflow: hidden;
+	}
+
+	.project-visual {
+		background:
+			radial-gradient(circle at 50% 55%, rgba(205, 230, 245, 0.12), transparent 34%),
+			linear-gradient(135deg, rgba(9, 29, 43, 0.72), rgba(3, 9, 20, 0.88));
+	}
+
+	.project-scroll {
+		scrollbar-width: thin;
+		scrollbar-color: rgba(226, 242, 255, 0.22) transparent;
+	}
+
+	.project-scroll::-webkit-scrollbar {
+		height: 0.45rem;
+	}
+
+	.project-scroll::-webkit-scrollbar-track {
+		background: transparent;
+	}
+
+	.project-scroll::-webkit-scrollbar-thumb {
+		background: rgba(226, 242, 255, 0.18);
+		border-radius: 999px;
 	}
 }
-
-

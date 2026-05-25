@@ -51,44 +51,43 @@ type SiteFooterProps = {
 
 export default function SiteFooter({ className = "" }: SiteFooterProps) {
   return (
-    <footer className={`relative z-20 w-full border-t border-white/10 bg-slate-950/72 px-4 py-6 backdrop-blur-xl sm:px-6 sm:py-8 ${className}`}>
+    <footer className={`relative z-20 w-full border-t border-white/8 bg-slate-950/56 px-4 py-5 backdrop-blur-xl sm:px-6 sm:py-6 ${className}`}>
       <div className="site-container">
-        <div className="h-px w-full bg-linear-to-r from-transparent via-white/14 to-transparent" />
-        <div className="mt-6 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        <div className="h-px w-full bg-linear-to-r from-transparent via-white/10 to-transparent" />
+        <div className="mt-5 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div>
-            <p className="text-sm font-semibold tracking-tight text-white" style={{ fontFamily: "var(--font-display)" }}>
-              Tanie
+            <p className="text-sm font-semibold tracking-tight text-white/92" style={{ fontFamily: "var(--font-display)" }}>
+              Tanisha Lalwani (Tanie)
             </p>
-            <p className="mt-2 max-w-xs text-sm leading-relaxed text-sky-100/72">Creative developer : Full-stack & Three.js</p>
+            <p className="mt-1 text-xs font-medium text-sky-100/58">Creative Developer · Full-Stack & Frontend Web Developer</p>
+            <p className="mt-2 max-w-xs text-xs leading-5 text-sky-100/44">Building interactive websites and immersive web experiences.</p>
+            <p className="mt-2 text-[11px] text-sky-100/36">React · TypeScript · Three.js · Node.js</p>
           </div>
-          <div className="grid grid-cols-2 gap-3 gap-x-4 sm:gap-x-8">
+          <div className="grid grid-cols-2 gap-2 gap-x-4 sm:gap-x-6">
             {SOCIALS.map((social) => (
               <a
                 key={social.label}
                 href={social.href}
                 target={social.href.startsWith("mailto") ? undefined : "_blank"}
                 rel={social.href.startsWith("mailto") ? undefined : "noopener noreferrer"}
-                className="group flex items-center gap-3 !no-underline text-sky-50 transition hover:!no-underline hover:text-white"
+                className="group flex items-center gap-2.5 !no-underline text-sky-50/62 transition hover:!no-underline hover:text-white"
               >
-                <span className="flex h-8 w-8 items-center justify-center rounded-lg border border-white/10 bg-white/8 text-sky-50 transition group-hover:border-sky-200/35 group-hover:bg-white/12">
+                <span className="flex h-7 w-7 items-center justify-center rounded-md border border-white/8 bg-white/5 text-sky-50/72 transition group-hover:border-sky-200/28 group-hover:bg-white/10">
                   {social.icon}
                 </span>
-                <span className="text-xs font-semibold tracking-wide leading-none">{social.label}</span>
+                <span className="text-[11px] font-medium tracking-wide leading-none">{social.label}</span>
               </a>
             ))}
           </div>
         </div>
-        <div className="mt-6 h-px w-full bg-linear-to-r from-transparent via-white/12 to-transparent" />
-        <p className="mt-3 text-center text-[11px] text-sky-100/68">
-          &copy; 2026 Tanisha Lalwani. Made with Three.js and TypeScript.
+        <div className="mt-5 h-px w-full bg-linear-to-r from-transparent via-white/8 to-transparent" />
+        <p className="mt-3 text-center text-[10px] text-sky-100/42">
+          © 2026 Tanisha Lalwani. Built with Three.js and TypeScript.
         </p>
       </div>
     </footer>
   )
 }
-
-
-
 
 
 

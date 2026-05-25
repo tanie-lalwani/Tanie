@@ -14,9 +14,9 @@ export default function PageHeader({ eyebrow, title, description, className = ""
         </p>
       ) : null}
       {title ? (
-        <h1 className="section-title" style={{ fontFamily: 'var(--font-display)' }}>
+        <h2 className="section-title" style={{ fontFamily: 'var(--font-display)' }}>
           {title}
-        </h1>
+        </h2>
       ) : null}
       {description ? (
         <p className="section-copy">
