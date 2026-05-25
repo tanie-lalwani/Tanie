@@ -59,7 +59,7 @@ export default function SiteFooter({ className = "" }: SiteFooterProps) {
             <p className="text-sm font-semibold tracking-tight text-white" style={{ fontFamily: "var(--font-display)" }}>
               Tanie
             </p>
-            <p className="mt-1 max-w-xs text-sm leading-relaxed text-sky-100/72">Full stack developer.</p>
+            <p className="mt-2 max-w-xs text-sm leading-relaxed text-sky-100/72">Creative developer : Full-stack & Three.js</p>
           </div>
           <div className="grid grid-cols-2 gap-3 gap-x-4 sm:gap-x-8">
             {SOCIALS.map((social) => (

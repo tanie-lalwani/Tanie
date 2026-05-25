@@ -96,6 +96,17 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
             className="[&_h1]:text-4xl [&_h1]:font-bold [&_h1]:tracking-tight [&_h1]:text-white sm:[&_h1]:text-5xl md:[&_h1]:text-6xl lg:[&_h1]:text-7xl"
           />
 
+          <div className="mt-4 flex flex-wrap gap-2">
+            {"React, TypeScript, Three.js, Node.js".split(", ").map((tech) => (
+              <span
+                key={tech}
+                className="rounded-full border border-white/14 bg-white/8 px-2 py-0.5 text-[9px] font-semibold uppercase tracking-[0.14em] text-white/75"
+              >
+                {tech}
+              </span>
+            ))}
+          </div>
+
           <div className="relative w-full">
             <ProjectsCarousel projects={PROJECTS} />
           </div>
@@ -109,12 +120,16 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
         <div className="site-container relative z-10">
           <PageHeader
             eyebrow=""
-            title="About me."
+            title="Hey there!"
             description=""
             className="[&_h1]:text-4xl [&_h1]:font-bold [&_h1]:tracking-tight [&_h1]:text-white sm:[&_h1]:text-5xl md:[&_h1]:text-6xl lg:[&_h1]:text-7xl"
           />
 
-          <div className="relative mb-4 flex flex-wrap items-center justify-between gap-2.5 border-b border-white/12 pb-3 sm:mb-5" />
+          <h2 className="mt-2 max-w-2xl text-xs font-medium tracking-[0.12em] !text-slate-200/40 sm:text-sm">
+            About Tanisha Lalwani (Tanie) :   Creative Developer
+          </h2>
+
+          <div className="relative mb-6 flex flex-wrap items-center justify-between gap-2.5 border-b border-white/12 pb-3 sm:mb-8" />
 
           <div className="mt-6 grid gap-8 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:items-center">
             <div>
@@ -158,6 +173,10 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
             description=""
             className="[&_h1]:text-4xl [&_h1]:font-bold [&_h1]:tracking-tight [&_h1]:text-white sm:[&_h1]:text-5xl md:[&_h1]:text-6xl lg:[&_h1]:text-7xl"
           />
+
+          <h2 className="mt-2 max-w-2xl text-xs font-medium tracking-[0.12em] !text-slate-200/40 sm:text-sm">
+            Open to work with your projects
+          </h2>
 
           <div className="relative mb-4 flex flex-wrap items-center justify-between gap-2.5 border-b border-white/12 pb-3 sm:mb-5" />
 
