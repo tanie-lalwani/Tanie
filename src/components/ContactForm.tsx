@@ -78,12 +78,12 @@ export function ContactForm() {
   return (
     <motion.form
       onSubmit={handleSubmit}
-      className="surface-panel relative mx-auto w-full max-w-5xl space-y-4 p-5 sm:space-y-5 sm:p-6"
+      className="surface-panel relative mx-auto w-full max-w-5xl space-y-3.5 p-5 sm:p-6"
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.45, ease: "easeOut" }}
     >
-      <label className="flex flex-col gap-1">
+      <label className="flex flex-col gap-1.5">
         <span className="ui-label">Name</span>
         <input
           type="text"
@@ -96,7 +96,7 @@ export function ContactForm() {
         />
       </label>
 
-      <label className="flex flex-col gap-1">
+      <label className="flex flex-col gap-1.5">
         <span className="ui-label">Email</span>
         <input
           type="email"
@@ -109,7 +109,7 @@ export function ContactForm() {
         />
       </label>
 
-      <label className="flex flex-col gap-1">
+      <label className="flex flex-col gap-1.5">
         <span className="ui-label">Subject</span>
         <input
           type="text"
@@ -121,15 +121,15 @@ export function ContactForm() {
         />
       </label>
 
-      <label className="flex flex-col gap-1">
+      <label className="flex flex-col gap-1.5">
         <span className="ui-label">Message</span>
         <textarea
           name="message"
           required
           value={fields.message}
           onChange={(event) => updateField("message", event.target.value)}
-          rows={5}
-          className="ui-input min-h-32 resize-y"
+          rows={4}
+          className="ui-input min-h-28 resize-y"
           placeholder="Tell me about your project..."
         />
       </label>
