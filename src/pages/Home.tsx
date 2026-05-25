@@ -89,35 +89,6 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
       </motion.section>
 
       <section
-        id="projects"
-        className="relative isolate flex min-h-[88svh] w-full items-start overflow-hidden px-4 pb-7 pt-6 sm:min-h-[76vh] sm:px-6 sm:pb-9 sm:pt-9"
-      >
-        <div className="site-container relative z-10">
-          <PageHeader
-            eyebrow=""
-            title="Built so far."
-            description=""
-            className="mb-4 max-w-2xl [&_h2]:text-3xl [&_h2]:font-semibold [&_h2]:tracking-tight [&_h2]:text-white/94 sm:[&_h2]:text-4xl md:[&_h2]:text-5xl"
-          />
-
-          <div className="mt-3 flex flex-wrap gap-1.5">
-            {"React, TypeScript, Three.js, Node.js".split(", ").map((tech) => (
-              <span
-                key={tech}
-                className="rounded-full border border-white/10 bg-white/5 px-2 py-0.5 text-[8px] font-medium uppercase tracking-[0.16em] text-white/48"
-              >
-                {tech}
-              </span>
-            ))}
-          </div>
-
-          <div className="relative w-full">
-            <ProjectsCarousel projects={PROJECTS} />
-          </div>
-        </div>
-      </section>
-
-      <section
         id="about"
         className="relative isolate flex min-h-[88svh] w-full items-start overflow-hidden px-4 pb-7 pt-6 sm:min-h-[76vh] sm:px-6 sm:pb-9 sm:pt-9"
       >
@@ -177,8 +148,37 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
       </section>
 
       <section
+        id="projects"
+        className="relative isolate flex min-h-[88svh] w-full items-start overflow-hidden px-4 pb-7 pt-6 sm:min-h-[76vh] sm:px-6 sm:pb-9 sm:pt-9"
+      >
+        <div className="site-container relative z-10">
+          <PageHeader
+            eyebrow=""
+            title="Built so far."
+            description=""
+            className="mb-4 max-w-2xl [&_h2]:text-3xl [&_h2]:font-semibold [&_h2]:tracking-tight [&_h2]:text-white/94 sm:[&_h2]:text-4xl md:[&_h2]:text-5xl"
+          />
+
+          <div className="mt-3 flex flex-wrap gap-1.5">
+            {"React, TypeScript, Three.js, Node.js".split(", ").map((tech) => (
+              <span
+                key={tech}
+                className="rounded-full border border-white/10 bg-white/5 px-2 py-0.5 text-[8px] font-medium uppercase tracking-[0.16em] text-white/48"
+              >
+                {tech}
+              </span>
+            ))}
+          </div>
+
+          <div className="relative w-full">
+            <ProjectsCarousel projects={PROJECTS} />
+          </div>
+        </div>
+      </section>
+
+      <section
         id="contact"
-        className="relative isolate flex min-h-[90svh] w-full items-start overflow-hidden px-4 pb-8 pt-12 sm:min-h-[86vh] sm:px-6 sm:pb-12 sm:pt-16"
+        className="relative isolate flex min-h-[88svh] w-full items-start overflow-hidden px-4 pb-7 pt-6 sm:min-h-[76vh] sm:px-6 sm:pb-9 sm:pt-9"
       >
         <div className="site-container relative z-10">
           <PageHeader

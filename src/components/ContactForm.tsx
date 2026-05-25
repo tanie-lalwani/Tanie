@@ -78,7 +78,7 @@ export function ContactForm() {
   return (
     <motion.form
       onSubmit={handleSubmit}
-      className="surface-panel relative mx-auto w-full max-w-5xl space-y-3.5 p-5 sm:p-6"
+      className="surface-panel relative w-full space-y-3 p-4 sm:p-5"
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.45, ease: "easeOut" }}
@@ -128,8 +128,8 @@ export function ContactForm() {
           required
           value={fields.message}
           onChange={(event) => updateField("message", event.target.value)}
-          rows={4}
-          className="ui-input min-h-28 resize-y"
+          rows={3}
+          className="ui-input min-h-24 resize-y"
           placeholder="Tell me about your project..."
         />
       </label>
