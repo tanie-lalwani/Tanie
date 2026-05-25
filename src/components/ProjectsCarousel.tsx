@@ -45,7 +45,7 @@ export function ProjectsCarousel({ projects }: ProjectsCarouselProps) {
   return (
     <div className="relative w-full">
       <div className="relative mb-4 flex flex-wrap items-center justify-between gap-2.5 border-b border-white/12 pb-3 sm:mb-5">
-        <p className="section-eyebrow">
+        <p className="section-eyebrow ml-auto">
           {String(activeIndex + 1).padStart(2, "0")} / {String(projects.length).padStart(2, "0")}
         </p>
       </div>
