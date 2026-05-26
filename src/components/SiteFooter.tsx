@@ -69,7 +69,7 @@ export default function SiteFooter({ className = "" }: SiteFooterProps) {
                 key={social.label}
                 href={social.href}
                 target={social.href.startsWith("mailto") ? undefined : "_blank"}
-                rel={social.href.startsWith("mailto") ? undefined : "noopener noreferrer"}
+                rel={social.href.startsWith("mailto") ? undefined : "me noopener noreferrer"}
                 className="group flex items-center gap-2.5 !no-underline text-sky-50/62 transition hover:!no-underline hover:text-white"
               >
                 <span className="flex h-7 w-7 items-center justify-center rounded-md border border-white/8 bg-white/5 text-sky-50/72 transition group-hover:border-sky-200/28 group-hover:bg-white/10">
@@ -88,7 +88,6 @@ export default function SiteFooter({ className = "" }: SiteFooterProps) {
     </footer>
   )
 }
-
 
 
 

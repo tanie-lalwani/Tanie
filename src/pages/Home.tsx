@@ -77,11 +77,11 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
               className="mt-4 text-4xl font-bold tracking-tight text-white sm:text-5xl md:text-6xl lg:text-7xl"
               style={{ fontFamily: "var(--font-display)" }}
             >
-              I’m Tanie!
+              Tanie
             </h1>
 
             <p className="mt-5 max-w-2xl text-sm leading-relaxed text-blue-950 sm:text-base">
-              I’m Tanie, a 3D developer, creative developer, and full stack developer making interactive websites, 3D/immersive web experiences, and modern web applications. I share work on GitHub at taniemp3 and build with React, TypeScript, Three.js, and Node.js.
+              I’m Tanie, also known as tanie.mp3. This is my official site, tanie.me, where I share 3D development, creative development, full stack projects, GitHub work at taniemp3, and Instagram work at tanie.mp3.
             </p>
           </div>
         </motion.div>
@@ -108,14 +108,17 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
           <div className="mt-5 grid gap-6 lg:grid-cols-[minmax(0,1.05fr)_minmax(18rem,0.85fr)] lg:items-center">
             <div>
               <p className="max-w-[36rem] text-[0.82rem] leading-6 text-white/62 sm:text-sm">
-                Hi, I’m Tanie, also known as tanie.mp3. I’m a 3D developer, creative developer, and full stack developer making interactive websites, immersive web experiences, and modern web applications. I create practical products with a focus on usability, performance, and thoughtful interaction design. Using React, TypeScript, Node.js, Three.js, and GitHub workflows, I turn ideas into engaging and technically strong web experiences. I’m open to creative, portfolio, and business web projects. Check out my qna above or scroll down to see some of my work!
+                Hi, I’m Tanie, also known as tanie.mp3 and Tanisha Lalwani. I’m a 3D developer, creative developer, and full stack developer making interactive websites, immersive web experiences, and modern web applications. I create practical products with a focus on usability, performance, and thoughtful interaction design. Using React, TypeScript, Node.js, Three.js, and GitHub workflows, I turn ideas into engaging and technically strong web experiences. I’m open to creative, portfolio, and business web projects. Check out my qna above or scroll down to see some of my work!
               </p>
 
               <div className="mt-4 flex max-w-xl flex-wrap gap-1.5">
                 {[
                   "tanie.mp3",
+                  "tanie mp3",
+                  "tanie.me",
                   "Tanie",
                   "Tanisha Lalwani",
+                  "taniemp3",
                   "3D Developer",
                   "React",
                   "TypeScript",
