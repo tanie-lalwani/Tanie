@@ -2,14 +2,14 @@
 
 ## Overview
 
-This portfolio site is fully optimized for search engine visibility, particularly for the search query **"tanisha lalwani"** and related developer searches.
+This portfolio site is fully optimized for search engine visibility, particularly for the search query **"tanie.mp3"** and related developer searches.
 
 ## Search Optimization
 
 ### Primary Keywords
 
-- **Tanisha Lalwani** — Full name search
-- **Tanie** — Common alias
+- **tanie.mp3** — Primary identity
+- **Tanie** — Secondary alias
 - **Full Stack Developer** — Professional title
 - **React Developer** — Technology expertise
 - **TypeScript Developer** — Technology expertise
@@ -21,7 +21,7 @@ This portfolio site is fully optimized for search engine visibility, particularl
 #### Page Title
 
 ```
-Tanisha Lalwani (Tanie) | Full Stack Developer
+tanie.mp3 | creative developer & internet builder
 ```
 
 - Includes full name + alias + profession
@@ -31,7 +31,7 @@ Tanisha Lalwani (Tanie) | Full Stack Developer
 #### Meta Description
 
 ```
-Portfolio of Tanisha Lalwani (Tanie), a full stack developer building clear, fast web experiences with strong UI craft and practical execution.
+Portfolio of tanie.mp3, a creative developer building clear, fast web experiences with strong UI craft and practical execution.
 ```
 
 - 160 characters (optimal length for search results)
@@ -41,10 +41,10 @@ Portfolio of Tanisha Lalwani (Tanie), a full stack developer building clear, fas
 #### Keywords Meta Tag
 
 ```
-Tanisha Lalwani, Tanie, full stack developer, web developer, portfolio, React, TypeScript, Three.js, UI design
+tanie.mp3, Tanie, creative developer, web developer, portfolio, React, TypeScript, Three.js, UI design
 ```
 
-- Primary term: "Tanisha Lalwani"
+- Primary term: "tanie.mp3"
 - Secondary terms: Related technologies and skills
 - Long-tail variations
 
@@ -55,11 +55,9 @@ The site uses JSON-LD schema for rich snippets:
 ```json
 {
   "@type": "Person",
-  "name": "Tanisha Lalwani",
-  "givenName": "Tanisha",
-  "familyName": "Lalwani",
+  "name": "tanie.mp3",
   "alternateName": ["Tanie", "taniehq"],
-  "jobTitle": "Full Stack Developer",
+  "jobTitle": "Creative Developer",
   "url": "https://tanie.me/",
   "image": "https://tanie.me/favicon.png",
   "description": "Full stack developer..."
@@ -224,7 +222,7 @@ All images include descriptive alt text:
 
 ### Key Metrics to Track
 
-- Average position for "tanisha lalwani"
+- Average position for "tanie.mp3"
 - Organic impressions & CTR
 - Pages per session
 - Bounce rate
@@ -257,7 +255,7 @@ All images include descriptive alt text:
    - Similar verification process
 
 3. **Monitor Rankings**
-   - Track "tanisha lalwani" position
+   - Track "tanie.mp3" position
    - Monitor monthly for changes
 
 4. **Optimize Content**
