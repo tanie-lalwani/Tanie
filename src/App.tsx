@@ -107,18 +107,19 @@ export default function App() {
   const isWaitingForOceanScene = location.pathname === "/" && readyOceanLocationKey !== location.key;
 
   return (
-    <main
-      data-phase="default"
-      className="relative flex min-h-screen w-full flex-col overflow-x-hidden text-sky-950"
+  <main
+    data-phase="default"
+    className={`relative flex min-h-screen w-full flex-col overflow-x-hidden text-sky-950 ${showNavbar ? "pt-9" : ""}`}
     >
       <div className="relative z-10 flex-1">
         <AnimatePresence mode="wait">
           {showNavbar ? (
             <motion.div
-              key="navbar"
-              initial={{ opacity: 0, y: -12 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -12 }}
+            key="navbar"
+            className="fixed left-0 top-0 z-50 w-full"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
               transition={{ duration: 0.24, ease: [0.22, 1, 0.36, 1] }}
             >
               <Navbar phase={timePhase} />
