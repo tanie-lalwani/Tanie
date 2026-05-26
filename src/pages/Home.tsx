@@ -101,7 +101,7 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
             className="mb-3 max-w-xl [&_h2]:text-3xl [&_h2]:font-semibold [&_h2]:tracking-tight [&_h2]:text-white/94 sm:[&_h2]:text-4xl md:[&_h2]:text-5xl"
           />
 
-          <p className="mt-1 max-w-lg text-[10px] font-medium uppercase tracking-[0.18em] text-slate-200/34 sm:text-[11px]">
+          <p className="mt-1 max-w-lg text-[10px] font-medium uppercase tracking-[0.18em] text-black sm:text-[11px]">
             Creative Developer · Full-Stack Web Developer · Creator
           </p>
 
@@ -109,7 +109,7 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
 
           <div className="mt-5 grid gap-6 lg:grid-cols-[minmax(0,1.05fr)_minmax(18rem,0.85fr)] lg:items-center">
             <div>
-              <p className="max-w-[36rem] text-[0.82rem] leading-6 text-white/62 sm:text-sm">
+              <p className="max-w-[36rem] text-[0.82rem] leading-6 text-black sm:text-sm">
                 Tanie Lalwani is a creative developer and builder focused on interactive web experiences, thoughtful interfaces, and modern digital products. Working across frontend and full-stack development, she enjoys turning ideas into experiences that feel intuitive, immersive, and genuinely enjoyable to use.
               </p>
 
@@ -128,6 +128,11 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
                     {t}
                   </span>
                 ))}
+              </div>
+              <div className="mt-4">
+                <a href="https://www.google.com/search?q=tanie+lalwani" target="_blank" rel="noopener noreferrer" className="text-sm font-semibold underline">
+                  Know more
+                </a>
               </div>
             </div>
 
