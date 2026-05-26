@@ -110,7 +110,7 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
           <div className="mt-5 grid gap-6 lg:grid-cols-[minmax(0,1.05fr)_minmax(18rem,0.85fr)] lg:items-center">
             <div>
               <p className="max-w-[36rem] text-[0.82rem] leading-6 text-black sm:text-sm">
-                Tanie Lalwani is a creative developer and builder focused on interactive web experiences, thoughtful interfaces, and modern digital products. Working across frontend and full-stack development, she enjoys turning ideas into experiences that feel intuitive, immersive, and genuinely enjoyable to use.
+                I'm Tanie Lalwani, a creative developer and full stack developer focused on interactive web experiences, thoughtful interfaces, and modern digital products. Check out qna with me above or scroll to see some of my work and get in touch!
               </p>
 
               <div className="mt-4 flex max-w-xl flex-wrap gap-1.5">
