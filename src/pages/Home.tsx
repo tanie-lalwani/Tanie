@@ -77,11 +77,11 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
               className="mt-4 text-4xl font-bold tracking-tight text-white sm:text-5xl md:text-6xl lg:text-7xl"
               style={{ fontFamily: "var(--font-display)" }}
             >
-              I'm Tanie!
+              I’m Tanie!
             </h1>
 
             <p className="mt-5 max-w-2xl text-sm leading-relaxed text-blue-950 sm:text-base">
-              I’m Tanisha Lalwani (Tanie), a creative developer and full-stack web developer building interactive websites, immersive web experiences, and modern web applications. Scroll to see my work or jump to the contact section.
+              I’m Tanie, a creative developer and full stack developer making interactive websites, 3D/immersive web experiences, and modern web applications. Scroll to see my work or jump to the contact section.
             </p>
           </div>
         </motion.div>
@@ -108,7 +108,7 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
           <div className="mt-5 grid gap-6 lg:grid-cols-[minmax(0,1.05fr)_minmax(18rem,0.85fr)] lg:items-center">
             <div>
               <p className="max-w-[36rem] text-[0.82rem] leading-6 text-white/62 sm:text-sm">
-                Hi, I’m Tanisha Lalwani (Tanie), a creative developer, full-stack developer, and frontend web developer building interactive websites and modern web applications. I create immersive digital experiences, portfolio websites, and practical products with a focus on usability, performance, and thoughtful interaction design. Using React, TypeScript, Node.js, and Three.js, I enjoy turning ideas into engaging and technically strong web experiences. I’m open to working on creative, portfolio, and business web projects.
+                Hi, I’m Tanie, a creative developer and full stack developer making interactive websites, 3D/immersive web experiences, and modern web applications. I create immersive digital experiences, portfolio websites, and practical products with a focus on usability, performance, and thoughtful interaction design. Using React, TypeScript, Node.js, and Three.js, I enjoy turning ideas into engaging and technically strong web experiences. I’m open to working on creative, portfolio, and business web projects. Check out my qna above or scroll down to see some of my work!
               </p>
 
               <div className="mt-4 flex max-w-xl flex-wrap gap-1.5">
@@ -128,7 +128,7 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
 
               <div className="mt-4">
                 <a
-                  href="https://www.google.com/search?q=who+is+Tanisha+Lalwani+Tanie"
+                  href="https://www.google.com/search?q=tanie.mp3"
                   target="_blank"
                   rel="noreferrer noopener"
                   className="ui-button-link"
