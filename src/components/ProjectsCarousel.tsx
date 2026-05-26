@@ -5,6 +5,7 @@ export interface Project {
   description: string
   techStack: string[]
   site: string
+  code?: string
 }
 
 interface ProjectsCarouselProps {
@@ -31,6 +32,7 @@ export function ProjectsCarousel({ projects }: ProjectsCarouselProps) {
             description={project.description}
             techStack={project.techStack}
             site={project.site}
+            code={project.code}
           />
         ))}
       </div>
