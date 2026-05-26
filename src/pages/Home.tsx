@@ -1,5 +1,4 @@
 import { motion, useScroll, useTransform } from "framer-motion"
-import { Link } from "react-router-dom"
 import PageHeader from "../components/PageHeader"
 import { ProjectsCarousel } from "../components/ProjectsCarousel"
 import { ContactForm } from "../components/ContactForm"
@@ -128,9 +127,14 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
               </div>
 
               <div className="mt-4">
-                <Link to="/qna" className="ui-button-link">
+                <a
+                  href="https://www.google.com/search?q=who+is+Tanisha+Lalwani+Tanie"
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  className="ui-button-link"
+                >
                   Know more
-                </Link>
+                </a>
               </div>
             </div>
 
