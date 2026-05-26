@@ -55,38 +55,167 @@
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
-        "@type": "Person",
-        "name": "Tanisha Lalwani",
-        "givenName": "Tanisha",
-        "familyName": "Lalwani",
-        "alternateName": ["Tanie", "taniehq"],
-        "url": "https://tanie.me/",
-        "image": "https://tanie.me/favicon.png",
-        "jobTitle": "Full Stack Developer",
-        "description": "Tanisha Lalwani (Tanie) is a creative developer, full-stack developer, and frontend web developer building interactive websites, modern web applications, and immersive web experiences using React, TypeScript and Three.js.",
-        "knowsAbout": [
-          "React",
-          "TypeScript",
-          "Three.js",
-          "Frontend Development",
-          "Full Stack Development",
-          "UI Design"
-        ],
-        "sameAs": [
-          "https://github.com/taniehq",
-          "https://instagram.com/tanie.mp3",
-          "https://linkedin.com/in/tanisha-lalwani/"
+        "@graph": [
+          {
+            "@type": "Person",
+            "@id": "https://tanie.me/#person",
+            "name": "Tanie",
+            "legalName": "Tanisha Lalwani",
+            "givenName": "Tanisha",
+            "familyName": "Lalwani",
+            "alternateName": ["Tanisha Lalwani", "tanie.mp3", "taniehq"],
+            "url": "https://tanie.me/",
+            "image": "https://tanie.me/favicon.png",
+            "jobTitle": "Creative Developer",
+            "description": "Tanie, also known as Tanisha Lalwani, is a creative developer, full-stack developer, creator, and singer building interactive websites, modern web applications, and immersive web experiences.",
+            "knowsAbout": [
+              "Creative Development",
+              "Full-Stack Development",
+              "Web Development",
+              "React",
+              "TypeScript",
+              "Three.js",
+              "Singing"
+            ],
+            "sameAs": [
+              "https://linkedin.com/in/tanisha-lalwani/",
+              "https://github.com/taniehq",
+              "https://instagram.com/tanie.mp3",
+              "https://youtube.com/@tanie.mp3"
+            ]
+          },
+          {
+            "@type": "WebSite",
+            "@id": "https://tanie.me/#website",
+            "url": "https://tanie.me/",
+            "name": "Tanie",
+            "alternateName": "Tanisha Lalwani Portfolio",
+            "description": "Tanie's portfolio showcasing creative development, full-stack work, and selected projects.",
+            "inLanguage": "en",
+            "publisher": {
+              "@id": "https://tanie.me/#person"
+            },
+            "about": {
+              "@id": "https://tanie.me/#person"
+            }
+          },
+          {
+            "@type": "WebPage",
+            "@id": "https://tanie.me/#webpage",
+            "url": "https://tanie.me/",
+            "name": "Tanie | Tanisha Lalwani",
+            "description": "Tanie's homepage and portfolio for creative development, full-stack development, creator work, and singing.",
+            "isPartOf": {
+              "@id": "https://tanie.me/#website"
+            },
+            "about": {
+              "@id": "https://tanie.me/#person"
+            },
+            "author": {
+              "@id": "https://tanie.me/#person"
+            },
+            "inLanguage": "en"
+          },
+          {
+            "@type": "ProfilePage",
+            "@id": "https://tanie.me/#profile-page",
+            "url": "https://tanie.me/",
+            "name": "Tanie | Tanisha Lalwani",
+            "description": "Profile page for Tanie, also known as Tanisha Lalwani, a creative developer, full-stack developer, creator, and singer.",
+            "isPartOf": {
+              "@id": "https://tanie.me/#website"
+            },
+            "about": {
+              "@id": "https://tanie.me/#person"
+            },
+            "author": {
+              "@id": "https://tanie.me/#person"
+            },
+            "mainEntity": {
+              "@id": "https://tanie.me/#person"
+            },
+            "inLanguage": "en"
+          },
+          {
+            "@type": "ItemList",
+            "@id": "https://tanie.me/#projects",
+            "name": "Selected Portfolio Projects",
+            "description": "Selected projects featured on the portfolio homepage.",
+            "itemListOrder": "https://schema.org/ItemListOrderAscending",
+            "numberOfItems": 3,
+            "isPartOf": {
+              "@id": "https://tanie.me/#webpage"
+            },
+            "about": {
+              "@id": "https://tanie.me/#person"
+            },
+            "itemListElement": [
+              {
+                "@type": "ListItem",
+                "position": 1,
+                "item": {
+                  "@id": "https://tanie.me/#project-brightlane"
+                }
+              },
+              {
+                "@type": "ListItem",
+                "position": 2,
+                "item": {
+                  "@id": "https://tanie.me/#project-finchpay"
+                }
+              },
+              {
+                "@type": "ListItem",
+                "position": 3,
+                "item": {
+                  "@id": "https://tanie.me/#project-leafline"
+                }
+              }
+            ]
+          },
+          {
+            "@type": "CreativeWork",
+            "@id": "https://tanie.me/#project-brightlane",
+            "name": "SaaS Dashboard Redesign — Brightlane",
+            "url": "https://brightlane.example",
+            "description": "This project explores interactive frontend development with a focus on usability, motion, performance, and modern web experiences using React and TypeScript.",
+            "keywords": ["React", "TypeScript", "CSS"],
+            "about": {
+              "@id": "https://tanie.me/#person"
+            },
+            "author": {
+              "@id": "https://tanie.me/#person"
+            }
+          },
+          {
+            "@type": "CreativeWork",
+            "@id": "https://tanie.me/#project-finchpay",
+            "name": "Checkout Performance Overhaul — FinchPay",
+            "url": "https://finchpay.example",
+            "description": "This project explores interactive frontend development with a focus on usability, motion, performance, and modern web experiences using React and TypeScript.",
+            "keywords": ["React", "TypeScript", "Node.js"],
+            "about": {
+              "@id": "https://tanie.me/#person"
+            },
+            "author": {
+              "@id": "https://tanie.me/#person"
+            }
+          },
+          {
+            "@type": "CreativeWork",
+            "@id": "https://tanie.me/#project-leafline",
+            "name": "Marketing Site Rebuild — Leafline",
+            "url": "https://leafline.example",
+            "description": "This project explores interactive frontend development with a focus on usability, motion, performance, and modern web experiences using React and TypeScript.",
+            "keywords": ["React", "TypeScript", "Design"],
+            "about": {
+              "@id": "https://tanie.me/#person"
+            },
+            "author": {
+              "@id": "https://tanie.me/#person"
+            }
+          }
         ]
-      }
-    </script>
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "WebSite",
-        "name": "Tanisha Lalwani Portfolio",
-        "alternateName": "Tanie Portfolio",
-        "url": "https://tanie.me/",
-        "description": "Tanisha Lalwani (Tanie) is a creative developer, full-stack developer, and frontend web developer building interactive websites, modern web applications, and immersive web experiences using React, TypeScript and Three.js."
       }
     </script>
 
