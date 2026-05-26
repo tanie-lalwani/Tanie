@@ -2,12 +2,13 @@ import { motion } from "framer-motion"
 
 interface ProjectCardProps {
   site: string
+  code?: string
   title: string
   description: string
   techStack: string[]
 }
 
-export function ProjectCard({ site, title, description, techStack }: ProjectCardProps) {
+export function ProjectCard({ site, code, title, description, techStack }: ProjectCardProps) {
   return (
     <motion.article
       className="relative h-full shrink-0 snap-start"
@@ -32,7 +33,7 @@ export function ProjectCard({ site, title, description, techStack }: ProjectCard
               </div>
             </div>
 
-            <div className="relative pr-14">
+            <div className="relative">
               <h3 className="text-base font-semibold leading-tight text-white/92" style={{ fontFamily: "var(--font-display)" }}>
                 {title}
               </h3>
@@ -47,15 +48,28 @@ export function ProjectCard({ site, title, description, techStack }: ProjectCard
                 ))}
               </div>
 
-              <a
-                href={site}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="absolute right-0 top-0 inline-flex items-center justify-center rounded-full border border-white/12 bg-white/7 px-3 py-1.5 text-[10px] font-medium no-underline text-sky-50/64 transition hover:bg-white/12 hover:text-white focus:outline-none focus:ring-2 focus:ring-sky-300/40"
-                aria-label={`Visit project site: ${title}`}
-              >
-                View
-              </a>
+              <div className="mt-3 flex flex-wrap gap-2">
+                <a
+                  href={site}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center rounded-full border border-white/12 bg-white/7 px-3 py-1.5 text-[10px] font-medium no-underline text-sky-50/64 transition hover:bg-white/12 hover:text-white focus:outline-none focus:ring-2 focus:ring-sky-300/40"
+                  aria-label={`Visit project site: ${title}`}
+                >
+                  View
+                </a>
+                {code ? (
+                  <a
+                    href={code}
+                    target="_blank"
+                    rel="me noopener noreferrer"
+                    className="inline-flex items-center justify-center rounded-full border border-white/12 bg-white/7 px-3 py-1.5 text-[10px] font-medium no-underline text-sky-50/64 transition hover:bg-white/12 hover:text-white focus:outline-none focus:ring-2 focus:ring-sky-300/40"
+                    aria-label={`View GitHub code for ${title}`}
+                  >
+                    Code
+                  </a>
+                ) : null}
+              </div>
             </div>
           </div>
         </div>

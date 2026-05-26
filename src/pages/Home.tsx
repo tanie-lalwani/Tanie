@@ -11,15 +11,17 @@ type Project = {
   description: string
   techStack: string[]
   site: string
+  code?: string
 }
 
 const PROJECTS: Project[] = [
   {
-    title: "SaaS Dashboard Redesign — Brightlane",
+    title: "Viziona",
     description:
-      "This project explores interactive frontend development with a focus on usability, motion, performance, and modern web experiences using React and TypeScript.",
-    techStack: ["React", "TypeScript", "CSS"],
-    site: "https://brightlane.example",
+      "Viziona is a web project by Tanie, built with a focus on clean UI, modern frontend development, and practical product execution.",
+    techStack: ["React", "TypeScript", "GitHub"],
+    site: "https://viziona.com",
+    code: "https://github.com/taniemp3/viziona",
   },
   {
     title: "Checkout Performance Overhaul — FinchPay",
