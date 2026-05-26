@@ -207,7 +207,7 @@ All images include descriptive alt text:
 - Links to social profiles:
   - GitHub: taniehq
   - Instagram: tanie.mp3
-  - LinkedIn: tanisha-lalwani
+  - LinkedIn: tanie-lalwani identity, currently linked through tanisha-lalwani profile URL
 - Links from portfolio projects
 
 ## Monitoring & Analytics
