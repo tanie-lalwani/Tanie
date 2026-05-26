@@ -110,7 +110,7 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
           <div className="mt-5 grid gap-6 lg:grid-cols-[minmax(0,1.05fr)_minmax(18rem,0.85fr)] lg:items-center">
             <div>
               <p className="max-w-[36rem] text-[0.82rem] leading-6 text-white/62 sm:text-sm">
-                Hi, I’m Tanie, also known as tanie.mp3 and Tanisha Lalwani. I’m a 3D developer, creative developer, and full stack developer making interactive websites, immersive web experiences, and modern web applications. I create practical products with a focus on usability, performance, and thoughtful interaction design. Using React, TypeScript, Node.js, Three.js, and GitHub workflows, I turn ideas into engaging and technically strong web experiences. I’m open to creative, portfolio, and business web projects. Check out my qna above or scroll down to see some of my work!
+                Hi, I’m Tanie, also known as tanie.mp3 and Tanisha Lalwani. I’m a React developer, 3D developer, creative developer, and full stack developer making interactive websites, immersive web experiences, and modern web applications. This tanie portfolio at tanie.me connects my developer work, creator work, GitHub projects, and selected web builds. Using React, TypeScript, Node.js, Three.js, and GitHub workflows, I turn ideas into engaging and technically strong web experiences. I’m open to creative, portfolio, and business web projects. Check out my qna above or scroll down to see some of my work!
               </p>
 
               <div className="mt-4 flex max-w-xl flex-wrap gap-1.5">
@@ -121,7 +121,12 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
                   "Tanie",
                   "Tanisha Lalwani",
                   "taniemp3",
+                  "tanie developer",
+                  "tanie portfolio",
+                  "tanie react",
+                  "tanie singer",
                   "3D Developer",
+                  "React Developer",
                   "React",
                   "TypeScript",
                   "Three.js",
@@ -172,7 +177,7 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
         <div className="site-container relative z-10">
           <PageHeader
             eyebrow=""
-            title="Built so far."
+            title="Tanie portfolio."
             description=""
             className="mb-4 max-w-2xl [&_h2]:text-3xl [&_h2]:font-semibold [&_h2]:tracking-tight [&_h2]:text-white/94 sm:[&_h2]:text-4xl md:[&_h2]:text-5xl"
           />
