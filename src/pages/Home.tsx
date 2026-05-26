@@ -130,7 +130,7 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
                 ))}
               </div>
               <div className="mt-4">
-                <a href="https://www.google.com/search?q=tanie+lalwani" target="_blank" rel="noopener noreferrer" className="text-sm font-semibold underline">
+                <a href="https://www.google.com/search?q=who+is+Tanie+Lalwani" target="_blank" rel="noopener noreferrer" className="text-sm font-semibold underline">
                   Know more
                 </a>
               </div>
