@@ -110,17 +110,15 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
           <div className="mt-5 grid gap-6 lg:grid-cols-[minmax(0,1.05fr)_minmax(18rem,0.85fr)] lg:items-center">
             <div>
               <p className="max-w-[36rem] text-[0.82rem] leading-6 text-white/62 sm:text-sm">
-                Hi, I’m Tanie Lalwani, also known as Tanie and tanie.mp3. I’m a React developer, 3D developer, creative developer, and full stack developer making interactive websites, immersive web experiences, and modern web applications. This tanie portfolio at tanie.me connects my developer work, creator work, GitHub projects, and selected web builds. Using React, TypeScript, Node.js, Three.js, and GitHub workflows, I turn ideas into engaging and technically strong web experiences. I’m open to creative, portfolio, and business web projects. Check out my qna above or scroll down to see some of my work!
+                Hi, I’m Tanie Lalwani, also known as Tanie. I’m a React developer, 3D developer, creative developer, and full stack developer making interactive websites, immersive web experiences, and modern web applications. This tanie portfolio at tanie.me connects my developer work, creator work, GitHub projects, and selected web builds. Using React, TypeScript, Node.js, Three.js, and GitHub workflows, I turn ideas into engaging and technically strong web experiences. I’m open to creative, portfolio, and business web projects. Check out my qna above or scroll down to see some of my work!
               </p>
 
               <p className="mt-3 max-w-[36rem] text-[0.78rem] leading-5 text-white/50 sm:text-xs">
-                Who is Tanie? Tanie is tanie.mp3: a React developer, creative developer, 3D web developer, and creator building web projects and sharing code on GitHub as taniemp3.
+                Who is Tanie? Tanie is Tanie Lalwani: a React developer, creative developer, 3D web developer, and creator building web projects and sharing code on GitHub as taniemp3.
               </p>
 
               <div className="mt-4 flex max-w-xl flex-wrap gap-1.5">
                 {[
-                  "tanie.mp3",
-                  "tanie mp3",
                   "tanie.me",
                   "Tanie",
                   "Tanie Lalwani",
@@ -158,7 +156,7 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
               </div>
 
               <p className="mt-3 max-w-xl text-[11px] text-sky-100/42 sm:text-xs">
-                LinkedIn still connects through Tanie Lalwani, while the site name stays focused on tanie.mp3.
+                LinkedIn still connects through Tanie Lalwani, while this site stays focused on her developer portfolio.
               </p>
             </div>
 

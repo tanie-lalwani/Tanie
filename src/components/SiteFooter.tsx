@@ -57,7 +57,7 @@ export default function SiteFooter({ className = "" }: SiteFooterProps) {
         <div className="mt-5 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div>
             <p className="text-sm font-semibold tracking-tight text-white/92" style={{ fontFamily: "var(--font-display)" }}>
-              tanie.mp3
+              Tanie Lalwani
             </p>
             <p className="mt-1 text-xs font-medium text-sky-100/58">3D Developer · Creative Developer · Full-Stack Web Developer</p>
             <p className="mt-2 max-w-xs text-xs leading-5 text-sky-100/44">Building interactive websites, immersive web experiences, and GitHub-backed products.</p>
@@ -82,12 +82,11 @@ export default function SiteFooter({ className = "" }: SiteFooterProps) {
         </div>
         <div className="mt-5 h-px w-full bg-linear-to-r from-transparent via-white/8 to-transparent" />
         <p className="mt-3 text-center text-[10px] text-sky-100/42">
-          © 2026 tanie.mp3. Built with Three.js and TypeScript.
+          © 2026 Tanie Lalwani. Built with Three.js and TypeScript.
         </p>
       </div>
     </footer>
   )
 }
-
 
 

@@ -16,7 +16,7 @@ An immersive, interactive portfolio website featuring a submarine-inspired scrol
 - **Client Testimonials** — Interactive carousel showcasing project experiences
 - **Contact Form** — Fully functional contact form with form validation
 - **Performance Optimized** — Mobile device detection to scale Three.js complexity; efficient particle systems
-- **SEO Optimized** — Full search engine optimization for "tanie.mp3" and related developer queries
+- **SEO Optimized** — Full search engine optimization for "Tanie Lalwani" and related developer queries
 
 ## Tech Stack
 
@@ -255,7 +255,7 @@ Note: Three.js and WebGL required for full experience
 
 ## Search Engine Optimization (SEO)
 
-This portfolio is fully optimized for search visibility under the query **"tanie.mp3"** and related developer searches.
+This portfolio is fully optimized for search visibility under the query **"Tanie Lalwani"** and related developer searches.
 
 ### Key Optimizations
 

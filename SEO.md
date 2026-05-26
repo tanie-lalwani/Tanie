@@ -2,13 +2,13 @@
 
 ## Overview
 
-This portfolio site is fully optimized for search engine visibility, particularly for the search query **"tanie.mp3"** and related developer searches.
+This portfolio site is fully optimized for search engine visibility, particularly for the search query **"Tanie Lalwani"** and related developer searches.
 
 ## Search Optimization
 
 ### Primary Keywords
 
-- **tanie.mp3** — Primary identity
+- **Tanie Lalwani** — Primary identity
 - **Tanie** — Secondary alias
 - **Full Stack Developer** — Professional title
 - **React Developer** — Technology expertise
@@ -21,7 +21,7 @@ This portfolio site is fully optimized for search engine visibility, particularl
 #### Page Title
 
 ```
-tanie.mp3 | creative developer & internet builder
+Tanie Lalwani | creative developer & internet builder
 ```
 
 - Includes full name + alias + profession
@@ -31,7 +31,7 @@ tanie.mp3 | creative developer & internet builder
 #### Meta Description
 
 ```
-Portfolio of tanie.mp3, a creative developer building clear, fast web experiences with strong UI craft and practical execution.
+Portfolio of Tanie Lalwani, a creative developer building clear, fast web experiences with strong UI craft and practical execution.
 ```
 
 - 160 characters (optimal length for search results)
@@ -41,10 +41,10 @@ Portfolio of tanie.mp3, a creative developer building clear, fast web experience
 #### Keywords Meta Tag
 
 ```
-tanie.mp3, Tanie, creative developer, web developer, portfolio, React, TypeScript, Three.js, UI design
+Tanie Lalwani, Tanie, creative developer, web developer, portfolio, React, TypeScript, Three.js, UI design
 ```
 
-- Primary term: "tanie.mp3"
+- Primary term: "Tanie Lalwani"
 - Secondary terms: Related technologies and skills
 - Long-tail variations
 
@@ -55,7 +55,7 @@ The site uses JSON-LD schema for rich snippets:
 ```json
 {
   "@type": "Person",
-  "name": "tanie.mp3",
+  "name": "Tanie Lalwani",
   "alternateName": ["Tanie", "taniehq"],
   "jobTitle": "Creative Developer",
   "url": "https://tanie.me/",
@@ -84,7 +84,7 @@ The site uses JSON-LD schema for rich snippets:
 #### Twitter Card
 
 - `twitter:card` — summary_large_image format
-- `twitter:creator` — @tanie.mp3 handle
+- `twitter:creator` — creator profile handle
 - Same image and description as OG tags
 
 **Benefits:**
@@ -206,7 +206,7 @@ All images include descriptive alt text:
 
 - Links to social profiles:
   - GitHub: taniehq
-  - Instagram: tanie.mp3
+  - Instagram: Tanie Lalwani profile
   - LinkedIn: tanie-lalwani identity, currently linked through tanisha-lalwani profile URL
 - Links from portfolio projects
 
@@ -222,7 +222,7 @@ All images include descriptive alt text:
 
 ### Key Metrics to Track
 
-- Average position for "tanie.mp3"
+- Average position for "Tanie Lalwani"
 - Organic impressions & CTR
 - Pages per session
 - Bounce rate
@@ -255,7 +255,7 @@ All images include descriptive alt text:
    - Similar verification process
 
 3. **Monitor Rankings**
-   - Track "tanie.mp3" position
+   - Track "Tanie Lalwani" position
    - Monitor monthly for changes
 
 4. **Optimize Content**
