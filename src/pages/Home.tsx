@@ -81,7 +81,7 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
             </h1>
 
             <p className="mt-5 max-w-2xl text-sm leading-relaxed text-blue-950 sm:text-base">
-              I’m Tanie, a creative developer and full stack developer making interactive websites, 3D/immersive web experiences, and modern web applications. Scroll to see my work or jump to the contact section.
+              I’m Tanie, a 3D developer, creative developer, and full stack developer making interactive websites, 3D/immersive web experiences, and modern web applications. I share work on GitHub at taniemp3 and build with React, TypeScript, Three.js, and Node.js.
             </p>
           </div>
         </motion.div>
@@ -100,7 +100,7 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
           />
 
           <p className="mt-1 max-w-lg text-[10px] font-medium uppercase tracking-[0.18em] text-slate-200/34 sm:text-[11px]">
-            Creative Developer · Full-Stack & Frontend Web Developer
+            3D Developer · Creative Developer · Full-Stack Web Developer · GitHub: taniemp3
           </p>
 
           <div className="relative mb-4 flex flex-wrap items-center justify-between gap-2.5 border-b border-white/8 pb-2.5 sm:mb-5" />
@@ -108,16 +108,21 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
           <div className="mt-5 grid gap-6 lg:grid-cols-[minmax(0,1.05fr)_minmax(18rem,0.85fr)] lg:items-center">
             <div>
               <p className="max-w-[36rem] text-[0.82rem] leading-6 text-white/62 sm:text-sm">
-                Hi, I’m Tanie, a creative developer and full stack developer making interactive websites, 3D/immersive web experiences, and modern web applications. I create immersive digital experiences, portfolio websites, and practical products with a focus on usability, performance, and thoughtful interaction design. Using React, TypeScript, Node.js, and Three.js, I enjoy turning ideas into engaging and technically strong web experiences. I’m open to working on creative, portfolio, and business web projects. Check out my qna above or scroll down to see some of my work!
+                Hi, I’m Tanie, also known as tanie.mp3. I’m a 3D developer, creative developer, and full stack developer making interactive websites, immersive web experiences, and modern web applications. I create practical products with a focus on usability, performance, and thoughtful interaction design. Using React, TypeScript, Node.js, Three.js, and GitHub workflows, I turn ideas into engaging and technically strong web experiences. I’m open to creative, portfolio, and business web projects. Check out my qna above or scroll down to see some of my work!
               </p>
 
               <div className="mt-4 flex max-w-xl flex-wrap gap-1.5">
                 {[
+                  "tanie.mp3",
+                  "Tanie",
+                  "Tanisha Lalwani",
+                  "3D Developer",
                   "React",
                   "TypeScript",
                   "Three.js",
                   "Node.js",
                   "Frontend Development",
+                  "GitHub",
                   "Interactive Websites",
                 ].map((t) => (
                   <span key={t} className="rounded-full border border-white/9 bg-white/4 px-2 py-0.5 text-[10px] font-medium text-sky-100/50">
@@ -128,7 +133,7 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
 
               <div className="mt-4">
                 <a
-                  href="https://www.google.com/search?q=tanie.mp3"
+                  href="https://www.google.com/search?q=who+is+tanisha+lalwani+tanie"
                   target="_blank"
                   rel="noreferrer noopener"
                   className="ui-button-link"
@@ -136,6 +141,10 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
                   Know more
                 </a>
               </div>
+
+              <p className="mt-3 max-w-xl text-[11px] text-sky-100/42 sm:text-xs">
+                LinkedIn still connects through Tanisha Lalwani, while the site name stays focused on tanie.mp3.
+              </p>
             </div>
 
             <div
