@@ -18,22 +18,22 @@ const PROJECTS: Project[] = [
   {
     title: "Viziona",
     description:
-      "Viziona is a web project by Tanie, built with a focus on clean UI, modern frontend development, and practical product execution.",
-    techStack: ["React", "TypeScript", "GitHub"],
+      "A focused web project shaped around clear interaction, clean interface decisions, and practical product execution.",
+    techStack: ["React", "TypeScript", "UI"],
     site: "https://viziona.com",
     code: "https://github.com/taniemp3/viziona",
   },
   {
     title: "Checkout Performance Overhaul — FinchPay",
     description:
-      "This project explores interactive frontend development with a focus on usability, motion, performance, and modern web experiences using React and TypeScript.",
+      "A frontend performance pass focused on faster checkout flows, clearer states, and smoother user feedback.",
     techStack: ["React", "TypeScript", "Node.js"],
     site: "https://finchpay.example",
   },
   {
     title: "Marketing Site Rebuild — Leafline",
     description:
-      "This project explores interactive frontend development with a focus on usability, motion, performance, and modern web experiences using React and TypeScript.",
+      "A modern site rebuild with tighter content structure, responsive layouts, and a calmer visual system.",
     techStack: ["React", "TypeScript", "Design"],
     site: "https://leafline.example",
   },
@@ -96,13 +96,13 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
         <div className="site-container relative z-10">
           <PageHeader
             eyebrow=""
-            title="About me."
+            title="About Tanie"
             description=""
             className="mb-3 max-w-xl [&_h2]:text-3xl [&_h2]:font-semibold [&_h2]:tracking-tight [&_h2]:text-white/94 sm:[&_h2]:text-4xl md:[&_h2]:text-5xl"
           />
 
           <p className="mt-1 max-w-lg text-[10px] font-medium uppercase tracking-[0.18em] text-slate-200/34 sm:text-[11px]">
-            3D Developer · Creative Developer · Full-Stack Web Developer · GitHub: taniemp3
+            Creative Developer · Full-Stack Web Developer · Creator
           </p>
 
           <div className="relative mb-4 flex flex-wrap items-center justify-between gap-2.5 border-b border-white/8 pb-2.5 sm:mb-5" />
@@ -110,54 +110,25 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
           <div className="mt-5 grid gap-6 lg:grid-cols-[minmax(0,1.05fr)_minmax(18rem,0.85fr)] lg:items-center">
             <div>
               <p className="max-w-[36rem] text-[0.82rem] leading-6 text-white/62 sm:text-sm">
-                Hi, I’m Tanie Lalwani, also known as Tanie. I’m a React developer, 3D developer, creative developer, and full stack developer making interactive websites, immersive web experiences, and modern web applications. This tanie portfolio at tanie.me connects my developer work, creator work, GitHub projects, and selected web builds. Using React, TypeScript, Node.js, Three.js, and GitHub workflows, I turn ideas into engaging and technically strong web experiences. I’m open to creative, portfolio, and business web projects. Check out my qna above or scroll down to see some of my work!
-              </p>
-
-              <p className="mt-3 max-w-[36rem] text-[0.78rem] leading-5 text-white/50 sm:text-xs">
-                Who is Tanie? Tanie is Tanie Lalwani: a React developer, creative developer, 3D web developer, and creator building web projects and sharing code on GitHub as taniemp3.
+                Tanie Lalwani is a creative developer and builder focused on interactive web experiences, thoughtful interfaces, and modern digital products. Working across frontend and full-stack development, she enjoys turning ideas into experiences that feel intuitive, immersive, and genuinely enjoyable to use.
               </p>
 
               <div className="mt-4 flex max-w-xl flex-wrap gap-1.5">
                 {[
-                  "tanie.me",
-                  "Tanie",
-                  "Tanie Lalwani",
-                  "taniemp3",
-                  "tanie developer",
-                  "tanie portfolio",
-                  "tanie react",
-                  "tanie singer",
-                  "who is Tanie",
-                  "3D Developer",
-                  "React Developer",
                   "React",
                   "TypeScript",
                   "Three.js",
+                  "Full-Stack",
+                  "Creative Development",
+                  "UI Engineering",
                   "Node.js",
-                  "Frontend Development",
-                  "GitHub",
-                  "Interactive Websites",
+                  "Interactive Web",
                 ].map((t) => (
                   <span key={t} className="rounded-full border border-white/9 bg-white/4 px-2 py-0.5 text-[10px] font-medium text-sky-100/50">
                     {t}
                   </span>
                 ))}
               </div>
-
-              <div className="mt-4">
-                <a
-                  href="https://www.google.com/search?q=who+is+tanie+lalwani"
-                  target="_blank"
-                  rel="noreferrer noopener"
-                  className="ui-button-link"
-                >
-                  Know more
-                </a>
-              </div>
-
-              <p className="mt-3 max-w-xl text-[11px] text-sky-100/42 sm:text-xs">
-                LinkedIn still connects through Tanie Lalwani, while this site stays focused on her developer portfolio.
-              </p>
             </div>
 
             <div
@@ -180,7 +151,7 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
         <div className="site-container relative z-10">
           <PageHeader
             eyebrow=""
-            title="Tanie portfolio."
+            title="Built so far."
             description=""
             className="mb-4 max-w-2xl [&_h2]:text-3xl [&_h2]:font-semibold [&_h2]:tracking-tight [&_h2]:text-white/94 sm:[&_h2]:text-4xl md:[&_h2]:text-5xl"
           />

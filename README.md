@@ -46,7 +46,7 @@ An immersive, interactive portfolio website featuring a submarine-inspired scrol
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/taniehq/taniehq.github.io.git
+git clone https://github.com/taniemp3/portfolio.git
 cd Portfolio
 ```
 
@@ -196,7 +196,7 @@ The core interaction is scroll-depth based. As users scroll down the page:
 
 ## Deployment
 
-The site is deployed to GitHub Pages at `taniehq.github.io`
+The site is deployed at `tanie.me`
 
 ```bash
 # Build and deploy
@@ -296,8 +296,8 @@ The site was developed with focus on:
 
 **Tanie** — Design & Development
 
-- GitHub: [@taniehq](https://github.com/taniehq)
-- Portfolio: [taniehq.github.io](https://taniehq.github.io)
+- GitHub: [@taniemp3](https://github.com/taniemp3)
+- Portfolio: [tanie.me](https://tanie.me)
 
 ## Contact
 

@@ -56,7 +56,7 @@ The site uses JSON-LD schema for rich snippets:
 {
   "@type": "Person",
   "name": "Tanie Lalwani",
-  "alternateName": ["Tanie", "taniehq"],
+  "alternateName": ["Tanie"],
   "jobTitle": "Creative Developer",
   "url": "https://tanie.me/",
   "image": "https://tanie.me/favicon.png",
@@ -205,9 +205,9 @@ All images include descriptive alt text:
 ### External Links
 
 - Links to social profiles:
-  - GitHub: taniehq
+  - GitHub: taniemp3
   - Instagram: Tanie Lalwani profile
-  - LinkedIn: tanie-lalwani identity, currently linked through tanisha-lalwani profile URL
+  - LinkedIn: tanie-lalwani
 - Links from portfolio projects
 
 ## Monitoring & Analytics
