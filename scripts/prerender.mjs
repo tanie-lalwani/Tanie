@@ -11,32 +11,29 @@ const prerenderedApp = String.raw`
     <section id="home">
       <h1>I'm Tanie!</h1>
       <p>
-        I'm Tanie Lalwani, a creative developer, full stack developer, React developer, and 3D web developer building interactive websites, immersive web experiences, and modern web applications.
-      </p>
-      <p>
-        This is the official Tanie portfolio at tanie.me, with GitHub projects, selected web builds, and creator work.
+        I'm Tanie, a creative developer and full-stack web developer making interactive websites, 3D/immersive web experiences, and modern web applications.
       </p>
     </section>
     <section id="about">
-      <h2>Who is Tanie?</h2>
+      <h2>About Tanie</h2>
       <p>
-        Tanie is Tanie Lalwani: a React developer, creative developer, 3D web developer, full stack developer, and creator. Her GitHub is taniemp3.
+        Tanie Lalwani is a creative developer and builder focused on interactive web experiences, thoughtful interfaces, and modern digital products. Working across frontend and full-stack development, she enjoys turning ideas into experiences that feel intuitive, immersive, and genuinely enjoyable to use.
       </p>
       <p>
-        Skills include React, TypeScript, Three.js, Node.js, frontend development, creative development, and portfolio websites.
+        Skills include React, TypeScript, Three.js, Node.js, full-stack development, UI engineering, and creative development.
       </p>
       <p>
         <a href="https://github.com/taniemp3" rel="me">GitHub</a>
         <a href="https://instagram.com/tanie.mp3" rel="me">Instagram</a>
-        <a href="https://linkedin.com/in/tanisha-lalwani/" rel="me">LinkedIn</a>
+        <a href="https://linkedin.com/in/tanie-lalwani/" rel="me">LinkedIn</a>
       </p>
     </section>
     <section id="projects">
-      <h2>Tanie portfolio</h2>
+      <h2>Built so far.</h2>
       <article>
         <h3>Viziona</h3>
         <p>
-          Viziona is a web project by Tanie Lalwani, built with React and TypeScript.
+          A focused web project shaped around clear interaction, clean interface decisions, and practical product execution.
         </p>
         <p>
           <a href="https://viziona.com">View Viziona</a>
@@ -46,7 +43,7 @@ const prerenderedApp = String.raw`
       <article>
         <h3>Creative development and 3D web work</h3>
         <p>
-          Selected interactive websites, immersive web experiences, and modern frontend projects by Tanie Lalwani.
+          Selected interactive websites, immersive web experiences, and modern frontend projects.
         </p>
       </article>
     </section>
