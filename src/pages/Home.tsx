@@ -101,7 +101,7 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
             className="mb-3 max-w-xl [&_h2]:text-3xl [&_h2]:font-semibold [&_h2]:tracking-tight [&_h2]:text-white/94 sm:[&_h2]:text-4xl md:[&_h2]:text-5xl"
           />
 
-          <p className="mt-1 max-w-lg text-[10px] font-medium uppercase tracking-[0.18em] text-black sm:text-[11px]">
+          <p className="mt-1 max-w-lg text-[10px] font-medium uppercase tracking-[0.18em] text-white/70 sm:text-[11px]">
             Creative Developer · Full-Stack Web Developer · Creator
           </p>
 
@@ -109,7 +109,7 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
 
           <div className="mt-5 grid gap-6 lg:grid-cols-[minmax(0,1.05fr)_minmax(18rem,0.85fr)] lg:items-center">
             <div>
-              <p className="max-w-[36rem] text-[0.82rem] leading-6 text-black sm:text-sm">
+              <p className="max-w-[36rem] text-[0.82rem] leading-6 text-white/75 sm:text-sm">
                 I'm Tanie Lalwani, a creative developer and full stack developer focused on interactive web experiences, thoughtful interfaces, and modern digital products. Check out qna with me above or scroll to see some of my work and get in touch!
               </p>
 
@@ -130,7 +130,7 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
                 ))}
               </div>
               <div className="mt-4">
-                <a href="https://www.google.com/search?q=Tanie+Lalwani" target="_blank" rel="noopener noreferrer" className="text-sm font-semibold underline">
+                <a href="https://www.google.com/search?q=Tanie+Lalwani" target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-white underline">
                   Know more
                 </a>
               </div>
