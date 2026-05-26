@@ -113,6 +113,10 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
                 Hi, I’m Tanie, also known as tanie.mp3 and Tanisha Lalwani. I’m a React developer, 3D developer, creative developer, and full stack developer making interactive websites, immersive web experiences, and modern web applications. This tanie portfolio at tanie.me connects my developer work, creator work, GitHub projects, and selected web builds. Using React, TypeScript, Node.js, Three.js, and GitHub workflows, I turn ideas into engaging and technically strong web experiences. I’m open to creative, portfolio, and business web projects. Check out my qna above or scroll down to see some of my work!
               </p>
 
+              <p className="mt-3 max-w-[36rem] text-[0.78rem] leading-5 text-white/50 sm:text-xs">
+                Who is Tanie? Tanie is tanie.mp3: a React developer, creative developer, 3D web developer, and creator building web projects and sharing code on GitHub as taniemp3.
+              </p>
+
               <div className="mt-4 flex max-w-xl flex-wrap gap-1.5">
                 {[
                   "tanie.mp3",
@@ -125,6 +129,7 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
                   "tanie portfolio",
                   "tanie react",
                   "tanie singer",
+                  "who is Tanie",
                   "3D Developer",
                   "React Developer",
                   "React",
