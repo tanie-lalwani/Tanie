@@ -77,11 +77,11 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
               className="mt-4 text-4xl font-bold tracking-tight text-white sm:text-5xl md:text-6xl lg:text-7xl"
               style={{ fontFamily: "var(--font-display)" }}
             >
-              Tanie
+              I’m Tanie!
             </h1>
 
             <p className="mt-5 max-w-2xl text-sm leading-relaxed text-blue-950 sm:text-base">
-              I’m Tanie, also known as tanie.mp3. This is my official site, tanie.me, where I share 3D development, creative development, full stack projects, GitHub work at taniemp3, and Instagram work at tanie.mp3.
+              I’m Tanie, a creative developer and full stack developer making interactive websites, 3D/immersive web experiences, and modern web applications. Scroll to see my work or jump to the contact section.
             </p>
           </div>
         </motion.div>
