@@ -78,7 +78,7 @@ export function ContactForm() {
   return (
     <motion.form
       onSubmit={handleSubmit}
-      className="surface-panel relative w-full space-y-3 p-4 sm:p-5"
+      className="surface-panel relative w-full space-y-3.5 p-4 sm:p-5"
       aria-label="Contact form for web development project inquiries"
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
