@@ -81,9 +81,12 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
             >
               I’m Tanie!
             </h1>
+            <h2 className="mt-4 max-w-lg text-[10px] font-medium uppercase tracking-[0.18em] text-white/70 sm:text-[11px]">
+              Creative Developer
+            </h2>
 
             <p className="mt-5 max-w-2xl text-sm leading-relaxed text-blue-950 sm:text-base">
-              I’m Tanie, a creative developer and full stack developer making interactive websites, 3D/immersive web experiences, and modern web applications. Scroll to see my work or jump to the contact section.
+              I make interactive websites, 3D/immersive web experiences, and modern web applications. Scroll to see my work or jump to the contact section.
             </p>
           </div>
         </motion.div>
@@ -96,22 +99,31 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
         <div className="site-container relative z-10">
           <PageHeader
             eyebrow=""
-            title="About Tanie"
+            title="Hi There!"
             description=""
-            className="mb-3 max-w-xl [&_h2]:text-3xl [&_h2]:font-semibold [&_h2]:tracking-tight [&_h2]:text-white/94 sm:[&_h2]:text-4xl md:[&_h2]:text-5xl"
+            className="mb-3 max-w-xl [&_h2]:text-4xl [&_h2]:font-bold [&_h2]:tracking-tight [&_h2]:text-white sm:[&_h2]:text-5xl md:[&_h2]:text-6xl lg:[&_h2]:text-7xl"
           />
 
           <p className="mt-1 max-w-lg text-[10px] font-medium uppercase tracking-[0.18em] text-white/70 sm:text-[11px]">
-            Creative Developer · Full-Stack Web Developer · Creator
+            A bit about me
           </p>
 
           <div className="relative mb-4 flex flex-wrap items-center justify-between gap-2.5 border-b border-white/8 pb-2.5 sm:mb-5" />
 
           <div className="mt-5 grid gap-6 lg:grid-cols-[minmax(0,1.05fr)_minmax(18rem,0.85fr)] lg:items-center">
             <div>
-              <p className="max-w-[36rem] text-[0.82rem] leading-6 text-white/75 sm:text-sm">
-                I'm Tanie Lalwani, a creative developer and full stack developer focused on interactive web experiences, thoughtful interfaces, and modern digital products. Check out qna with me above or scroll to see some of my work and get in touch!
-              </p>
+              <div className="max-w-[36rem] text-[0.82rem] leading-6 text-white/75 sm:text-sm space-y-4">
+                                <p>Before you scroll, <p className="font-semibold text-white">are you looking for...</p>
+</p>
+
+
+                <p>A portfolio website? An interactive web experience? A modern frontend build? Product ideas brought to life? A landing page that actually feels intentional? Something immersive, polished, or just slightly more fun to use?
+</p>
+
+                <p>cuz I got you, I’ve been coding for around two years and spending most of that time building, experimenting, and trying to understand what makes something feel genuinely enjoyable to use.</p>
+
+                <p>I'd be happy to help :)</p>
+              </div>
 
               <div className="mt-4 flex max-w-xl flex-wrap gap-1.5">
                 {[
@@ -121,7 +133,7 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
                   "Full-Stack",
                   "Creative Development",
                   "UI Engineering",
-                  "Node.js",
+                  "Next.js",
                   "Interactive Web",
                 ].map((t) => (
                   <span key={t} className="rounded-full border border-white/9 bg-white/4 px-2 py-0.5 text-[10px] font-medium text-sky-100/50">
@@ -158,11 +170,11 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
             eyebrow=""
             title="Built so far."
             description=""
-            className="mb-4 max-w-2xl [&_h2]:text-3xl [&_h2]:font-semibold [&_h2]:tracking-tight [&_h2]:text-white/94 sm:[&_h2]:text-4xl md:[&_h2]:text-5xl"
+            className="mb-4 max-w-2xl [&_h2]:text-4xl [&_h2]:font-bold [&_h2]:tracking-tight [&_h2]:text-white sm:[&_h2]:text-5xl md:[&_h2]:text-6xl lg:[&_h2]:text-7xl"
           />
 
           <div className="mt-3 flex flex-wrap gap-1.5">
-            {"React, TypeScript, Three.js, Node.js".split(", ").map((tech) => (
+            {"React, TypeScript, Three.js, Next.js".split(", ").map((tech) => (
               <span
                 key={tech}
                 className="rounded-full border border-white/10 bg-white/5 px-2 py-0.5 text-[8px] font-medium uppercase tracking-[0.16em] text-white/48"
@@ -187,7 +199,7 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
             eyebrow=""
             title="Let's build something."
             description=""
-            className="mb-3 max-w-2xl [&_h2]:text-3xl [&_h2]:font-semibold [&_h2]:tracking-tight [&_h2]:text-white/94 sm:[&_h2]:text-4xl md:[&_h2]:text-5xl"
+            className="mb-3 max-w-2xl [&_h2]:text-4xl [&_h2]:font-bold [&_h2]:tracking-tight [&_h2]:text-white sm:[&_h2]:text-5xl md:[&_h2]:text-6xl lg:[&_h2]:text-7xl"
           />
 
           <p className="mt-4 max-w-xl text-xs font-medium text-slate-200/36 sm:text-sm">

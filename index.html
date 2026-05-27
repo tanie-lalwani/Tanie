@@ -3,48 +3,69 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Tanie Lalwani | Creative Developer & Full-Stack Web Developer</title>
+
+    <title>Tanie Lalwani | Creative & Full-Stack Developer</title>
+
     <meta
       name="description"
-      content="Creative developer building interactive websites and web experiences with React, TypeScript, and Three.js."
+      content="Tanie Lalwani is a creative & full-stack developer building interactive websites and web experiences."
     />
+
     <meta
       name="robots"
       content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"
     />
+
     <meta name="author" content="Tanie Lalwani" />
     <meta name="theme-color" content="#020617" />
+
+    <link
+      rel="sitemap"
+      type="application/xml"
+      title="Sitemap"
+      href="/sitemap.xml"
+    />
+    <link rel="manifest" href="/manifest.json" />
     <link rel="canonical" href="https://tanie.me/" />
     <link rel="apple-touch-icon" href="https://tanie.me/favicon.png" />
     <meta name="apple-mobile-web-app-title" content="Tanie" />
 
+    <!-- Open Graph -->
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Tanie" />
+
     <meta
       property="og:title"
-      content="Tanie Lalwani | Creative Developer"
+      content="Tanie Lalwani | Creative & Full-Stack Developer"
     />
+
     <meta
       property="og:description"
-      content="Creative developer building interactive websites and web experiences with React, TypeScript, and Three.js."
+      content="Creative & full-stack developer building interactive websites and web experiences."
     />
+
     <meta property="og:url" content="https://tanie.me/" />
-    <meta property="og:image" content="https://tanie.me/favicon.png" />
+    <meta property="og:image" content="https://tanie.me/og.png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta property="og:locale" content="en_US" />
 
+    <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
+
     <meta
       name="twitter:title"
-      content="Tanie Lalwani | Creative Developer"
+      content="Tanie Lalwani | Creative & Full-Stack Developer"
     />
+
     <meta
       name="twitter:description"
-      content="Creative developer building interactive websites and web experiences with React, TypeScript, and Three.js."
+      content="Creative & full-stack developer building interactive websites and web experiences."
     />
-    <meta name="twitter:image" content="https://tanie.me/favicon.png" />
 
+    <meta name="twitter:image" content="https://tanie.me/og.png" />
+
+    <!-- Structured Data -->
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -55,22 +76,21 @@
             "name": "Tanie Lalwani",
             "alternateName": ["Tanie"],
             "url": "https://tanie.me/",
+            "email": "contact@tanie.me",
             "image": "https://tanie.me/favicon.png",
             "mainEntityOfPage": "https://tanie.me/",
-            "jobTitle": "Creative Developer",
-            "description": "Creative developer focused on frontend experiences, interaction, and modern web interfaces.",
+            "jobTitle": "Creative & Full-Stack Developer",
+            "description": "Creative & full-stack developer building interactive websites and web experiences.",
             "knowsAbout": [
-              "Creative Development",
-              "Full-Stack Web Development",
-              "Frontend Development",
-              "Interactive Web Experiences",
               "React",
+              "Next.js",
               "TypeScript",
               "Three.js",
-              "Node.js"
+              "Frontend Development",
+              "Creative Development",
+              "Interactive Web Experiences"
             ],
             "sameAs": [
-              "https://tanie.me/",
               "https://github.com/taniemp3",
               "https://instagram.com/tanie.mp3",
               "https://linkedin.com/in/tanie-lalwani/"
@@ -81,30 +101,44 @@
             "@id": "https://tanie.me/#website",
             "url": "https://tanie.me/",
             "name": "Tanie Lalwani",
-            "alternateName": ["Tanie"],
+            "alternateName": "Tanie",
             "description": "Portfolio and selected work by Tanie Lalwani.",
-            "inLanguage": "en",
             "publisher": {
               "@id": "https://tanie.me/#person"
             },
             "about": {
               "@id": "https://tanie.me/#person"
-            }
+            },
+            "inLanguage": "en"
           },
           {
             "@type": "WebPage",
             "@id": "https://tanie.me/#webpage",
             "url": "https://tanie.me/",
-            "name": "Tanie Lalwani | Creative Developer",
-            "description": "Portfolio and selected work by Tanie Lalwani.",
+            "name": "Tanie Lalwani",
+            "description": "Creative & full-stack developer portfolio and selected work.",
             "isPartOf": {
               "@id": "https://tanie.me/#website"
+            },
+            "mainEntity": {
+              "@id": "https://tanie.me/#person"
+            },
+            "author": {
+              "@id": "https://tanie.me/#person"
             },
             "about": {
               "@id": "https://tanie.me/#person"
             },
-            "mainEntity": {
-              "@id": "https://tanie.me/#person"
+            "inLanguage": "en"
+          },
+          {
+            "@type": "WebPage",
+            "@id": "https://tanie.me/#qna",
+            "url": "https://tanie.me/qna",
+            "name": "Frontend Interview Questions",
+            "description": "A collection of frontend, React, JavaScript, and web development interview questions.",
+            "isPartOf": {
+              "@id": "https://tanie.me/#website"
             },
             "author": {
               "@id": "https://tanie.me/#person"
@@ -116,56 +150,27 @@
             "@id": "https://tanie.me/#profile-page",
             "url": "https://tanie.me/",
             "name": "Tanie Lalwani",
-            "description": "Profile page for Tanie Lalwani.",
             "isPartOf": {
               "@id": "https://tanie.me/#website"
-            },
-            "about": {
-              "@id": "https://tanie.me/#person"
-            },
-            "author": {
-              "@id": "https://tanie.me/#person"
             },
             "mainEntity": {
               "@id": "https://tanie.me/#person"
             },
-            "inLanguage": "en"
-          },
-          {
-            "@type": "ItemList",
-            "@id": "https://tanie.me/#projects",
-            "name": "Selected Portfolio Projects",
-            "description": "Selected creative development and web projects by Tanie Lalwani.",
-            "itemListOrder": "https://schema.org/ItemListOrderAscending",
-            "numberOfItems": 1,
-            "isPartOf": {
-              "@id": "https://tanie.me/#webpage"
-            },
             "about": {
               "@id": "https://tanie.me/#person"
-            },
-            "itemListElement": [
-              {
-                "@type": "ListItem",
-                "position": 1,
-                "item": {
-                  "@id": "https://tanie.me/#project-viziona"
-                }
-              }
-            ]
+            }
           },
           {
             "@type": "CreativeWork",
             "@id": "https://tanie.me/#project-viziona",
             "name": "Viziona",
-            "description": "A selected web project by Tanie Lalwani.",
+            "description": "A web project built by Tanie Lalwani.",
             "url": "https://viziona.com",
             "codeRepository": "https://github.com/taniemp3/viziona",
-            "keywords": ["React", "TypeScript", "Creative Development"],
-            "about": {
+            "author": {
               "@id": "https://tanie.me/#person"
             },
-            "author": {
+            "about": {
               "@id": "https://tanie.me/#person"
             }
           }
@@ -173,14 +178,17 @@
       }
     </script>
 
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&display=swap"
       rel="stylesheet"
     />
+
     <link rel="icon" type="image/png" href="/favicon.png" />
   </head>
+
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>

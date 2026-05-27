@@ -1,65 +1,144 @@
-import { readFileSync, writeFileSync } from "node:fs"
-import { join } from "node:path"
-
-const distIndexPath = join(process.cwd(), "dist", "index.html")
-
-const html = readFileSync(distIndexPath, "utf8")
-
 const prerenderedApp = String.raw`
 <div id="root">
   <main data-prerendered="true">
+
     <section id="home">
-      <h1>I'm Tanie!</h1>
+      <h1>Tanie Lalwani</h1>
+
       <p>
-        I'm Tanie, a creative developer and full-stack web developer making interactive websites, 3D/immersive web experiences, and modern web applications.
+        Creative Developer & Full-Stack Web Developer.
+      </p>
+
+      <p>
+        Building interactive websites, immersive web experiences, and modern web applications using React, TypeScript, Three.js, and Next.js.
       </p>
     </section>
+
     <section id="about">
       <h2>About Tanie</h2>
+
+      <p>Hey there!</p>
+
+      <p>Before you scroll, maybe a better question:</p>
+
+      <p><strong>What are you looking for?</strong></p>
+
+      <p>Someone to build something? A curious developer figuring things out? Interactive experiments, product thinking, frontend ideas, or just a portfolio with too many tiny details?</p>
+
+      <p>I’ve been coding for around two years and spending most of that time building, experimenting, and trying to understand what makes something feel genuinely enjoyable to use. Either way — welcome :)</p>
+
+      <ul>
+        <li>React</li>
+        <li>TypeScript</li>
+        <li>Three.js</li>
+        <li>Next.js</li>
+        <li>Creative Development</li>
+        <li>Frontend Engineering</li>
+        <li>Full-Stack Development</li>
+      </ul>
+
       <p>
-        Tanie Lalwani is a creative developer and builder focused on interactive web experiences, thoughtful interfaces, and modern digital products. Working across frontend and full-stack development, she enjoys turning ideas into experiences that feel intuitive, immersive, and genuinely enjoyable to use.
-      </p>
-      <p>
-        Skills include React, TypeScript, Three.js, Node.js, full-stack development, UI engineering, and creative development.
-      </p>
-      <p>
-        <a href="https://github.com/taniemp3" rel="me">GitHub</a>
-        <a href="https://instagram.com/tanie.mp3" rel="me">Instagram</a>
-        <a href="https://linkedin.com/in/tanie-lalwani/" rel="me">LinkedIn</a>
+        <a href="https://www.google.com/search?q=Tanie+Lalwani">
+          Know more about Tanie Lalwani
+        </a>
       </p>
     </section>
+
     <section id="projects">
-      <h2>Built so far.</h2>
+      <h2>Built so far</h2>
+
       <article>
         <h3>Viziona</h3>
+
         <p>
-          A focused web project shaped around clear interaction, clean interface decisions, and practical product execution.
+          A modern web project focused on interface clarity, practical user experience, and thoughtful implementation.
         </p>
+
         <p>
-          <a href="https://viziona.com">View Viziona</a>
-          <a href="https://github.com/taniemp3/viziona" rel="me">Code on GitHub</a>
+          Technologies: React, TypeScript, UI Engineering.
         </p>
+
+        <a href="https://viziona.com">
+          View Viziona
+        </a>
       </article>
+
       <article>
-        <h3>Creative development and 3D web work</h3>
+        <h3>Checkout Performance Overhaul — FinchPay</h3>
+
         <p>
-          Selected interactive websites, immersive web experiences, and modern frontend projects.
+          A frontend-focused performance pass aimed at improving checkout speed, usability, and interaction flow.
+        </p>
+      </article>
+
+      <article>
+        <h3>Marketing Site Rebuild — Leafline</h3>
+
+        <p>
+          A responsive marketing site rebuild focused on clearer structure, calmer visuals, and improved readability.
         </p>
       </article>
     </section>
+
     <section id="contact">
-      <h2>Contact Tanie Lalwani</h2>
-      <p>Open to creative, portfolio, and business web projects.</p>
-      <p><a href="mailto:contact@tanie.me">contact@tanie.me</a></p>
+      <h2>Let’s build something</h2>
+
+      <p>
+        Open to creative, portfolio, and business web projects.
+      </p>
+
+      <p>
+        <a href="mailto:contact@tanie.me">
+          contact@tanie.me
+        </a>
+      </p>
     </section>
+
+    <section id="links">
+      <h2>Links</h2>
+
+      <ul>
+        <li>
+          <a href="https://github.com/taniemp3" rel="me">
+            GitHub
+          </a>
+        </li>
+
+        <li>
+          <a href="https://instagram.com/tanie.mp3" rel="me">
+            Instagram
+          </a>
+        </li>
+
+        <li>
+          <a href="https://linkedin.com/in/tanie-lalwani/" rel="me">
+            LinkedIn
+          </a>
+        </li>
+      </ul>
+    </section>
+
   </main>
-</div>`
+</div>
+`;
 
-const nextHtml = html.replace('<div id="root"></div>', prerenderedApp.trim())
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
-if (nextHtml === html) {
-  throw new Error("Could not find empty root element in dist/index.html")
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const distPath = path.resolve(__dirname, '../dist/index.html');
+
+try {
+  let html = fs.readFileSync(distPath, 'utf8');
+
+  // Replace the empty root div with our prerendered content
+  html = html.replace('<div id="root"></div>', prerenderedApp);
+
+  fs.writeFileSync(distPath, html);
+  console.log('✅ Successfully injected prerendered HTML into dist/index.html');
+} catch (err) {
+  console.error('❌ Failed to prerender:', err);
 }
-
-writeFileSync(distIndexPath, nextHtml)
-console.log("Prerendered crawlable HTML into dist/index.html")
