@@ -107,7 +107,7 @@ export default function App() {
   const isWaitingForOceanScene = location.pathname === "/" && readyOceanLocationKey !== location.key;
 
   return (
-  <main
+  <div
     data-phase="default"
     className={`relative flex min-h-screen w-full flex-col overflow-x-hidden text-sky-950 ${showNavbar ? "pt-9" : ""}`}
     >
@@ -154,6 +154,6 @@ export default function App() {
       <AnimatePresence>
         {isWaitingForOceanScene ? <AppLoadingVeil key="app-loading-veil" /> : null}
       </AnimatePresence>
-    </main>
+    </div>
   );
 }

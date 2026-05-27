@@ -61,7 +61,7 @@ h4,
 h5,
 h6 {
 	font-family: var(--font-display);
-	letter-spacing: -0.02em;
+	letter-spacing: 0;
 	color: var(--color-text-heading);
 }
 
@@ -100,7 +100,7 @@ a:hover, .text-link:hover {
 	}
 
 	.section-title {
-		@apply mt-3 text-3xl font-semibold tracking-tight text-white/94 sm:text-4xl lg:text-5xl;
+		@apply mt-3 text-3xl font-semibold tracking-normal text-white/94 sm:text-4xl lg:text-5xl;
 	}
 
 	.section-copy {
@@ -108,11 +108,11 @@ a:hover, .text-link:hover {
 	}
 
 	.surface-panel {
-		@apply rounded-2xl border border-white/10 bg-slate-950/30 backdrop-blur-xl;
+		@apply rounded-2xl border border-white/8 bg-slate-950/26 backdrop-blur-xl;
 	}
 
 	.surface-panel-soft {
-		@apply rounded-2xl border border-white/8 bg-slate-950/18 backdrop-blur-lg;
+		@apply rounded-2xl border border-white/6 bg-slate-950/16 backdrop-blur-lg;
 	}
 
 	.ui-label {
@@ -120,19 +120,19 @@ a:hover, .text-link:hover {
 	}
 
 	.ui-input {
-		@apply rounded-xl border border-white/16 bg-white/10 px-4 py-2.5 text-sm text-sky-50/88 outline-none transition placeholder:text-sky-100/40 focus:border-sky-300/55 focus:ring-2 focus:ring-sky-300/25;
+		@apply rounded-xl border border-white/12 bg-white/8 px-4 py-2.5 text-sm text-sky-50/88 outline-none transition placeholder:text-sky-100/40 focus:border-sky-300/45 focus:ring-2 focus:ring-sky-300/20;
 	}
 
 	.ui-button-primary {
-		@apply inline-flex items-center justify-center rounded-full border border-sky-300/80 bg-[#b9d8ef]/95 px-4 py-1.5 text-xs font-medium text-[#243b6b] transition hover:bg-[#c8e4f7] hover:text-[#243b6b] focus:outline-none focus:ring-2 focus:ring-sky-300 disabled:cursor-not-allowed disabled:opacity-70;
+		@apply inline-flex items-center justify-center rounded-full border border-sky-300/65 bg-[#b9d8ef]/90 px-4 py-1.5 text-xs font-medium text-[#243b6b] transition hover:bg-[#c8e4f7]/95 hover:text-[#243b6b] focus:outline-none focus:ring-2 focus:ring-sky-300/75 disabled:cursor-not-allowed disabled:opacity-70;
 	}
 
 	.ui-button-link {
-		@apply inline-flex items-center justify-center rounded-full border border-sky-300/55 bg-[#b9d8ef]/82 px-4 py-1.5 text-xs font-medium text-black transition hover:bg-[#c8e4f7] hover:text-black focus:outline-none focus:ring-2 focus:ring-sky-300 disabled:cursor-not-allowed disabled:opacity-70 no-underline w-full sm:w-auto;
+		@apply inline-flex items-center justify-center rounded-full border border-sky-300/42 bg-[#b9d8ef]/72 px-4 py-1.5 text-xs font-medium text-black transition hover:bg-[#c8e4f7]/86 hover:text-black focus:outline-none focus:ring-2 focus:ring-sky-300/70 disabled:cursor-not-allowed disabled:opacity-70 no-underline w-full sm:w-auto;
 	}
 
 	.ui-icon-button {
-		@apply flex items-center justify-center rounded-full border border-white/12 bg-white/7 text-white/72 backdrop-blur transition hover:bg-white/12 hover:text-white disabled:cursor-not-allowed disabled:opacity-35;
+		@apply flex items-center justify-center rounded-full border border-white/9 bg-white/5 text-white/70 backdrop-blur transition hover:bg-white/9 hover:text-white disabled:cursor-not-allowed disabled:opacity-35;
 	}
 
 	.copy-clamp {
@@ -144,8 +144,8 @@ a:hover, .text-link:hover {
 
 	.project-visual {
 		background:
-			radial-gradient(circle at 50% 55%, rgba(205, 230, 245, 0.12), transparent 34%),
-			linear-gradient(135deg, rgba(9, 29, 43, 0.72), rgba(3, 9, 20, 0.88));
+			radial-gradient(circle at 50% 55%, rgba(205, 230, 245, 0.085), transparent 34%),
+			linear-gradient(135deg, rgba(9, 29, 43, 0.66), rgba(3, 9, 20, 0.82));
 	}
 
 	.project-scroll {

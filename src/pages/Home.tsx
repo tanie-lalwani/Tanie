@@ -18,23 +18,23 @@ const PROJECTS: Project[] = [
   {
     title: "Viziona",
     description:
-      "A focused web project shaped around clear interaction, clean interface decisions, and practical product execution.",
-    techStack: ["React", "TypeScript", "UI"],
+      "A responsive web application shaped around clear interaction, UI/UX design, and practical product execution.",
+    techStack: ["React", "TypeScript", "UI/UX"],
     site: "https://viziona.com",
     code: "https://github.com/taniemp3/viziona",
   },
   {
-    title: "Checkout Performance Overhaul — FinchPay",
+    title: "Checkout Performance Overhaul - FinchPay",
     description:
-      "A frontend performance pass focused on faster checkout flows, clearer states, and smoother user feedback.",
-    techStack: ["React", "TypeScript", "Node.js"],
+      "A frontend performance optimization pass for faster checkout flows, clearer states, and smoother feedback.",
+    techStack: ["React", "TypeScript", "Performance"],
     site: "https://finchpay.example",
   },
   {
-    title: "Marketing Site Rebuild — Leafline",
+    title: "Marketing Site Rebuild - Leafline",
     description:
-      "A modern site rebuild with tighter content structure, responsive layouts, and a calmer visual system.",
-    techStack: ["React", "TypeScript", "Design"],
+      "A modern frontend rebuild with tighter content structure, responsive layouts, and a calmer visual system.",
+    techStack: ["React", "TypeScript", "Web development"],
     site: "https://leafline.example",
   },
 ]
@@ -63,6 +63,7 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
 
       <motion.section
         id="home"
+        aria-labelledby="home-title"
         className="relative isolate flex min-h-[165svh] w-full items-start overflow-hidden px-4 pb-8 pt-16 sm:min-h-[140svh] sm:px-6 sm:pb-14 sm:pt-24"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -74,90 +75,85 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
         >
-          <div className="relative max-w-none">
+          <header className="relative max-w-none">
             <h1
-              className="mt-4 text-4xl font-bold tracking-tight text-white sm:text-5xl md:text-6xl lg:text-7xl"
+              id="home-title"
+              className="mt-4 text-4xl font-bold tracking-normal text-white sm:text-5xl md:text-6xl lg:text-7xl"
               style={{ fontFamily: "var(--font-display)" }}
             >
-              I’m Tanie!
+              I'm Tanie!
             </h1>
-            <h2 className="mt-4 max-w-lg text-[10px] font-medium uppercase tracking-[0.18em] text-slate-200/36 sm:text-[11px]">
-            · Creative Developer
-            </h2>
+            <p className="mt-1 max-w-lg text-[10px] font-medium uppercase tracking-[0.18em] text-slate-200/36 sm:text-[11px]">
+              Creative Developer
+            </p>
 
             <p className="mt-5 max-w-2xl text-sm leading-relaxed text-blue-950 sm:text-base">
-              I make interactive websites, 3D/immersive web experiences, and modern web applications. Scroll to see my work or jump to the contact section.
+              I make interactive websites, 3D web experiences, and modern responsive web applications with React, TypeScript, and thoughtful frontend engineering.
             </p>
-          </div>
+          </header>
         </motion.div>
       </motion.section>
 
       <section
         id="about"
+        aria-labelledby="about-title"
         className="relative isolate flex min-h-[88svh] w-full items-start overflow-hidden px-4 pb-7 pt-6 sm:min-h-[76vh] sm:px-6 sm:pb-9 sm:pt-9"
       >
         <div className="site-container relative z-10">
           <PageHeader
             eyebrow=""
             title="before you scroll..."
-            description=""
-            className="mb-3 max-w-xl [&_h2]:text-3xl [&_h2]:font-bold [&_h2]:tracking-tight [&_h2]:text-white sm:[&_h2]:text-4xl md:[&_h2]:text-5xl lg:[&_h2]:text-6xl"
+            titleId="about-title"
+            description="A bit about me, the way I build, and the kind of web work I like taking on."
+            className="mb-4 max-w-xl [&_h2]:text-3xl [&_h2]:font-bold [&_h2]:tracking-normal [&_h2]:text-white sm:[&_h2]:text-4xl md:[&_h2]:text-5xl lg:[&_h2]:text-6xl"
           />
-
-          <p className="mt-1 max-w-lg text-[10px] font-medium uppercase tracking-[0.18em] text-slate-200/36 sm:text-[11px]">
-            A bit about me
-          </p>
 
           <div className="relative mb-4 flex flex-wrap items-center justify-between gap-2.5 border-b border-white/8 pb-2.5 sm:mb-5" />
 
           <div className="mt-5 grid gap-6 lg:grid-cols-[minmax(0,1.05fr)_minmax(18rem,0.85fr)] lg:items-center">
-            <div>
+            <article aria-label="About Tanie Lalwani">
               <div className="max-w-[36rem] text-[0.82rem] leading-6 text-slate-200/36 sm:text-sm space-y-4">
-                                
-                <p>Looking for a portfolio website? An interactive web experience? A modern frontend build? Product ideas brought to life? A landing page that actually feels intentional? Something immersive, polished, or just slightly more fun to use?
-</p>
+                <p>Looking for a portfolio website, an interactive web experience, a modern frontend build, or a landing page that feels intentional?</p>
 
-                <p>I got you! I’ve been coding for around two years and spending most of that time building, experimenting, and trying to understand what makes something feel genuinely enjoyable to use.</p>
+                <p>I'm a frontend developer and React developer who has spent the last two years building, experimenting, and learning what makes interfaces feel genuinely enjoyable to use.</p>
 
-                <p>I'd be happy to help :)</p>
+                <p>I like clean TypeScript developer workflows, polished interaction, UI/UX design details, and web development that feels useful without losing personality.</p>
               </div>
 
-              
               <div className="mt-4">
-                <a href="https://www.google.com/search?q=Tanie+Lalwani" target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-slate-200/36 ">
+                <a href="https://www.google.com/search?q=Tanie+Lalwani" target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-slate-200/42 transition hover:text-white/82" aria-label="Search for more information about Tanie Lalwani">
                   Know more
                 </a>
               </div>
-            </div>
+            </article>
 
-            <div
-              className="relative h-56 w-full overflow-hidden rounded-2xl border border-white/10 bg-white/5 sm:h-64"
-              aria-label="About me image placeholder"
+            <figure
+              className="relative h-56 w-full overflow-hidden rounded-2xl border border-white/8 bg-white/4 sm:h-64"
+              role="img"
+              aria-label="Atmospheric visual placeholder for Tanie Lalwani's creative developer portfolio"
             >
-              <div className="absolute inset-0 bg-linear-to-br from-white/9 via-sky-100/5 to-slate-950/20" />
+              <div className="absolute inset-0 bg-linear-to-br from-white/7 via-sky-100/4 to-slate-950/18" />
               <div className="absolute inset-0 grid place-items-center text-xs font-semibold uppercase tracking-[0.22em] text-white/55">
                 Image Placeholder
               </div>
-            </div>
+            </figure>
           </div>
         </div>
       </section>
 
       <section
         id="projects"
+        aria-labelledby="projects-title"
         className="relative isolate flex min-h-[88svh] w-full items-start overflow-hidden px-4 pb-7 pt-6 sm:min-h-[76vh] sm:px-6 sm:pb-9 sm:pt-9"
       >
         <div className="site-container relative z-10">
           <PageHeader
             eyebrow=""
             title="Built so far."
-            description=""
-            className="mb-4 max-w-2xl [&_h2]:text-3xl [&_h2]:font-bold [&_h2]:tracking-tight [&_h2]:text-white sm:[&_h2]:text-4xl md:[&_h2]:text-5xl lg:[&_h2]:text-6xl"
+            titleId="projects-title"
+            description="Selected project cards from my React, TypeScript, and modern frontend engineering work."
+            className="mb-4 max-w-2xl [&_h2]:text-3xl [&_h2]:font-bold [&_h2]:tracking-normal [&_h2]:text-white sm:[&_h2]:text-4xl md:[&_h2]:text-5xl lg:[&_h2]:text-6xl"
           />
-
-          <p className="mt-1 max-w-lg text-[10px] font-medium uppercase tracking-[0.18em] text-slate-200/36 sm:text-[11px]">
-            Projects and Testimonials
-          </p>
 
           <div className="relative w-full">
             <ProjectsCarousel projects={PROJECTS} />
@@ -167,21 +163,19 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
 
       <section
         id="contact"
+        aria-labelledby="contact-title"
         className="relative isolate flex min-h-[88svh] w-full items-start overflow-hidden px-4 pb-7 pt-6 sm:min-h-[76vh] sm:px-6 sm:pb-9 sm:pt-9"
       >
         <div className="site-container relative z-10">
           <PageHeader
             eyebrow=""
             title="Let's build something."
-            description=""
-            className="mb-3 max-w-2xl [&_h2]:text-3xl [&_h2]:font-bold [&_h2]:tracking-tight [&_h2]:text-white sm:[&_h2]:text-4xl md:[&_h2]:text-5xl lg:[&_h2]:text-6xl"
+            titleId="contact-title"
+            description="Tell me what you want to make, from a focused web development project to a polished interactive experience."
+            className="mb-3 max-w-2xl [&_h2]:text-3xl [&_h2]:font-bold [&_h2]:tracking-normal [&_h2]:text-white sm:[&_h2]:text-4xl md:[&_h2]:text-5xl lg:[&_h2]:text-6xl"
           />
 
-           <p className="mt-1 max-w-lg text-[10px] font-medium uppercase tracking-[0.18em]  text-slate-200/36 sm:text-[11px]">
-            Projects and Testimonials
-          </p>
-
-          <div className="relative mb-5 flex flex-wrap items-center justify-between gap-2.5 border-b border-white/10 pb-3 sm:mb-5" />
+          <div className="relative mb-5 flex flex-wrap items-center justify-between gap-2.5 border-b border-white/8 pb-3 sm:mb-5" />
 
           <ContactForm />
         </div>
