@@ -100,7 +100,8 @@ a:hover, .text-link:hover {
 	}
 
 	.section-title {
-		@apply mt-3 text-3xl font-semibold tracking-normal text-white/94 sm:text-4xl lg:text-5xl;
+		font-family: var(--font-display);
+		@apply mt-3 text-3xl font-bold tracking-normal text-white/94 sm:text-4xl lg:text-5xl;
 	}
 
 	.section-copy {
