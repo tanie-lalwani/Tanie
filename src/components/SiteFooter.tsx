@@ -61,7 +61,7 @@ export default function SiteFooter({ className = "" }: SiteFooterProps) {
             </p>
             <p className="mt-1 text-xs font-medium text-sky-100/58">Creative Developer · Full-Stack Web Developer</p>
             <p className="mt-2 max-w-xs text-xs leading-5 text-sky-100/44">Building thoughtful digital experiences and interactive web products.</p>
-            <p className="mt-2 text-[11px] text-sky-100/36">React · TypeScript · Three.js · Node.js</p>
+            <p className="mt-2 text-[11px] text-sky-100/36">React · TypeScript · Three.js · Next.js</p>
           </div>
           <div className="grid grid-cols-2 gap-2 gap-x-4 sm:gap-x-6">
             {SOCIALS.map((social) => (
