@@ -3,9 +3,10 @@ type PageHeaderProps = {
   title: string
   description: string
   className?: string
+  titleId?: string
 }
 
-export default function PageHeader({ eyebrow, title, description, className = "" }: PageHeaderProps) {
+export default function PageHeader({ eyebrow, title, description, className = "", titleId }: PageHeaderProps) {
   return (
     <header className={`mb-8 max-w-3xl ${className}`}>
       {eyebrow ? (
@@ -14,7 +15,7 @@ export default function PageHeader({ eyebrow, title, description, className = ""
         </p>
       ) : null}
       {title ? (
-        <h2 className="section-title" style={{ fontFamily: 'var(--font-display)' }}>
+        <h2 id={titleId} className="section-title" style={{ fontFamily: 'var(--font-display)' }}>
           {title}
         </h2>
       ) : null}
@@ -26,6 +27,5 @@ export default function PageHeader({ eyebrow, title, description, className = ""
     </header>
   )
 }
-
 
 

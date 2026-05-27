@@ -56,7 +56,7 @@ export default function SiteFooter({ className = "" }: SiteFooterProps) {
         <div className="h-px w-full bg-linear-to-r from-transparent via-white/10 to-transparent" />
         <div className="mt-5 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div>
-            <p className="text-sm font-semibold tracking-tight text-white/92" style={{ fontFamily: "var(--font-display)" }}>
+            <p className="text-sm font-semibold tracking-normal text-white/92" style={{ fontFamily: "var(--font-display)" }}>
               Tanie Lalwani
             </p>
             <p className="mt-1 text-xs font-medium text-sky-100/58">Creative Developer</p>

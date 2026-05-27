@@ -59,12 +59,12 @@ export default function Navbar({ phase }: NavbarProps) {
     }
   }, [])
 
-  const navBorder = rgba([186, 230, 253, 0.5], [130, 162, 172, 0.18], diveProgress)
-  const linkBackground = rgba([185, 216, 239, 0.95], [10, 32, 46, 0.64], diveProgress)
-  const activeBackground = rgba([200, 228, 247, 0.96], [18, 48, 66, 0.76], diveProgress)
-  const linkBorder = rgba([125, 211, 252, 0.8], [154, 185, 194, 0.3], diveProgress)
+  const navBorder = rgba([186, 230, 253, 0.38], [130, 162, 172, 0.14], diveProgress)
+  const linkBackground = rgba([185, 216, 239, 0.86], [10, 32, 46, 0.54], diveProgress)
+  const activeBackground = rgba([200, 228, 247, 0.9], [18, 48, 66, 0.68], diveProgress)
+  const linkBorder = rgba([125, 211, 252, 0.62], [154, 185, 194, 0.24], diveProgress)
   const linkText = rgba([36, 59, 107, 1], [234, 246, 255, 1], diveProgress)
-  const glowColor = rgba([186, 230, 253, 0.75], [150, 190, 204, 0.5], diveProgress)
+  const glowColor = rgba([186, 230, 253, 0.54], [150, 190, 204, 0.36], diveProgress)
   const dotColor = rgba([186, 230, 253, 1], [202, 228, 236, 0.92], diveProgress)
   const linkStyle = (isActive = false): CSSProperties => ({
     backgroundColor: isActive ? activeBackground : linkBackground,
@@ -75,6 +75,7 @@ export default function Navbar({ phase }: NavbarProps) {
   return (
     <header className="w-full">
       <nav
+        aria-label="Primary navigation"
         className="flex h-9 w-full items-center justify-between border-b px-3 backdrop-blur-xl transition-colors duration-200 sm:px-5"
         style={{ backgroundColor: 'transparent', borderColor: navBorder }}
       >
