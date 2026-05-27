@@ -6,6 +6,7 @@ import SiteFooter from "./components/SiteFooter";
 import { type TimePhase } from "./experience/timePhase";
 import { useCursorTrail } from "./hooks/useCursorTrail";
 import { useClickRipple } from "./hooks/useClickRipple";
+import { useLanguage } from "./context/LanguageContext";
 
 const loadHome = () => import("./pages/Home");
 const loadQnA = () => import("./pages/InterviewMe.tsx");
@@ -14,6 +15,8 @@ const Home = lazy(loadHome);
 const QnA = lazy(loadQnA);
 
 function AppLoadingVeil() {
+  const { copy } = useLanguage()
+
   return (
     <motion.div
       className="fixed inset-0 z-[10000] grid place-items-center overflow-hidden px-6 backdrop-blur-[12px]"
@@ -53,7 +56,7 @@ function AppLoadingVeil() {
           className="flex text-base font-medium leading-none tracking-normal text-white/70 sm:text-lg"
           style={{ fontFamily: "var(--font-body)" }}
         >
-          Welcome
+          {copy.loading.welcome}
         </div>
       </motion.div>
     </motion.div>

@@ -1,6 +1,7 @@
 import { motion } from "framer-motion"
 import type { FormEvent } from "react"
 import { useState } from "react"
+import { useLanguage } from "../context/LanguageContext"
 
 const FORM_ENDPOINT = import.meta.env.VITE_FORMSPREE_ENDPOINT ?? ""
 
@@ -22,6 +23,7 @@ const labelClass = "text-[11.5px] font-medium tracking-[0.18em] text-slate-200/3
 const inputClass = "rounded-xl border border-white/14 bg-white/10 px-4 py-2 text-[11.5px] font-medium leading-6 tracking-[0.18em] text-slate-100/70 outline-none transition placeholder:text-[11.5px] placeholder:tracking-[0.18em] placeholder:text-slate-200/30 focus:border-sky-300/46 focus:ring-2 focus:ring-sky-300/20 sm:text-[12.5px]"
 
 export function ContactForm() {
+  const { copy } = useLanguage()
   const [fields, setFields] = useState<ContactFields>(initialFields)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle")
@@ -36,7 +38,7 @@ export function ContactForm() {
 
     if (!FORM_ENDPOINT) {
       setSubmitStatus("error")
-      setSubmitMessage("Form endpoint is not configured.")
+      setSubmitMessage(copy.contact.endpointError)
       return
     }
 
@@ -60,7 +62,7 @@ export function ContactForm() {
 
       if (response.ok) {
         setSubmitStatus("success")
-        setSubmitMessage("Message sent! I'll get back to you soon.")
+        setSubmitMessage(copy.contact.success)
         setFields(initialFields)
 
         setTimeout(() => {
@@ -68,11 +70,11 @@ export function ContactForm() {
         }, 4000)
       } else {
         setSubmitStatus("error")
-        setSubmitMessage("Failed to send message. Please try again.")
+        setSubmitMessage(copy.contact.error)
       }
     } catch {
       setSubmitStatus("error")
-      setSubmitMessage("Network error. Please check your connection and try again.")
+      setSubmitMessage(copy.contact.networkError)
     } finally {
       setIsSubmitting(false)
     }
@@ -89,6 +91,7 @@ export function ContactForm() {
     >
       <label className="flex flex-col gap-1.5">
         <span className={labelClass}>Name</span>
+        <span className={labelClass}>{copy.contact.labels.name}</span>
         <input
           type="text"
           name="name"
@@ -96,12 +99,12 @@ export function ContactForm() {
           value={fields.name}
           onChange={(event) => updateField("name", event.target.value)}
           className={inputClass}
-          placeholder="Your name"
+          placeholder={copy.contact.placeholders.name}
         />
       </label>
 
       <label className="flex flex-col gap-1.5">
-        <span className={labelClass}>Email</span>
+        <span className={labelClass}>{copy.contact.labels.email}</span>
         <input
           type="email"
           name="email"
@@ -109,24 +112,24 @@ export function ContactForm() {
           value={fields.email}
           onChange={(event) => updateField("email", event.target.value)}
           className={inputClass}
-          placeholder="your@email.com"
+          placeholder={copy.contact.placeholders.email}
         />
       </label>
 
       <label className="flex flex-col gap-1.5">
-        <span className={labelClass}>Subject</span>
+        <span className={labelClass}>{copy.contact.labels.subject}</span>
         <input
           type="text"
           name="subject"
           value={fields.subject}
           onChange={(event) => updateField("subject", event.target.value)}
           className={inputClass}
-          placeholder="What's this about?"
+          placeholder={copy.contact.placeholders.subject}
         />
       </label>
 
       <label className="flex flex-col gap-1.5">
-        <span className={labelClass}>Message</span>
+        <span className={labelClass}>{copy.contact.labels.message}</span>
         <textarea
           name="message"
           required
@@ -134,7 +137,7 @@ export function ContactForm() {
           onChange={(event) => updateField("message", event.target.value)}
           rows={3}
           className={`${inputClass} min-h-20 resize-y`}
-          placeholder="Tell me about your project..."
+          placeholder={copy.contact.placeholders.message}
         />
       </label>
 
@@ -143,7 +146,7 @@ export function ContactForm() {
         disabled={isSubmitting}
         className="inline-flex h-9 items-center justify-center rounded-full px-4 text-[9px] tracking-[0.04em] font-medium text-[#274472] border border-[#274472]/15 hover:bg-white/5 transition"
       >
-        {isSubmitting ? "Sending..." : "Send message"}
+        {isSubmitting ? copy.contact.sending : copy.contact.button}
       </button>
 
       {submitStatus !== "idle" && (

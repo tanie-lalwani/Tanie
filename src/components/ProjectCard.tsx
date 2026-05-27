@@ -1,4 +1,5 @@
 import { motion } from "framer-motion"
+import { useLanguage } from "../context/LanguageContext"
 
 interface ProjectCardProps {
   site: string
@@ -9,6 +10,7 @@ interface ProjectCardProps {
 }
 
 export function ProjectCard({ site, code, title, description, techStack }: ProjectCardProps) {
+  const { copy } = useLanguage()
   const titleId = `project-${title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "")}`
 
   return (
@@ -64,9 +66,9 @@ export function ProjectCard({ site, code, title, description, techStack }: Proje
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center justify-center rounded-full border border-sky-200/18 bg-sky-100/8 px-3 py-1.5 text-[10px] font-medium tracking-[0.18em] no-underline text-slate-100/58 transition hover:bg-sky-100/12 hover:text-slate-50/74 focus:outline-none focus:ring-2 focus:ring-sky-300/24"
-                  aria-label={`Visit project site: ${title}`}
+                  aria-label={`${copy.projectCard.view} ${title}`}
                 >
-                  View
+                  {copy.projectCard.view}
                 </a>
                 {code ? (
                   <a
@@ -74,9 +76,9 @@ export function ProjectCard({ site, code, title, description, techStack }: Proje
                     target="_blank"
                     rel="me noopener noreferrer"
                     className="inline-flex items-center justify-center rounded-full border border-white/5 bg-transparent px-3 py-1.5 text-[10px] font-medium tracking-[0.18em] no-underline text-slate-200/38 transition hover:bg-white/5 hover:text-slate-100/58 focus:outline-none focus:ring-2 focus:ring-sky-300/22"
-                    aria-label={`View GitHub code for ${title}`}
+                    aria-label={`${copy.projectCard.code} ${title}`}
                   >
-                    Code
+                    {copy.projectCard.code}
                   </a>
                 ) : null}
               </div>
