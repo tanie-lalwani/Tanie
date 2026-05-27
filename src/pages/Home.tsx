@@ -99,9 +99,9 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
         <div className="site-container relative z-10">
           <PageHeader
             eyebrow=""
-            title="Hi There!"
+            title="before you scroll..."
             description=""
-            className="mb-3 max-w-xl [&_h2]:text-4xl [&_h2]:font-bold [&_h2]:tracking-tight [&_h2]:text-white sm:[&_h2]:text-5xl md:[&_h2]:text-6xl lg:[&_h2]:text-7xl"
+            className="mb-3 max-w-xl [&_h2]:text-3xl [&_h2]:font-bold [&_h2]:tracking-tight [&_h2]:text-white sm:[&_h2]:text-4xl md:[&_h2]:text-5xl lg:[&_h2]:text-6xl"
           />
 
           <p className="mt-1 max-w-lg text-[10px] font-medium uppercase tracking-[0.18em] text-white/70 sm:text-[11px]">
@@ -113,34 +113,16 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
           <div className="mt-5 grid gap-6 lg:grid-cols-[minmax(0,1.05fr)_minmax(18rem,0.85fr)] lg:items-center">
             <div>
               <div className="max-w-[36rem] text-[0.82rem] leading-6 text-white/75 sm:text-sm space-y-4">
-                                <p>Before you scroll, <p className="font-semibold text-white">are you looking for...</p>
+                                
+                <p>Looking for .. A portfolio website? An interactive web experience? A modern frontend build? Product ideas brought to life? A landing page that actually feels intentional? Something immersive, polished, or just slightly more fun to use?
 </p>
 
-
-                <p>A portfolio website? An interactive web experience? A modern frontend build? Product ideas brought to life? A landing page that actually feels intentional? Something immersive, polished, or just slightly more fun to use?
-</p>
-
-                <p>cuz I got you, I’ve been coding for around two years and spending most of that time building, experimenting, and trying to understand what makes something feel genuinely enjoyable to use.</p>
+                <p>I got you! I’ve been coding for around two years and spending most of that time building, experimenting, and trying to understand what makes something feel genuinely enjoyable to use.</p>
 
                 <p>I'd be happy to help :)</p>
               </div>
 
-              <div className="mt-4 flex max-w-xl flex-wrap gap-1.5">
-                {[
-                  "React",
-                  "TypeScript",
-                  "Three.js",
-                  "Full-Stack",
-                  "Creative Development",
-                  "UI Engineering",
-                  "Next.js",
-                  "Interactive Web",
-                ].map((t) => (
-                  <span key={t} className="rounded-full border border-white/9 bg-white/4 px-2 py-0.5 text-[10px] font-medium text-sky-100/50">
-                    {t}
-                  </span>
-                ))}
-              </div>
+              
               <div className="mt-4">
                 <a href="https://www.google.com/search?q=Tanie+Lalwani" target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-white underline">
                   Know more
@@ -170,7 +152,7 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
             eyebrow=""
             title="Built so far."
             description=""
-            className="mb-4 max-w-2xl [&_h2]:text-4xl [&_h2]:font-bold [&_h2]:tracking-tight [&_h2]:text-white sm:[&_h2]:text-5xl md:[&_h2]:text-6xl lg:[&_h2]:text-7xl"
+            className="mb-4 max-w-2xl [&_h2]:text-3xl [&_h2]:font-bold [&_h2]:tracking-tight [&_h2]:text-white sm:[&_h2]:text-4xl md:[&_h2]:text-5xl lg:[&_h2]:text-6xl"
           />
 
           <div className="mt-3 flex flex-wrap gap-1.5">
@@ -199,7 +181,7 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
             eyebrow=""
             title="Let's build something."
             description=""
-            className="mb-3 max-w-2xl [&_h2]:text-4xl [&_h2]:font-bold [&_h2]:tracking-tight [&_h2]:text-white sm:[&_h2]:text-5xl md:[&_h2]:text-6xl lg:[&_h2]:text-7xl"
+            className="mb-3 max-w-2xl [&_h2]:text-3xl [&_h2]:font-bold [&_h2]:tracking-tight [&_h2]:text-white sm:[&_h2]:text-4xl md:[&_h2]:text-5xl lg:[&_h2]:text-6xl"
           />
 
           <p className="mt-4 max-w-xl text-xs font-medium text-slate-200/36 sm:text-sm">
