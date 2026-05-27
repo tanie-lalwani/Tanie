@@ -50,7 +50,7 @@ function AppLoadingVeil() {
           aria-hidden="true"
         />
         <div
-          className="flex text-xl font-semibold leading-none tracking-normal text-white/82 sm:text-2xl"
+          className="flex text-base font-medium leading-none tracking-normal text-white/70 sm:text-lg"
           style={{ fontFamily: "var(--font-body)" }}
         >
           Welcome

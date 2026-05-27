@@ -166,20 +166,10 @@ a:hover, .text-link:hover {
 	}
 
 	.project-scroll {
-		scrollbar-width: thin;
-		scrollbar-color: rgba(226, 242, 255, 0.22) transparent;
+		scrollbar-width: none;
 	}
 
 	.project-scroll::-webkit-scrollbar {
-		height: 0.45rem;
-	}
-
-	.project-scroll::-webkit-scrollbar-track {
-		background: transparent;
-	}
-
-	.project-scroll::-webkit-scrollbar-thumb {
-		background: rgba(226, 242, 255, 0.18);
-		border-radius: 999px;
+		display: none;
 	}
 }

@@ -44,7 +44,7 @@ export function ProjectCard({ site, code, title, description, techStack }: Proje
             </div>
 
             <div className="relative px-1 pt-0.5">
-              <h3 id={titleId} className="text-[0.98rem] font-semibold leading-tight text-white/90" style={{ fontFamily: "var(--font-display)" }}>
+              <h3 id={titleId} className="text-[0.95rem] font-semibold leading-tight text-sky-50/76" style={{ fontFamily: "var(--font-body)" }}>
                 {title}
               </h3>
               <p className="copy-clamp mt-1 max-w-[58ch] text-xs leading-5 text-sky-100/60 sm:text-[0.82rem]">
