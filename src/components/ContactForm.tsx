@@ -141,7 +141,7 @@ export function ContactForm() {
       <button
         type="submit"
         disabled={isSubmitting}
-        className={`${labelClass} inline-flex w-full items-center justify-center rounded-full border border-sky-300/65 bg-[#b9d8ef]/90 px-4 py-1.5 transition hover:bg-[#c8e4f7]/95 focus:outline-none focus:ring-2 focus:ring-sky-300/75 disabled:cursor-not-allowed disabled:opacity-70 sm:w-auto`}
+        className="inline-flex h-9 items-center justify-center rounded-full px-4 text-[9px] tracking-[0.04em] font-medium text-[#274472] border border-[#274472]/15 hover:bg-white/5 transition"
       >
         {isSubmitting ? "Sending..." : "Send message"}
       </button>
