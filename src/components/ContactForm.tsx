@@ -19,7 +19,7 @@ const initialFields: ContactFields = {
 }
 
 const labelClass = "text-[11.5px] font-medium tracking-[0.18em] text-slate-200/36 sm:text-[12.5px]"
-const inputClass = "rounded-xl border border-white/14 bg-white/10 px-4 py-2.5 text-[11.5px] font-medium leading-6 tracking-[0.18em] text-slate-100/70 outline-none transition placeholder:text-slate-200/30 focus:border-sky-300/46 focus:ring-2 focus:ring-sky-300/20 sm:text-[12.5px]"
+const inputClass = "rounded-xl border border-white/14 bg-white/10 px-4 py-2 text-[11.5px] font-medium leading-6 tracking-[0.18em] text-slate-100/70 outline-none transition placeholder:text-[11.5px] placeholder:tracking-[0.18em] placeholder:text-slate-200/30 focus:border-sky-300/46 focus:ring-2 focus:ring-sky-300/20 sm:text-[12.5px]"
 
 export function ContactForm() {
   const [fields, setFields] = useState<ContactFields>(initialFields)
@@ -133,7 +133,7 @@ export function ContactForm() {
           value={fields.message}
           onChange={(event) => updateField("message", event.target.value)}
           rows={3}
-          className={`${inputClass} min-h-24 resize-y`}
+          className={`${inputClass} min-h-20 resize-y`}
           placeholder="Tell me about your project..."
         />
       </label>
@@ -141,7 +141,7 @@ export function ContactForm() {
       <button
         type="submit"
         disabled={isSubmitting}
-        className="inline-flex w-full items-center justify-center rounded-full border border-sky-300/65 bg-[#b9d8ef]/90 px-4 py-1.5 text-xs font-medium text-[#243b6b] transition hover:bg-[#c8e4f7]/95 hover:text-[#243b6b] focus:outline-none focus:ring-2 focus:ring-sky-300/75 disabled:cursor-not-allowed disabled:opacity-70 sm:w-auto"
+        className={`${labelClass} inline-flex w-full items-center justify-center rounded-full border border-sky-300/65 bg-[#b9d8ef]/90 px-4 py-1.5 transition hover:bg-[#c8e4f7]/95 focus:outline-none focus:ring-2 focus:ring-sky-300/75 disabled:cursor-not-allowed disabled:opacity-70 sm:w-auto`}
       >
         {isSubmitting ? "Sending..." : "Send message"}
       </button>
