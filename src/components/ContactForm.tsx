@@ -90,7 +90,6 @@ export function ContactForm() {
       transition={{ duration: 0.45, ease: "easeOut" }}
     >
       <label className="flex flex-col gap-1.5">
-        <span className={labelClass}>Name</span>
         <span className={labelClass}>{copy.contact.labels.name}</span>
         <input
           type="text"

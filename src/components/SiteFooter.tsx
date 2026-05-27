@@ -1,4 +1,5 @@
 import type { ReactNode } from "react"
+import { useLanguage } from "../context/LanguageContext"
 
 type SocialItem = {
   label: string
@@ -50,6 +51,8 @@ type SiteFooterProps = {
 }
 
 export default function SiteFooter({ className = "" }: SiteFooterProps) {
+  const { copy } = useLanguage()
+
   return (
     <footer className={`relative z-20 w-full border-t border-white/8 bg-slate-950/56 px-4 py-5 backdrop-blur-xl sm:px-6 sm:py-6 ${className}`}>
       <div className="site-container">
@@ -59,7 +62,7 @@ export default function SiteFooter({ className = "" }: SiteFooterProps) {
             <p className="text-sm font-semibold tracking-normal text-white/92" style={{ fontFamily: "var(--font-display)" }}>
               Tanie Lalwani
             </p>
-            <p className="mt-1 text-[0.86rem] font-medium text-sky-100/58">Creative Developer</p>
+            <p className="mt-1 text-[0.86rem] font-medium text-sky-100/58">{copy.footer.role}</p>
             
           </div>
           <div className="grid grid-cols-2 gap-2 gap-x-4 sm:gap-x-6">
@@ -81,7 +84,7 @@ export default function SiteFooter({ className = "" }: SiteFooterProps) {
         </div>
         <div className="mt-5 h-px w-full bg-linear-to-r from-transparent via-white/8 to-transparent" />
         <p className="mt-3 text-center text-[11.5px] text-sky-100/42">
-        © 2026 Tanie Lalwani : Built with React, TypeScript, Three.js, and a lot of coffee.{" "}
+        {copy.footer.copyright}{" "}
         </p>
       </div>
     </footer>
