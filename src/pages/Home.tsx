@@ -104,9 +104,9 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
             eyebrow=""
             title="before you scroll..."
             titleId="about-title"
-            description="A bit about me, the way I build, and the kind of web work I like taking on."
-            className="mb-4 max-w-xl [&_h2]:text-3xl [&_h2]:font-bold [&_h2]:tracking-normal [&_h2]:text-white sm:[&_h2]:text-4xl md:[&_h2]:text-5xl lg:[&_h2]:text-6xl"
-          />
+            description="A bit about me."
+            className="mt-1 max-w-lg text-[10px] font-medium uppercase tracking-[0.18em] text-slate-200/36 sm:text-[11px]"
+            />
 
           <div className="relative mb-4 flex flex-wrap items-center justify-between gap-2.5 border-b border-white/8 pb-2.5 sm:mb-5" />
 
@@ -149,12 +149,11 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
         <div className="site-container relative z-10">
           <PageHeader
             eyebrow=""
-            title="Built so far."
+            title="Built so far..."
             titleId="projects-title"
-            description="Selected project cards from my React, TypeScript, and modern frontend engineering work."
-            className="mb-4 max-w-2xl [&_h2]:text-3xl [&_h2]:font-bold [&_h2]:tracking-normal [&_h2]:text-white sm:[&_h2]:text-4xl md:[&_h2]:text-5xl lg:[&_h2]:text-6xl"
-          />
-
+            description="Projects and testimonials."
+            className="mt-1 max-w-lg text-[10px] font-medium uppercase tracking-[0.18em] text-slate-200/36 sm:text-[11px]"
+            />
           <div className="relative w-full">
             <ProjectsCarousel projects={PROJECTS} />
           </div>
@@ -169,10 +168,10 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
         <div className="site-container relative z-10">
           <PageHeader
             eyebrow=""
-            title="Let's build something."
+            title="Let's build ..."
             titleId="contact-title"
-            description="Tell me what you want to make, from a focused web development project to a polished interactive experience."
-            className="mb-3 max-w-2xl [&_h2]:text-3xl [&_h2]:font-bold [&_h2]:tracking-normal [&_h2]:text-white sm:[&_h2]:text-4xl md:[&_h2]:text-5xl lg:[&_h2]:text-6xl"
+            description="Let's bring your ideas to life."
+            className="mt-1 max-w-lg text-[10px] font-medium uppercase tracking-[0.18em] text-slate-200/36 sm:text-[11px]"
           />
 
           <div className="relative mb-5 flex flex-wrap items-center justify-between gap-2.5 border-b border-white/8 pb-3 sm:mb-5" />
