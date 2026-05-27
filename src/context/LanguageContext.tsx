@@ -109,7 +109,7 @@ const translations: Record<Locale, SiteCopy> = {
       heroTitle: "I'm Tanie!",
       heroRole: "Creative Developer",
       heroDescription:
-        "I make interactive websites, 3D web experiences, and modern responsive web applications using modern tech-stack.Scroll to see my work or jump to contact section",
+        "I make interactive websites, 3D web experiences, and modern responsive web applications. Scroll to see my work or jump to contact section",
       aboutTitle: "A bit about me:",
       aboutParagraphs: [
         "Looking for a portfolio website, an interactive web experience, a modern frontend build, or a landing page that feels intentional?",
