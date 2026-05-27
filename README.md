@@ -56,13 +56,21 @@ cd Portfolio
 npm install
 ```
 
-3. Start the development server:
+3. Create your local environment file from the example:
+
+```bash
+copy .env.example .env.local
+```
+
+4. Add your server-only Gemini key to `.env.local` as `GEMINI_API_KEY=...`. Keep it out of `VITE_` vars so it stays off the frontend bundle.
+
+5. Start the development server and Gemini proxy together:
 
 ```bash
 npm run dev
 ```
 
-4. Open your browser and navigate to `http://localhost:5173`
+6. Open your browser and navigate to `http://localhost:5173`
 
 ## Project Structure
 
@@ -197,6 +205,12 @@ The core interaction is scroll-depth based. As users scroll down the page:
 ## Deployment
 
 The site is deployed at `tanie.me`
+
+### Gemini Bot Setup
+
+The QnA bot calls a local `/api/gemini` proxy during development. `npm run dev` starts both Vite and the proxy, and the proxy reads `GEMINI_API_KEY` from `.env.local`, so the key never ships in the browser bundle.
+
+If you deploy the site somewhere serverless or on a Node host, point the frontend at the same `/api/gemini` route there and keep the API key in the server environment only.
 
 ```bash
 # Build and deploy

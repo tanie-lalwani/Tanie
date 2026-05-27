@@ -51,13 +51,6 @@ export default function QnA() {
     { id: 1, role: "bot", text: "hi im tanie" },
   ])
 
-  useEffect(() => {
-    if (isBotOpen) {
-      setBotNotificationVisible(false)
-    }
-  }, [isBotOpen])
-
-
   // Track which card is centered in the viewport
   const [activeIndex, setActiveIndex] = useState(0);
   const questions = copy.qna.questions
@@ -98,7 +91,7 @@ export default function QnA() {
       if (container) container.removeEventListener('scroll', onScroll);
       window.removeEventListener('keydown', onKeyDown);
     };
-  }, [activeIndex]);
+  }, [activeIndex, questions.length]);
 
 
 
@@ -403,9 +396,7 @@ export default function QnA() {
                   {isReplying ? "..." : "Send"}
                 </button>
               </div>
-              <p className="mt-2 px-1 text-[10px] font-medium uppercase tracking-[0.18em] text-black/34">
-                Answers come from your portfolio data and Gemini when configured.
-              </p>
+              
             </form>
           </section>
         ) : null}
