@@ -101,15 +101,15 @@ a:hover, .text-link:hover {
 
 	.section-title {
 		font-family: var(--font-display);
-		@apply mt-3 text-3xl font-bold tracking-normal text-white/94 sm:text-4xl lg:text-5xl;
+		@apply mt-2 text-2xl font-semibold tracking-normal text-white/92 sm:text-3xl lg:text-4xl;
 	}
 
 	.section-copy {
-		@apply mt-3 max-w-xl text-sm leading-6 text-sky-100/56;
+		@apply mt-2 max-w-[62ch] text-sm leading-6 text-sky-100/64;
 	}
 
 	.surface-panel {
-		@apply rounded-2xl border border-white/8 bg-slate-950/26 backdrop-blur-xl;
+		@apply rounded-2xl border border-white/8 bg-slate-950/28 backdrop-blur-xl;
 	}
 
 	.surface-panel-soft {
@@ -117,11 +117,11 @@ a:hover, .text-link:hover {
 	}
 
 	.ui-label {
-		@apply text-xs font-semibold tracking-wide text-sky-100/76;
+		@apply text-xs font-semibold tracking-wide text-sky-100/80;
 	}
 
 	.ui-input {
-		@apply rounded-xl border border-white/12 bg-white/8 px-4 py-2.5 text-sm text-sky-50/88 outline-none transition placeholder:text-sky-100/40 focus:border-sky-300/45 focus:ring-2 focus:ring-sky-300/20;
+		@apply rounded-xl border border-white/14 bg-white/10 px-4 py-2.5 text-sm text-sky-50/90 outline-none transition placeholder:text-sky-100/44 focus:border-sky-300/46 focus:ring-2 focus:ring-sky-300/20;
 	}
 
 	.ui-button-primary {
@@ -145,8 +145,39 @@ a:hover, .text-link:hover {
 
 	.project-visual {
 		background:
-			radial-gradient(circle at 50% 55%, rgba(205, 230, 245, 0.085), transparent 34%),
-			linear-gradient(135deg, rgba(9, 29, 43, 0.66), rgba(3, 9, 20, 0.82));
+			radial-gradient(circle at 50% 55%, rgba(205, 230, 245, 0.068), transparent 34%),
+			linear-gradient(135deg, rgba(9, 29, 43, 0.62), rgba(3, 9, 20, 0.78));
+	}
+
+	.project-video {
+		background:
+			linear-gradient(115deg, rgba(125, 211, 252, 0.12), transparent 28%),
+			linear-gradient(145deg, rgba(255, 255, 255, 0.08), transparent 18%),
+			linear-gradient(135deg, rgba(5, 18, 32, 0.78), rgba(8, 47, 73, 0.58), rgba(2, 6, 23, 0.86));
+	}
+
+	.project-video::before {
+		position: absolute;
+		inset: -35%;
+		content: "";
+		background: linear-gradient(90deg, transparent, rgba(226, 242, 255, 0.12), transparent);
+		animation: video-sheen 4.8s ease-in-out infinite;
+	}
+
+	.project-video-progress {
+		width: 38%;
+		animation: video-progress 5.8s ease-in-out infinite;
+	}
+
+	@keyframes video-sheen {
+		0%, 28% { transform: translateX(-35%) rotate(10deg); opacity: 0; }
+		45% { opacity: 1; }
+		72%, 100% { transform: translateX(35%) rotate(10deg); opacity: 0; }
+	}
+
+	@keyframes video-progress {
+		0%, 100% { width: 28%; }
+		50% { width: 72%; }
 	}
 
 	.project-scroll {
