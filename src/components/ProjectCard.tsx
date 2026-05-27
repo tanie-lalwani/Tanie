@@ -44,15 +44,15 @@ export function ProjectCard({ site, code, title, description, techStack }: Proje
             </div>
 
             <div className="relative px-1 pt-0.5">
-              <h3 id={titleId} className="text-[0.95rem] font-semibold leading-tight text-sky-50/76" style={{ fontFamily: "var(--font-body)" }}>
+              <h3 id={titleId} className="text-[10px] font-medium leading-5 tracking-[0.18em] text-slate-100/58 sm:text-[11px]" style={{ fontFamily: "var(--font-body)" }}>
                 {title}
               </h3>
-              <p className="copy-clamp mt-1 max-w-[58ch] text-xs leading-5 text-sky-100/60 sm:text-[0.82rem]">
+              <p className="copy-clamp mt-1 max-w-[58ch] text-[10px] font-medium leading-5 tracking-[0.18em] text-slate-200/36 sm:text-[11px]">
                 {description}
               </p>
               <div className="mt-1.5 flex flex-wrap gap-1.5">
                 {techStack.map((t) => (
-                  <span key={t} className="rounded-full border border-white/5 bg-white/2 px-1.5 py-0.5 text-[9px] font-medium text-sky-100/44">
+                  <span key={t} className="rounded-full border border-white/5 bg-white/2 px-1.5 py-0.5 text-[9px] font-medium tracking-[0.18em] text-slate-200/34">
                     {t}
                   </span>
                 ))}
@@ -63,7 +63,7 @@ export function ProjectCard({ site, code, title, description, techStack }: Proje
                   href={site}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center rounded-full border border-sky-200/28 bg-sky-100/13 px-3 py-1.5 text-[10px] font-medium no-underline text-sky-50/78 transition hover:bg-sky-100/17 hover:text-white focus:outline-none focus:ring-2 focus:ring-sky-300/32"
+                  className="inline-flex items-center justify-center rounded-full border border-sky-200/18 bg-sky-100/8 px-3 py-1.5 text-[10px] font-medium tracking-[0.18em] no-underline text-slate-100/58 transition hover:bg-sky-100/12 hover:text-slate-50/74 focus:outline-none focus:ring-2 focus:ring-sky-300/24"
                   aria-label={`Visit project site: ${title}`}
                 >
                   View
@@ -73,7 +73,7 @@ export function ProjectCard({ site, code, title, description, techStack }: Proje
                     href={code}
                     target="_blank"
                     rel="me noopener noreferrer"
-                    className="inline-flex items-center justify-center rounded-full border border-white/6 bg-transparent px-3 py-1.5 text-[10px] font-medium no-underline text-sky-50/50 transition hover:bg-white/6 hover:text-white focus:outline-none focus:ring-2 focus:ring-sky-300/26"
+                    className="inline-flex items-center justify-center rounded-full border border-white/5 bg-transparent px-3 py-1.5 text-[10px] font-medium tracking-[0.18em] no-underline text-slate-200/38 transition hover:bg-white/5 hover:text-slate-100/58 focus:outline-none focus:ring-2 focus:ring-sky-300/22"
                     aria-label={`View GitHub code for ${title}`}
                   >
                     Code

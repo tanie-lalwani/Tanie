@@ -46,7 +46,7 @@ An immersive, interactive portfolio website featuring a submarine-inspired scrol
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/taniemp3/portfolio.git
+git clone https://github.com/tanie-lalwani/portfolio.git
 cd Portfolio
 ```
 
@@ -296,7 +296,7 @@ The site was developed with focus on:
 
 **Tanie** — Design & Development
 
-- GitHub: [@taniemp3](https://github.com/taniemp3)
+- GitHub: [@tanie-lalwani](https://github.com/tanie-lalwani)
 - Portfolio: [tanie.me](https://tanie.me)
 
 ## Contact

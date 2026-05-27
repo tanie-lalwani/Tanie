@@ -15,9 +15,9 @@ main[data-prerendered="true"] {
 :root {
 	--font-body: "Inter", "Aptos", "Segoe UI", sans-serif;
 	--font-display: "Cormorant Garamond", "Cambria", "Palatino Linotype", serif;
-	--type-caption: clamp(0.72rem, 0.7rem + 0.08vw, 0.78rem);
-	--type-body: clamp(0.92rem, 0.9rem + 0.12vw, 0.98rem);
-	--type-body-lg: clamp(1rem, 0.96rem + 0.2vw, 1.08rem);
+	--type-caption: clamp(0.83rem, 0.81rem + 0.08vw, 0.9rem);
+	--type-body: clamp(1.06rem, 1.04rem + 0.12vw, 1.13rem);
+	--type-body-lg: clamp(1.15rem, 1.1rem + 0.2vw, 1.24rem);
 	--type-title: clamp(1.55rem, 1.22rem + 1.45vw, 2.4rem);
 	--color-text-main: #f3f6fa;
 	--color-text-heading: #ffffff;
@@ -95,45 +95,12 @@ a:hover, .text-link:hover {
 		@apply relative isolate w-full px-4 py-14 sm:px-6 sm:py-20;
 	}
 
-	.section-eyebrow {
-		@apply inline-flex text-[10px] font-medium uppercase tracking-[0.2em] text-sky-200/55;
-	}
-
-	.section-title {
-		font-family: var(--font-display);
-		@apply mt-2 text-[1.8rem] font-semibold leading-none tracking-normal text-white/90 sm:text-[2.25rem] lg:text-[2.85rem];
-	}
-
-	.section-copy {
-		@apply mt-2 max-w-[60ch] text-sm leading-6 text-sky-100/68;
-	}
-
 	.surface-panel {
 		@apply rounded-2xl border border-white/8 bg-slate-950/28 backdrop-blur-xl;
 	}
 
 	.surface-panel-soft {
 		@apply rounded-2xl border border-white/6 bg-slate-950/16 backdrop-blur-lg;
-	}
-
-	.ui-label {
-		@apply text-xs font-semibold tracking-wide text-sky-100/80;
-	}
-
-	.ui-input {
-		@apply rounded-xl border border-white/14 bg-white/10 px-4 py-2.5 text-sm text-sky-50/90 outline-none transition placeholder:text-sky-100/44 focus:border-sky-300/46 focus:ring-2 focus:ring-sky-300/20;
-	}
-
-	.ui-button-primary {
-		@apply inline-flex items-center justify-center rounded-full border border-sky-300/65 bg-[#b9d8ef]/90 px-4 py-1.5 text-xs font-medium text-[#243b6b] transition hover:bg-[#c8e4f7]/95 hover:text-[#243b6b] focus:outline-none focus:ring-2 focus:ring-sky-300/75 disabled:cursor-not-allowed disabled:opacity-70;
-	}
-
-	.ui-button-link {
-		@apply inline-flex items-center justify-center rounded-full border border-sky-300/42 bg-[#b9d8ef]/72 px-4 py-1.5 text-xs font-medium text-black transition hover:bg-[#c8e4f7]/86 hover:text-black focus:outline-none focus:ring-2 focus:ring-sky-300/70 disabled:cursor-not-allowed disabled:opacity-70 no-underline w-full sm:w-auto;
-	}
-
-	.ui-icon-button {
-		@apply flex items-center justify-center rounded-full border border-white/9 bg-white/5 text-white/70 backdrop-blur transition hover:bg-white/9 hover:text-white disabled:cursor-not-allowed disabled:opacity-35;
 	}
 
 	.copy-clamp {

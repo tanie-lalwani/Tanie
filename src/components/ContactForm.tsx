@@ -18,6 +18,9 @@ const initialFields: ContactFields = {
   message: "",
 }
 
+const labelClass = "text-[11.5px] font-medium tracking-[0.18em] text-slate-200/36 sm:text-[12.5px]"
+const inputClass = "rounded-xl border border-white/14 bg-white/10 px-4 py-2.5 text-[11.5px] font-medium leading-6 tracking-[0.18em] text-slate-100/70 outline-none transition placeholder:text-slate-200/30 focus:border-sky-300/46 focus:ring-2 focus:ring-sky-300/20 sm:text-[12.5px]"
+
 export function ContactForm() {
   const [fields, setFields] = useState<ContactFields>(initialFields)
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -85,52 +88,52 @@ export function ContactForm() {
       transition={{ duration: 0.45, ease: "easeOut" }}
     >
       <label className="flex flex-col gap-1.5">
-        <span className="ui-label">Name</span>
+        <span className={labelClass}>Name</span>
         <input
           type="text"
           name="name"
           required
           value={fields.name}
           onChange={(event) => updateField("name", event.target.value)}
-          className="ui-input"
+          className={inputClass}
           placeholder="Your name"
         />
       </label>
 
       <label className="flex flex-col gap-1.5">
-        <span className="ui-label">Email</span>
+        <span className={labelClass}>Email</span>
         <input
           type="email"
           name="email"
           required
           value={fields.email}
           onChange={(event) => updateField("email", event.target.value)}
-          className="ui-input"
+          className={inputClass}
           placeholder="your@email.com"
         />
       </label>
 
       <label className="flex flex-col gap-1.5">
-        <span className="ui-label">Subject</span>
+        <span className={labelClass}>Subject</span>
         <input
           type="text"
           name="subject"
           value={fields.subject}
           onChange={(event) => updateField("subject", event.target.value)}
-          className="ui-input"
+          className={inputClass}
           placeholder="What's this about?"
         />
       </label>
 
       <label className="flex flex-col gap-1.5">
-        <span className="ui-label">Message</span>
+        <span className={labelClass}>Message</span>
         <textarea
           name="message"
           required
           value={fields.message}
           onChange={(event) => updateField("message", event.target.value)}
           rows={3}
-          className="ui-input min-h-24 resize-y"
+          className={`${inputClass} min-h-24 resize-y`}
           placeholder="Tell me about your project..."
         />
       </label>
@@ -138,14 +141,14 @@ export function ContactForm() {
       <button
         type="submit"
         disabled={isSubmitting}
-        className="ui-button-primary w-full sm:w-auto"
+        className="inline-flex w-full items-center justify-center rounded-full border border-sky-300/65 bg-[#b9d8ef]/90 px-4 py-1.5 text-xs font-medium text-[#243b6b] transition hover:bg-[#c8e4f7]/95 hover:text-[#243b6b] focus:outline-none focus:ring-2 focus:ring-sky-300/75 disabled:cursor-not-allowed disabled:opacity-70 sm:w-auto"
       >
         {isSubmitting ? "Sending..." : "Send message"}
       </button>
 
       {submitStatus !== "idle" && (
         <motion.p
-          className={`text-sm font-medium ${
+          className={`text-[11.5px] font-medium leading-6 tracking-[0.18em] sm:text-[12.5px] ${
             submitStatus === "success" ? "text-emerald-300" : "text-rose-300"
           }`}
           initial={{ opacity: 0 }}
