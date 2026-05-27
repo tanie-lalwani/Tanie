@@ -1,45 +1,30 @@
-import { motion, useScroll, useTransform } from "framer-motion"
-import { useEffect, useState } from "react"
+import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion"
+import { useEffect, useRef, useState } from "react"
 import { Link } from "react-router-dom"
 import PageHeader from "../components/PageHeader"
-import { ProjectsCarousel } from "../components/ProjectsCarousel"
+import { ProjectsCarousel, type Project as CarouselProject } from "../components/ProjectsCarousel"
 import { ContactForm } from "../components/ContactForm"
 import GlobalOceanBackdrop from "../experience/Scenes/GlobalOceanBackdrop"
 import { useIsMobile } from "../hooks/useIsMobile"
 import type { TimePhase } from "../experience/timePhase"
+import { useLanguage } from "../context/LanguageContext"
 
-type Project = {
-  title: string
-  description: string
-  techStack: string[]
-  site: string
-  code?: string
-}
-
-const PROJECTS: Project[] = [
-  {
-    title: "Viziona",
-    description:
-      "A responsive web application shaped around clear interaction, UI/UX design, and practical product execution.",
-    techStack: ["React", "TypeScript", "UI/UX"],
-    site: "https://viziona.com",
-    code: "https://github.com/tanie-lalwani/viziona",
-  },
-  {
-    title: "Checkout Performance Overhaul - FinchPay",
-    description:
-      "A frontend performance optimization pass for faster checkout flows, clearer states, and smoother feedback.",
-    techStack: ["React", "TypeScript", "Performance"],
-    site: "https://finchpay.example",
-  },
-  {
-    title: "Marketing Site Rebuild - Leafline",
-    description:
-      "A modern frontend rebuild with tighter content structure, responsive layouts, and a calmer visual system.",
-    techStack: ["React", "TypeScript", "Web development"],
-    site: "https://leafline.example",
-  },
+const ABOUT_SKILLS = [
+  "React",
+  "TypeScript",
+  "Interactive UI",
+  "Frontend Engineering",
+  "Responsive Web Apps",
+  "UI/UX Design",
+  "Motion & Interaction",
+  "Tailwind CSS",
+  "Accessibility",
+  "Performance",
+  "Component Systems",
+  "Creative Development",
 ]
+
+const ABOUT_SKILLS_LINE = ABOUT_SKILLS.join(" · ")
 
 
 type HomeProps = {
@@ -48,6 +33,7 @@ type HomeProps = {
 }
 
 function InterviewPrompt() {
+  const { copy } = useLanguage()
   const [show, setShow] = useState(false)
   const [hasShown, setHasShown] = useState(false)
 
@@ -100,7 +86,7 @@ function InterviewPrompt() {
             ×
           </button>
           <Link to="/qna" className="!no-underline text-inherit">
-            Interview me here
+            {copy.nav.interviewPrompt}
           </Link>
           <span className="absolute right-6 -top-5 h-5 w-px bg-sky-100/22" aria-hidden="true" />
         </motion.aside>
@@ -110,9 +96,30 @@ function InterviewPrompt() {
 }
 
 export default function Home({ phase, onSceneReady }: HomeProps) {
+  const { copy } = useLanguage()
   const isMobile = useIsMobile()
+  const prefersReducedMotion = useReducedMotion()
+  const skillsTrackRef = useRef<HTMLDivElement | null>(null)
+  const [skillsLoopDistance, setSkillsLoopDistance] = useState(0)
   const { scrollYProgress } = useScroll()
   const worldDiveProgress = useTransform(scrollYProgress, [0, isMobile ? 0.65 : 0.4], [0, 1])
+  const projects: CarouselProject[] = copy.home.projects
+
+  useEffect(() => {
+    const track = skillsTrackRef.current
+    if (!track) return
+
+    const updateLoopDistance = () => {
+      setSkillsLoopDistance(track.scrollWidth / 2)
+    }
+
+    updateLoopDistance()
+
+    const observer = new ResizeObserver(updateLoopDistance)
+    observer.observe(track)
+
+    return () => observer.disconnect()
+  }, [])
 
   return (
     <main className="relative">
@@ -146,14 +153,14 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
               className="mt-4 text-4xl font-bold tracking-normal text-white sm:text-5xl md:text-6xl lg:text-7xl"
               style={{ fontFamily: "var(--font-display)" }}
             >
-              I'm Tanie!
+              {copy.home.heroTitle}
             </h1>
             <p className="mt-1 max-w-lg text-[11.5px] font-medium uppercase tracking-[0.18em] text-slate-200/54 sm:text-[12.5px]">
-              Creative Developer
+              {copy.home.heroRole}
             </p>
 
             <p className="mt-5 max-w-2xl text-[11.5px] font-medium leading-6 tracking-[0.18em] text-blue-950 sm:text-[12.5px]">
-              I make interactive websites, 3D web experiences, and modern responsive web applications with React, TypeScript, and thoughtful frontend engineering.
+              {copy.home.heroDescription}
             </p>
           </header>
         </motion.div>
@@ -167,7 +174,7 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
         <div className="site-container relative z-10">
           <PageHeader
             eyebrow=""
-            title="About me"
+            title={copy.home.aboutTitle}
             titleId="about-title"
             description=""
             className="mb-4 max-w-[62ch]"
@@ -178,31 +185,54 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
           <div className="mt-5 grid gap-7 lg:grid-cols-[minmax(0,1fr)_minmax(17rem,0.82fr)] lg:items-center">
             <article aria-label="About Tanie Lalwani">
               <div className="max-w-[60ch] space-y-3.5 text-[11.5px] font-medium leading-6 tracking-[0.18em] text-slate-200/36 sm:text-[12.5px]">
-                <p>Looking for a portfolio website, an interactive web experience, a modern frontend build, or a landing page that feels intentional?</p>
-
-                <p>I'm a frontend developer and React developer who has spent the last two years building, experimenting, and learning what makes interfaces feel genuinely enjoyable to use.</p>
-
-                <p>I like clean TypeScript developer workflows, polished interaction, UI/UX design details, and web development that feels useful without losing personality.</p>
+                {copy.home.aboutParagraphs.map((paragraph) => (
+                  <p key={paragraph}>{paragraph}</p>
+                ))}
               </div>
 
               <div className="mt-5">
-                <a href="https://www.google.com/search?q=Tanie+Lalwani" target="_blank" rel="noopener noreferrer" className="inline-flex border-b border-slate-400/10 pb-0.5 text-[11.5px] font-medium tracking-[0.18em] text-slate-400/40 no-underline transition hover:border-white/20 hover:text-white sm:text-[12.5px]" aria-label="Search for more information about Tanie Lalwani">
-                  Know more
+                <a href="https://www.google.com/search?q=Tanie+Lalwani" target="_blank" rel="noopener noreferrer" className="inline-flex border-b border-transparent pb-0.5 text-[11.5px] font-medium tracking-[0.18em] !text-slate-200/36 no-underline transition-colors duration-200 !hover:text-white !hover:border-white/20 sm:text-[12.5px]" aria-label="Search for more information about Tanie Lalwani">
+                  {copy.home.knowMore}
                 </a>
               </div>
             </article>
 
-            <figure
-              className="relative h-52 w-full overflow-hidden rounded-2xl border border-white/7 bg-white/4 sm:h-60"
-            >
-              <img
-                src="/about-workspace.jpg"
-                alt="Laptop workspace with colorful light for Tanie Lalwani's creative web development portfolio"
-                className="h-full w-full object-cover opacity-82"
-                loading="lazy"
-              />
-              <div className="absolute inset-0 bg-linear-to-br from-slate-950/10 via-sky-100/4 to-slate-950/28" />
-            </figure>
+            <div>
+              <figure
+                className="relative h-52 w-full overflow-hidden rounded-2xl border border-white/7 bg-white/4 sm:h-60"
+              >
+                <img
+                  src="/about-workspace.jpg"
+                  alt="Laptop workspace with colorful light for Tanie Lalwani's creative web development portfolio"
+                  className="h-full w-full object-cover opacity-82"
+                  loading="lazy"
+                />
+                <div className="absolute inset-0 bg-linear-to-br from-slate-950/10 via-sky-100/4 to-slate-950/28" />
+              </figure>
+
+              <div className="mt-5 overflow-hidden sm:mt-6 [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
+                {prefersReducedMotion ? (
+                  <p
+                    className="whitespace-nowrap text-[11px] font-medium tracking-[0.18em] text-slate-300/40 sm:text-[12px]"
+                    style={{ fontFamily: "var(--font-body)" }}
+                  >
+                    {ABOUT_SKILLS_LINE}
+                  </p>
+                ) : (
+                  <motion.div
+                    ref={skillsTrackRef}
+                    className="flex w-max items-center whitespace-nowrap text-[11px] font-medium tracking-[0.18em] text-slate-300/40 sm:text-[12px]"
+                    style={{ fontFamily: "var(--font-body)" }}
+                    animate={skillsLoopDistance > 0 ? { x: [0, -skillsLoopDistance] } : undefined}
+                    transition={{ duration: 32, ease: "linear", repeat: Number.POSITIVE_INFINITY }}
+                    aria-label="Skills and capabilities"
+                  >
+                    <span className="pr-10">{ABOUT_SKILLS_LINE}</span>
+                    <span className="pr-10" aria-hidden="true">{ABOUT_SKILLS_LINE}</span>
+                  </motion.div>
+                )}
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -215,13 +245,13 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
         <div className="site-container relative z-10">
           <PageHeader
             eyebrow=""
-            title="Selected work"
+            title={copy.home.projectsTitle}
             titleId="projects-title"
             description=""
             className="mb-4 max-w-[62ch]"
             />
           <div className="relative w-full">
-            <ProjectsCarousel projects={PROJECTS} />
+            <ProjectsCarousel projects={projects} />
           </div>
         </div>
       </section>
@@ -234,7 +264,7 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
         <div className="site-container relative z-10">
           <PageHeader
             eyebrow=""
-            title="Let's build"
+            title={copy.home.contactTitle}
             titleId="contact-title"
             description=""
             className="mb-4 max-w-[62ch]"

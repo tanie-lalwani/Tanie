@@ -1,15 +1,6 @@
 import { useEffect, useRef, useState } from "react"
 import { Link, useLocation } from "react-router-dom"
-
-
-const questions = [
-  "Tell me about yourself.",
-  "Walk me through a project you are proud of.",
-  "How do you handle bugs in production?",
-  "Describe a time you disagreed with a teammate.",
-  "How do you optimize frontend performance?",
-  "Why do you want this role?",
-]
+import { useLanguage } from "../context/LanguageContext"
 
 // Removed unused: totalQuestions, smoothEase, ScrollDirection
 
@@ -41,6 +32,7 @@ function getQuestionCards() {
 
 
 export default function QnA() {
+  const { copy } = useLanguage()
   const location = useLocation()
   // Removed unused isMobile
   const scrollContainerRef = useRef<HTMLElement | null>(null)
@@ -49,6 +41,7 @@ export default function QnA() {
 
   // Track which card is centered in the viewport
   const [activeIndex, setActiveIndex] = useState(0);
+  const questions = copy.qna.questions
 
   const scrollToQuestion = (index: number) => {
     const cards = getQuestionCards();
@@ -103,19 +96,19 @@ export default function QnA() {
             className={`flex w-14 flex-col items-center rounded-[1.35rem] px-2 py-3 transition-all ${
               location.pathname === "/" ? "bg-[#c8ecff] !text-black" : "!text-black hover:bg-white/55 hover:!text-black"
             }`}
-            title="Home"
+            title={copy.qna.homeLabel}
           >
             <svg width="28" height="28" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.7" className="mb-1">
               <path strokeLinecap="round" strokeLinejoin="round" d="M3 12l9-8 9 8M4 10v10a1 1 0 001 1h3m10-11v10a1 1 0 01-1 1h-3m-6 0h6" />
             </svg>
-            <span className="text-xs font-semibold">Home</span>
+            <span className="text-xs font-semibold">{copy.qna.homeLabel}</span>
           </Link>
-          <Link to="/#contact" className="flex w-14 flex-col items-center rounded-[1.35rem] px-2 py-3 !text-black transition-all hover:bg-white/55 hover:!text-black" title="Contact">
+          <Link to="/#contact" className="flex w-14 flex-col items-center rounded-[1.35rem] px-2 py-3 !text-black transition-all hover:bg-white/55 hover:!text-black" title={copy.qna.contactLabel}>
             <svg width="28" height="28" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.7" className="mb-1">
               <path strokeLinecap="round" strokeLinejoin="round" d="M21 10.5V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2h7.5" />
               <path strokeLinecap="round" strokeLinejoin="round" d="M21 10.5l-9 6.5-9-6.5" />
             </svg>
-            <span className="text-xs font-semibold">Contact</span>
+            <span className="text-xs font-semibold">{copy.qna.contactLabel}</span>
           </Link>
         </div>
         <div className="mb-2 flex flex-col items-center gap-4">
@@ -212,7 +205,7 @@ export default function QnA() {
                       <div
                         className="rounded-full border border-white/14 bg-white/8 px-4 py-2 text-[11px] font-bold uppercase tracking-[0.18em] text-sky-50 backdrop-blur"
                       >
-                        Video Placeholder
+                        {copy.qna.videoPlaceholder}
                       </div>
                     </div>
                     <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-5">
@@ -224,23 +217,23 @@ export default function QnA() {
                     </div>
                   </div>
                   <div className="mb-3 hidden flex-col items-center gap-4 text-black md:flex">
-                    <button className="transition hover:text-black/62" title="Like" aria-label="Like">
+                      <button className="transition hover:text-black/62" title={copy.qna.like} aria-label={copy.qna.like}>
                       <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.2">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M4.318 6.318a4.5 4.5 0 016.364 0L12 7.636l1.318-1.318a4.5 4.5 0 116.364 6.364L12 21.682l-7.682-7.682a4.5 4.5 0 010-6.364z" />
                       </svg>
                     </button>
-                    <button className="transition hover:text-black/62" title="Comment" aria-label="Comment">
+                      <button className="transition hover:text-black/62" title={copy.qna.comment} aria-label={copy.qna.comment}>
                       <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.2">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
                       </svg>
                     </button>
-                    <button className="transition hover:text-black/62" title="Share" aria-label="Share">
+                      <button className="transition hover:text-black/62" title={copy.qna.share} aria-label={copy.qna.share}>
                       <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.2">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M4 12v7a2 2 0 002 2h12a2 2 0 002-2v-7" />
                         <path strokeLinecap="round" strokeLinejoin="round" d="M16 6l-4-4-4 4M12 2v14" />
                       </svg>
                     </button>
-                    <button className="transition hover:text-black/62" title="Save" aria-label="Save">
+                      <button className="transition hover:text-black/62" title={copy.qna.save} aria-label={copy.qna.save}>
                       <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.2">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-5-7 5V5z" />
                       </svg>
@@ -255,7 +248,7 @@ export default function QnA() {
 
       <div
         className="fixed bottom-5 right-5 z-50 flex h-12 w-12 items-center justify-center rounded-full border border-black/10 bg-white/55 text-[10px] font-semibold tracking-[0.12em] text-black/58 shadow-sm backdrop-blur-xl"
-        aria-label="Tanie bot"
+        aria-label={copy.qna.bot}
         role="img"
       >
         bot
