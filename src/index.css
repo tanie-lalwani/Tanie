@@ -13,15 +13,80 @@ main[data-prerendered="true"] {
 }
 
 :root {
+	/* fonts */
 	--font-body: "Inter", "Aptos", "Segoe UI", sans-serif;
 	--font-display: "Cormorant Garamond", "Cambria", "Palatino Linotype", serif;
-	--type-caption: clamp(0.83rem, 0.81rem + 0.08vw, 0.9rem);
-	--type-body: clamp(1.06rem, 1.04rem + 0.12vw, 1.13rem);
-	--type-body-lg: clamp(1.15rem, 1.1rem + 0.2vw, 1.24rem);
+
+	/* type scale */
+	--type-caption: clamp(0.82rem, 0.8rem + 0.08vw, 0.88rem);
+	--type-body: clamp(0.98rem, 0.96rem + 0.12vw, 1.03rem);
+	--type-body-lg: clamp(1.08rem, 1.05rem + 0.18vw, 1.16rem);
 	--type-title: clamp(1.55rem, 1.22rem + 1.45vw, 2.4rem);
+
+	/* UI-specific text */
+	--type-ui: clamp(0.9rem, 0.88rem + 0.08vw, 0.96rem);
+
+	/* colors */
 	--color-text-main: #f3f6fa;
 	--color-text-heading: #ffffff;
 	--color-text-link: #eaf6ff;
+}
+
+html {
+	font-family: var(--font-body);
+	text-rendering: optimizeLegibility;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	color: var(--color-text-main);
+	cursor: url("/water-cursor.svg") 16 5, auto;
+}
+
+body {
+	font-family: var(--font-body);
+	font-size: var(--type-body);
+	line-height: 1.6;
+	color: var(--color-text-main);
+	background-color: transparent;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	font-family: var(--font-display);
+	font-weight: 500;
+	line-height: 1.05;
+	letter-spacing: 0;
+	text-wrap: balance;
+	color: var(--color-text-heading);
+}
+
+/* global form semantics */
+button,
+input,
+textarea,
+select {
+	font-family: var(--font-body);
+	font-size: var(--type-ui);
+	font-weight: 400;
+	letter-spacing: 0.03em;
+	font: inherit;
+}
+
+/* links */
+a,
+.text-link {
+	color: var(--color-text-link);
+	text-decoration: underline;
+	text-underline-offset: 2px;
+	transition: color 0.2s;
+}
+
+a:hover,
+.text-link:hover {
+	color: #fff;
 }
 
 html {
