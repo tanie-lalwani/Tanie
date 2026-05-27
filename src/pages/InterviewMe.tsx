@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, type FormEvent } from "react"
 import { Link, useLocation } from "react-router-dom"
 import { useLanguage } from "../context/LanguageContext"
+import { getBotReply } from "../lib/botAssistant"
 
 // Removed unused: totalQuestions, smoothEase, ScrollDirection
 
@@ -45,6 +46,7 @@ export default function QnA() {
   const [isBotOpen, setIsBotOpen] = useState(false)
   const [botNotificationVisible, setBotNotificationVisible] = useState(true)
   const [botInput, setBotInput] = useState("")
+  const [isReplying, setIsReplying] = useState(false)
   const [botMessages, setBotMessages] = useState<BotMessage[]>([
     { id: 1, role: "bot", text: "hi im tanie" },
   ])
@@ -102,22 +104,45 @@ export default function QnA() {
 
 
 
-  const handleBotSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleBotSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
 
     const trimmed = botInput.trim()
-    if (!trimmed) return
+    if (!trimmed || isReplying) return
 
+    const userMessageId = Date.now()
     setBotMessages((currentMessages) => [
       ...currentMessages,
       {
-        id: Date.now(),
+        id: userMessageId,
         role: "user",
         text: trimmed,
+      },
+      {
+        id: userMessageId + 1,
+        role: "bot",
+        text: "Thinking...",
       },
     ])
     setBotInput("")
     setBotNotificationVisible(false)
+
+    setIsReplying(true)
+
+    const reply = await getBotReply(trimmed)
+
+    setBotMessages((currentMessages) =>
+      currentMessages.map((message) =>
+        message.id === userMessageId + 1
+          ? {
+              ...message,
+              text: reply,
+            }
+          : message,
+      ),
+    )
+
+    setIsReplying(false)
   }
 
   const openBot = () => {
@@ -372,13 +397,14 @@ export default function QnA() {
                 />
                 <button
                   type="submit"
-                  className="rounded-full bg-[#0f172a] px-3.5 py-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-white transition hover:bg-[#1e293b]"
+                  disabled={isReplying}
+                  className="rounded-full bg-[#0f172a] px-3.5 py-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-white transition hover:bg-[#1e293b] disabled:cursor-not-allowed disabled:opacity-60"
                 >
-                  Send
+                  {isReplying ? "..." : "Send"}
                 </button>
               </div>
               <p className="mt-2 px-1 text-[10px] font-medium uppercase tracking-[0.18em] text-black/34">
-                Reply integration can be wired to Gemini later.
+                Answers come from your portfolio data and Gemini when configured.
               </p>
             </form>
           </section>
