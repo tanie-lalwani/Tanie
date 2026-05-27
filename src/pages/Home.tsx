@@ -81,7 +81,7 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
             >
               I’m Tanie!
             </h1>
-            <h2 className="mt-4 max-w-lg text-[10px] font-medium uppercase tracking-[0.18em] text-white/70 sm:text-[11px]">
+            <h2 className="mt-4 max-w-lg text-[10px] font-medium uppercase tracking-[0.18em] text-slate-200/36 sm:text-[11px]">
             · Creative Developer
             </h2>
 
@@ -104,7 +104,7 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
             className="mb-3 max-w-xl [&_h2]:text-3xl [&_h2]:font-bold [&_h2]:tracking-tight [&_h2]:text-white sm:[&_h2]:text-4xl md:[&_h2]:text-5xl lg:[&_h2]:text-6xl"
           />
 
-          <p className="mt-1 max-w-lg text-[10px] font-medium uppercase tracking-[0.18em] text-white/70 sm:text-[11px]">
+          <p className="mt-1 max-w-lg text-[10px] font-medium uppercase tracking-[0.18em] text-slate-200/36 sm:text-[11px]">
             A bit about me
           </p>
 
@@ -112,7 +112,7 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
 
           <div className="mt-5 grid gap-6 lg:grid-cols-[minmax(0,1.05fr)_minmax(18rem,0.85fr)] lg:items-center">
             <div>
-              <div className="max-w-[36rem] text-[0.82rem] leading-6 text-white/75 sm:text-sm space-y-4">
+              <div className="max-w-[36rem] text-[0.82rem] leading-6 text-slate-200/36 sm:text-sm space-y-4">
                                 
                 <p>Looking for a portfolio website? An interactive web experience? A modern frontend build? Product ideas brought to life? A landing page that actually feels intentional? Something immersive, polished, or just slightly more fun to use?
 </p>
@@ -124,7 +124,7 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
 
               
               <div className="mt-4">
-                <a href="https://www.google.com/search?q=Tanie+Lalwani" target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-white underline">
+                <a href="https://www.google.com/search?q=Tanie+Lalwani" target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-slate-200/36 ">
                   Know more
                 </a>
               </div>
@@ -155,16 +155,9 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
             className="mb-4 max-w-2xl [&_h2]:text-3xl [&_h2]:font-bold [&_h2]:tracking-tight [&_h2]:text-white sm:[&_h2]:text-4xl md:[&_h2]:text-5xl lg:[&_h2]:text-6xl"
           />
 
-          <div className="mt-3 flex flex-wrap gap-1.5">
-            {"React, TypeScript, Three.js, Next.js".split(", ").map((tech) => (
-              <span
-                key={tech}
-                className="rounded-full border border-white/10 bg-white/5 px-2 py-0.5 text-[8px] font-medium uppercase tracking-[0.16em] text-white/48"
-              >
-                {tech}
-              </span>
-            ))}
-          </div>
+          <p className="mt-1 max-w-lg text-[10px] font-medium uppercase tracking-[0.18em] text-slate-200/36 sm:text-[11px]">
+            Projects and Testimonials
+          </p>
 
           <div className="relative w-full">
             <ProjectsCarousel projects={PROJECTS} />
@@ -184,8 +177,8 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
             className="mb-3 max-w-2xl [&_h2]:text-3xl [&_h2]:font-bold [&_h2]:tracking-tight [&_h2]:text-white sm:[&_h2]:text-4xl md:[&_h2]:text-5xl lg:[&_h2]:text-6xl"
           />
 
-          <p className="mt-4 max-w-xl text-xs font-medium text-slate-200/36 sm:text-sm">
-            Open to creative, portfolio, and business web projects.
+           <p className="mt-1 max-w-lg text-[10px] font-medium uppercase tracking-[0.18em]  text-slate-200/36 sm:text-[11px]">
+            Projects and Testimonials
           </p>
 
           <div className="relative mb-5 flex flex-wrap items-center justify-between gap-2.5 border-b border-white/10 pb-3 sm:mb-5" />
