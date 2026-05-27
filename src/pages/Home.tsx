@@ -82,7 +82,7 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
               I’m Tanie!
             </h1>
             <h2 className="mt-4 max-w-lg text-[10px] font-medium uppercase tracking-[0.18em] text-white/70 sm:text-[11px]">
-              Creative Developer
+            · Creative Developer
             </h2>
 
             <p className="mt-5 max-w-2xl text-sm leading-relaxed text-blue-950 sm:text-base">
@@ -114,7 +114,7 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
             <div>
               <div className="max-w-[36rem] text-[0.82rem] leading-6 text-white/75 sm:text-sm space-y-4">
                                 
-                <p>Looking for .. A portfolio website? An interactive web experience? A modern frontend build? Product ideas brought to life? A landing page that actually feels intentional? Something immersive, polished, or just slightly more fun to use?
+                <p>Looking for a portfolio website? An interactive web experience? A modern frontend build? Product ideas brought to life? A landing page that actually feels intentional? Something immersive, polished, or just slightly more fun to use?
 </p>
 
                 <p>I got you! I’ve been coding for around two years and spending most of that time building, experimenting, and trying to understand what makes something feel genuinely enjoyable to use.</p>
