@@ -119,7 +119,7 @@ export default function QnA() {
           </Link>
         </div>
         <div className="mb-2 flex flex-col items-center gap-4">
-          <a href="https://github.com/taniemp3" target="_blank" rel="me noopener" className="flex h-12 w-12 items-center justify-center rounded-[1.1rem] border border-black/10 bg-white/45 !text-black transition-colors duration-150 hover:bg-white/70 hover:!text-black" title="GitHub">
+          <a href="https://github.com/tanie-lalwani" target="_blank" rel="me noopener" className="flex h-12 w-12 items-center justify-center rounded-[1.1rem] border border-black/10 bg-white/45 !text-black transition-colors duration-150 hover:bg-white/70 hover:!text-black" title="GitHub">
             <svg viewBox="0 0 24 24" fill="currentColor" className="h-6 w-6">
               <path d="M12 2C6.477 2 2 6.484 2 12.021c0 4.428 2.865 8.185 6.839 9.504.5.092.682-.217.682-.482 0-.237-.009-.868-.013-1.703-2.782.605-3.369-1.342-3.369-1.342-.454-1.154-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.339-2.221-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844a9.59 9.59 0 0 1 2.504.337c1.909-1.296 2.747-1.026 2.747-1.026.546 1.378.202 2.397.1 2.65.64.7 1.028 1.595 1.028 2.688 0 3.848-2.337 4.695-4.566 4.944.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.203 22 16.447 22 12.021 22 6.484 17.523 2 12 2z" />
             </svg>
@@ -253,7 +253,13 @@ export default function QnA() {
         </div>
       </section>
 
-      {/* Bot UI removed */}
+      <div
+        className="fixed bottom-5 right-5 z-50 flex h-12 w-12 items-center justify-center rounded-full border border-black/10 bg-white/55 text-[10px] font-semibold tracking-[0.12em] text-black/58 shadow-sm backdrop-blur-xl"
+        aria-label="Tanie bot"
+        role="img"
+      >
+        bot
+      </div>
     </div>
   )
 }

@@ -99,7 +99,7 @@ const prerenderedApp = String.raw`
 
       <ul>
         <li>
-          <a href="https://github.com/taniemp3" rel="me">
+          <a href="https://github.com/tanie-lalwani" rel="me">
             GitHub
           </a>
         </li>
