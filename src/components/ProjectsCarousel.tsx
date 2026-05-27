@@ -22,7 +22,7 @@ export function ProjectsCarousel({ projects }: ProjectsCarouselProps) {
       </div>
 
       <div
-        className="project-scroll -mx-4 flex snap-x snap-mandatory gap-3.5 overflow-x-auto px-4 pb-4 sm:-mx-6 sm:gap-4 sm:px-6"
+        className="project-scroll -mx-4 flex snap-x snap-mandatory gap-3.5 overflow-x-auto px-4 pb-9 sm:-mx-6 sm:gap-4 sm:px-6 sm:pb-10"
         aria-label="Project cards"
       >
         {projects.map((project) => (
