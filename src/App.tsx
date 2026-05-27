@@ -19,7 +19,7 @@ function AppLoadingVeil() {
       className="fixed inset-0 z-[10000] grid place-items-center overflow-hidden px-6 backdrop-blur-[12px]"
       style={{
         background:
-          "linear-gradient(180deg, rgba(183, 222, 243, 0.38) 0%, rgba(143, 216, 255, 0.26) 24%, rgba(61, 95, 127, 0.38) 56%, rgba(8, 36, 58, 0.62) 100%)",
+          "linear-gradient(180deg, rgba(13, 35, 52, 0.64) 0%, rgba(8, 31, 49, 0.72) 52%, rgba(2, 8, 23, 0.86) 100%)",
       }}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
@@ -33,7 +33,7 @@ function AppLoadingVeil() {
         className="pointer-events-none absolute inset-0"
         style={{
           background:
-            "radial-gradient(circle at 17% 18%, rgba(127, 198, 255, 0.34), rgba(127, 198, 255, 0) 34%), radial-gradient(circle at 78% 16%, rgba(183, 222, 243, 0.22), rgba(183, 222, 243, 0) 30%), linear-gradient(180deg, rgba(255, 221, 153, 0.08) 0%, rgba(255, 221, 153, 0) 22%, rgba(61, 95, 127, 0.18) 48%, rgba(4, 16, 24, 0.28) 100%)",
+            "radial-gradient(circle at 22% 18%, rgba(125, 211, 252, 0.14), transparent 32%), linear-gradient(90deg, transparent, rgba(226, 242, 255, 0.06), transparent)",
         }}
         aria-hidden="true"
       />
@@ -44,13 +44,13 @@ function AppLoadingVeil() {
         transition={{ duration: 0.16, ease: [0.22, 1, 0.36, 1] }}
       >
         <motion.div
-          className="mb-4 h-8 w-8 rounded-full border border-sky-50/30 border-t-white/90"
+          className="mb-4 h-8 w-8 rounded-full border border-sky-50/16 border-t-sky-100/70"
           animate={{ rotate: 360 }}
           transition={{ duration: 0.9, ease: "linear", repeat: Infinity }}
           aria-hidden="true"
         />
         <div
-          className="flex text-xl font-bold leading-none tracking-normal text-white drop-shadow-[0_8px_28px_rgba(4,16,24,0.34)] sm:text-2xl"
+          className="flex text-xl font-semibold leading-none tracking-normal text-white/82 sm:text-2xl"
           style={{ fontFamily: "var(--font-body)" }}
         >
           Welcome

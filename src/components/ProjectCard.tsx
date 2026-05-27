@@ -26,24 +26,31 @@ export function ProjectCard({ site, code, title, description, techStack }: Proje
             <div className="flex w-full items-center justify-center">
               <div
                 aria-hidden="true"
-                className="project-visual project-video relative flex aspect-2/1 min-h-22 w-full items-center justify-center overflow-hidden rounded-xl border border-white/6 shadow-[0_18px_55px_rgba(2,8,23,0.22)] sm:min-h-32 md:min-h-40 lg:aspect-video lg:min-h-44"
+                className="project-visual project-video relative flex aspect-2/1 min-h-20 w-full items-center justify-center overflow-hidden rounded-xl border border-white/6 shadow-[0_16px_44px_rgba(2,8,23,0.2)] sm:min-h-28 md:min-h-36 lg:aspect-video lg:min-h-40"
               >
-                <div className="absolute inset-3 rounded-lg border border-white/6" />
-                <div className="absolute left-4 top-4 h-1.5 w-16 rounded-full bg-white/18" />
+                <video
+                  src="/project-preview.mp4"
+                  className="absolute inset-0 h-full w-full object-cover opacity-62"
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                />
+                <div className="absolute inset-0 bg-slate-950/20" />
                 <div className="absolute bottom-4 left-4 right-4 h-1 rounded-full bg-white/10">
                   <div className="project-video-progress h-full rounded-full bg-sky-100/42" />
                 </div>
               </div>
             </div>
 
-            <div className="relative px-1">
+            <div className="relative px-1 pt-0.5">
               <h3 id={titleId} className="text-[0.98rem] font-semibold leading-tight text-white/90" style={{ fontFamily: "var(--font-display)" }}>
                 {title}
               </h3>
-              <p className="copy-clamp mt-1.5 max-w-[58ch] text-xs leading-5 text-sky-100/58 sm:text-[0.82rem]">
+              <p className="copy-clamp mt-1 max-w-[58ch] text-xs leading-5 text-sky-100/60 sm:text-[0.82rem]">
                 {description}
               </p>
-              <div className="mt-2 flex flex-wrap gap-1.5">
+              <div className="mt-1.5 flex flex-wrap gap-1.5">
                 {techStack.map((t) => (
                   <span key={t} className="rounded-full border border-white/5 bg-white/2 px-1.5 py-0.5 text-[9px] font-medium text-sky-100/44">
                     {t}

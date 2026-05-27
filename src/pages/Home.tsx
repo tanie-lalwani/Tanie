@@ -102,9 +102,9 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
         <div className="site-container relative z-10">
           <PageHeader
             eyebrow=""
-            title="before you scroll..."
+            title="About me"
             titleId="about-title"
-            description="A bit about me."
+            description=""
             className="mb-4 max-w-[62ch]"
             />
 
@@ -112,7 +112,7 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
 
           <div className="mt-5 grid gap-7 lg:grid-cols-[minmax(0,1fr)_minmax(17rem,0.82fr)] lg:items-center">
             <article aria-label="About Tanie Lalwani">
-              <div className="max-w-[60ch] space-y-3.5 text-[0.82rem] leading-6 text-slate-200/48 sm:text-sm">
+              <div className="max-w-[60ch] space-y-3.5 text-[0.82rem] leading-6 text-slate-200/56 sm:text-sm">
                 <p>Looking for a portfolio website, an interactive web experience, a modern frontend build, or a landing page that feels intentional?</p>
 
                 <p>I'm a frontend developer and React developer who has spent the last two years building, experimenting, and learning what makes interfaces feel genuinely enjoyable to use.</p>
@@ -150,9 +150,9 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
         <div className="site-container relative z-10">
           <PageHeader
             eyebrow=""
-            title="Built so far..."
+            title="Selected work"
             titleId="projects-title"
-            description="Projects and testimonials."
+            description=""
             className="mb-4 max-w-[62ch]"
             />
           <div className="relative w-full">
@@ -169,9 +169,9 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
         <div className="site-container relative z-10">
           <PageHeader
             eyebrow=""
-            title="Let's build ..."
+            title="Let's build"
             titleId="contact-title"
-            description="Let's bring your ideas to life."
+            description=""
             className="mb-4 max-w-[62ch]"
           />
 
