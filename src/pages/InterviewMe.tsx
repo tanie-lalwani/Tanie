@@ -1,8 +1,14 @@
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useRef, useState, type FormEvent } from "react"
 import { Link, useLocation } from "react-router-dom"
 import { useLanguage } from "../context/LanguageContext"
 
 // Removed unused: totalQuestions, smoothEase, ScrollDirection
+
+type BotMessage = {
+  id: number
+  role: "bot" | "user"
+  text: string
+}
 
 function getCenteredCardIndex() {
   const cards = Array.from(document.querySelectorAll('article.qna-card'));
@@ -36,7 +42,18 @@ export default function QnA() {
   const location = useLocation()
   // Removed unused isMobile
   const scrollContainerRef = useRef<HTMLElement | null>(null)
-  // Removed unused bot-related state
+  const [isBotOpen, setIsBotOpen] = useState(false)
+  const [botNotificationVisible, setBotNotificationVisible] = useState(true)
+  const [botInput, setBotInput] = useState("")
+  const [botMessages, setBotMessages] = useState<BotMessage[]>([
+    { id: 1, role: "bot", text: "hi im tanie" },
+  ])
+
+  useEffect(() => {
+    if (isBotOpen) {
+      setBotNotificationVisible(false)
+    }
+  }, [isBotOpen])
 
 
   // Track which card is centered in the viewport
@@ -85,7 +102,32 @@ export default function QnA() {
 
 
 
-  // Removed unused handleBotSubmit
+  const handleBotSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+
+    const trimmed = botInput.trim()
+    if (!trimmed) return
+
+    setBotMessages((currentMessages) => [
+      ...currentMessages,
+      {
+        id: Date.now(),
+        role: "user",
+        text: trimmed,
+      },
+    ])
+    setBotInput("")
+    setBotNotificationVisible(false)
+  }
+
+  const openBot = () => {
+    setIsBotOpen(true)
+    setBotNotificationVisible(false)
+  }
+
+  const closeBot = () => {
+    setIsBotOpen(false)
+  }
 
   return (
     <div className="site-shell bg-[#dff4ff] text-black">
@@ -246,12 +288,101 @@ export default function QnA() {
         </div>
       </section>
 
-      <div
-        className="fixed bottom-5 right-5 z-50 flex h-12 w-12 items-center justify-center rounded-full border border-black/10 bg-white/55 text-[10px] font-semibold tracking-[0.12em] text-black/58 shadow-sm backdrop-blur-xl"
-        aria-label={copy.qna.bot}
-        role="img"
-      >
-        bot
+      <div className="fixed bottom-5 right-5 z-50 flex flex-col items-end gap-3 md:bottom-6 md:right-6">
+        {botNotificationVisible ? (
+          <button
+            type="button"
+            onClick={openBot}
+            className="max-w-56 rounded-[1.35rem] border border-black/10 bg-white/86 px-4 py-2 text-left text-[11px] font-semibold tracking-[0.14em] text-black shadow-[0_18px_45px_rgba(15,23,42,0.16)] backdrop-blur-xl transition hover:-translate-y-0.5 hover:bg-white"
+            aria-label="Open bot message"
+          >
+            hi im tanie
+          </button>
+        ) : null}
+
+        <button
+          type="button"
+          onClick={isBotOpen ? closeBot : openBot}
+          className="relative flex h-14 w-14 items-center justify-center rounded-full border border-black/10 bg-white/70 text-[10px] font-semibold tracking-[0.12em] text-black/58 shadow-[0_18px_45px_rgba(15,23,42,0.16)] backdrop-blur-xl transition hover:-translate-y-0.5 hover:bg-white/90"
+          aria-expanded={isBotOpen}
+          aria-controls="qna-bot-panel"
+          aria-label={isBotOpen ? "Close bot panel" : "Open bot panel"}
+        >
+          <span className="absolute inset-[0.45rem] rounded-full border border-black/8 bg-[radial-gradient(circle_at_30%_30%,rgba(255,255,255,0.95),rgba(255,255,255,0.55)_48%,rgba(208,244,255,0.9)_100%)]" />
+          <span className="relative z-10 text-[9px] uppercase tracking-[0.22em] text-black/55">bot</span>
+          {botNotificationVisible ? (
+            <span className="absolute -right-0.5 -top-0.5 h-3.5 w-3.5 rounded-full border-2 border-[#dff4ff] bg-[#ff6b6b] shadow-[0_0_0_6px_rgba(255,107,107,0.14)]" aria-hidden="true" />
+          ) : null}
+        </button>
+
+        {isBotOpen ? (
+          <section
+            id="qna-bot-panel"
+            className="w-[min(92vw,22rem)] overflow-hidden rounded-[1.6rem] border border-black/10 bg-white/92 shadow-[0_26px_75px_rgba(15,23,42,0.22)] backdrop-blur-xl"
+            aria-label="QnA bot panel"
+          >
+            <div className="flex items-center justify-between border-b border-black/6 px-4 py-3">
+              <div>
+                <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-black/38">Assistant</p>
+                <p className="text-sm font-semibold text-black">Tanie bot</p>
+              </div>
+              <button
+                type="button"
+                onClick={closeBot}
+                className="rounded-full px-2 py-1 text-lg leading-none text-black/42 transition hover:bg-black/6 hover:text-black/72"
+                aria-label="Close bot panel"
+              >
+                ×
+              </button>
+            </div>
+
+            <div className="max-h-72 space-y-3 overflow-y-auto px-4 py-4">
+              {botMessages.map((message) => (
+                <div
+                  key={message.id}
+                  className={
+                    message.role === "bot"
+                      ? "flex justify-start"
+                      : "flex justify-end"
+                  }
+                >
+                  <div
+                    className={
+                      message.role === "bot"
+                        ? "max-w-[82%] rounded-[1.2rem] rounded-bl-md bg-[#dff4ff] px-3 py-2 text-sm leading-6 text-black"
+                        : "max-w-[82%] rounded-[1.2rem] rounded-br-md bg-[#0f172a] px-3 py-2 text-sm leading-6 text-white"
+                    }
+                  >
+                    {message.text}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <form onSubmit={handleBotSubmit} className="border-t border-black/6 p-3">
+              <label className="sr-only" htmlFor="qna-bot-input">Type a message</label>
+              <div className="flex items-end gap-2 rounded-[1.2rem] border border-black/10 bg-[#f7fbff] px-3 py-2">
+                <textarea
+                  id="qna-bot-input"
+                  value={botInput}
+                  onChange={(event) => setBotInput(event.target.value)}
+                  rows={1}
+                  placeholder="Say something..."
+                  className="min-h-10 max-h-28 flex-1 resize-none bg-transparent text-sm leading-6 text-black outline-none placeholder:text-black/34"
+                />
+                <button
+                  type="submit"
+                  className="rounded-full bg-[#0f172a] px-3.5 py-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-white transition hover:bg-[#1e293b]"
+                >
+                  Send
+                </button>
+              </div>
+              <p className="mt-2 px-1 text-[10px] font-medium uppercase tracking-[0.18em] text-black/34">
+                Reply integration can be wired to Gemini later.
+              </p>
+            </form>
+          </section>
+        ) : null}
       </div>
     </div>
   )
