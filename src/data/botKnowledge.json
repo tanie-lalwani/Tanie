@@ -1,0 +1,77 @@
+[
+  {
+    "title": "Identity",
+    "content": "Tanie Lalwani is a creative frontend developer and React developer. She builds interactive websites, 3D web experiences, modern responsive web applications, portfolio sites, and landing pages with personality and careful frontend engineering.",
+    "keywords": ["about", "who", "intro", "introduce", "tanie", "developer", "yourself", "bio", "identity"]
+  },
+  {
+    "title": "Experience",
+    "content": "Tanie has spent the last two years building, experimenting, and learning what makes interfaces feel genuinely enjoyable to use. She focuses on clean implementation, polished interaction, and practical user-facing results.",
+    "keywords": ["experience", "years", "background", "work history", "frontend", "react developer", "learning"]
+  },
+  {
+    "title": "Skills",
+    "content": "Tanie works with React, TypeScript, Tailwind CSS, Three.js, Framer Motion, responsive design, UI/UX design, accessibility, frontend performance, component systems, and clean TypeScript workflows.",
+    "keywords": ["skills", "stack", "tech", "tools", "react", "typescript", "tailwind", "three", "threejs", "framer", "motion", "accessibility", "performance"]
+  },
+  {
+    "title": "Style",
+    "content": "Tanie likes clean TypeScript workflows, polished interactions, thoughtful UI/UX details, useful web development, playful creative direction, and interfaces that feel intentional instead of generic.",
+    "keywords": ["style", "design", "approach", "ui", "ux", "workflow", "personality", "creative"]
+  },
+  {
+    "title": "Project: Viziona",
+    "content": "Viziona is a responsive web application shaped around clear interaction, UI/UX design, and practical product execution. Its stack includes React, TypeScript, and UI/UX work. Site: https://viziona.com. Code: https://github.com/tanie-lalwani/viziona.",
+    "keywords": ["viziona", "project", "proud", "work", "sample", "portfolio project", "ui/ux"]
+  },
+  {
+    "title": "Project: FinchPay",
+    "content": "Checkout Performance Overhaul - FinchPay is a frontend performance optimization pass focused on faster checkout flows, clearer states, smoother feedback, and a better checkout experience. Its stack includes React, TypeScript, and performance work.",
+    "keywords": ["finchpay", "performance", "checkout", "optimization", "speed", "project", "faster"]
+  },
+  {
+    "title": "Project: Leafline",
+    "content": "Marketing Site Rebuild - Leafline is a modern frontend rebuild with tighter content structure, responsive layouts, and a calmer visual system. Its stack includes React, TypeScript, and web development.",
+    "keywords": ["leafline", "marketing", "site", "rebuild", "landing", "page", "responsive", "project"]
+  },
+  {
+    "title": "Interview: Tell me about yourself",
+    "content": "Tanie is a creative frontend developer who builds interactive, responsive, personality-filled web experiences with React and TypeScript. She enjoys turning design ideas into polished interfaces and cares about performance, accessibility, and details that make products feel good to use.",
+    "keywords": ["tell me about yourself", "about yourself", "introduce yourself", "who are you"]
+  },
+  {
+    "title": "Interview: Proud project",
+    "content": "Tanie can talk about Viziona as a responsive web app focused on clear interaction, UI/UX design, and practical product execution, or FinchPay as a checkout performance overhaul that improved speed, state clarity, and feedback.",
+    "keywords": ["proud project", "project proud", "walk me through", "best project", "favorite project"]
+  },
+  {
+    "title": "Interview: Production bugs",
+    "content": "Tanie would reproduce the issue, check logs and user impact, isolate the smallest failing path, ship a minimal fix or rollback if needed, then add a regression test or guard so the bug does not come back.",
+    "keywords": ["bug", "bugs", "production", "debug", "issue", "fix", "regression"]
+  },
+  {
+    "title": "Interview: Disagreement",
+    "content": "Tanie handles disagreement by clarifying the goal, comparing tradeoffs, using evidence such as user impact or maintainability, and choosing the option that best serves the product instead of trying to win the argument.",
+    "keywords": ["disagree", "disagreement", "teammate", "conflict", "team", "collaboration"]
+  },
+  {
+    "title": "Interview: Performance",
+    "content": "Tanie optimizes frontend performance by measuring first, reducing unnecessary JavaScript, lazy-loading heavy routes or assets, optimizing images and 3D assets, avoiding wasteful renders, and keeping interactions responsive.",
+    "keywords": ["optimize", "performance", "fast", "speed", "lazy", "bundle", "render", "frontend performance"]
+  },
+  {
+    "title": "Interview: Why this role",
+    "content": "Tanie wants frontend roles where she can combine React engineering, thoughtful UI/UX, performance, accessibility, and creative interaction work to build products that feel useful and memorable.",
+    "keywords": ["why this role", "role", "job", "hire", "why hire", "position"]
+  },
+  {
+    "title": "Contact",
+    "content": "Contact Tanie through the portfolio contact form or email contact@tanie.me. Public links: GitHub https://github.com/tanie-lalwani, Instagram https://instagram.com/tanie.mp3, LinkedIn https://linkedin.com/in/tanie-lalwani/.",
+    "keywords": ["contact", "hire", "email", "reach out", "project inquiry", "mail", "linkedin", "github", "instagram", "social"]
+  },
+  {
+    "title": "Portfolio site",
+    "content": "The portfolio is tanie.me. It is built with React, TypeScript, Three.js, Tailwind CSS, and motion-focused frontend work. The site includes a creative ocean-inspired experience, project cards, QnA page, contact form, and social links.",
+    "keywords": ["portfolio", "site", "website", "tanie.me", "built", "three.js", "ocean", "qna"]
+  }
+]
