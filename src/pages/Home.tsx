@@ -203,7 +203,7 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
               >
                 <img
                   src="/about-workspace.jpg"
-                  alt="Laptop workspace with colorful light for Tanie Lalwani's creative web development portfolio"
+                  alt="Tanie Lalwani's creative web development profile picture, showing her working on a laptop in a cozy, plant-filled workspace with warm lighting."
                   className="h-full w-full object-cover opacity-82"
                   loading="lazy"
                 />
