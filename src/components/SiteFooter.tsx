@@ -59,9 +59,8 @@ export default function SiteFooter({ className = "" }: SiteFooterProps) {
             <p className="text-sm font-semibold tracking-tight text-white/92" style={{ fontFamily: "var(--font-display)" }}>
               Tanie Lalwani
             </p>
-            <p className="mt-1 text-xs font-medium text-sky-100/58">Creative Developer · Full-Stack Web Developer</p>
-            <p className="mt-2 max-w-xs text-xs leading-5 text-sky-100/44">Building thoughtful digital experiences and interactive web products.</p>
-            <p className="mt-2 text-[11px] text-sky-100/36">React · TypeScript · Three.js · Next.js</p>
+            <p className="mt-1 text-xs font-medium text-sky-100/58">Creative Developer</p>
+            
           </div>
           <div className="grid grid-cols-2 gap-2 gap-x-4 sm:gap-x-6">
             {SOCIALS.map((social) => (
@@ -82,7 +81,7 @@ export default function SiteFooter({ className = "" }: SiteFooterProps) {
         </div>
         <div className="mt-5 h-px w-full bg-linear-to-r from-transparent via-white/8 to-transparent" />
         <p className="mt-3 text-center text-[10px] text-sky-100/42">
-          © 2026 Tanie Lalwani
+        © 2026 Tanie Lalwani : Built with React, TypeScript, Three.js, and a lot of coffee.{" "}
         </p>
       </div>
     </footer>
