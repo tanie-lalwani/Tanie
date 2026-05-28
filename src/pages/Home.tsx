@@ -182,9 +182,9 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
 
           <div className="relative mb-5 flex flex-wrap items-center justify-between gap-2.5 border-b border-white/7 pb-2.5 sm:mb-6" />
 
-          <div className="mt-5 grid gap-7 lg:grid-cols-[minmax(0,1fr)_minmax(17rem,0.82fr)] lg:items-center">
+          <div className="mt-5 grid w-full grid-cols-1 gap-7 lg:grid-cols-[minmax(0,1fr)_minmax(14rem,20rem)] lg:items-start">
             <article aria-label="About Tanie Lalwani">
-              <div className="max-w-[60ch] space-y-3.5 text-[11.5px] font-medium leading-6 tracking-[0.18em] text-slate-200/36 sm:text-[12.5px]">
+              <div className="space-y-3.5 text-[11.5px] font-medium leading-6 tracking-[0.18em] text-slate-200/36 sm:text-[12.5px]">
                 {copy.home.aboutParagraphs.map((paragraph) => (
                   <p key={paragraph}>{paragraph}</p>
                 ))}
@@ -197,14 +197,14 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
               </div>
             </article>
 
-            <div>
+            <div className="hidden lg:block">
               <figure
-                className="relative h-52 w-full overflow-hidden rounded-2xl border border-white/7 bg-white/4 sm:h-60"
+                className="relative mx-auto aspect-[3/4] w-full max-w-[18rem] overflow-hidden rounded-2xl border border-white/10 bg-white/4 sm:max-w-[20rem] lg:mx-0 lg:w-full"
               >
                 <img
-                  src="/about-workspace.jpg"
-                  alt="Tanie Lalwani's creative web development profile picture, showing her working on a laptop in a cozy, plant-filled workspace with warm lighting."
-                  className="h-full w-full object-cover opacity-82"
+                  src="/favicon.png"
+                  alt="Tanie Lalwani profile photo."
+                  className="h-full w-full object-cover object-center opacity-82"
                   loading="lazy"
                 />
                 <div className="absolute inset-0 bg-linear-to-br from-slate-950/10 via-sky-100/4 to-slate-950/28" />
