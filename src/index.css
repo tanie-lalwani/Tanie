@@ -203,4 +203,19 @@ a:hover, .text-link:hover {
 	.project-scroll::-webkit-scrollbar {
 		display: none;
 	}
+
+	.skills-marquee-track {
+		animation: skills-marquee 28s linear infinite;
+		will-change: transform;
+	}
+
+	@keyframes skills-marquee {
+		from {
+			transform: translate3d(0, 0, 0);
+		}
+
+		to {
+			transform: translate3d(-25%, 0, 0);
+		}
+	}
 }
