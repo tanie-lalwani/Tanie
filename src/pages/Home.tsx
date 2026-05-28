@@ -1,5 +1,5 @@
-import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion"
-import { useEffect, useRef, useState } from "react"
+import { motion, useScroll, useTransform } from "framer-motion"
+import { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 import PageHeader from "../components/PageHeader"
 import { ProjectsCarousel, type Project as CarouselProject } from "../components/ProjectsCarousel"
@@ -98,28 +98,9 @@ function InterviewPrompt() {
 export default function Home({ phase, onSceneReady }: HomeProps) {
   const { copy } = useLanguage()
   const isMobile = useIsMobile()
-  const prefersReducedMotion = useReducedMotion()
-  const skillsTrackRef = useRef<HTMLDivElement | null>(null)
-  const [skillsLoopDistance, setSkillsLoopDistance] = useState(0)
   const { scrollYProgress } = useScroll()
   const worldDiveProgress = useTransform(scrollYProgress, [0, isMobile ? 0.65 : 0.4], [0, 1])
   const projects: CarouselProject[] = copy.home.projects
-
-  useEffect(() => {
-    const track = skillsTrackRef.current
-    if (!track) return
-
-    const updateLoopDistance = () => {
-      setSkillsLoopDistance(track.scrollWidth / 2)
-    }
-
-    updateLoopDistance()
-
-    const observer = new ResizeObserver(updateLoopDistance)
-    observer.observe(track)
-
-    return () => observer.disconnect()
-  }, [])
 
   return (
     <main className="relative">
@@ -211,26 +192,16 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
               </figure>
 
               <div className="mt-5 overflow-hidden sm:mt-6 [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
-                {prefersReducedMotion ? (
-                  <p
-                    className="whitespace-nowrap text-[11px] font-medium tracking-[0.18em] text-slate-300/40 sm:text-[12px]"
-                    style={{ fontFamily: "var(--font-body)" }}
-                  >
-                    {ABOUT_SKILLS_LINE}
-                  </p>
-                ) : (
-                  <motion.div
-                    ref={skillsTrackRef}
-                    className="flex w-max items-center whitespace-nowrap text-[11px] font-medium tracking-[0.18em] text-slate-300/40 sm:text-[12px]"
-                    style={{ fontFamily: "var(--font-body)" }}
-                    animate={skillsLoopDistance > 0 ? { x: [0, -skillsLoopDistance] } : undefined}
-                    transition={{ duration: 32, ease: "linear", repeat: Number.POSITIVE_INFINITY }}
-                    aria-label="Skills and capabilities"
-                  >
-                    <span className="pr-10">{ABOUT_SKILLS_LINE}</span>
-                    <span className="pr-10" aria-hidden="true">{ABOUT_SKILLS_LINE}</span>
-                  </motion.div>
-                )}
+                <div
+                  className="skills-marquee-track flex w-max items-center whitespace-nowrap text-[11px] font-medium tracking-[0.18em] text-slate-300/40 sm:text-[12px]"
+                  style={{ fontFamily: "var(--font-body)" }}
+                  aria-label="Skills and capabilities"
+                >
+                  <span className="pr-10">{ABOUT_SKILLS_LINE}</span>
+                  <span className="pr-10" aria-hidden="true">{ABOUT_SKILLS_LINE}</span>
+                  <span className="pr-10" aria-hidden="true">{ABOUT_SKILLS_LINE}</span>
+                  <span className="pr-10" aria-hidden="true">{ABOUT_SKILLS_LINE}</span>
+                </div>
               </div>
             </div>
           </div>

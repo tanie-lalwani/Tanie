@@ -15,7 +15,7 @@ function normalizeToken(value: string) {
 }
 
 function isContactQuery(query: string) {
-  return /\b(contact|email|mail|reach|hire|linkedin|github|instagram|social)\b/i.test(query)
+  return /\b(contact|email|mail|reach|hire|linkedin|github|instagram|x|twitter|social)\b/i.test(query)
 }
 
 function isGreetingQuery(query: string) {
@@ -31,7 +31,7 @@ function isSupportedServiceQuery(query: string) {
 }
 
 function buildContactReply() {
-  return "Use the contact form or email tanielalwani@gmail.com. Links: GitHub github.com/tanie-lalwani, LinkedIn linkedin.com/in/tanie-lalwani/, Instagram instagram.com/tanie.mp3."
+  return "Use the contact form or email tanielalwani@gmail.com. Links: GitHub github.com/tanie-lalwani, LinkedIn linkedin.com/in/tanie-lalwani/, Instagram instagram.com/tanie.mp3, X x.com/tanielalwani."
 }
 
 function scoreEntry(query: string, entry: BotKnowledgeEntry) {

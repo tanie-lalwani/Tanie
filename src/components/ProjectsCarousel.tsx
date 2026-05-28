@@ -33,7 +33,6 @@ export function ProjectsCarousel({ projects }: ProjectsCarouselProps) {
             key={project.site}
             title={project.title}
             description={project.description}
-            techStack={project.techStack}
             site={project.site}
             code={project.code}
           />
