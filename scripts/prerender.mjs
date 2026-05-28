@@ -88,8 +88,8 @@ const prerenderedApp = String.raw`
       </p>
 
       <p>
-        <a href="mailto:contact@tanie.me">
-          contact@tanie.me
+        <a href="mailto:tanielalwani@gmail.com">
+          tanielalwani@gmail.com
         </a>
       </p>
     </section>

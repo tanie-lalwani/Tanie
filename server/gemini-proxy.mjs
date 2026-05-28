@@ -74,7 +74,7 @@ function isSupportedServiceQuery(query) {
 }
 
 function buildContactReply() {
-    return "Use the contact form or email contact@tanie.me. Links: GitHub github.com/tanie-lalwani, LinkedIn linkedin.com/in/tanie-lalwani/, Instagram instagram.com/tanie.mp3."
+    return "Use the contact form or email tanielalwani@gmail.com. Links: GitHub github.com/tanie-lalwani, LinkedIn linkedin.com/in/tanie-lalwani/, Instagram instagram.com/tanie.mp3."
 }
 
 function findRelevantKnowledge(query, knowledge, limit = 6) {
@@ -170,7 +170,7 @@ async function replyWithGemini(query, knowledge) {
                                 "If the user asks whether Tanie does a service, answer yes only for frontend websites, React/TypeScript apps, portfolio sites, landing pages, UI/UX frontend work, 3D web experiences, performance work, or interactive web experiences.",
                                 "For any other service, answer no and briefly mention she focuses on frontend websites and interactive web experiences.",
                                 "Do not answer unrelated service questions with a project description.",
-                                "For contact questions, include contact@tanie.me and the contact form.",
+                                "For contact questions, include tanielalwani@gmail.com and the contact form.",
                                 "Keep responses short, direct, and conversational.",
                             ].join(" "),
                         },
