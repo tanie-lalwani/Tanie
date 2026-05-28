@@ -31,7 +31,7 @@ function isSupportedServiceQuery(query: string) {
 }
 
 function buildContactReply() {
-  return "Use the contact form or email contact@tanie.me. Links: GitHub github.com/tanie-lalwani, LinkedIn linkedin.com/in/tanie-lalwani/, Instagram instagram.com/tanie.mp3."
+  return "Use the contact form or email tanielalwani@gmail.com. Links: GitHub github.com/tanie-lalwani, LinkedIn linkedin.com/in/tanie-lalwani/, Instagram instagram.com/tanie.mp3."
 }
 
 function scoreEntry(query: string, entry: BotKnowledgeEntry) {
