@@ -18,10 +18,7 @@
           var search = window.location.search || "";
           var hash = window.location.hash || "";
 
-          sessionStorage.setItem(
-            "gh-pages-redirect",
-            pathname + search + hash,
-          );
+          sessionStorage.setItem("gh-pages-redirect", pathname + search + hash);
           window.location.replace("./");
         }
       })();
