@@ -9,6 +9,10 @@ export interface Project {
   techStack: string[]
   site: string
   code?: string
+  previewVideo?: string
+  detailVideo?: string
+  previewFit?: "cover" | "contain"
+  details?: string[]
 }
 
 interface ProjectsCarouselProps {
@@ -61,6 +65,8 @@ export function ProjectsCarousel({ projects }: ProjectsCarouselProps) {
             key={`${project.site}-${index}`}
             title={project.title}
             description={project.description}
+            previewVideo={project.previewVideo}
+            previewFit={project.previewFit}
             onOpen={() => setActiveProject(project)}
           />
         ))}
@@ -71,7 +77,7 @@ export function ProjectsCarousel({ projects }: ProjectsCarouselProps) {
           <article key={`${project.site}-seo-${index}`}>
             <h3>{project.title}</h3>
             <p>{project.description}</p>
-            {projectDetails.map((detail) => <p key={detail}>{detail}</p>)}
+            {(project.details ?? projectDetails).map((detail) => <p key={detail}>{detail}</p>)}
             <a href={project.site}>{copy.projectCard.view}</a>
             {project.code ? <a href={project.code}>{copy.projectCard.code}</a> : null}
           </article>
@@ -102,7 +108,7 @@ export function ProjectsCarousel({ projects }: ProjectsCarouselProps) {
             <article className="grid min-h-[calc(100vh-2rem)] content-center gap-5 py-12 sm:min-h-[calc(100vh-3rem)] sm:py-14 lg:grid-cols-[minmax(0,1.28fr)_minmax(18rem,0.72fr)] lg:items-center">
               <div className="project-visual project-video relative aspect-video w-full overflow-hidden rounded-2xl border border-white/8 shadow-[0_26px_75px_rgba(2,8,23,0.35)]">
                 <video
-                  src="/project-preview.mp4"
+                  src={activeProject.detailVideo ?? "/project-preview.mp4"}
                   className="absolute inset-0 h-full w-full object-cover opacity-72"
                   autoPlay
                   muted
@@ -126,7 +132,7 @@ export function ProjectsCarousel({ projects }: ProjectsCarouselProps) {
                 </h2>
                 <div className="mt-4 max-h-[38vh] overflow-y-auto pr-3 text-[12px] font-medium leading-7 tracking-[0.14em] text-slate-200/68 sm:text-[13px] sm:tracking-[0.16em] lg:max-h-[44vh]">
                   <p>{activeProject.description}</p>
-                  {projectDetails.map((detail) => <p className="mt-4" key={detail}>{detail}</p>)}
+                  {(activeProject.details ?? projectDetails).map((detail) => <p className="mt-4" key={detail}>{detail}</p>)}
                 </div>
 
                 <div className="mt-7 flex flex-wrap gap-2.5">
