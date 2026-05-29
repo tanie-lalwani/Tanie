@@ -1,6 +1,7 @@
 import { ProjectCard } from "./ProjectCard"
 import { useLanguage } from "../context/LanguageContext"
 import { useEffect, useState } from "react"
+import { createPortal } from "react-dom"
 
 export interface Project {
   title: string
@@ -13,6 +14,11 @@ export interface Project {
 interface ProjectsCarouselProps {
   projects: Project[]
 }
+
+const projectDetails = [
+  "Viziona was built as a polished product surface with a strong focus on responsive layout, clear visual hierarchy, and smooth interaction states. The work balances brand presence with practical usability, keeping the interface easy to scan while still feeling distinctive.",
+  "The project highlights frontend execution across structure, motion, spacing, and cross-device behavior. Each section is shaped to guide the user naturally from first impression to action, with careful attention to readable content, reliable components, and a modern React and TypeScript workflow.",
+]
 
 export function ProjectsCarousel({ projects }: ProjectsCarouselProps) {
   const { copy } = useLanguage()
@@ -50,21 +56,31 @@ export function ProjectsCarousel({ projects }: ProjectsCarouselProps) {
         className="project-scroll -mx-4 flex snap-x snap-mandatory gap-3.5 overflow-x-auto px-4 pb-9 sm:-mx-6 sm:gap-4 sm:px-6 sm:pb-10"
         aria-label={copy.home.projectsTitle}
       >
-        {projects.map((project) => (
+        {projects.map((project, index) => (
           <ProjectCard
-            key={project.site}
+            key={`${project.site}-${index}`}
             title={project.title}
             description={project.description}
-            site={project.site}
-            code={project.code}
             onOpen={() => setActiveProject(project)}
           />
         ))}
       </div>
 
-      {activeProject ? (
+      <section className="sr-only" aria-label="Project details">
+        {projects.map((project, index) => (
+          <article key={`${project.site}-seo-${index}`}>
+            <h3>{project.title}</h3>
+            <p>{project.description}</p>
+            {projectDetails.map((detail) => <p key={detail}>{detail}</p>)}
+            <a href={project.site}>{copy.projectCard.view}</a>
+            {project.code ? <a href={project.code}>{copy.projectCard.code}</a> : null}
+          </article>
+        ))}
+      </section>
+
+      {activeProject && typeof document !== "undefined" ? createPortal(
         <div
-          className="fixed inset-0 z-[10000] flex items-stretch justify-center overflow-y-auto bg-slate-950/94 px-4 py-4 backdrop-blur-xl sm:px-6 sm:py-6"
+          className="fixed inset-0 z-[2147483647] flex min-h-[100dvh] items-stretch justify-center overflow-y-auto bg-slate-950 px-4 py-4 backdrop-blur-xl sm:px-6 sm:py-6"
           role="dialog"
           aria-modal="true"
           aria-labelledby="project-detail-title"
@@ -108,9 +124,10 @@ export function ProjectsCarousel({ projects }: ProjectsCarouselProps) {
                 >
                   {activeProject.title}
                 </h2>
-                <p className="mt-4 text-[12px] font-medium leading-7 tracking-[0.16em] text-slate-200/56 sm:text-[13px]">
-                  {activeProject.description}
-                </p>
+                <div className="mt-4 max-h-[38vh] overflow-y-auto pr-3 text-[12px] font-medium leading-7 tracking-[0.16em] text-slate-200/56 sm:text-[13px] lg:max-h-[44vh]">
+                  <p>{activeProject.description}</p>
+                  {projectDetails.map((detail) => <p className="mt-4" key={detail}>{detail}</p>)}
+                </div>
 
                 <div className="mt-7 flex flex-wrap gap-2.5">
                   <a
@@ -136,7 +153,7 @@ export function ProjectsCarousel({ projects }: ProjectsCarouselProps) {
             </article>
           </div>
         </div>
-      ) : null}
+      , document.body) : null}
     </div>
   )
 }

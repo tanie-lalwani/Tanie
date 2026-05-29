@@ -1,17 +1,13 @@
 import { motion } from "framer-motion"
 import type { KeyboardEvent } from "react"
-import { useLanguage } from "../context/LanguageContext"
 
 interface ProjectCardProps {
-  site: string
-  code?: string
   title: string
   description: string
   onOpen: () => void
 }
 
-export function ProjectCard({ site, code, title, description, onOpen }: ProjectCardProps) {
-  const { copy } = useLanguage()
+export function ProjectCard({ title, description, onOpen }: ProjectCardProps) {
   const titleId = `project-${title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "")}`
 
   const openFromKeyboard = (event: KeyboardEvent<HTMLElement>) => {
@@ -53,28 +49,10 @@ export function ProjectCard({ site, code, title, description, onOpen }: ProjectC
                 <div className="absolute bottom-4 left-4 right-4 h-1 rounded-full bg-white/10">
                   <div className="project-video-progress h-full rounded-full bg-sky-100/42" />
                 </div>
-                <a
-                  href={site}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="absolute bottom-3 left-3 inline-flex items-center justify-center rounded-full border border-sky-200/18 bg-slate-950/52 px-3 py-1.5 text-[10px] font-medium tracking-[0.18em] no-underline text-slate-100/72 shadow-[0_10px_26px_rgba(2,8,23,0.22)] backdrop-blur-md transition hover:bg-sky-100/12 hover:text-white focus:outline-none focus:ring-2 focus:ring-sky-300/24"
-                  aria-label={`${copy.projectCard.view} ${title}`}
-                  onClick={(event) => event.stopPropagation()}
-                >
-                  {copy.projectCard.view}
-                </a>
-                {code ? (
-                  <a
-                    href={code}
-                    target="_blank"
-                    rel="me noopener noreferrer"
-                    className="absolute bottom-3 right-3 inline-flex items-center justify-center rounded-full border border-white/8 bg-slate-950/48 px-3 py-1.5 text-[10px] font-medium tracking-[0.18em] no-underline text-slate-100/64 shadow-[0_10px_26px_rgba(2,8,23,0.18)] backdrop-blur-md transition hover:bg-white/8 hover:text-white focus:outline-none focus:ring-2 focus:ring-sky-300/22"
-                    aria-label={`${copy.projectCard.code} ${title}`}
-                    onClick={(event) => event.stopPropagation()}
-                  >
-                    {copy.projectCard.code}
-                  </a>
-                ) : null}
+                <div className="absolute right-3 top-3 h-2 w-2 rounded-full bg-sky-100/62 shadow-[0_0_18px_rgba(186,230,253,0.55)]" />
+                <p className="absolute bottom-3 right-3 text-[9px] font-medium uppercase tracking-[0.22em] text-slate-100/48">
+                  Open
+                </p>
               </div>
             </div>
 
