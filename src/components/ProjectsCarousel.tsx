@@ -51,9 +51,14 @@ export function ProjectsCarousel({ projects }: ProjectsCarouselProps) {
   return (
     <div className="relative w-full" aria-label={copy.home.projectsTitle}>
       <div className="relative mb-3 flex flex-wrap items-center justify-between gap-2.5 border-b border-white/7 pb-2.5 sm:mb-4">
-        <p className="ml-auto inline-flex text-[11.5px] font-medium uppercase tracking-[0.2em] text-sky-200/55">
-          {String(projects.length).padStart(2, "0")} {copy.projectCard.projectsCountSuffix}
-        </p>
+        <a
+          href="https://tanie.me/projects"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="ml-auto inline-flex text-[11.5px] font-medium uppercase tracking-[0.2em] !text-sky-200/55 underline transition hover:!text-sky-100/80"
+        >
+          All Projects
+        </a>
       </div>
 
       <div

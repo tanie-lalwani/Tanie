@@ -97,27 +97,38 @@ function InterviewPrompt() {
 
 export default function Home({ phase, onSceneReady }: HomeProps) {
   const { copy } = useLanguage()
-  const [aboutExpanded, setAboutExpanded] = useState(false)
+  const [aboutExpanded, setAboutExpanded] = useState(true)
   const isMobile = useIsMobile()
   const { scrollYProgress } = useScroll()
   const worldDiveProgress = useTransform(scrollYProgress, [0, isMobile ? 0.65 : 0.4], [0, 1])
   const projects: CarouselProject[] = Array.from({ length: 7 }, (_, index) => {
-    const project = { ...copy.home.projects[index % copy.home.projects.length], previewVideo: "/project-preview.mp4", detailVideo: "/project-preview.mp4" }
+    const base = copy.home.projects[index % copy.home.projects.length]
+    const project = { ...base, previewVideo: "/project-preview.mp4", detailVideo: "/project-preview.mp4" }
 
-    return index === 4
-      ? {
-          ...project,
-          title: "Innomedia",
-          description: "A lightweight 360 degree marketing company website built with basic HTML and CSS, then elevated with motion, animated sections, and flexible layouts.",
-          techStack: ["HTML", "CSS", "Flex", "Animation"],
-          previewVideo: "/Innomedia.mp4",
-          previewFit: "contain",
-          details: [
-            "Innomedia is a generic 360 degree marketing company site shaped around simple service storytelling, clear page flow, and quick visual trust. The base was intentionally lean: HTML, CSS, flexible sections, and direct content structure.",
-            "Even with a basic stack, the build adds motion through animated reveals, soft transitions, and layout rhythm so the site feels more alive than a static brochure. It is a practical example of making small frontend decisions feel polished without overengineering.",
-          ],
-        }
-      : project
+    if (index === 4) {
+      return {
+        ...project,
+        title: "Innomedia",
+        description: "A lightweight 360 degree marketing company website built with basic HTML and CSS, then elevated with motion, animated sections, and flexible layouts.",
+        techStack: ["HTML", "CSS", "Flex", "Animation"],
+        previewVideo: "/Innomedia.mp4",
+        previewFit: "contain",
+        details: [
+          "Innomedia is a generic 360 degree marketing company site shaped around simple service storytelling, clear page flow, and quick visual trust. The base was intentionally lean: HTML, CSS, flexible sections, and direct content structure.",
+          "Even with a basic stack, the build adds motion through animated reveals, soft transitions, and layout rhythm so the site feels more alive than a static brochure. It is a practical example of making small frontend decisions feel polished without overengineering.",
+        ],
+      }
+    }
+
+    // Ensure each generated project instance has unique content/ids for SEO
+    const uniqueIndex = index + 1
+    return {
+      ...project,
+      title: `${project.title} — ${uniqueIndex}`,
+      description: `${project.description} (Demo ${uniqueIndex})`,
+      site: `${project.site}?instance=${uniqueIndex}`,
+      code: project.code ? `${project.code}?instance=${uniqueIndex}` : undefined,
+    }
   })
 
   return (
@@ -193,17 +204,7 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
                 ))}
               </div>
 
-              <div className="mt-5 flex items-center gap-4">
-                {!aboutExpanded ? (
-                  <button
-                    type="button"
-                    className="border-b border-sky-100/18 pb-0.5 text-[11.5px] font-medium tracking-[0.16em] text-slate-200/56 transition hover:text-white sm:text-[12.5px]"
-                    onClick={() => setAboutExpanded(true)}
-                  >
-                    Read more
-                  </button>
-                ) : null}
-              </div>
+              <div className="mt-5 flex items-center gap-4" />
             </article>
 
             <div className="hidden lg:block">
@@ -213,7 +214,7 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
                 <img
                   src="/favicon.png"
                   alt="Tanie Lalwani profile photo."
-                  className="h-full w-full object-cover object-[center_40%] opacity-82"
+                  className="h-full w-full object-cover object-[center_40%] transform scale-100 opacity-82"
                   loading="lazy"
                 />
                 <div className="absolute inset-0 bg-linear-to-br from-slate-950/10 via-sky-100/4 to-slate-950/28" />
