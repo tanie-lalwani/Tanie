@@ -1,6 +1,6 @@
-import { Suspense, lazy, useCallback, useEffect, useLayoutEffect, useState, type ReactNode } from "react";
+import { Suspense, lazy, useCallback, useEffect, useState, type ReactNode } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 import Navbar from "./components/Navbar.tsx";
 import SiteFooter from "./components/SiteFooter";
 import { type TimePhase } from "./experience/timePhase";
@@ -77,26 +77,25 @@ function PageShell({ children }: { children: ReactNode }) {
   );
 }
 
+function NotFoundPage() {
+  useEffect(() => {
+    const robots = document.querySelector('meta[name="robots"]');
+    robots?.setAttribute("content", "noindex");
+  }, []);
+
+  return (
+    <iframe
+      title="Page not found"
+      src="/404.html"
+      className="block h-screen w-full border-0"
+    />
+  );
+}
+
 export default function App() {
   const location = useLocation();
-  const navigate = useNavigate();
   const [readyOceanLocationKey, setReadyOceanLocationKey] = useState<string | null>(null);
   const timePhase: TimePhase = "default"
-  const ghPagesRedirectKey = "gh-pages-redirect"
-
-  // Restore the deep link before paint when GitHub Pages serves the 404 fallback.
-  useLayoutEffect(() => {
-    if (typeof window === 'undefined') return;
-    const params = new URLSearchParams(window.location.search);
-    const redirect = params.get('redirect') ?? window.sessionStorage.getItem(ghPagesRedirectKey);
-    if (!redirect) return;
-
-    window.sessionStorage.removeItem(ghPagesRedirectKey);
-
-    if (window.location.pathname === '/' || window.location.pathname === '/index.html') {
-      navigate(redirect, { replace: true });
-    }
-  }, [navigate]);
 
   useEffect(() => {
     void loadHome();
@@ -112,7 +111,7 @@ export default function App() {
   useClickRipple()
 
 
-  const showNavbar = location.pathname !== "/qna"
+  const showNavbar = location.pathname === "/"
   const isWaitingForOceanScene = location.pathname === "/" && readyOceanLocationKey !== location.key;
 
   return (
@@ -156,6 +155,7 @@ export default function App() {
                   </PageShell>
                 }
               />
+              <Route path="*" element={<NotFoundPage />} />
             </Routes>
           </AnimatePresence>
         </Suspense>
