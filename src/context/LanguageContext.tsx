@@ -135,14 +135,14 @@ const translations: Record<Locale, SiteCopy> = {
           description:
             "A frontend performance optimization pass for faster checkout flows, clearer states, and smoother feedback.",
           techStack: ["React", "TypeScript", "Performance"],
-          site: "https://finchpay.example",
+          site: "https://finchpay.app",
         },
         {
           title: "Marketing Site Rebuild - Leafline",
           description:
             "A modern frontend rebuild with tighter content structure, responsive layouts, and a calmer visual system.",
           techStack: ["React", "TypeScript", "Web development"],
-          site: "https://leafline.example",
+          site: "https://leafline.studio",
         },
       ],
     },
@@ -234,14 +234,14 @@ const translations: Record<Locale, SiteCopy> = {
           description:
             "Una mejora de rendimiento frontend para flujos de pago más rápidos, estados más claros y feedback más suave.",
           techStack: ["React", "TypeScript", "Rendimiento"],
-          site: "https://finchpay.example",
+          site: "https://finchpay.app",
         },
         {
           title: "Rebuild del sitio marketing - Leafline",
           description:
             "Una reconstrucción frontend moderna con estructura de contenido más limpia, layouts responsive y una estética más calma.",
           techStack: ["React", "TypeScript", "Desarrollo web"],
-          site: "https://leafline.example",
+          site: "https://leafline.studio",
         },
       ],
     },
@@ -333,14 +333,14 @@ const translations: Record<Locale, SiteCopy> = {
           description:
             "Une optimisation des performances frontend pour des parcours de paiement plus rapides, des états plus clairs et un feedback plus fluide.",
           techStack: ["React", "TypeScript", "Performance"],
-          site: "https://finchpay.example",
+          site: "https://finchpay.app",
         },
         {
           title: "Refonte du site marketing - Leafline",
           description:
             "Une refonte frontend moderne avec une structure de contenu plus serrée, des layouts responsives et une ambiance plus calme.",
           techStack: ["React", "TypeScript", "Développement web"],
-          site: "https://leafline.example",
+          site: "https://leafline.studio",
         },
       ],
     },
@@ -432,14 +432,14 @@ const translations: Record<Locale, SiteCopy> = {
           description:
             "Checkout flows को तेज़, states को स्पष्ट और feedback को smoother बनाने के लिए frontend performance optimization.",
           techStack: ["React", "TypeScript", "Performance"],
-          site: "https://finchpay.example",
+          site: "https://finchpay.app",
         },
         {
           title: "Marketing Site Rebuild - Leafline",
           description:
             "Tighter content structure, responsive layouts, और calmer visual system के साथ modern frontend rebuild.",
           techStack: ["React", "TypeScript", "Web development"],
-          site: "https://leafline.example",
+          site: "https://leafline.studio",
         },
       ],
     },
@@ -531,14 +531,14 @@ const translations: Record<Locale, SiteCopy> = {
           description:
             "チェックアウトをより速く、状態をより明確に、フィードバックをより滑らかにするためのフロントエンド最適化です。",
           techStack: ["React", "TypeScript", "Performance"],
-          site: "https://finchpay.example",
+          site: "https://finchpay.app",
         },
         {
           title: "Leafline marketing site rebuild",
           description:
             "より引き締まった構成、レスポンシブなレイアウト、落ち着いたビジュアルで再構築したモダンなフロントエンドです。",
           techStack: ["React", "TypeScript", "Web development"],
-          site: "https://leafline.example",
+          site: "https://leafline.studio",
         },
       ],
     },
@@ -630,14 +630,14 @@ const translations: Record<Locale, SiteCopy> = {
           description:
             "تیز checkout flows، واضح states، اور smooth feedback کے لیے frontend performance optimization۔",
           techStack: ["React", "TypeScript", "Performance"],
-          site: "https://finchpay.example",
+          site: "https://finchpay.app",
         },
         {
           title: "Marketing Site Rebuild - Leafline",
           description:
             "زیادہ مربوط content structure، responsive layouts، اور پرسکون visual system کے ساتھ modern frontend rebuild۔",
           techStack: ["React", "TypeScript", "Web development"],
-          site: "https://leafline.example",
+          site: "https://leafline.studio",
         },
       ],
     },
@@ -729,14 +729,14 @@ const translations: Record<Locale, SiteCopy> = {
           description:
             "一轮前端性能优化，让结账流程更快、状态更清晰、反馈更顺滑。",
           techStack: ["React", "TypeScript", "性能"],
-          site: "https://finchpay.example",
+          site: "https://finchpay.app",
         },
         {
           title: "Marketing Site Rebuild - Leafline",
           description:
             "一次现代化前端重建，拥有更紧凑的内容结构、响应式布局和更安静的视觉系统。",
           techStack: ["React", "TypeScript", "Web 开发"],
-          site: "https://leafline.example",
+          site: "https://leafline.studio",
         },
       ],
     },

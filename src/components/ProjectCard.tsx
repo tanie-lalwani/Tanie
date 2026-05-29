@@ -2,6 +2,7 @@ import { motion } from "framer-motion"
 import type { KeyboardEvent } from "react"
 
 interface ProjectCardProps {
+  titleId?: string
   title: string
   description: string
   previewVideo?: string
@@ -9,8 +10,8 @@ interface ProjectCardProps {
   onOpen: () => void
 }
 
-export function ProjectCard({ title, description, previewVideo, previewFit = "cover", onOpen }: ProjectCardProps) {
-  const titleId = `project-${title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "")}`
+export function ProjectCard({ titleId, title, description, previewVideo, previewFit = "cover", onOpen }: ProjectCardProps) {
+  const resolvedTitleId = titleId ?? `project-${title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "")}`
 
   const openFromKeyboard = (event: KeyboardEvent<HTMLElement>) => {
     if (event.key !== "Enter" && event.key !== " ") return
@@ -20,7 +21,7 @@ export function ProjectCard({ title, description, previewVideo, previewFit = "co
 
   return (
     <motion.article
-      aria-labelledby={titleId}
+      aria-labelledby={resolvedTitleId}
       role="button"
       tabIndex={0}
       className="relative h-full shrink-0 snap-start cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-300/24"
@@ -59,7 +60,7 @@ export function ProjectCard({ title, description, previewVideo, previewFit = "co
             </div>
 
             <div className="relative px-1 pt-0.5">
-              <h3 id={titleId} className="text-[10px] font-medium leading-5 tracking-[0.16em] text-slate-100/66 sm:text-[11px]" style={{ fontFamily: "var(--font-body)" }}>
+              <h3 id={resolvedTitleId} className="text-[10px] font-medium leading-5 tracking-[0.16em] text-slate-100/66 sm:text-[11px]" style={{ fontFamily: "var(--font-body)" }}>
                 {title}
               </h3>
               <p className="copy-clamp mt-1 max-w-[58ch] text-[10px] font-medium leading-5 tracking-[0.14em] text-slate-200/48 sm:text-[11px] sm:tracking-[0.16em]">

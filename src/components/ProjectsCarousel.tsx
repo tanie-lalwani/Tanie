@@ -4,6 +4,7 @@ import { useEffect, useState } from "react"
 import { createPortal } from "react-dom"
 
 export interface Project {
+  id?: string
   title: string
   description: string
   techStack: string[]
@@ -27,6 +28,7 @@ const projectDetails = [
 export function ProjectsCarousel({ projects }: ProjectsCarouselProps) {
   const { copy } = useLanguage()
   const [activeProject, setActiveProject] = useState<Project | null>(null)
+  const detailTitleId = activeProject?.id ? `${activeProject.id}-detail-title` : "project-detail-title"
 
   useEffect(() => {
     if (!activeProject) return
@@ -68,6 +70,7 @@ export function ProjectsCarousel({ projects }: ProjectsCarouselProps) {
         {projects.map((project, index) => (
           <ProjectCard
             key={`${project.site}-${index}`}
+            titleId={project.id}
             title={project.title}
             description={project.description}
             previewVideo={project.previewVideo}
@@ -94,7 +97,7 @@ export function ProjectsCarousel({ projects }: ProjectsCarouselProps) {
           className="fixed inset-0 z-[2147483647] flex min-h-[100dvh] items-stretch justify-center overflow-y-auto bg-slate-950 px-4 py-4 backdrop-blur-xl sm:px-6 sm:py-6"
           role="dialog"
           aria-modal="true"
-          aria-labelledby="project-detail-title"
+          aria-labelledby={detailTitleId}
           onClick={() => setActiveProject(null)}
         >
           <div
@@ -129,7 +132,7 @@ export function ProjectsCarousel({ projects }: ProjectsCarouselProps) {
                   {copy.home.projectsTitle}
                 </p>
                 <h2
-                  id="project-detail-title"
+                  id={detailTitleId}
                   className="mt-3 text-[2.25rem] font-semibold tracking-normal text-white sm:text-[2.85rem]"
                   style={{ fontFamily: "var(--font-display)" }}
                 >
