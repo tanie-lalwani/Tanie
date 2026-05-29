@@ -19,8 +19,8 @@ const initialFields: ContactFields = {
   message: "",
 }
 
-const labelClass = "text-[11.5px] font-medium tracking-[0.18em] text-slate-200/36 sm:text-[12.5px]"
-const inputClass = "rounded-xl border border-white/14 bg-white/10 px-4 py-2 text-[11.5px] font-medium leading-6 tracking-[0.18em] text-slate-100/70 outline-none transition placeholder:text-[11.5px] placeholder:tracking-[0.18em] placeholder:text-slate-200/30 focus:border-sky-300/46 focus:ring-2 focus:ring-sky-300/20 sm:text-[12.5px]"
+const labelClass = "text-[11.5px] font-medium tracking-[0.16em] text-slate-200/50 sm:text-[12.5px]"
+const inputClass = "rounded-xl border border-white/14 bg-white/10 px-4 py-2 text-[11.5px] font-medium leading-6 tracking-[0.14em] text-slate-100/76 outline-none transition placeholder:text-[11.5px] placeholder:tracking-[0.14em] placeholder:text-slate-200/38 focus:border-sky-300/46 focus:ring-2 focus:ring-sky-300/20 sm:text-[12.5px] sm:tracking-[0.16em]"
 
 export function ContactForm() {
   const { copy } = useLanguage()
@@ -143,7 +143,7 @@ export function ContactForm() {
       <button
         type="submit"
         disabled={isSubmitting}
-        className="inline-flex h-9 items-center justify-center rounded-full px-4 text-[9px] tracking-[0.04em] font-medium text-[#274472] border border-[#274472]/15 hover:bg-white/5 transition"
+        className="inline-flex h-8 items-center justify-center rounded-full border border-[#274472]/15 px-3.5 text-[9px] font-medium tracking-[0.04em] text-[#274472] transition hover:bg-white/5"
       >
         {isSubmitting ? copy.contact.sending : copy.contact.button}
       </button>

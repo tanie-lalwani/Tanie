@@ -57,10 +57,10 @@ export function ProjectCard({ title, description, onOpen }: ProjectCardProps) {
             </div>
 
             <div className="relative px-1 pt-0.5">
-              <h3 id={titleId} className="text-[10px] font-medium leading-5 tracking-[0.18em] text-slate-100/58 sm:text-[11px]" style={{ fontFamily: "var(--font-body)" }}>
+              <h3 id={titleId} className="text-[10px] font-medium leading-5 tracking-[0.16em] text-slate-100/66 sm:text-[11px]" style={{ fontFamily: "var(--font-body)" }}>
                 {title}
               </h3>
-              <p className="copy-clamp mt-1 max-w-[58ch] text-[10px] font-medium leading-5 tracking-[0.18em] text-slate-200/36 sm:text-[11px]">
+              <p className="copy-clamp mt-1 max-w-[58ch] text-[10px] font-medium leading-5 tracking-[0.14em] text-slate-200/48 sm:text-[11px] sm:tracking-[0.16em]">
                 {description}
               </p>
             </div>

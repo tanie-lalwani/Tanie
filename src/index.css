@@ -197,6 +197,22 @@ a:hover, .text-link:hover {
 		border-radius: 999px;
 	}
 
+	.comment-pulse {
+		animation: comment-pulse 2.4s ease-in-out infinite;
+	}
+
+	@keyframes comment-pulse {
+		0%, 100% {
+			transform: scale(1);
+			filter: drop-shadow(0 0 0 rgba(15, 23, 42, 0));
+		}
+
+		50% {
+			transform: scale(1.12);
+			filter: drop-shadow(0 6px 12px rgba(15, 23, 42, 0.16));
+		}
+	}
+
 	.project-visual {
 		background:
 			radial-gradient(circle at 50% 55%, rgba(205, 230, 245, 0.068), transparent 34%),
