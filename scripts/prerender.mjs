@@ -122,6 +122,31 @@ const prerenderedApp = String.raw`
 </div>
 `;
 
+const prerenderedQna = String.raw`
+<div id="root">
+  <main data-prerendered="true">
+    <section>
+      <h1>Interview Tanie</h1>
+
+      <p>
+        Quick interview-style questions and answers about Tanie Lalwani, her work, projects, creative development, frontend engineering, React, TypeScript, and interactive web experiences.
+      </p>
+
+      <ul>
+        <li>Who is Tanie Lalwani?</li>
+        <li>What kind of projects does Tanie build?</li>
+        <li>What technologies does Tanie use?</li>
+        <li>How can I contact Tanie?</li>
+      </ul>
+
+      <p>
+        <a href="/">Back to portfolio</a>
+      </p>
+    </section>
+  </main>
+</div>
+`;
+
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -130,6 +155,8 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const distPath = path.resolve(__dirname, '../dist/index.html');
+const qnaHtmlPath = path.resolve(__dirname, '../dist/qna.html');
+const qnaDistPath = path.resolve(__dirname, '../dist/qna/index.html');
 
 try {
   let html = fs.readFileSync(distPath, 'utf8');
@@ -138,6 +165,12 @@ try {
   html = html.replace('<div id="root"></div>', prerenderedApp);
 
   fs.writeFileSync(distPath, html);
+  fs.mkdirSync(path.dirname(qnaDistPath), { recursive: true });
+  const qnaHtml = html
+    .replace(prerenderedApp, prerenderedQna)
+    .replace('href="https://tanie.me/"', 'href="https://tanie.me/qna"');
+  fs.writeFileSync(qnaHtmlPath, qnaHtml);
+  fs.writeFileSync(qnaDistPath, qnaHtml);
   console.log('✅ Successfully injected prerendered HTML into dist/index.html');
 } catch (err) {
   console.error('❌ Failed to prerender:', err);
