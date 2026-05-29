@@ -97,10 +97,11 @@ function InterviewPrompt() {
 
 export default function Home({ phase, onSceneReady }: HomeProps) {
   const { copy } = useLanguage()
+  const [aboutExpanded, setAboutExpanded] = useState(false)
   const isMobile = useIsMobile()
   const { scrollYProgress } = useScroll()
   const worldDiveProgress = useTransform(scrollYProgress, [0, isMobile ? 0.65 : 0.4], [0, 1])
-  const projects: CarouselProject[] = copy.home.projects
+  const projects: CarouselProject[] = Array.from({ length: 7 }, (_, index) => copy.home.projects[index % copy.home.projects.length])
 
   return (
     <main className="relative">
@@ -161,34 +162,51 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
             className="mb-4 max-w-[62ch]"
             />
 
-          <div className="relative mb-5 flex flex-wrap items-center justify-between gap-2.5 border-b border-white/7 pb-2.5 sm:mb-6" />
+          <div className="relative mb-5 flex flex-wrap items-center justify-end gap-2.5 border-b border-white/7 pb-2.5 sm:mb-6">
+            <a href="https://www.google.com/search?q=Tanie+Lalwani" target="_blank" rel="noopener noreferrer" className="inline-flex text-[11.5px] font-medium uppercase tracking-[0.2em] !text-sky-200/55 no-underline transition hover:!text-sky-100/80">
+              {copy.home.knowMore}
+            </a>
+          </div>
 
           <div className="mt-5 grid w-full grid-cols-1 gap-7 lg:grid-cols-[minmax(0,1fr)_minmax(14rem,20rem)] lg:items-start">
-            <article aria-label="About Tanie Lalwani">
-              <div className="space-y-3.5 text-[11.5px] font-medium leading-6 tracking-[0.18em] text-slate-200/36 sm:text-[12.5px]">
+            <article className="max-w-[62ch]" aria-label="About Tanie Lalwani">
+              <div className={`about-scroll max-h-[calc(88svh-13rem)] space-y-3.5 pr-3 text-[11.5px] font-medium leading-6 tracking-[0.18em] text-slate-200/36 sm:max-h-[calc(76vh-12rem)] sm:text-[12.5px] ${aboutExpanded ? "overflow-y-auto" : "overflow-hidden"}`}>
                 {copy.home.aboutParagraphs.map((paragraph) => (
-                  <p key={paragraph}>{paragraph}</p>
+                  <p key={paragraph} dangerouslySetInnerHTML={{ __html: paragraph }} />
                 ))}
               </div>
 
-              <div className="mt-5">
-                <a href="https://www.google.com/search?q=Tanie+Lalwani" target="_blank" rel="noopener noreferrer" className="inline-flex border-b border-transparent pb-0.5 text-[11.5px] font-medium tracking-[0.18em] !text-slate-200/36 no-underline transition-colors duration-200 !hover:text-white !hover:border-white/20 sm:text-[12.5px]" aria-label="Search for more information about Tanie Lalwani">
-                  {copy.home.knowMore}
-                </a>
+              <div className="mt-5 flex items-center gap-4">
+                {!aboutExpanded ? (
+                  <button
+                    type="button"
+                    className="border-b border-sky-100/18 pb-0.5 text-[11.5px] font-medium tracking-[0.18em] text-slate-200/46 transition hover:text-white sm:text-[12.5px]"
+                    onClick={() => setAboutExpanded(true)}
+                  >
+                    Read more
+                  </button>
+                ) : null}
               </div>
             </article>
 
             <div className="hidden lg:block">
               <figure
-                className="relative mx-auto aspect-[3/4] w-full max-w-[18rem] overflow-hidden rounded-2xl border border-white/10 bg-white/4 sm:max-w-[20rem] lg:mx-0 lg:w-full"
+                className="relative mx-auto h-[calc(76vh-12rem)] max-h-[26rem] min-h-64 w-full max-w-[18rem] overflow-hidden rounded-2xl border border-white/10 bg-white/4 sm:max-w-[20rem] lg:mx-0 lg:w-full"
               >
                 <img
                   src="/favicon.png"
                   alt="Tanie Lalwani profile photo."
-                  className="h-full w-full object-cover object-center opacity-82"
+                  className="h-full w-full object-cover object-[center_40%] opacity-82"
                   loading="lazy"
                 />
                 <div className="absolute inset-0 bg-linear-to-br from-slate-950/10 via-sky-100/4 to-slate-950/28" />
+                <a
+                  href="/gallery"
+                  className="absolute bottom-3 right-3 grid h-9 w-9 place-items-center rounded-full border border-white/14 bg-slate-950/42 text-xl !text-white/72 !no-underline backdrop-blur-md transition hover:bg-white/10 hover:!text-white"
+                  aria-label="Open gallery"
+                >
+                  ↗
+                </a>
               </figure>
 
               <div className="mt-5 overflow-hidden sm:mt-6 [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
