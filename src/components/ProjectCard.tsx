@@ -1,4 +1,5 @@
 import { motion } from "framer-motion"
+import type { KeyboardEvent } from "react"
 import { useLanguage } from "../context/LanguageContext"
 
 interface ProjectCardProps {
@@ -6,16 +7,27 @@ interface ProjectCardProps {
   code?: string
   title: string
   description: string
+  onOpen: () => void
 }
 
-export function ProjectCard({ site, code, title, description }: ProjectCardProps) {
+export function ProjectCard({ site, code, title, description, onOpen }: ProjectCardProps) {
   const { copy } = useLanguage()
   const titleId = `project-${title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "")}`
+
+  const openFromKeyboard = (event: KeyboardEvent<HTMLElement>) => {
+    if (event.key !== "Enter" && event.key !== " ") return
+    event.preventDefault()
+    onOpen()
+  }
 
   return (
     <motion.article
       aria-labelledby={titleId}
-      className="relative h-full shrink-0 snap-start"
+      role="button"
+      tabIndex={0}
+      className="relative h-full shrink-0 snap-start cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-300/24"
+      onClick={onOpen}
+      onKeyDown={openFromKeyboard}
       initial={{ opacity: 0, y: 18 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: 18 }}
@@ -47,6 +59,7 @@ export function ProjectCard({ site, code, title, description }: ProjectCardProps
                   rel="noopener noreferrer"
                   className="absolute bottom-3 left-3 inline-flex items-center justify-center rounded-full border border-sky-200/18 bg-slate-950/52 px-3 py-1.5 text-[10px] font-medium tracking-[0.18em] no-underline text-slate-100/72 shadow-[0_10px_26px_rgba(2,8,23,0.22)] backdrop-blur-md transition hover:bg-sky-100/12 hover:text-white focus:outline-none focus:ring-2 focus:ring-sky-300/24"
                   aria-label={`${copy.projectCard.view} ${title}`}
+                  onClick={(event) => event.stopPropagation()}
                 >
                   {copy.projectCard.view}
                 </a>
@@ -57,6 +70,7 @@ export function ProjectCard({ site, code, title, description }: ProjectCardProps
                     rel="me noopener noreferrer"
                     className="absolute bottom-3 right-3 inline-flex items-center justify-center rounded-full border border-white/8 bg-slate-950/48 px-3 py-1.5 text-[10px] font-medium tracking-[0.18em] no-underline text-slate-100/64 shadow-[0_10px_26px_rgba(2,8,23,0.18)] backdrop-blur-md transition hover:bg-white/8 hover:text-white focus:outline-none focus:ring-2 focus:ring-sky-300/22"
                     aria-label={`${copy.projectCard.code} ${title}`}
+                    onClick={(event) => event.stopPropagation()}
                   >
                     {copy.projectCard.code}
                   </a>
