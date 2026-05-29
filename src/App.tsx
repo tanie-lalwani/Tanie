@@ -1,4 +1,4 @@
-import { Suspense, lazy, useCallback, useEffect, useState, type ReactNode } from "react";
+import { Suspense, lazy, useCallback, useEffect, useLayoutEffect, useState, type ReactNode } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import Navbar from "./components/Navbar.tsx";
@@ -82,12 +82,18 @@ export default function App() {
   const navigate = useNavigate();
   const [readyOceanLocationKey, setReadyOceanLocationKey] = useState<string | null>(null);
   const timePhase: TimePhase = "default"
-  // Handle GitHub Pages SPA redirect (?redirect=...)
-  useEffect(() => {
+  const ghPagesRedirectKey = "gh-pages-redirect"
+
+  // Restore the deep link before paint when GitHub Pages serves the 404 fallback.
+  useLayoutEffect(() => {
     if (typeof window === 'undefined') return;
     const params = new URLSearchParams(window.location.search);
-    const redirect = params.get('redirect');
-    if (redirect && window.location.pathname === '/index.html') {
+    const redirect = params.get('redirect') ?? window.sessionStorage.getItem(ghPagesRedirectKey);
+    if (!redirect) return;
+
+    window.sessionStorage.removeItem(ghPagesRedirectKey);
+
+    if (window.location.pathname === '/' || window.location.pathname === '/index.html') {
       navigate(redirect, { replace: true });
     }
   }, [navigate]);
