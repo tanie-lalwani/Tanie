@@ -11,6 +11,15 @@ type BotMessage = {
   text: string
 }
 
+const transcriptReplies = [
+  "I am Tanie Lalwani, a creative developer focused on React, TypeScript, UI design, full-stack experiments, and interactive web experiences. I got into tech through curiosity: building, redesigning, fixing details, and learning how interfaces can feel memorable instead of just functional.",
+  "A project I am proud of is Viziona, because it reflects how I think about product work: responsive layouts, clear interaction, visual hierarchy, and practical execution. I care about making the interface feel polished, readable, and easy to move through.",
+  "When I handle bugs in production, I start by reproducing the issue, checking the user impact, reading logs or browser errors, and narrowing the cause before changing code. I prefer small fixes, clear testing, and documenting what broke so the same issue is less likely to return.",
+  "When I disagree with a teammate, I try to move the conversation toward the user, the constraints, and the evidence. I explain my reasoning, listen for what I missed, and look for the option that protects the product instead of trying to win the argument.",
+  "For frontend performance, I look at bundle size, unnecessary renders, image weight, layout shifts, and slow interactions. I use lazy loading, memoization where it actually helps, cleaner component boundaries, and practical measurement instead of guessing.",
+  "I want roles where I can combine engineering, design sensitivity, communication, and product thinking. I like work that lets me build useful things, explain technology clearly, collaborate with people, and create digital experiences that feel intentional.",
+]
+
 function getCenteredCardIndex() {
   const cards = Array.from(document.querySelectorAll('article.qna-card'));
   if (!cards.length) return 0;
@@ -44,6 +53,7 @@ export default function QnA() {
   // Removed unused isMobile
   const scrollContainerRef = useRef<HTMLElement | null>(null)
   const [isBotOpen, setIsBotOpen] = useState(false)
+  const [openTranscriptIndex, setOpenTranscriptIndex] = useState<number | null>(null)
   const [botNotificationVisible, setBotNotificationVisible] = useState(true)
   const [botInput, setBotInput] = useState("")
   const [isReplying, setIsReplying] = useState(false)
@@ -148,7 +158,7 @@ export default function QnA() {
   }
 
   return (
-    <div className="site-shell bg-[#dff4ff] text-black">
+    <main className="site-shell bg-[#dff4ff] text-black">
       <nav className="fixed left-0 top-0 z-40 hidden h-full w-20 flex-col items-center justify-between border-r border-black/10 bg-[#dff4ff]/88 py-8 backdrop-blur-xl md:flex">
         <div className="flex flex-col items-center gap-8">
           <Link
@@ -229,6 +239,7 @@ export default function QnA() {
 
       <section
         ref={scrollContainerRef}
+        aria-label="Interview reel questions"
         className={
           // Always apply scroll snap and smooth scrolling for both mobile and desktop
           "h-screen overflow-y-auto overscroll-y-contain bg-[#dff4ff] touch-pan-y [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden snap-y snap-mandatory"
@@ -243,9 +254,10 @@ export default function QnA() {
       >
         <div className="site-container mx-auto flex min-h-full items-stretch justify-center px-0 py-0 md:px-6 md:py-8 md:pl-24 md:pr-24">
           <div className="w-full max-w-3xl">
-            {questions.map((question) => (
+            {questions.map((question, index) => (
               <article
                 key={question}
+                aria-labelledby={`qna-question-${index}`}
                 className="qna-card flex min-h-[90vh] items-center justify-center py-0 md:py-6 snap-center transition-all duration-300"
                 style={{
                   scrollSnapAlign: "center",
@@ -269,12 +281,24 @@ export default function QnA() {
                       </div>
                     </div>
                     <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-5">
-                      <p
+                      <h2
+                        id={`qna-question-${index}`}
                         className="text-center text-base font-bold text-white md:text-lg"
                       >
                         {question}
-                      </p>
+                      </h2>
                     </div>
+                    <button
+                      type="button"
+                      className="absolute right-4 top-4 grid h-10 w-10 place-items-center rounded-full border border-white/14 bg-black/30 text-white/82 backdrop-blur transition hover:bg-black/42 md:hidden"
+                      onClick={() => setOpenTranscriptIndex(index)}
+                      aria-label={`Open transcript for ${question}`}
+                      aria-haspopup="dialog"
+                    >
+                      <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.2" aria-hidden="true">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
+                      </svg>
+                    </button>
                   </div>
                   <div className="mb-3 hidden flex-col items-center gap-4 text-black md:flex">
                       <button className="transition hover:text-black/62" title={copy.qna.like} aria-label={copy.qna.like}>
@@ -282,7 +306,14 @@ export default function QnA() {
                         <path strokeLinecap="round" strokeLinejoin="round" d="M4.318 6.318a4.5 4.5 0 016.364 0L12 7.636l1.318-1.318a4.5 4.5 0 116.364 6.364L12 21.682l-7.682-7.682a4.5 4.5 0 010-6.364z" />
                       </svg>
                     </button>
-                      <button className="transition hover:text-black/62" title={copy.qna.comment} aria-label={copy.qna.comment}>
+                      <button
+                        type="button"
+                        className="comment-pulse transition hover:text-black/62"
+                        title={copy.qna.comment}
+                        aria-label={`Open transcript for ${question}`}
+                        aria-haspopup="dialog"
+                        onClick={() => setOpenTranscriptIndex(index)}
+                      >
                       <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.2">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
                       </svg>
@@ -304,6 +335,40 @@ export default function QnA() {
             ))}
           </div>
         </div>
+      </section>
+
+      {openTranscriptIndex !== null ? (
+        <aside
+          className="fixed inset-x-4 bottom-4 z-50 max-h-[70vh] overflow-hidden rounded-[1.6rem] border border-black/10 bg-white/94 shadow-[0_26px_75px_rgba(15,23,42,0.22)] backdrop-blur-xl md:inset-x-auto md:bottom-auto md:right-[7rem] md:top-1/2 md:w-[24rem] md:-translate-y-1/2"
+          role="dialog"
+          aria-modal="false"
+          aria-labelledby="qna-transcript-title"
+        >
+          <header className="flex items-center justify-between border-b border-black/6 px-4 py-3">
+            <p id="qna-transcript-title" className="text-sm font-semibold text-black">Transcript</p>
+            <button
+              type="button"
+              onClick={() => setOpenTranscriptIndex(null)}
+              className="rounded-full px-2 py-1 text-lg leading-none text-black/42 transition hover:bg-black/6 hover:text-black/72"
+              aria-label="Close transcript"
+            >
+              ×
+            </button>
+          </header>
+          <article className="max-h-[calc(70vh-3.5rem)] overflow-y-auto px-4 py-4">
+            <h2 className="text-sm font-semibold leading-6 text-black">{questions[openTranscriptIndex]}</h2>
+            <p className="mt-3 text-sm leading-7 text-black/68">{transcriptReplies[openTranscriptIndex]}</p>
+          </article>
+        </aside>
+      ) : null}
+
+      <section className="sr-only" aria-label="Readable interview transcripts">
+        {questions.map((question, index) => (
+          <article key={`${question}-transcript`}>
+            <h2>{question}</h2>
+            <p>{transcriptReplies[index]}</p>
+          </article>
+        ))}
       </section>
 
       <div className="fixed bottom-5 right-5 z-50 flex flex-col items-end gap-3 md:bottom-6 md:right-6">
@@ -401,6 +466,6 @@ export default function QnA() {
           </section>
         ) : null}
       </div>
-    </div>
+    </main>
   )
 }

@@ -170,7 +170,7 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
 
           <div className="mt-5 grid w-full grid-cols-1 gap-7 lg:grid-cols-[minmax(0,1fr)_minmax(14rem,20rem)] lg:items-start">
             <article className="max-w-[62ch]" aria-label="About Tanie Lalwani">
-              <div className={`about-scroll max-h-[calc(88svh-13rem)] space-y-3.5 pr-3 text-[11.5px] font-medium leading-6 tracking-[0.18em] text-slate-200/36 sm:max-h-[calc(76vh-12rem)] sm:text-[12.5px] ${aboutExpanded ? "overflow-y-auto" : "overflow-hidden"}`}>
+              <div className={`about-scroll max-h-[calc(88svh-13rem)] space-y-3.5 pr-3 text-[12px] font-medium leading-6 tracking-[0.12em] text-slate-200/50 sm:max-h-[calc(76vh-12rem)] sm:text-[12.5px] sm:tracking-[0.16em] ${aboutExpanded ? "overflow-y-auto" : "overflow-hidden"}`}>
                 {copy.home.aboutParagraphs.map((paragraph) => (
                   <p key={paragraph} dangerouslySetInnerHTML={{ __html: paragraph }} />
                 ))}
@@ -180,7 +180,7 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
                 {!aboutExpanded ? (
                   <button
                     type="button"
-                    className="border-b border-sky-100/18 pb-0.5 text-[11.5px] font-medium tracking-[0.18em] text-slate-200/46 transition hover:text-white sm:text-[12.5px]"
+                    className="border-b border-sky-100/18 pb-0.5 text-[11.5px] font-medium tracking-[0.16em] text-slate-200/56 transition hover:text-white sm:text-[12.5px]"
                     onClick={() => setAboutExpanded(true)}
                   >
                     Read more
