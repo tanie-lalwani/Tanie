@@ -1,6 +1,6 @@
 <!--
-  GitHub Pages 404.html redirect for React Router SPA
-  This script redirects all unknown routes to index.html so client-side routing works.
+  GitHub Pages SPA fallback.
+  Store the requested deep link, then send the browser back to the app entry point.
 -->
 <!doctype html>
 <html>
@@ -8,28 +8,21 @@
     <meta charset="utf-8" />
     <title>Redirecting...</title>
     <script type="text/javascript">
-      // GitHub Pages SPA redirect: serve index.html for all unknown routes
-      // https://github.com/rafgraph/spa-github-pages
       (function () {
-        var redirect = sessionStorage.getItem("redirect");
-        if (redirect) {
-          sessionStorage.removeItem("redirect");
-          window.location.replace(redirect);
-        } else {
-          var pathname = window.location.pathname;
-          if (
-            pathname !== "/" &&
-            pathname !== "/index.html" &&
-            pathname !== "/404.html"
-          ) {
-            var search = window.location.search || "";
-            var hash = window.location.hash || "";
-            var newUrl =
-              "/index.html?redirect=" +
-              encodeURIComponent(pathname + search + hash);
-            sessionStorage.setItem("redirect", pathname + search + hash);
-            window.location.replace(newUrl);
-          }
+        var pathname = window.location.pathname;
+        if (
+          pathname !== "/" &&
+          pathname !== "/index.html" &&
+          pathname !== "/404.html"
+        ) {
+          var search = window.location.search || "";
+          var hash = window.location.hash || "";
+
+          sessionStorage.setItem(
+            "gh-pages-redirect",
+            pathname + search + hash,
+          );
+          window.location.replace("./");
         }
       })();
     </script>
