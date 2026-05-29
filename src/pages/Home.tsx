@@ -101,7 +101,24 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
   const isMobile = useIsMobile()
   const { scrollYProgress } = useScroll()
   const worldDiveProgress = useTransform(scrollYProgress, [0, isMobile ? 0.65 : 0.4], [0, 1])
-  const projects: CarouselProject[] = Array.from({ length: 7 }, (_, index) => copy.home.projects[index % copy.home.projects.length])
+  const projects: CarouselProject[] = Array.from({ length: 7 }, (_, index) => {
+    const project = { ...copy.home.projects[index % copy.home.projects.length], previewVideo: "/project-preview.mp4", detailVideo: "/project-preview.mp4" }
+
+    return index === 4
+      ? {
+          ...project,
+          title: "Innomedia",
+          description: "A lightweight 360 degree marketing company website built with basic HTML and CSS, then elevated with motion, animated sections, and flexible layouts.",
+          techStack: ["HTML", "CSS", "Flex", "Animation"],
+          previewVideo: "/Innomedia.mp4",
+          previewFit: "contain",
+          details: [
+            "Innomedia is a generic 360 degree marketing company site shaped around simple service storytelling, clear page flow, and quick visual trust. The base was intentionally lean: HTML, CSS, flexible sections, and direct content structure.",
+            "Even with a basic stack, the build adds motion through animated reveals, soft transitions, and layout rhythm so the site feels more alive than a static brochure. It is a practical example of making small frontend decisions feel polished without overengineering.",
+          ],
+        }
+      : project
+  })
 
   return (
     <main className="relative">

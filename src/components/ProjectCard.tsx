@@ -4,10 +4,12 @@ import type { KeyboardEvent } from "react"
 interface ProjectCardProps {
   title: string
   description: string
+  previewVideo?: string
+  previewFit?: "cover" | "contain"
   onOpen: () => void
 }
 
-export function ProjectCard({ title, description, onOpen }: ProjectCardProps) {
+export function ProjectCard({ title, description, previewVideo, previewFit = "cover", onOpen }: ProjectCardProps) {
   const titleId = `project-${title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "")}`
 
   const openFromKeyboard = (event: KeyboardEvent<HTMLElement>) => {
@@ -37,8 +39,8 @@ export function ProjectCard({ title, description, onOpen }: ProjectCardProps) {
                 className="project-visual project-video relative flex aspect-2/1 min-h-20 w-full items-center justify-center overflow-hidden rounded-xl border border-white/6 shadow-[0_16px_44px_rgba(2,8,23,0.2)] sm:min-h-28 md:min-h-36 lg:aspect-video lg:min-h-40"
               >
                 <video
-                  src="/project-preview.mp4"
-                  className="absolute inset-0 h-full w-full object-cover opacity-62"
+                  src={previewVideo ?? "/project-preview.mp4"}
+                  className={`absolute inset-0 h-full w-full ${previewFit === "contain" ? "border border-white/14 bg-slate-950/70 object-contain p-1 opacity-82" : "object-cover opacity-62"}`}
                   autoPlay
                   muted
                   loop
