@@ -26,6 +26,16 @@ const ABOUT_SKILLS = [
 
 const ABOUT_SKILLS_LINE = ABOUT_SKILLS.join(" · ")
 
+const PROJECT_TITLE_IDS = [
+  "project-viziona-webapp-1",
+  "project-finchpay-checkout-1",
+  "project-leafline-marketing-1",
+  "project-innomedia-agency-1",
+  "project-lunara-portfolio-1",
+  "project-neuroflow-dashboard-1",
+  "project-pixelhaven-storefront-1",
+]
+
 
 type HomeProps = {
   phase: TimePhase
@@ -97,17 +107,19 @@ function InterviewPrompt() {
 
 export default function Home({ phase, onSceneReady }: HomeProps) {
   const { copy } = useLanguage()
-  const [aboutExpanded, setAboutExpanded] = useState(true)
+  const [aboutExpanded, _setAboutExpanded] = useState(true)
   const isMobile = useIsMobile()
   const { scrollYProgress } = useScroll()
   const worldDiveProgress = useTransform(scrollYProgress, [0, isMobile ? 0.65 : 0.4], [0, 1])
   const projects: CarouselProject[] = Array.from({ length: 7 }, (_, index) => {
     const base = copy.home.projects[index % copy.home.projects.length]
     const project = { ...base, previewVideo: "/project-preview.mp4", detailVideo: "/project-preview.mp4" }
+    const projectId = PROJECT_TITLE_IDS[index] ?? `project-${base.title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "")}-${index + 1}`
 
     if (index === 4) {
       return {
         ...project,
+        id: projectId,
         title: "Innomedia",
         description: "A lightweight 360 degree marketing company website built with basic HTML and CSS, then elevated with motion, animated sections, and flexible layouts.",
         techStack: ["HTML", "CSS", "Flex", "Animation"],
@@ -124,7 +136,7 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
     const uniqueIndex = index + 1
     return {
       ...project,
-      title: `${project.title} — ${uniqueIndex}`,
+      id: projectId,
       description: `${project.description} (Demo ${uniqueIndex})`,
       site: `${project.site}?instance=${uniqueIndex}`,
       code: project.code ? `${project.code}?instance=${uniqueIndex}` : undefined,
