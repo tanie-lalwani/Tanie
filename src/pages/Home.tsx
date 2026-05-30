@@ -225,7 +225,7 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
                 className="relative mx-auto h-[calc(76vh-12rem)] max-h-[26rem] min-h-64 w-full max-w-[18rem] overflow-hidden rounded-2xl border border-white/10 bg-white/4 sm:max-w-[20rem] lg:mx-0 lg:w-full"
               >
                 <img
-                  src="/favicon.png"
+                  src="/favicon+about+og.png"
                   alt="Tanie Lalwani profile photo."
                   className="h-full w-full object-cover object-[center_40%] transform scale-100 opacity-82"
                   loading="lazy"
