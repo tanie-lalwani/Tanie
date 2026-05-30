@@ -71,7 +71,6 @@ export default function GlobalOceanBackdrop({
   const isSurfaceStage = depthStage === "surface"
   const usesContinuousDive = enableContinuousDive
   const useReducedMobileScene = isMobile && usesContinuousDive
-  const useOpaqueCanvas = usesContinuousDive || !isSurfaceStage
   const supportsUnderwaterSystems = !isSurfaceStage || usesContinuousDive
 
   useEffect(() => {
@@ -206,7 +205,7 @@ export default function GlobalOceanBackdrop({
       renderer = new THREE.WebGLRenderer({
         canvas,
         antialias: !isMobile,
-        alpha: !useOpaqueCanvas,
+        alpha: true,
         powerPreference: isMobile ? "default" : "high-performance",
       })
     } catch {
@@ -492,7 +491,7 @@ export default function GlobalOceanBackdrop({
       if (transitionVeil) {
         const veilIn = smoothstep(0.14, 0.34, stageDepth)
         const veilOut = 1 - smoothstep(0.76, 0.94, stageDepth)
-        const veilOpacity = usesContinuousDive && !isMobile ? veilIn * veilOut * postTransitionFade * 0.78 : 0
+        const veilOpacity = usesContinuousDive ? veilIn * veilOut * postTransitionFade * 0.78 : 0
         const veilHeight = THREE.MathUtils.lerp(42, 92, smoothstep(0.22, 0.62, stageDepth))
         const veilLift = THREE.MathUtils.lerp(-18, -3, veilIn)
 
@@ -503,7 +502,7 @@ export default function GlobalOceanBackdrop({
       if (transitionWash) {
         const washIn = smoothstep(0.2, 0.42, stageDepth)
         const washOut = 1 - smoothstep(0.78, 0.94, stageDepth)
-        const washOpacity = usesContinuousDive && !isMobile ? washIn * washOut * postTransitionFade * 0.86 : 0
+        const washOpacity = usesContinuousDive ? washIn * washOut * postTransitionFade * 0.86 : 0
         const washLift = THREE.MathUtils.lerp(10, -9, smoothstep(0.28, 0.74, stageDepth))
 
         transitionWash.style.opacity = washOpacity.toFixed(3)
@@ -647,13 +646,13 @@ export default function GlobalOceanBackdrop({
         // Water stays fully visible during zoom phase (0-0.4), then fades as you go deeper
         if (usesContinuousDive) {
           // TUNE: Water surface visibility window during dive.
-          water.visible = isMobile || surfaceFade > 0.002
+          water.visible = surfaceFade > 0.002
         }
       }
       // Control sky visibility during continuous dive - long smooth fade
       if (sky && usesContinuousDive) {
         // TUNE: Keep ambient sky light alive after the surface band starts clearing.
-        sky.visible = isMobile || smoothstep(0.58, 0.34, stageDepth) > 0.03
+        sky.visible = smoothstep(0.58, 0.34, stageDepth) > 0.03
       }
       // Fade clouds out before the darker transition window kicks in.
       if (surfaceCloudLayer && usesContinuousDive) {
@@ -721,7 +720,7 @@ export default function GlobalOceanBackdrop({
       disposeScene(scene)
       renderer.dispose()
     }
-  }, [depthTuning, fogColor, isMobile, isSurfaceStage, onReady, phase, scenePreset, submergedClearColor, sunColor, waterColor, depthStage, usesContinuousDive, useReducedMobileScene, useOpaqueCanvas, supportsUnderwaterSystems])
+  }, [depthTuning, fogColor, isMobile, isSurfaceStage, onReady, phase, scenePreset, submergedClearColor, sunColor, waterColor, depthStage, usesContinuousDive, useReducedMobileScene, supportsUnderwaterSystems])
 
   const positionClass = position === "absolute" ? "absolute" : "fixed"
 
