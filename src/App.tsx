@@ -1,5 +1,7 @@
 import { Suspense, lazy, useCallback, useEffect, useState, type ReactNode } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import Lenis, { type VirtualScrollData } from "lenis";
+import "lenis/dist/lenis.css";
 import { Route, Routes, useLocation } from "react-router-dom";
 import Navbar from "./components/Navbar.tsx";
 import SiteFooter from "./components/SiteFooter";
@@ -101,6 +103,31 @@ export default function App() {
     void loadHome();
     void loadQnA();
   }, []);
+
+  useEffect(() => {
+    if (location.pathname !== "/" || !window.matchMedia("(max-width: 767px)").matches) return;
+
+    const lenis = new Lenis({
+      autoRaf: true,
+      lerp: 0.08,
+      syncTouch: true,
+      syncTouchLerp: 0.06,
+      touchMultiplier: 0.55,
+      wheelMultiplier: 0.55,
+      overscroll: false,
+      virtualScroll: (data: VirtualScrollData) => {
+        const aboutTop = document.getElementById("about")?.offsetTop ?? window.innerHeight;
+        if (window.scrollY < aboutTop + window.innerHeight * 0.25) {
+          data.deltaY = Math.sign(data.deltaY) * Math.min(Math.abs(data.deltaY), 46);
+        }
+        return true;
+      },
+    });
+
+    return () => {
+      lenis.destroy();
+    };
+  }, [location.pathname]);
 
   const handleOceanSceneReady = useCallback(() => {
     setReadyOceanLocationKey(location.key);
