@@ -160,6 +160,11 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
   const { scrollYProgress } = useScroll()
   const worldDiveProgress = useTransform(scrollYProgress, [0, isMobile ? 0.22 : 0.34], [0, 1])
   const aboutParagraphs = isMobile ? copy.home.aboutParagraphsMobile ?? copy.home.aboutParagraphs : copy.home.aboutParagraphs
+
+  useEffect(() => {
+    document.title = "Tanie Lalwani | About, Projects & Contact"
+  }, [])
+
   const projects: CarouselProject[] = Array.from({ length: 7 }, (_, index) => {
     const base = copy.home.projects[index % copy.home.projects.length]
     const project = { ...base, previewVideo: "/project-preview.mp4", detailVideo: "/project-preview.mp4" }

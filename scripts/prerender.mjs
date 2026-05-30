@@ -143,6 +143,50 @@ const prerenderedQna = String.raw`
         <a href="/">Back to portfolio</a>
       </p>
     </section>
+
+    <section aria-label="Readable interview transcripts">
+      <article>
+        <h2>Tell me about yourself.</h2>
+        <p>
+          I am Tanie Lalwani, a creative developer focused on React, TypeScript, UI design, full-stack experiments, and interactive web experiences. I got into tech through curiosity: building, redesigning, fixing details, and learning how interfaces can feel memorable instead of just functional.
+        </p>
+      </article>
+
+      <article>
+        <h2>Walk me through a project you are proud of.</h2>
+        <p>
+          A project I am proud of is Viziona, because it reflects how I think about product work: responsive layouts, clear interaction, visual hierarchy, and practical execution. I care about making the interface feel polished, readable, and easy to move through.
+        </p>
+      </article>
+
+      <article>
+        <h2>How do you handle bugs in production?</h2>
+        <p>
+          When I handle bugs in production, I start by reproducing the issue, checking the user impact, reading logs or browser errors, and narrowing the cause before changing code. I prefer small fixes, clear testing, and documenting what broke so the same issue is less likely to return.
+        </p>
+      </article>
+
+      <article>
+        <h2>Describe a time you disagreed with a teammate.</h2>
+        <p>
+          When I disagree with a teammate, I try to move the conversation toward the user, the constraints, and the evidence. I explain my reasoning, listen for what I missed, and look for the option that protects the product instead of trying to win the argument.
+        </p>
+      </article>
+
+      <article>
+        <h2>How do you optimize frontend performance?</h2>
+        <p>
+          For frontend performance, I look at bundle size, unnecessary renders, image weight, layout shifts, and slow interactions. I use lazy loading, memoization where it actually helps, cleaner component boundaries, and practical measurement instead of guessing.
+        </p>
+      </article>
+
+      <article>
+        <h2>Why do you want this role?</h2>
+        <p>
+          I want roles where I can combine engineering, design sensitivity, communication, and product thinking. I like work that lets me build useful things, explain technology clearly, collaborate with people, and create digital experiences that feel intentional.
+        </p>
+      </article>
+    </section>
   </main>
 </div>
 `;
@@ -150,6 +194,9 @@ const prerenderedQna = String.raw`
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+
+const homeTitle = 'Tanie Lalwani | About, Projects & Contact';
+const qnaTitle = 'About Tanie Lalwani | Interview QnA';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -161,12 +208,15 @@ const qnaDistPath = path.resolve(__dirname, '../dist/qna/index.html');
 try {
   let html = fs.readFileSync(distPath, 'utf8');
 
+  html = html.replace('<title>Tanie Lalwani | About, Projects & Contact</title>', `<title>${homeTitle}</title>`);
+
   // Replace the empty root div with our prerendered content
   html = html.replace('<div id="root"></div>', prerenderedApp);
 
   fs.writeFileSync(distPath, html);
   fs.mkdirSync(path.dirname(qnaDistPath), { recursive: true });
   const qnaHtml = html
+    .replace(`<title>${homeTitle}</title>`, `<title>${qnaTitle}</title>`)
     .replace(prerenderedApp, prerenderedQna)
     .replace('href="https://tanie.me/"', 'href="https://tanie.me/qna"');
   fs.writeFileSync(qnaHtmlPath, qnaHtml);
