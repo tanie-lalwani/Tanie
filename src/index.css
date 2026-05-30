@@ -45,7 +45,7 @@ body {
 	font-size: var(--type-body);
 	line-height: 1.6;
 	color: var(--color-text-main);
-	background-color: transparent;
+	background-color: #04111b;
 }
 
 h1,
@@ -102,7 +102,7 @@ body {
 	font-size: var(--type-body);
 	line-height: 1.6;
 	color: var(--color-text-main);
-	background-color: transparent;
+	background-color: #04111b;
 }
 
 a,

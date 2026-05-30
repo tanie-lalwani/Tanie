@@ -110,7 +110,7 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
   const [aboutExpanded, _setAboutExpanded] = useState(true)
   const isMobile = useIsMobile()
   const { scrollYProgress } = useScroll()
-  const worldDiveProgress = useTransform(scrollYProgress, [0, isMobile ? 0.65 : 0.4], [0, 1])
+  const worldDiveProgress = useTransform(scrollYProgress, [0, isMobile ? 0.38 : 0.34], [0, 1])
   const projects: CarouselProject[] = Array.from({ length: 7 }, (_, index) => {
     const base = copy.home.projects[index % copy.home.projects.length]
     const project = { ...base, previewVideo: "/project-preview.mp4", detailVideo: "/project-preview.mp4" }
@@ -158,7 +158,7 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
       <motion.section
         id="home"
         aria-labelledby="home-title"
-        className="relative isolate flex min-h-[165svh] w-full items-start overflow-hidden px-4 pb-8 pt-16 sm:min-h-[140svh] sm:px-6 sm:pb-14 sm:pt-24"
+        className="relative isolate flex min-h-[128svh] w-full items-start overflow-hidden px-4 pb-8 pt-16 sm:min-h-[118svh] sm:px-6 sm:pb-14 sm:pt-24"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
@@ -191,7 +191,7 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
       <section
         id="about"
         aria-labelledby="about-title"
-        className="relative isolate flex min-h-[88svh] w-full items-start overflow-hidden px-4 pb-7 pt-6 sm:min-h-[76vh] sm:px-6 sm:pb-9 sm:pt-9"
+        className="relative isolate flex min-h-[78svh] w-full items-start overflow-hidden px-4 pb-7 pt-6 sm:min-h-[76vh] sm:px-6 sm:pb-9 sm:pt-9"
       >
         <div className="site-container relative z-10">
           <PageHeader
@@ -210,7 +210,7 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
 
           <div className="mt-5 grid w-full grid-cols-1 gap-7 lg:grid-cols-[minmax(0,1fr)_minmax(14rem,20rem)] lg:items-start">
             <article className="max-w-[62ch]" aria-label="About Tanie Lalwani">
-              <div className={`about-scroll max-h-[calc(88svh-13rem)] space-y-3.5 pr-3 text-[12px] font-medium leading-6 tracking-[0.12em] text-slate-200/50 sm:max-h-[calc(76vh-12rem)] sm:text-[12.5px] sm:tracking-[0.16em] ${aboutExpanded ? "overflow-y-auto" : "overflow-hidden"}`}>
+              <div className={`about-scroll max-h-[calc(78svh-13rem)] space-y-3.5 pr-3 text-[12px] font-medium leading-6 tracking-[0.12em] text-slate-200/50 sm:max-h-[calc(76vh-12rem)] sm:text-[12.5px] sm:tracking-[0.16em] ${aboutExpanded ? "overflow-y-auto" : "overflow-hidden"}`}>
                 {copy.home.aboutParagraphs.map((paragraph) => (
                   <p key={paragraph} dangerouslySetInnerHTML={{ __html: paragraph }} />
                 ))}
@@ -259,7 +259,7 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
       <section
         id="projects"
         aria-labelledby="projects-title"
-        className="relative isolate flex min-h-[88svh] w-full items-start overflow-hidden px-4 pb-7 pt-6 sm:min-h-[76vh] sm:px-6 sm:pb-9 sm:pt-9"
+        className="relative isolate flex min-h-[78svh] w-full items-start overflow-hidden px-4 pb-7 pt-6 sm:min-h-[76vh] sm:px-6 sm:pb-9 sm:pt-9"
       >
         <div className="site-container relative z-10">
           <PageHeader
@@ -278,7 +278,7 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
       <section
         id="contact"
         aria-labelledby="contact-title"
-        className="relative isolate flex min-h-[88svh] w-full items-start overflow-hidden px-4 pb-7 pt-6 sm:min-h-[76vh] sm:px-6 sm:pb-9 sm:pt-9"
+        className="relative isolate flex min-h-[78svh] w-full items-start overflow-hidden px-4 pb-7 pt-6 sm:min-h-[76vh] sm:px-6 sm:pb-9 sm:pt-9"
       >
         <div className="site-container relative z-10">
           <PageHeader
