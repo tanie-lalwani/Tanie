@@ -110,7 +110,7 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
   const [aboutExpanded, _setAboutExpanded] = useState(true)
   const isMobile = useIsMobile()
   const { scrollYProgress } = useScroll()
-  const worldDiveProgress = useTransform(scrollYProgress, [0, isMobile ? 0.38 : 0.34], [0, 1])
+  const worldDiveProgress = useTransform(scrollYProgress, [0, isMobile ? 0.22 : 0.34], [0, 1])
   const projects: CarouselProject[] = Array.from({ length: 7 }, (_, index) => {
     const base = copy.home.projects[index % copy.home.projects.length]
     const project = { ...base, previewVideo: "/project-preview.mp4", detailVideo: "/project-preview.mp4" }

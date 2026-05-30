@@ -477,7 +477,11 @@ export default function GlobalOceanBackdrop({
       const controlledProgress =
         typeof externalDiveProgressRef.current === "number" ? externalDiveProgressRef.current : sectionProgress
       const targetDepthBlend = usesContinuousDive ? controlledProgress : getDepthBlend(depthStage, controlledProgress)
-      smoothedDepthBlend = THREE.MathUtils.lerp(smoothedDepthBlend, targetDepthBlend, usesContinuousDive ? 0.2 : 0.5)
+      smoothedDepthBlend = THREE.MathUtils.lerp(
+        smoothedDepthBlend,
+        targetDepthBlend,
+        usesContinuousDive ? (isMobile ? 0.58 : 0.28) : 0.5,
+      )
       const stageDepth = usesContinuousDive || !isSurfaceStage ? clamp01(smoothedDepthBlend) : smoothedDepthBlend
       const surfaceWaveTime = elapsed * 0.45
       const transitionVeil = transitionVeilRef.current
