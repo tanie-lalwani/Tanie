@@ -73,5 +73,10 @@
     "title": "Portfolio site",
     "content": "The portfolio is tanie.me. It is built with React, TypeScript, Three.js, Tailwind CSS, and motion-focused frontend work. The site includes a creative ocean-inspired experience, project cards, QnA page, contact form, and social links.",
     "keywords": ["portfolio", "site", "website", "tanie.me", "built", "three.js", "ocean", "qna"]
+  },
+  {
+    "title": "Site map",
+    "content": "The homepage contains the ocean-inspired portfolio, About, Projects, Contact, and links sections. The /qna route contains the Interview Tanie QnA page with transcript cards, a readable transcript section, and the bot panel. Social redirects exist at /github, /instagram, /linkedin, and /x.",
+    "keywords": ["where", "location", "locate", "map", "section", "home", "homepage", "about", "projects", "contact", "qna", "interview", "redirect", "path", "route"]
   }
 ]
