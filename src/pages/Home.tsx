@@ -22,8 +22,8 @@ const ABOUT_SKILLS = [
   "Firebase",
   "REST APIs",
   "Git",
-  "Vite",
-  "Figma",
+  "Matter.js",
+  "p5.js",
 ]
 
 const ABOUT_SKILLS_LINE = ABOUT_SKILLS.join(" · ")
