@@ -42,6 +42,7 @@ const OPEN_TO_SERVICES = [
   "Portfolio Websites",
   "Landing Pages",
   "Web Apps",
+  "Game Prototyping",
   "Interactive Experiences",
   "Frontend Interfaces",
   "Creative Web Projects",
