@@ -111,6 +111,7 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
   const isMobile = useIsMobile()
   const { scrollYProgress } = useScroll()
   const worldDiveProgress = useTransform(scrollYProgress, [0, isMobile ? 0.22 : 0.34], [0, 1])
+  const aboutParagraphs = isMobile ? copy.home.aboutParagraphsMobile ?? copy.home.aboutParagraphs : copy.home.aboutParagraphs
   const projects: CarouselProject[] = Array.from({ length: 7 }, (_, index) => {
     const base = copy.home.projects[index % copy.home.projects.length]
     const project = { ...base, previewVideo: "/project-preview.mp4", detailVideo: "/project-preview.mp4" }
@@ -210,8 +211,8 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
 
           <div className="mt-5 grid w-full grid-cols-1 gap-7 lg:grid-cols-[minmax(0,1fr)_minmax(14rem,20rem)] lg:items-start">
             <article className="max-w-[62ch]" aria-label="About Tanie Lalwani">
-              <div className={`about-scroll max-h-[calc(78svh-13rem)] space-y-3.5 pr-3 text-[12px] font-medium leading-6 tracking-[0.12em] text-slate-200/50 sm:max-h-[calc(76vh-12rem)] sm:text-[12.5px] sm:tracking-[0.16em] ${aboutExpanded ? "overflow-y-auto" : "overflow-hidden"}`}>
-                {copy.home.aboutParagraphs.map((paragraph) => (
+              <div data-lenis-prevent className={`about-scroll max-h-[calc(78svh-13rem)] space-y-3.5 pr-3 text-[12px] font-medium leading-6 tracking-[0.12em] text-slate-200/50 sm:max-h-[calc(76vh-12rem)] sm:text-[12.5px] sm:tracking-[0.16em] ${aboutExpanded ? "overflow-y-auto" : "overflow-hidden"}`}>
+                {aboutParagraphs.map((paragraph) => (
                   <p key={paragraph} dangerouslySetInnerHTML={{ __html: paragraph }} />
                 ))}
               </div>

@@ -33,6 +33,7 @@ type SiteCopy = {
     heroDescription: string
     aboutTitle: string
     aboutParagraphs: string[]
+    aboutParagraphsMobile?: string[]
     knowMore: string
     projectsTitle: string
     contactTitle: string
@@ -117,6 +118,13 @@ const translations: Record<Locale, SiteCopy> = {
         "Over the last few years, that turned into 100+ projects across landing pages, web apps, interactive experiences, and different tech stacks. I’ve spent 2+ years freelancing with founders, creators, startups, and personal brands.",
         "A huge part of my initial growth came from hackathons, tech communities, volunteering, fast deadlines, freelancing and learning in public and lately, from learning through the people around me.",
         "Outside tech, I spend time making music, creating content, experimenting with visuals, business products, fashion, and random hobbies I somehow end up trying at least once. One way or another, we’ll probably have fun working together.",
+      ],
+      aboutParagraphsMobile: [
+        "Hi, I'm Tanie Lalwani, a creative full-stack developer from India and a data science graduate. I started tech at 16, explored data, blockchain, ML, and dev-rel, but web design stuck.",
+        "I build memorable websites: interactive UI, 3D web, motion, and frontend work that feels alive.",
+        "I've made 100+ projects and spent 2+ years freelancing with founders, creators, startups, and personal brands.",
+        "Hackathons, tech communities, volunteering, fast deadlines, freelancing, and learning in public shaped how I work.",
+        "Outside tech, I make music, content, visuals, and experiment with products, fashion, and random hobbies.",
       ],
       knowMore: "Know more",
       projectsTitle: "Work & Testimonials:",
