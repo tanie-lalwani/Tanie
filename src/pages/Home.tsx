@@ -257,9 +257,9 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
             />
 
           <div className="relative mb-5 flex flex-wrap items-center justify-end gap-2.5 border-b border-white/7 pb-2.5 sm:mb-6">
-            <a href="https://www.google.com/search?q=Tanie+Lalwani" target="_blank" rel="noopener noreferrer" className="inline-flex text-[11.5px] font-medium uppercase tracking-[0.2em] !text-sky-200/55 no-underline transition hover:!text-sky-100/80">
+            <Link to="/qna" className="inline-flex text-[11.5px] font-medium uppercase tracking-[0.2em] !text-sky-200/55 no-underline transition hover:!text-sky-100/80">
               {copy.home.knowMore}
-            </a>
+            </Link>
           </div>
 
           <div className="mt-5 grid w-full grid-cols-1 gap-7 lg:grid-cols-[minmax(0,1fr)_minmax(14rem,20rem)] lg:items-start">

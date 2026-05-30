@@ -10,52 +10,66 @@ const prerenderedApp = String.raw`
       </p>
 
       <p>
-        Building interactive websites, immersive web experiences, and modern web applications using React, TypeScript, Three.js, and Next.js.
+        I create interactive websites, 3D web experiences, and modern responsive web applications with React, TypeScript, and careful frontend engineering.
       </p>
     </section>
 
     <section id="about">
-      <h2>About Tanie</h2>
+      <h2>About Tanie:</h2>
 
-      <p>Hey there!</p>
+      <p>Hi, I’m Tanie Lalwani, a creative and full-stack developer based in India.</p>
 
-      <p>Before you scroll, maybe a better question:</p>
+      <p>I build interactive websites, 3D web experiences, and responsive web applications that feel intentional, polished, and easy to use.</p>
 
-      <p><strong>What are you looking for?</strong></p>
+      <p>Over the last few years, that has turned into work across landing pages, web apps, and interactive experiences with founders, creators, startups, and personal brands.</p>
 
-      <p>Someone to build something? A curious developer figuring things out? Interactive experiments, product thinking, frontend ideas, or just a portfolio with too many tiny details?</p>
-
-      <p>I’ve been coding for around two years and spending most of that time building, experimenting, and trying to understand what makes something feel genuinely enjoyable to use. Either way — welcome :)</p>
-
-      <ul>
-        <li>React</li>
-        <li>TypeScript</li>
-        <li>Three.js</li>
-        <li>Next.js</li>
-        <li>Creative Development</li>
-        <li>Frontend Engineering</li>
-        <li>Full-Stack Development</li>
-      </ul>
+      <p>Outside tech, I make music, create content, experiment with visuals, business products, fashion, and the occasional hobby I only try once.</p>
 
       <p>
-        <a href="https://www.google.com/search?q=Tanie+Lalwani">
-          Know more about Tanie Lalwani
+        <a href="/qna">
+          View QnA
         </a>
+      </p>
+
+      <p>
+        React · TypeScript · Next.js · Framer Motion · GSAP · Three.js · Frontend Development · Interactive Web Experiences · UI Design · Creative Development
       </p>
     </section>
 
+    <section id="open-to">
+      <h2>Open to:</h2>
+
+      <span>Open to:</span>
+
+      <h3 class="sr-only">Open to web development services</h3>
+
+      <ul class="sr-only">
+        <li>Portfolio Websites</li>
+        <li>Landing Pages</li>
+        <li>Web Apps</li>
+        <li>Game Prototyping</li>
+        <li>Interactive Experiences</li>
+        <li>Frontend Interfaces</li>
+        <li>Creative Web Projects</li>
+      </ul>
+
+      <span>Portfolio Websites</span>
+    </section>
+
     <section id="projects">
-      <h2>Built so far</h2>
+      <h2>Work & Testimonials:</h2>
+
+      <div>
+        <a href="https://tanie.me/projects" target="_blank" rel="noopener noreferrer">
+          All Projects
+        </a>
+      </div>
 
       <article>
         <h3>Viziona</h3>
 
         <p>
-          A modern web project focused on interface clarity, practical user experience, and thoughtful implementation.
-        </p>
-
-        <p>
-          Technologies: React, TypeScript, UI Engineering.
+          A responsive web application shaped around clear interaction, UI/UX design, and practical product execution.
         </p>
 
         <a href="https://viziona.com">
@@ -67,7 +81,7 @@ const prerenderedApp = String.raw`
         <h3>Checkout Performance Overhaul — FinchPay</h3>
 
         <p>
-          A frontend-focused performance pass aimed at improving checkout speed, usability, and interaction flow.
+          A frontend performance optimization pass for faster checkout flows, clearer states, and smoother feedback.
         </p>
       </article>
 
@@ -75,9 +89,30 @@ const prerenderedApp = String.raw`
         <h3>Marketing Site Rebuild — Leafline</h3>
 
         <p>
-          A responsive marketing site rebuild focused on clearer structure, calmer visuals, and improved readability.
+          A modern frontend rebuild with tighter content structure, responsive layouts, and a calmer visual system.
         </p>
       </article>
+
+      <section aria-label="Project details" class="sr-only">
+        <article>
+          <h3>Viziona</h3>
+          <p>A responsive web application shaped around clear interaction, UI/UX design, and practical product execution.</p>
+          <p>Viziona was built as a polished product surface with a strong focus on responsive layout, clear visual hierarchy, and smooth interaction states. The work balances brand presence with practical usability, keeping the interface easy to scan while still feeling distinctive.</p>
+          <p>The project highlights frontend execution across structure, motion, spacing, and cross-device behavior. Each section is shaped to guide the user naturally from first impression to action, with careful attention to readable content, reliable components, and a modern React and TypeScript workflow.</p>
+          <a href="https://viziona.com">View</a>
+          <a href="https://github.com/tanie-lalwani/viziona">Code</a>
+        </article>
+        <article>
+          <h3>Checkout Performance Overhaul - FinchPay</h3>
+          <p>A frontend performance optimization pass for faster checkout flows, clearer states, and smoother feedback.</p>
+          <p>Checkout Performance Overhaul - FinchPay is a frontend performance optimization pass focused on faster checkout flows, clearer states, smoother feedback, and a better checkout experience. Its stack includes React, TypeScript, and performance work.</p>
+        </article>
+        <article>
+          <h3>Marketing Site Rebuild - Leafline</h3>
+          <p>A modern frontend rebuild with tighter content structure, responsive layouts, and a calmer visual system.</p>
+          <p>Marketing Site Rebuild - Leafline is a modern frontend rebuild with tighter content structure, responsive layouts, and a calmer visual system. Its stack includes React, TypeScript, and web development.</p>
+        </article>
+      </section>
     </section>
 
     <section id="contact">
@@ -125,26 +160,11 @@ const prerenderedApp = String.raw`
 const prerenderedQna = String.raw`
 <div id="root">
   <main data-prerendered="true">
-    <section>
-      <h1>Interview Tanie</h1>
+    <section aria-labelledby="qna-title">
+      <h1 id="qna-title">Interview Tanie</h1>
 
-      <p>
-        Quick interview-style questions and answers about Tanie Lalwani, her work, projects, creative development, frontend engineering, React, TypeScript, and interactive web experiences.
-      </p>
+      <p>Quick interview-style questions and answers about Tanie Lalwani, her work, projects, creative development, frontend engineering, React, TypeScript, and interactive web experiences.</p>
 
-      <ul>
-        <li>Who is Tanie Lalwani?</li>
-        <li>What kind of projects does Tanie build?</li>
-        <li>What technologies does Tanie use?</li>
-        <li>How can I contact Tanie?</li>
-      </ul>
-
-      <p>
-        <a href="/">Back to portfolio</a>
-      </p>
-    </section>
-
-    <section aria-label="Readable interview transcripts">
       <article>
         <h2>Tell me about yourself.</h2>
         <p>
@@ -186,6 +206,10 @@ const prerenderedQna = String.raw`
           I want roles where I can combine engineering, design sensitivity, communication, and product thinking. I like work that lets me build useful things, explain technology clearly, collaborate with people, and create digital experiences that feel intentional.
         </p>
       </article>
+
+      <p>
+        <a href="/">Back to portfolio</a>
+      </p>
     </section>
   </main>
 </div>
