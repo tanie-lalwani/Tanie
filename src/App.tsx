@@ -115,7 +115,9 @@ export default function App() {
       touchMultiplier: 0.55,
       wheelMultiplier: 0.55,
       overscroll: false,
+      prevent: (node) => node.closest("[data-lenis-prevent]") !== null,
       virtualScroll: (data: VirtualScrollData) => {
+        if ((data.event.target as Element | null)?.closest("[data-lenis-prevent]")) return false;
         const aboutTop = document.getElementById("about")?.offsetTop ?? window.innerHeight;
         if (window.scrollY < aboutTop + window.innerHeight * 0.25) {
           data.deltaY = Math.sign(data.deltaY) * Math.min(Math.abs(data.deltaY), 46);

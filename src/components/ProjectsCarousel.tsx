@@ -64,6 +64,7 @@ export function ProjectsCarousel({ projects }: ProjectsCarouselProps) {
       </div>
 
       <div
+        data-lenis-prevent
         className="project-scroll -mx-4 flex snap-x snap-mandatory gap-3.5 overflow-x-auto px-4 pb-9 sm:-mx-6 sm:gap-4 sm:px-6 sm:pb-10"
         aria-label={copy.home.projectsTitle}
       >
