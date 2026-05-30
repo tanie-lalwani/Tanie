@@ -65,6 +65,10 @@ export default function QnA() {
   const [activeIndex, setActiveIndex] = useState(0);
   const questions = copy.qna.questions
 
+  useEffect(() => {
+    document.title = "About Tanie Lalwani | Interview QnA"
+  }, [])
+
   const scrollToQuestion = (index: number) => {
     const cards = getQuestionCards();
     const nextIndex = Math.min(Math.max(index, 0), cards.length - 1);
