@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import Lenis, { type VirtualScrollData } from "lenis";
 import "lenis/dist/lenis.css";
 import { Route, Routes, useLocation } from "react-router-dom";
+import ExternalRedirect from "./components/ExternalRedirect";
 import Navbar from "./components/Navbar.tsx";
 import SiteFooter from "./components/SiteFooter";
 import { type TimePhase } from "./experience/timePhase";
@@ -186,6 +187,10 @@ export default function App() {
                   </PageShell>
                 }
               />
+              <Route path="/github" element={<ExternalRedirect to="https://github.com/tanie-lalwani" label="GitHub"/>} />
+              <Route path="/instagram" element={<ExternalRedirect to="https://instagram.com/tanie.mp3" label="Instagram"/>} />
+              <Route path="/linkedin" element={<ExternalRedirect to="https://www.linkedin.com/in/tanie-lalwani/" label="LinkedIn"/>} />
+              <Route path="/x" element={<ExternalRedirect to="https://x.com/tanielalwani" label="X (Twitter)"/>} />
               <Route path="*" element={<NotFoundPage />} />
             </Routes>
           </AnimatePresence>
