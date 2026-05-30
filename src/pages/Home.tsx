@@ -1,4 +1,4 @@
-import { motion, useScroll, useTransform } from "framer-motion"
+import { AnimatePresence, motion, useScroll, useTransform } from "framer-motion"
 import { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 import PageHeader from "../components/PageHeader"
@@ -12,16 +12,18 @@ import { useLanguage } from "../context/LanguageContext"
 const ABOUT_SKILLS = [
   "React",
   "TypeScript",
-  "Interactive UI",
-  "Frontend Engineering",
-  "Responsive Web Apps",
-  "UI/UX Design",
-  "Motion & Interaction",
+  "Next.js",
   "Tailwind CSS",
-  "Accessibility",
-  "Performance",
-  "Component Systems",
-  "Creative Development",
+  "Framer Motion",
+  "GSAP",
+  "Three.js",
+  "Node.js",
+  "MongoDB",
+  "Firebase",
+  "REST APIs",
+  "Git",
+  "Vite",
+  "Figma",
 ]
 
 const ABOUT_SKILLS_LINE = ABOUT_SKILLS.join(" · ")
@@ -36,10 +38,55 @@ const PROJECT_TITLE_IDS = [
   "project-pixelhaven-storefront-1",
 ]
 
+const OPEN_TO_SERVICES = [
+  "Portfolio Websites",
+  "Landing Pages",
+  "Web Apps",
+  "Interactive Experiences",
+  "Frontend Interfaces",
+  "Creative Web Projects",
+]
+
 
 type HomeProps = {
   phase: TimePhase
   onSceneReady?: () => void
+}
+
+function OpenToCarousel() {
+  const [index, setIndex] = useState(0)
+
+  useEffect(() => {
+    const timer = window.setInterval(() => {
+      setIndex((current) => (current + 1) % OPEN_TO_SERVICES.length)
+    }, 1500)
+
+    return () => window.clearInterval(timer)
+  }, [])
+
+  return (
+    <div className="ml-auto flex w-full items-center justify-center gap-2 overflow-hidden text-[11.5px] font-medium uppercase tracking-[0.2em] text-sky-200/55 sm:w-auto sm:justify-end" aria-labelledby="open-to-heading">
+      <span className="shrink-0">Open to:</span>
+      <h3 id="open-to-heading" className="sr-only">Open to web development services</h3>
+      <ul className="sr-only">
+        {OPEN_TO_SERVICES.map((service) => <li key={service}>{service}</li>)}
+      </ul>
+      <span className="relative h-5 min-w-[13.5rem] overflow-hidden text-left [mask-image:linear-gradient(to_bottom,transparent,black_22%,black_78%,transparent)]" aria-hidden="true">
+        <AnimatePresence initial={false}>
+          <motion.span
+            key={OPEN_TO_SERVICES[index]}
+            className="absolute left-0 top-0 whitespace-nowrap text-sky-100/72"
+            initial={{ y: 18, opacity: 0, filter: "blur(5px)" }}
+            animate={{ y: 0, opacity: 1, filter: "blur(0px)" }}
+            exit={{ y: -18, opacity: 0, filter: "blur(5px)" }}
+            transition={{ duration: 0.85, ease: "easeInOut" }}
+          >
+            {OPEN_TO_SERVICES[index]}
+          </motion.span>
+        </AnimatePresence>
+      </span>
+    </div>
+  )
 }
 
 function InterviewPrompt() {
@@ -211,6 +258,11 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
 
           <div className="mt-5 grid w-full grid-cols-1 gap-7 lg:grid-cols-[minmax(0,1fr)_minmax(14rem,20rem)] lg:items-start">
             <article className="max-w-[62ch]" aria-label="About Tanie Lalwani">
+              {copy.home.aboutParagraphsMobile ? (
+                <section className="sr-only" aria-label="Condensed about Tanie Lalwani">
+                  {copy.home.aboutParagraphsMobile.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+                </section>
+              ) : null}
               <div data-lenis-prevent className={`about-scroll max-h-[calc(78svh-13rem)] space-y-3.5 pr-3 text-[12px] font-medium leading-6 tracking-[0.12em] text-slate-200/50 sm:max-h-[calc(76vh-12rem)] sm:text-[12.5px] sm:tracking-[0.16em] ${aboutExpanded ? "overflow-y-auto" : "overflow-hidden"}`}>
                 {aboutParagraphs.map((paragraph) => (
                   <p key={paragraph} dangerouslySetInnerHTML={{ __html: paragraph }} />
@@ -290,7 +342,9 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
             className="mb-4 max-w-[62ch]"
           />
 
-          <div className="relative mb-5 flex flex-wrap items-center justify-between gap-2.5 border-b border-white/7 pb-3 sm:mb-6" />
+          <div className="relative mb-5 flex flex-wrap items-center justify-between gap-2.5 border-b border-white/7 pb-3 sm:mb-6">
+            <OpenToCarousel />
+          </div>
 
           <ContactForm />
         </div>
