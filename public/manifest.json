@@ -8,7 +8,7 @@
   "description": "Creative & full-stack developer building interactive websites and web experiences.",
   "icons": [
     {
-      "src": "/favicon+about+og.png?v=aboutog1",
+      "src": "/og.png?v=aboutog1",
       "sizes": "1024x1038",
       "type": "image/png",
       "purpose": "any maskable"
