@@ -105,22 +105,24 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    if (location.pathname !== "/" || !window.matchMedia("(max-width: 767px)").matches) return;
+    if (location.pathname !== "/") return;
+    const isMobileViewport = window.matchMedia("(max-width: 767px)").matches;
 
     const lenis = new Lenis({
       autoRaf: true,
-      lerp: 0.08,
-      syncTouch: true,
+      lerp: isMobileViewport ? 0.08 : 0.1,
+      syncTouch: isMobileViewport,
       syncTouchLerp: 0.06,
-      touchMultiplier: 0.55,
-      wheelMultiplier: 0.55,
+      touchMultiplier: isMobileViewport ? 0.55 : 0.85,
+      wheelMultiplier: isMobileViewport ? 0.55 : 0.8,
       overscroll: false,
       prevent: (node) => node.closest("[data-lenis-prevent]") !== null,
       virtualScroll: (data: VirtualScrollData) => {
         if ((data.event.target as Element | null)?.closest("[data-lenis-prevent]")) return false;
         const aboutTop = document.getElementById("about")?.offsetTop ?? window.innerHeight;
         if (window.scrollY < aboutTop + window.innerHeight * 0.25) {
-          data.deltaY = Math.sign(data.deltaY) * Math.min(Math.abs(data.deltaY), 46);
+          const maxDelta = isMobileViewport ? 46 : 90;
+          data.deltaY = Math.sign(data.deltaY) * Math.min(Math.abs(data.deltaY), maxDelta);
         }
         return true;
       },
