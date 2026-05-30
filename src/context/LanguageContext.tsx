@@ -122,7 +122,7 @@ const translations: Record<Locale, SiteCopy> = {
       aboutParagraphsMobile: [
         "Hi, I'm Tanie Lalwani, a creative full-stack developer from India and a data science graduate. I started tech at 16, explored data, blockchain, ML, and dev-rel, but kept coming back to web design.",
         "I build memorable websites: interactive UI, 3D web, motion, and frontend work that feels alive.",
-        "I've made 100+ projects and spent 2+ years freelancing with founders, creators, startups, and personal brands.",
+        "I've made 80+ projects and spent 2+ years freelancing with founders, creators, startups, and personal brands.",
         "Hackathons, tech communities, volunteering, fast deadlines, freelancing, and learning in public shaped how I work.",
         "Outside tech, I make music, content, visuals, and experiment with products, fashion, and random hobbies.",
       ],
