@@ -267,7 +267,7 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
   }, [heroRoleLead, heroRoleTail])
 
   useEffect(() => {
-    document.title = "Tanie Lalwani | About, Projects & Contact"
+    document.title = "Tanie Lalwani | Creative and Full Stack Developer"
   }, [])
 
   const projects: CarouselProject[] = Array.from({ length: 7 }, (_, index) => {

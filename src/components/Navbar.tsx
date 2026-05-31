@@ -2,6 +2,7 @@ import { NavLink } from 'react-router-dom'
 import { useEffect, useRef, useState, type CSSProperties } from 'react'
 import type { TimePhase } from '../experience/timePhase'
 import { languageOptions, useLanguage } from '../context/LanguageContext'
+import AmbientOceanAudio from './AmbientOceanAudio'
 
 const navLinks = [
   { href: '/qna' },
@@ -183,6 +184,10 @@ export default function Navbar({ phase }: NavbarProps) {
                 </div>
               </div>
             ) : null}
+          </li>
+
+          <li className="relative">
+            <AmbientOceanAudio placement="inline" />
           </li>
         </ul>
       </nav>
