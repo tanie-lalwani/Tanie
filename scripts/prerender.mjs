@@ -15,11 +15,7 @@ const prerenderedApp = String.raw`
       </h1>
 
       <p>
-        I create websites that move, react, and stand out.
-      </p>
-
-      <p class="mt-1 text-[0.94em] leading-[1.3] tracking-[0.01em] text-[#314A70CC]">
-        Scroll deeper! The fun stuff’s below.
+        i create interactive websites, 3d experiences and modern webapps scroll to see my work
       </p>
     </section>
 
