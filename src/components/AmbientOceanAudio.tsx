@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react"
+import { useIsMobile } from "../hooks/useIsMobile"
 
 type AmbientGraph = {
   context: AudioContext
@@ -102,6 +103,8 @@ export default function AmbientOceanAudio({ placement = "floating" }: AmbientOce
       window.removeEventListener("resize", scheduleUpdate)
     }
   }, [])
+
+  const isMobile = useIsMobile()
 
   useEffect(() => {
     const cleanupUnderwaterAudio = () => {
@@ -272,6 +275,14 @@ export default function AmbientOceanAudio({ placement = "floating" }: AmbientOce
     }
 
     const syncAudioMode = async () => {
+      // Always disable audio on mobile devices for the mobile site.
+      if (isMobile) {
+        cleanupGraph()
+        cleanupUnderwaterAudio()
+        setIsAudioReady(false)
+        return
+      }
+
       if (!isEnabled) {
         cleanupGraph()
         cleanupUnderwaterAudio()
@@ -291,6 +302,9 @@ export default function AmbientOceanAudio({ placement = "floating" }: AmbientOce
     void syncAudioMode()
 
     const handleUnlockGesture = () => {
+      // No-op on mobile; audio is disabled there.
+      if (isMobile) return
+
       if (!isEnabled) {
         return
       }
