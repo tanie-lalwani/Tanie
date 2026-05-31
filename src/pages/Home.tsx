@@ -128,17 +128,17 @@ function OpenToCarousel() {
   }, [])
 
   return (
-    <div className="ml-auto flex w-full items-center justify-center gap-2 overflow-hidden text-[11.5px] font-medium uppercase tracking-[0.2em] text-sky-200/55 sm:w-auto sm:justify-end" aria-labelledby="open-to-heading">
-      <span className="shrink-0">Open to:</span>
+    <div className="ml-auto flex w-full items-center justify-end gap-2 overflow-hidden text-[11.5px] font-medium uppercase tracking-[0.2em] text-sky-200/55 sm:w-auto sm:gap-3" aria-labelledby="open-to-heading">
+      <span className="hidden md:inline shrink-0 pr-3 text-right">Open to:</span>
       <h3 id="open-to-heading" className="sr-only">Open to web development services</h3>
       <ul className="sr-only">
         {OPEN_TO_SERVICES.map((service) => <li key={service}>{service}</li>)}
       </ul>
-      <span className="relative h-5 min-w-[13.5rem] overflow-hidden text-left [mask-image:linear-gradient(to_bottom,transparent,black_22%,black_78%,transparent)]" aria-hidden="true">
+      <span className="relative h-5 min-w-[13.5rem] overflow-hidden text-right [mask-image:linear-gradient(to_bottom,transparent,black_22%,black_78%,transparent)]" aria-hidden="true">
         <AnimatePresence initial={false}>
           <motion.span
             key={OPEN_TO_SERVICES[index]}
-            className="absolute left-0 top-0 whitespace-nowrap text-sky-100/72"
+            className="absolute right-0 top-0 whitespace-nowrap text-sky-200/55"
             initial={{ y: 18, opacity: 0, filter: "blur(5px)" }}
             animate={{ y: 0, opacity: 1, filter: "blur(0px)" }}
             exit={{ y: -18, opacity: 0, filter: "blur(5px)" }}

@@ -349,7 +349,39 @@ export default function AmbientOceanAudio({ placement = "floating" }: AmbientOce
             ? "border-cyan-100/20 bg-slate-950/72 text-sky-50 hover:border-cyan-100/34 hover:bg-slate-950/86"
             : "border-white/10 bg-slate-950/52 text-sky-100/72 hover:border-white/18 hover:bg-slate-950/70"
         } ${isInline ? "h-8 w-8 justify-center p-0" : "gap-3 px-4 py-2.5"}`}
-        onClick={() => setIsEnabled((current) => !current)}
+        onClick={() => {
+          if (isMobile) {
+            // Mobile: show a small transient notice instead of enabling audio
+            const id = `mobile-audio-toast`
+            if (!document.getElementById(id)) {
+              const toast = document.createElement("div")
+              toast.id = id
+              toast.textContent = "Audio is a laptop/desktop feature"
+              Object.assign(toast.style, {
+                position: "fixed",
+                left: "50%",
+                bottom: "20px",
+                transform: "translateX(-50%)",
+                background: "rgba(2,8,23,0.9)",
+                color: "white",
+                padding: "8px 12px",
+                borderRadius: "10px",
+                zIndex: "99999",
+                fontSize: "13px",
+                boxShadow: "0 6px 24px rgba(2,8,23,0.6)",
+              })
+              document.body.appendChild(toast)
+              window.setTimeout(() => {
+                toast.style.transition = "opacity 300ms"
+                toast.style.opacity = "0"
+                window.setTimeout(() => toast.remove(), 350)
+              }, 1600)
+            }
+            return
+          }
+
+          setIsEnabled((current) => !current)
+        }}
         aria-pressed={isEnabled}
         aria-label={isEnabled ? "Disable ocean ambient audio" : "Enable ocean ambient audio"}
       >

@@ -258,6 +258,16 @@ a:hover, .text-link:hover {
 	.hero-title-role {
  		color: #6b8396;
  	}
+
+	/* Reduce heavy panel framing on narrow viewports (fixes unexpected device-frame border) */
+	.surface-panel,
+	.surface-panel-soft,
+	.project-visual,
+	.project-video,
+	.hero-title-lockup {
+		border: none !important;
+		box-shadow: none !important;
+	}
 }
 
 	.copy-clamp {
