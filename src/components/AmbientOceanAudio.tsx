@@ -10,6 +10,8 @@ type AmbientGraph = {
 
 const AMBIENT_ENABLED_KEY = "tanie:ambientOceanEnabled"
 const AMBIENT_VOLUME = 0.14
+const UNDERWATER_VOLUME = 0.24
+const UNDERWATER_TRACK_SRC = "/Underwater.mp3"
 
 type AmbientOceanAudioProps = {
   placement?: "floating" | "inline"
@@ -51,8 +53,10 @@ export default function AmbientOceanAudio({ placement = "floating" }: AmbientOce
     }
   })
   const [isAudioReady, setIsAudioReady] = useState(false)
+  const [isUnderwaterSectionActive, setIsUnderwaterSectionActive] = useState(false)
   const graphRef = useRef<AmbientGraph | null>(null)
   const cleanupTimerRef = useRef<number | null>(null)
+  const underwaterAudioRef = useRef<HTMLAudioElement | null>(null)
 
   useEffect(() => {
     try {
@@ -63,6 +67,51 @@ export default function AmbientOceanAudio({ placement = "floating" }: AmbientOce
   }, [isEnabled])
 
   useEffect(() => {
+    let frame = 0
+
+    const updateSectionMode = () => {
+      frame = 0
+
+      const aboutSection = document.getElementById("about")
+      if (!aboutSection) {
+        setIsUnderwaterSectionActive(false)
+        return
+      }
+
+      const nextIsUnderwater = aboutSection.getBoundingClientRect().top < window.innerHeight * 0.45
+      setIsUnderwaterSectionActive((current) => (current === nextIsUnderwater ? current : nextIsUnderwater))
+    }
+
+    const scheduleUpdate = () => {
+      if (frame) return
+      frame = window.requestAnimationFrame(updateSectionMode)
+    }
+
+    scheduleUpdate()
+    window.addEventListener("scroll", scheduleUpdate, { passive: true })
+    window.addEventListener("resize", scheduleUpdate)
+
+    return () => {
+      if (frame) {
+        window.cancelAnimationFrame(frame)
+      }
+
+      window.removeEventListener("scroll", scheduleUpdate)
+      window.removeEventListener("resize", scheduleUpdate)
+    }
+  }, [])
+
+  useEffect(() => {
+    const cleanupUnderwaterAudio = () => {
+      const audio = underwaterAudioRef.current
+      if (!audio) {
+        return
+      }
+
+      audio.pause()
+      audio.currentTime = 0
+    }
+
     const cleanupGraph = () => {
       if (cleanupTimerRef.current !== null) {
         window.clearTimeout(cleanupTimerRef.current)
@@ -107,13 +156,7 @@ export default function AmbientOceanAudio({ placement = "floating" }: AmbientOce
       }, 180)
     }
 
-    const startGraph = async () => {
-      if (!isEnabled) {
-        cleanupGraph()
-        setIsAudioReady(false)
-        return
-      }
-
+    const startShoreGraph = async () => {
       if (graphRef.current) {
         const existingGraph = graphRef.current
         const now = existingGraph.context.currentTime
@@ -203,10 +246,55 @@ export default function AmbientOceanAudio({ placement = "floating" }: AmbientOce
       setIsAudioReady(true)
     }
 
-    void startGraph()
+    const startUnderwaterTrack = async () => {
+      cleanupGraph()
+
+      const audio = underwaterAudioRef.current ?? new Audio(UNDERWATER_TRACK_SRC)
+      if (!underwaterAudioRef.current) {
+        underwaterAudioRef.current = audio
+        audio.loop = true
+        audio.preload = "auto"
+        audio.volume = UNDERWATER_VOLUME
+      }
+
+      if (!audio.src.endsWith(UNDERWATER_TRACK_SRC)) {
+        audio.src = UNDERWATER_TRACK_SRC
+      }
+
+      try {
+        await audio.play()
+        setIsAudioReady(true)
+      } catch {
+        setIsAudioReady(false)
+      }
+    }
+
+    const syncAudioMode = async () => {
+      if (!isEnabled) {
+        cleanupGraph()
+        cleanupUnderwaterAudio()
+        setIsAudioReady(false)
+        return
+      }
+
+      if (isUnderwaterSectionActive) {
+        await startUnderwaterTrack()
+        return
+      }
+
+      cleanupUnderwaterAudio()
+      await startShoreGraph()
+    }
+
+    void syncAudioMode()
 
     const handleUnlockGesture = () => {
       if (!isEnabled) {
+        return
+      }
+
+      if (isUnderwaterSectionActive) {
+        void startUnderwaterTrack()
         return
       }
 
@@ -217,7 +305,7 @@ export default function AmbientOceanAudio({ placement = "floating" }: AmbientOce
       }
 
       if (!graph) {
-        void startGraph()
+        void startShoreGraph()
       }
     }
 
@@ -228,8 +316,9 @@ export default function AmbientOceanAudio({ placement = "floating" }: AmbientOce
       window.removeEventListener("pointerdown", handleUnlockGesture)
       window.removeEventListener("keydown", handleUnlockGesture)
       cleanupGraph()
+      cleanupUnderwaterAudio()
     }
-  }, [isEnabled])
+  }, [isEnabled, isUnderwaterSectionActive])
 
   const isInline = placement === "inline"
 
@@ -271,7 +360,11 @@ export default function AmbientOceanAudio({ placement = "floating" }: AmbientOce
         <span className={`flex min-w-0 flex-col leading-tight ${isInline ? "hidden" : ""}`}>
           <span className="text-[11px] font-semibold uppercase tracking-[0.24em] text-sky-100/46">Ambient</span>
           <span className="text-sm font-medium text-white/88">
-            {isEnabled ? (isAudioReady ? "Ocean white noise on" : "Starting ambient layer") : "Tap for underwater sound"}
+            {isEnabled
+              ? (isUnderwaterSectionActive
+                ? (isAudioReady ? "Underwater sound on" : "Starting underwater track")
+                : (isAudioReady ? "Sea shore audio on" : "Starting shore ambience"))
+              : "Tap to enable sound"}
           </span>
         </span>
       </button>
