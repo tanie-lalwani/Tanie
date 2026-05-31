@@ -14,8 +14,9 @@ main[data-prerendered="true"] {
 
 :root {
 	/* fonts */
-	--font-body: "Inter", "Aptos", "Segoe UI", sans-serif;
-	--font-display: "Cormorant Garamond", "Cambria", "Palatino Linotype", serif;
+	--font-body: "Manrope", "Aptos", "Segoe UI", sans-serif;
+	--font-ui: "Inter", "Aptos", "Segoe UI", sans-serif;
+	--font-display: "Bodoni Moda", "Didot", "Bodoni 72", "Cambria", serif;
 
 	/* type scale */
 	--type-caption: clamp(0.82rem, 0.8rem + 0.08vw, 0.88rem);
@@ -67,7 +68,6 @@ button,
 input,
 textarea,
 select {
-	font-family: var(--font-body);
 	font-size: var(--type-ui);
 	font-weight: 400;
 	letter-spacing: 0.03em;
@@ -136,6 +136,36 @@ select {
 	font: inherit;
 }
 
+main,
+section,
+article,
+aside,
+p,
+li,
+dd,
+dt,
+input,
+textarea,
+select {
+	font-family: var(--font-body);
+}
+
+nav,
+button,
+label {
+	font-family: var(--font-ui);
+}
+
+.uppercase {
+	font-family: var(--font-ui);
+}
+
+input,
+textarea,
+select {
+	font-family: var(--font-body);
+}
+
 a, .text-link {
 	color: var(--color-text-link);
 	text-decoration: underline;
@@ -165,6 +195,62 @@ a:hover, .text-link:hover {
 
 	.surface-panel-soft {
 		@apply rounded-2xl border border-white/6 bg-slate-950/16 backdrop-blur-lg;
+	}
+
+	.hero-title-lockup {
+		--hero-role-size: 0.48rem;
+		--hero-rule-gap: 0.08rem;
+	}
+
+	.hero-title-lockup::before,
+	.hero-title-lockup::after {
+		position: absolute;
+		right: 0;
+		left: 0;
+		height: 1px;
+		content: "";
+		pointer-events: none;
+	}
+
+	.hero-title-lockup::before {
+		bottom: calc(var(--hero-role-size) + var(--hero-rule-gap));
+		background: rgba(139, 157, 180, 0.1);
+	}
+
+	.hero-title-lockup::after {
+		bottom: calc(var(--hero-rule-gap) * -0.7);
+		background: rgba(139, 157, 180, 0.1);
+	}
+
+	.hero-title-role {
+		font-family: var(--font-ui);
+		letter-spacing: var(--hero-role-tracking, 0.08em);
+		text-transform: uppercase;
+		white-space: nowrap;
+		color: #8b9db4;
+		left: var(--hero-role-inset, 0);
+	}
+
+	.hero-title-role--tail {
+		letter-spacing: var(--hero-role-tracking, 0.34em);
+	}
+
+	@media (min-width: 640px) {
+		.hero-title-lockup {
+			--hero-role-size: 0.58rem;
+		}
+	}
+
+	@media (min-width: 768px) {
+		.hero-title-lockup {
+			--hero-role-size: 0.64rem;
+		}
+	}
+
+	@media (min-width: 1024px) {
+		.hero-title-lockup {
+			--hero-role-size: 0.7rem;
+		}
 	}
 
 	.copy-clamp {

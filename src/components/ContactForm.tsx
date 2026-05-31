@@ -20,7 +20,7 @@ const initialFields: ContactFields = {
 }
 
 const labelClass = "text-[11.5px] font-medium tracking-[0.16em] text-slate-200/50 sm:text-[12.5px]"
-const inputClass = "rounded-xl border border-white/14 bg-white/10 px-4 py-2 text-[11.5px] font-medium leading-6 tracking-[0.14em] text-slate-100/76 outline-none transition placeholder:text-[11.5px] placeholder:tracking-[0.14em] placeholder:text-slate-200/38 focus:border-sky-300/46 focus:ring-2 focus:ring-sky-300/20 sm:text-[12.5px] sm:tracking-[0.16em]"
+const inputClass = "rounded-xl border border-white/14 bg-white/10 px-4 py-2 text-[12.5px] font-medium leading-6 tracking-normal text-slate-100/76 outline-none transition placeholder:text-[12.5px] placeholder:tracking-normal placeholder:text-slate-200/38 focus:border-sky-300/46 focus:ring-2 focus:ring-sky-300/20 sm:text-[13px]"
 
 export function ContactForm() {
   const { copy } = useLanguage()
@@ -150,7 +150,7 @@ export function ContactForm() {
 
       {submitStatus !== "idle" && (
         <motion.p
-          className={`text-[11.5px] font-medium leading-6 tracking-[0.18em] sm:text-[12.5px] ${
+          className={`text-[12.5px] font-medium leading-6 tracking-normal sm:text-[13px] ${
             submitStatus === "success" ? "text-emerald-300" : "text-rose-300"
           }`}
           initial={{ opacity: 0 }}

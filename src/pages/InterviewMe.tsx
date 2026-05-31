@@ -361,7 +361,7 @@ export default function QnA() {
           </header>
           <article className="max-h-[calc(70vh-3.5rem)] overflow-y-auto px-4 py-4">
             <h2 className="text-sm font-semibold leading-6 text-black">{questions[openTranscriptIndex]}</h2>
-            <p className="mt-3 text-sm leading-7 text-black/68">{transcriptReplies[openTranscriptIndex]}</p>
+            <p className="mt-3 text-sm leading-7 tracking-normal text-black/68">{transcriptReplies[openTranscriptIndex]}</p>
           </article>
         </aside>
       ) : null}
@@ -436,8 +436,8 @@ export default function QnA() {
                   <div
                     className={
                       message.role === "bot"
-                        ? "max-w-[82%] rounded-[1.2rem] rounded-bl-md bg-[#dff4ff] px-3 py-2 text-sm leading-6 text-black"
-                        : "max-w-[82%] rounded-[1.2rem] rounded-br-md bg-[#0f172a] px-3 py-2 text-sm leading-6 text-white"
+                        ? "max-w-[82%] rounded-[1.2rem] rounded-bl-md bg-[#dff4ff] px-3 py-2 text-sm leading-6 tracking-normal text-black"
+                        : "max-w-[82%] rounded-[1.2rem] rounded-br-md bg-[#0f172a] px-3 py-2 text-sm leading-6 tracking-normal text-white"
                     }
                   >
                     {message.text}

@@ -3,31 +3,42 @@ const prerenderedApp = String.raw`
   <main data-prerendered="true">
 
     <section id="home">
-      <h1>Tanie Lalwani</h1>
+      <h1 class="inline-grid w-fit grid-cols-[auto_auto] gap-x-[1.45rem] gap-y-[0.2rem] sm:gap-x-[1.65rem] sm:gap-y-[0.22rem]">
+        <span class="col-start-1 row-start-1">I'm</span>
+        <span class="col-start-2 row-start-1">Tanie!</span>
+        <span class="col-start-1 row-start-2 text-[0.56rem] font-medium uppercase tracking-[0.34em] text-[#A7B5C4] sm:text-[0.64rem] sm:tracking-[0.38em]">
+          Creative
+        </span>
+        <span class="col-start-2 row-start-2 text-[0.56rem] font-medium uppercase tracking-[0.28em] text-[#A7B5C4] sm:text-[0.64rem] sm:tracking-[0.33em]">
+          Developer
+        </span>
+      </h1>
 
       <p>
-        Creative Developer & Full-Stack Web Developer.
+        I create websites that move, react, and stand out.
       </p>
 
-      <p>
-        I create interactive websites, 3D web experiences, and modern responsive web applications with React, TypeScript, and careful frontend engineering.
+      <p class="mt-1 text-[0.94em] leading-[1.3] tracking-[0.01em] text-[#314A70CC]">
+        Scroll deeper! The fun stuff’s below.
       </p>
     </section>
 
     <section id="about">
-      <h2>About Tanie:</h2>
+      <h2>A bit about me:</h2>
 
-      <p>Hi, I’m Tanie Lalwani, a creative and full-stack developer based in India.</p>
+      <p>Hi, I’m Tanie Lalwani, a creative and full-stack developer based in India. I’m a data science graduate, and I first got into tech at 16. Over time, I found myself interested in almost everything like data, blockchain, ML, dev-rel, and most of the usual tech buzzwords, but the thing that stuck with me the longest was web design.</p>
 
-      <p>I build interactive websites, 3D web experiences, and responsive web applications that feel intentional, polished, and easy to use.</p>
+      <p>I liked websites more when they stood out. Not just functional, but memorable. That curiosity slowly pushed me toward interactive and creative web experiences, 3D websites, motion, and frontend work that feels a little more alive.</p>
 
-      <p>Over the last few years, that has turned into work across landing pages, web apps, and interactive experiences with founders, creators, startups, and personal brands.</p>
+      <p>Over the last few years, that turned into 100+ projects across landing pages, web apps, interactive experiences, and different tech stacks. I’ve spent 2+ years freelancing with founders, creators, startups, and personal brands.</p>
 
-      <p>Outside tech, I make music, create content, experiment with visuals, business products, fashion, and the occasional hobby I only try once.</p>
+      <p>A huge part of my initial growth came from hackathons, tech communities, volunteering, fast deadlines, freelancing and learning in public and lately, from learning through the people around me.</p>
+
+      <p>Outside tech, I spend time making music, creating content, experimenting with visuals, business products, fashion, and random hobbies I somehow end up trying at least once. One way or another, we’ll probably have fun working together.</p>
 
       <p>
-        <a href="/qna">
-          View QnA
+        <a href="https://www.google.com/search?q=Tanie+Lalwani" target="_blank" rel="noopener noreferrer">
+          Know more
         </a>
       </p>
 
