@@ -78,7 +78,9 @@ export default function AmbientOceanAudio({ placement = "floating" }: AmbientOce
         return
       }
 
-      const nextIsUnderwater = aboutSection.getBoundingClientRect().top < window.innerHeight * 0.45
+      // Start the underwater audio a little earlier so it lines up with the visual transition.
+      // Increase threshold from 0.45 -> 0.65 to trigger near the section transition.
+      const nextIsUnderwater = aboutSection.getBoundingClientRect().top < window.innerHeight * 0.65
       setIsUnderwaterSectionActive((current) => (current === nextIsUnderwater ? current : nextIsUnderwater))
     }
 
