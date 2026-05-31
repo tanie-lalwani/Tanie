@@ -253,6 +253,13 @@ a:hover, .text-link:hover {
 		}
 	}
 
+/* Mobile-only: make the hero role text slightly darker for contrast */
+@media (max-width: 639px) {
+	.hero-title-role {
+ 		color: #6b8396;
+ 	}
+}
+
 	.copy-clamp {
 		display: -webkit-box;
 		-webkit-box-orient: vertical;
