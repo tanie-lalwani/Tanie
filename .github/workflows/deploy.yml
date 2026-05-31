@@ -27,6 +27,13 @@ jobs:
           node-version: 24
           cache: npm
 
+      - name: Setup Chrome
+        uses: browser-actions/setup-chrome@v2
+        id: setup-chrome
+
+      - name: Configure Puppeteer to use system Chrome
+        run: echo "PUPPETEER_EXECUTABLE_PATH=${{ steps.setup-chrome.outputs.chrome-path }}" >> $GITHUB_ENV
+
       - name: Install dependencies
         run: npm ci
 
