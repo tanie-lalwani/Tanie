@@ -250,8 +250,9 @@ Note: Three.js and WebGL required for full experience
 
 ### Typography
 
-- Display: Cambria (`--font-display`) for headings
-- Body: Aptos (`--font-body`) for content
+- Display: Bodoni Moda (`--font-display`) for headings
+- Body: Manrope (`--font-body`) for content
+- UI labels: Inter (`--font-ui`) for small uppercase text
 - Sizing: Responsive scales from mobile to desktop
 
 ### Spacing

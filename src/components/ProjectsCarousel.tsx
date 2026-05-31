@@ -139,7 +139,7 @@ export function ProjectsCarousel({ projects }: ProjectsCarouselProps) {
                 >
                   {activeProject.title}
                 </h2>
-                <div className="mt-4 max-h-[38vh] overflow-y-auto pr-3 text-[12px] font-medium leading-7 tracking-[0.14em] text-slate-200/68 sm:text-[13px] sm:tracking-[0.16em] lg:max-h-[44vh]">
+                <div className="mt-4 max-h-[38vh] overflow-y-auto pr-3 text-[13px] font-medium leading-7 tracking-normal text-slate-200/70 sm:text-sm lg:max-h-[44vh]">
                   <p>{activeProject.description}</p>
                   {(activeProject.details ?? projectDetails).map((detail) => <p className="mt-4" key={detail}>{detail}</p>)}
                 </div>

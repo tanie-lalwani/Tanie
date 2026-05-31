@@ -1,5 +1,5 @@
 import { AnimatePresence, motion, useScroll, useTransform } from "framer-motion"
-import { useEffect, useState } from "react"
+import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties } from "react"
 import { Link } from "react-router-dom"
 import PageHeader from "../components/PageHeader"
 import { ProjectsCarousel, type Project as CarouselProject } from "../components/ProjectsCarousel"
@@ -47,6 +47,68 @@ const OPEN_TO_SERVICES = [
   "Frontend Interfaces",
   "Creative Web Projects",
 ]
+
+type HeroRoleMetrics = {
+  tracking?: number
+  inset?: number
+}
+
+type HeroRoleLayout = {
+  lead?: HeroRoleMetrics
+  tail?: HeroRoleMetrics
+}
+
+type HeroRoleStyle = CSSProperties & {
+  "--hero-role-tracking"?: string
+  "--hero-role-inset"?: string
+}
+
+const HERO_ROLE_VISUAL_WIDTH_RATIO = 0.92
+
+const createHeroRoleStyle = (metrics?: HeroRoleMetrics): HeroRoleStyle => {
+  const style: HeroRoleStyle = {}
+
+  if (typeof metrics?.tracking === "number") style["--hero-role-tracking"] = `${metrics.tracking}px`
+  if (typeof metrics?.inset === "number") style["--hero-role-inset"] = `${metrics.inset}px`
+
+  return style
+}
+
+const measureHeroRoleMetrics = (
+  titleElement: HTMLSpanElement | null,
+  roleElement: HTMLSpanElement | null,
+  roleText: string,
+) => {
+  const glyphCount = Array.from(roleText.replace(/\s/g, "")).length
+  if (!titleElement || !roleElement || glyphCount < 2) return undefined
+
+  const previousLetterSpacing = roleElement.style.letterSpacing
+  roleElement.style.letterSpacing = "0px"
+
+  const titleWidth = titleElement.getBoundingClientRect().width
+  const roleWidth = roleElement.getBoundingClientRect().width
+
+  roleElement.style.letterSpacing = previousLetterSpacing
+
+  if (!titleWidth || !roleWidth) return undefined
+
+  const visualTargetWidth = titleWidth * HERO_ROLE_VISUAL_WIDTH_RATIO
+  const inset = (titleWidth - visualTargetWidth) / 2
+
+  return {
+    tracking: Math.max(0, (visualTargetWidth - roleWidth) / (glyphCount - 1)),
+    inset,
+  }
+}
+
+const isCloseNumber = (a?: number, b?: number) => {
+  if (a === undefined || b === undefined) return a === b
+  return Math.abs(a - b) < 0.2
+}
+
+const isCloseMetrics = (a?: HeroRoleMetrics, b?: HeroRoleMetrics) => (
+  isCloseNumber(a?.tracking, b?.tracking) && isCloseNumber(a?.inset, b?.inset)
+)
 
 
 type HomeProps = {
@@ -160,6 +222,49 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
   const { scrollYProgress } = useScroll()
   const worldDiveProgress = useTransform(scrollYProgress, [0, isMobile ? 0.22 : 0.34], [0, 1])
   const aboutParagraphs = isMobile ? copy.home.aboutParagraphsMobile ?? copy.home.aboutParagraphs : copy.home.aboutParagraphs
+  const [heroLead = "", heroSubline = ""] = copy.home.heroDescription.split("\n")
+  const [heroRoleLead = "", ...heroRoleTailParts] = copy.home.heroRole.split(/\s+/)
+  const heroRoleTail = heroRoleTailParts.join(" ")
+  const heroLeadTitleRef = useRef<HTMLSpanElement>(null)
+  const heroTailTitleRef = useRef<HTMLSpanElement>(null)
+  const heroLeadRoleRef = useRef<HTMLSpanElement>(null)
+  const heroTailRoleRef = useRef<HTMLSpanElement>(null)
+  const [heroRoleLayout, setHeroRoleLayout] = useState<HeroRoleLayout>({})
+
+  useLayoutEffect(() => {
+    let cancelled = false
+
+    const updateTracking = () => {
+      const next = {
+        lead: measureHeroRoleMetrics(heroLeadTitleRef.current, heroLeadRoleRef.current, heroRoleLead),
+        tail: measureHeroRoleMetrics(heroTailTitleRef.current, heroTailRoleRef.current, heroRoleTail),
+      }
+
+      if (cancelled) return
+
+      setHeroRoleLayout((current) => (
+        isCloseMetrics(current.lead, next.lead) && isCloseMetrics(current.tail, next.tail) ? current : next
+      ))
+    }
+
+    updateTracking()
+    window.addEventListener("resize", updateTracking)
+
+    const resizeObserver = typeof ResizeObserver === "undefined" ? null : new ResizeObserver(updateTracking)
+    if (resizeObserver) {
+      ;[heroLeadTitleRef.current, heroTailTitleRef.current].forEach((element) => {
+        if (element) resizeObserver.observe(element)
+      })
+    }
+
+    void document.fonts?.ready.then(updateTracking)
+
+    return () => {
+      cancelled = true
+      window.removeEventListener("resize", updateTracking)
+      resizeObserver?.disconnect()
+    }
+  }, [heroRoleLead, heroRoleTail])
 
   useEffect(() => {
     document.title = "Tanie Lalwani | About, Projects & Contact"
@@ -223,21 +328,55 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
         >
-          <header className="relative max-w-none">
-            <h1
+          <header className="relative max-w-[40rem]">
+            <motion.h1
               id="home-title"
-              className="mt-4 text-4xl font-bold tracking-normal text-white sm:text-5xl md:text-6xl lg:text-7xl"
-              style={{ fontFamily: "var(--font-display)" }}
+              className="hero-title-lockup relative mt-1 inline-flex w-fit items-start gap-x-[0.5rem] text-4xl font-bold tracking-normal text-[#F4F1EE] sm:mt-0 sm:gap-x-[0.65rem] sm:text-5xl md:gap-x-[0.8rem] md:text-6xl lg:gap-x-[0.95rem] lg:text-7xl"
+              style={{ fontFamily: "var(--font-display)", lineHeight: 1 }}
+              aria-label={`I'm Tanie! ${copy.home.heroRole}`}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
             >
-              {copy.home.heroTitle}
-            </h1>
-            <p className="mt-1 max-w-lg text-[11.5px] font-medium uppercase tracking-[0.18em] text-slate-200/54 sm:text-[12.5px]">
-              {copy.home.heroRole}
-            </p>
+              <span className="relative inline-block pb-[0.055em] sm:pb-[0.04em] md:pb-[0.03em] lg:pb-[0.02em]" aria-hidden="true">
+                <span ref={heroLeadTitleRef} className="inline-block">I'm</span>
+                {heroRoleLead ? (
+                  <span
+                    ref={heroLeadRoleRef}
+                    className="hero-title-role hero-title-role--lead absolute bottom-0 inline-block text-[0.48rem] font-medium leading-none sm:text-[0.58rem] md:text-[0.64rem] lg:text-[0.7rem]"
+                    style={createHeroRoleStyle(heroRoleLayout.lead)}
+                  >
+                    {heroRoleLead}
+                  </span>
+                ) : null}
+              </span>
+              <span className="relative inline-block pb-[0.055em] sm:pb-[0.04em] md:pb-[0.03em] lg:pb-[0.02em]" aria-hidden="true">
+                <span ref={heroTailTitleRef} className="inline-block">Tanie!</span>
+                {heroRoleTail ? (
+                  <span
+                    ref={heroTailRoleRef}
+                    className="hero-title-role hero-title-role--tail absolute bottom-0 inline-block text-[0.48rem] font-medium leading-none sm:text-[0.58rem] md:text-[0.64rem] lg:text-[0.7rem]"
+                    style={createHeroRoleStyle(heroRoleLayout.tail)}
+                  >
+                    {heroRoleTail}
+                  </span>
+                ) : null}
+              </span>
+            </motion.h1>
 
-            <p className="mt-5 max-w-2xl text-[11.5px] font-medium leading-6 tracking-[0.18em] text-blue-950 sm:text-[12.5px]">
-              {copy.home.heroDescription}
-            </p>
+            <motion.div
+              className="mt-[2.625rem] max-w-[35.5rem] translate-x-[4.5px] text-[1.06rem] font-normal leading-[1.12] tracking-normal text-[#314A70] sm:mt-[2.875rem] sm:text-[1.12rem]"
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.45, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+            >
+              <p className="block">{heroLead}</p>
+              {heroSubline ? (
+                <p className="mt-0 block w-full text-[0.94em] leading-[1.12] tracking-[0.05em] text-[#314A70CC]">
+                  {heroSubline}
+                </p>
+              ) : null}
+            </motion.div>
           </header>
         </motion.div>
       </motion.section>
@@ -257,9 +396,9 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
             />
 
           <div className="relative mb-5 flex flex-wrap items-center justify-end gap-2.5 border-b border-white/7 pb-2.5 sm:mb-6">
-            <Link to="/qna" className="inline-flex text-[11.5px] font-medium uppercase tracking-[0.2em] !text-sky-200/55 no-underline transition hover:!text-sky-100/80">
+            <a href="https://www.google.com/search?q=Tanie+Lalwani" target="_blank" rel="noopener noreferrer" className="inline-flex text-[11.5px] font-medium uppercase tracking-[0.2em] !text-sky-200/55 no-underline transition hover:!text-sky-100/80">
               {copy.home.knowMore}
-            </Link>
+            </a>
           </div>
 
           <div className="mt-5 grid w-full grid-cols-1 gap-7 lg:grid-cols-[minmax(0,1fr)_minmax(14rem,20rem)] lg:items-start">
@@ -269,7 +408,7 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
                   {copy.home.aboutParagraphsMobile.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
                 </section>
               ) : null}
-              <div data-lenis-prevent className={`about-scroll max-h-[calc(78svh-13rem)] space-y-3.5 pr-3 text-[12px] font-medium leading-6 tracking-[0.12em] text-slate-200/50 sm:max-h-[calc(76vh-12rem)] sm:text-[12.5px] sm:tracking-[0.16em] ${aboutExpanded ? "overflow-y-auto" : "overflow-hidden"}`}>
+              <div data-lenis-prevent className={`about-scroll max-h-[calc(78svh-13rem)] space-y-3.5 pr-3 text-[13px] font-medium leading-7 tracking-normal text-slate-200/54 sm:max-h-[calc(76vh-12rem)] sm:text-[13.5px] ${aboutExpanded ? "overflow-y-auto" : "overflow-hidden"}`}>
                 {aboutParagraphs.map((paragraph) => (
                   <p key={paragraph} dangerouslySetInnerHTML={{ __html: paragraph }} />
                 ))}
@@ -301,7 +440,7 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
               <div className="mt-5 overflow-hidden sm:mt-6 [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
                 <div
                   className="skills-marquee-track flex w-max items-center whitespace-nowrap text-[11px] font-medium tracking-[0.18em] text-slate-300/40 sm:text-[12px]"
-                  style={{ fontFamily: "var(--font-body)" }}
+                  style={{ fontFamily: "var(--font-ui)" }}
                   aria-label="Skills and capabilities"
                 >
                   <span className="pr-10">{ABOUT_SKILLS_LINE}</span>
