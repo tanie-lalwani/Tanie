@@ -1,18 +1,1 @@
-<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <defs>
-    <radialGradient id="dotFill" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(13 11) rotate(45) scale(12)">
-      <stop offset="0" stop-color="#E8F8FF"/>
-      <stop offset="0.55" stop-color="#B9D8EF"/>
-      <stop offset="1" stop-color="#8EC8E8"/>
-    </radialGradient>
-    <filter id="dotGlow" x="4" y="4" width="20" height="20" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-      <feFlood flood-opacity="0" result="BackgroundImageFix"/>
-      <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
-      <feGaussianBlur stdDeviation="1.5" result="effect1_foregroundBlur"/>
-    </filter>
-  </defs>
-  <g filter="url(#dotGlow)">
-    <circle cx="14" cy="14" r="5.5" fill="url(#dotFill)" stroke="#9FDBF6" stroke-width="1.5"/>
-    <circle cx="11.8" cy="11.7" r="1.6" fill="#F7FDFF" fill-opacity="0.9"/>
-  </g>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="none" viewBox="0 0 32 32"><defs><radialGradient id="dotFill" cx="0" cy="0" r="1" gradientTransform="translate(13 11) rotate(45) scale(12)" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#E8F8FF"/><stop offset=".55" stop-color="#B9D8EF"/><stop offset="1" stop-color="#8EC8E8"/></radialGradient><filter id="dotGlow" width="20" height="20" x="4" y="4" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" mode="normal" result="shape"/><feGaussianBlur result="effect1_foregroundBlur" stdDeviation="1.5"/></filter></defs><g filter="url(#dotGlow)"><circle cx="14" cy="14" r="5.5" fill="url(#dotFill)" stroke="#9FDBF6" stroke-width="1.5"/><circle cx="11.8" cy="11.7" r="1.6" fill="#F7FDFF" fill-opacity=".9"/></g></svg>
