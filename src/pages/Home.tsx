@@ -38,16 +38,6 @@ const PROJECT_TITLE_IDS = [
   "project-pixelhaven-storefront-1",
 ]
 
-const OPEN_TO_SERVICES = [
-  "Portfolio Websites",
-  "Landing Pages",
-  "Web Apps",
-  "Game Prototyping",
-  "Interactive Experiences",
-  "Frontend Interfaces",
-  "Creative Web Projects",
-]
-
 type HeroRoleMetrics = {
   tracking?: number
   inset?: number
@@ -117,34 +107,37 @@ type HomeProps = {
 }
 
 function OpenToCarousel() {
+  const { copy } = useLanguage()
+  const services = copy.home.services
   const [index, setIndex] = useState(0)
+  const activeService = services[index % services.length] ?? ""
 
   useEffect(() => {
     const timer = window.setInterval(() => {
-      setIndex((current) => (current + 1) % OPEN_TO_SERVICES.length)
+      setIndex((current) => (current + 1) % services.length)
     }, 1500)
 
     return () => window.clearInterval(timer)
-  }, [])
+  }, [services.length])
 
   return (
     <div className="ml-auto flex w-full items-center justify-end gap-2 overflow-hidden text-[11.5px] font-medium uppercase tracking-[0.2em] text-sky-200/55 sm:w-auto sm:gap-3" aria-labelledby="open-to-heading">
-      <span className="hidden md:inline shrink-0 pr-3 text-right">Open to:</span>
-      <h3 id="open-to-heading" className="sr-only">Open to web development services</h3>
+      <span className="hidden md:inline shrink-0 pr-3 text-right">{copy.home.openToLabel}</span>
+      <h3 id="open-to-heading" className="sr-only">{copy.home.openToAriaLabel}</h3>
       <ul className="sr-only">
-        {OPEN_TO_SERVICES.map((service) => <li key={service}>{service}</li>)}
+        {services.map((service) => <li key={service}>{service}</li>)}
       </ul>
       <span className="relative h-5 min-w-[13.5rem] overflow-hidden text-right [mask-image:linear-gradient(to_bottom,transparent,black_22%,black_78%,transparent)]" aria-hidden="true">
         <AnimatePresence initial={false}>
           <motion.span
-            key={OPEN_TO_SERVICES[index]}
+            key={activeService}
             className="absolute right-0 top-0 whitespace-nowrap text-sky-200/55"
             initial={{ y: 18, opacity: 0, filter: "blur(5px)" }}
             animate={{ y: 0, opacity: 1, filter: "blur(0px)" }}
             exit={{ y: -18, opacity: 0, filter: "blur(5px)" }}
             transition={{ duration: 0.85, ease: "easeInOut" }}
           >
-            {OPEN_TO_SERVICES[index]}
+            {activeService}
           </motion.span>
         </AnimatePresence>
       </span>
@@ -223,6 +216,8 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
   const worldDiveProgress = useTransform(scrollYProgress, [0, isMobile ? 0.22 : 0.34], [0, 1])
   const aboutParagraphs = isMobile ? copy.home.aboutParagraphsMobile ?? copy.home.aboutParagraphs : copy.home.aboutParagraphs
   const [heroLead = "", heroSubline = ""] = copy.home.heroDescription.split("\n")
+  const [heroTitleLead = "", ...heroTitleTailParts] = copy.home.heroTitle.split(/\s+/)
+  const heroTitleTail = heroTitleTailParts.join(" ")
   const [heroRoleLead = "", ...heroRoleTailParts] = copy.home.heroRole.split(/\s+/)
   const heroRoleTail = heroRoleTailParts.join(" ")
   const heroLeadTitleRef = useRef<HTMLSpanElement>(null)
@@ -264,7 +259,7 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
       window.removeEventListener("resize", updateTracking)
       resizeObserver?.disconnect()
     }
-  }, [heroRoleLead, heroRoleTail])
+  }, [heroRoleLead, heroRoleTail, heroTitleLead, heroTitleTail])
 
   useEffect(() => {
     document.title = "Tanie Lalwani | Creative and Full Stack Developer"
@@ -276,18 +271,17 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
     const projectId = PROJECT_TITLE_IDS[index] ?? `project-${base.title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "")}-${index + 1}`
 
     if (index === 4) {
+      const featuredProject = copy.home.featuredProject
+
       return {
         ...project,
         id: projectId,
-        title: "Innomedia",
-        description: "A lightweight 360 degree marketing company website built with basic HTML and CSS, then elevated with motion, animated sections, and flexible layouts.",
-        techStack: ["HTML", "CSS", "Flex", "Animation"],
+        title: featuredProject.title,
+        description: featuredProject.description,
+        techStack: featuredProject.techStack,
         previewVideo: "/Innomedia.mp4",
         previewFit: "contain",
-        details: [
-          "Innomedia is a generic 360 degree marketing company site shaped around simple service storytelling, clear page flow, and quick visual trust. The base was intentionally lean: HTML, CSS, flexible sections, and direct content structure.",
-          "Even with a basic stack, the build adds motion through animated reveals, soft transitions, and layout rhythm so the site feels more alive than a static brochure. It is a practical example of making small frontend decisions feel polished without overengineering.",
-        ],
+        details: featuredProject.details,
       }
     }
 
@@ -296,7 +290,7 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
     return {
       ...project,
       id: projectId,
-      description: `${project.description} (Demo ${uniqueIndex})`,
+      description: `${project.description} (${copy.projectCard.demoLabel} ${uniqueIndex})`,
       site: `${project.site}?instance=${uniqueIndex}`,
       code: project.code ? `${project.code}?instance=${uniqueIndex}` : undefined,
     }
@@ -333,13 +327,13 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
               id="home-title"
               className="hero-title-lockup relative mt-1 inline-flex w-fit items-start gap-x-[0.5rem] text-4xl font-bold tracking-normal text-[#F4F1EE] sm:mt-0 sm:gap-x-[0.65rem] sm:text-5xl md:gap-x-[0.8rem] md:text-6xl lg:gap-x-[0.95rem] lg:text-7xl"
               style={{ fontFamily: "var(--font-display)", lineHeight: 1 }}
-              aria-label={`I'm Tanie! ${copy.home.heroRole}`}
+              aria-label={`${copy.home.heroTitle} ${copy.home.heroRole}`}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
             >
               <span className="relative inline-block pb-[0.055em] sm:pb-[0.04em] md:pb-[0.03em] lg:pb-[0.02em]" aria-hidden="true">
-                <span ref={heroLeadTitleRef} className="inline-block">I'm</span>
+                <span ref={heroLeadTitleRef} className="inline-block">{heroTitleLead}</span>
                 {heroRoleLead ? (
                   <span
                     ref={heroLeadRoleRef}
@@ -350,18 +344,20 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
                   </span>
                 ) : null}
               </span>
-              <span className="relative inline-block pb-[0.055em] sm:pb-[0.04em] md:pb-[0.03em] lg:pb-[0.02em]" aria-hidden="true">
-                <span ref={heroTailTitleRef} className="inline-block">Tanie!</span>
-                {heroRoleTail ? (
-                  <span
-                    ref={heroTailRoleRef}
-                    className="hero-title-role hero-title-role--tail absolute bottom-0 inline-block text-[0.48rem] font-medium leading-none sm:text-[0.58rem] md:text-[0.64rem] lg:text-[0.7rem]"
-                    style={createHeroRoleStyle(heroRoleLayout.tail)}
-                  >
-                    {heroRoleTail}
-                  </span>
-                ) : null}
-              </span>
+              {heroTitleTail ? (
+                <span className="relative inline-block pb-[0.055em] sm:pb-[0.04em] md:pb-[0.03em] lg:pb-[0.02em]" aria-hidden="true">
+                  <span ref={heroTailTitleRef} className="inline-block">{heroTitleTail}</span>
+                  {heroRoleTail ? (
+                    <span
+                      ref={heroTailRoleRef}
+                      className="hero-title-role hero-title-role--tail absolute bottom-0 inline-block text-[0.48rem] font-medium leading-none sm:text-[0.58rem] md:text-[0.64rem] lg:text-[0.7rem]"
+                      style={createHeroRoleStyle(heroRoleLayout.tail)}
+                    >
+                      {heroRoleTail}
+                    </span>
+                  ) : null}
+                </span>
+              ) : null}
             </motion.h1>
 
             <motion.div

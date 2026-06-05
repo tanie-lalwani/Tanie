@@ -21,11 +21,6 @@ interface ProjectsCarouselProps {
   projects: Project[]
 }
 
-const projectDetails = [
-  "Viziona was built as a polished product surface with a strong focus on responsive layout, clear visual hierarchy, and smooth interaction states. The work balances brand presence with practical usability, keeping the interface easy to scan while still feeling distinctive.",
-  "The project highlights frontend execution across structure, motion, spacing, and cross-device behavior. Each section is shaped to guide the user naturally from first impression to action, with careful attention to readable content, reliable components, and a modern React and TypeScript workflow.",
-]
-
 export function ProjectsCarousel({ projects }: ProjectsCarouselProps) {
   const { copy } = useLanguage()
   const isMobile = useIsMobile()
@@ -61,14 +56,18 @@ export function ProjectsCarousel({ projects }: ProjectsCarouselProps) {
           rel="noopener noreferrer"
           className="ml-auto inline-flex text-[11.5px] font-medium uppercase tracking-[0.2em] !text-sky-200/55 underline transition hover:!text-sky-100/80"
         >
-          All Projects
+          {copy.projectCard.allProjects}
         </a>
       </div>
 
       <div
         {...(!isMobile ? { "data-lenis-prevent": true } : {})}
         className="project-scroll -mx-4 flex snap-x snap-mandatory gap-3.5 overflow-x-auto px-4 pb-9 sm:-mx-6 sm:gap-4 sm:px-6 sm:pb-10"
-        style={isMobile ? { touchAction: "pan-y" } as React.CSSProperties : undefined}
+        style={{
+          touchAction: "pan-x pan-y",
+          overscrollBehaviorX: "contain",
+          WebkitOverflowScrolling: "touch",
+        }}
         aria-label={copy.home.projectsTitle}
       >
         {projects.map((project, index) => (
@@ -77,6 +76,7 @@ export function ProjectsCarousel({ projects }: ProjectsCarouselProps) {
             titleId={project.id}
             title={project.title}
             description={project.description}
+            openLabel={copy.projectCard.open}
             previewVideo={project.previewVideo}
             previewFit={project.previewFit}
             onOpen={() => setActiveProject(project)}
@@ -84,12 +84,12 @@ export function ProjectsCarousel({ projects }: ProjectsCarouselProps) {
         ))}
       </div>
 
-      <section className="sr-only" aria-label="Project details">
+      <section className="sr-only" aria-label={copy.projectCard.projectDetails}>
         {projects.map((project, index) => (
           <article key={`${project.site}-seo-${index}`}>
             <h3>{project.title}</h3>
             <p>{project.description}</p>
-            {(project.details ?? projectDetails).map((detail) => <p key={detail}>{detail}</p>)}
+            {(project.details ?? copy.projectCard.defaultProjectDetails).map((detail) => <p key={detail}>{detail}</p>)}
             <a href={project.site}>{copy.projectCard.view}</a>
             {project.code ? <a href={project.code}>{copy.projectCard.code}</a> : null}
           </article>
@@ -111,7 +111,7 @@ export function ProjectsCarousel({ projects }: ProjectsCarouselProps) {
             <button
               type="button"
               className="fixed right-4 top-4 z-10 flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-slate-950/58 text-lg leading-none text-slate-100/70 shadow-[0_18px_55px_rgba(2,8,23,0.32)] backdrop-blur-xl transition hover:bg-white/8 hover:text-white focus:outline-none focus:ring-2 focus:ring-sky-300/24 sm:right-6 sm:top-6"
-              aria-label="Close project details"
+              aria-label={copy.projectCard.closeDetails}
               onClick={() => setActiveProject(null)}
             >
               x
@@ -144,7 +144,7 @@ export function ProjectsCarousel({ projects }: ProjectsCarouselProps) {
                 </h2>
                 <div className="mt-4 max-h-[38vh] overflow-y-auto pr-3 text-[13px] font-medium leading-7 tracking-normal text-slate-200/70 sm:text-sm lg:max-h-[44vh]">
                   <p>{activeProject.description}</p>
-                  {(activeProject.details ?? projectDetails).map((detail) => <p className="mt-4" key={detail}>{detail}</p>)}
+                  {(activeProject.details ?? copy.projectCard.defaultProjectDetails).map((detail) => <p className="mt-4" key={detail}>{detail}</p>)}
                 </div>
 
                 <div className="mt-7 flex flex-wrap gap-2.5">
