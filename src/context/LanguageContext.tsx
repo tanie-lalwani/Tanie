@@ -1088,16 +1088,8 @@ type LanguageContextValue = {
 
 const LanguageContext = createContext<LanguageContextValue | null>(null)
 
-function isLocale(value: string | null): value is Locale {
-  return value === "en" || value === "es" || value === "fr" || value === "hi" || value === "ja" || value === "ur" || value === "zh"
-}
-
 export function LanguageProvider({ children }: { children: ReactNode }) {
-  const [locale, setLocaleState] = useState<Locale>(() => {
-    if (typeof window === "undefined") return "en"
-    const storedLocale = window.localStorage.getItem(STORAGE_KEY)
-    return isLocale(storedLocale) ? storedLocale : "en"
-  })
+  const [locale, setLocaleState] = useState<Locale>("en")
 
   useEffect(() => {
     window.localStorage.setItem(STORAGE_KEY, locale)

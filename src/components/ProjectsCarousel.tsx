@@ -1,6 +1,6 @@
 import { ProjectCard } from "./ProjectCard"
 import { useLanguage } from "../context/LanguageContext"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { createPortal } from "react-dom"
 import { useIsMobile } from "../hooks/useIsMobile"
 
@@ -24,8 +24,72 @@ interface ProjectsCarouselProps {
 export function ProjectsCarousel({ projects }: ProjectsCarouselProps) {
   const { copy } = useLanguage()
   const isMobile = useIsMobile()
+  const scrollRef = useRef<HTMLDivElement | null>(null)
+  const suppressClickRef = useRef(false)
   const [activeProject, setActiveProject] = useState<Project | null>(null)
   const detailTitleId = activeProject?.id ? `${activeProject.id}-detail-title` : "project-detail-title"
+
+  useEffect(() => {
+    if (!isMobile) return
+
+    const scroller = scrollRef.current
+    if (!scroller) return
+
+    let startX = 0
+    let startY = 0
+    let startScrollLeft = 0
+    let lock: "x" | "y" | null = null
+
+    const onTouchStart = (event: TouchEvent) => {
+      if (event.touches.length !== 1) return
+
+      const touch = event.touches[0]
+      startX = touch.clientX
+      startY = touch.clientY
+      startScrollLeft = scroller.scrollLeft
+      lock = null
+      suppressClickRef.current = false
+    }
+
+    const onTouchMove = (event: TouchEvent) => {
+      if (event.touches.length !== 1) return
+
+      const touch = event.touches[0]
+      const deltaX = touch.clientX - startX
+      const deltaY = touch.clientY - startY
+      const absX = Math.abs(deltaX)
+      const absY = Math.abs(deltaY)
+
+      if (!lock && (absX > 8 || absY > 8)) {
+        lock = absX > absY * 1.08 ? "x" : "y"
+      }
+
+      if (lock !== "x") return
+
+      event.preventDefault()
+      suppressClickRef.current = absX > 10
+      scroller.scrollLeft = startScrollLeft - deltaX
+    }
+
+    const onTouchEnd = () => {
+      lock = null
+      startX = 0
+      startY = 0
+      startScrollLeft = scroller.scrollLeft
+    }
+
+    scroller.addEventListener("touchstart", onTouchStart, { passive: true })
+    scroller.addEventListener("touchmove", onTouchMove, { passive: false })
+    scroller.addEventListener("touchend", onTouchEnd)
+    scroller.addEventListener("touchcancel", onTouchEnd)
+
+    return () => {
+      scroller.removeEventListener("touchstart", onTouchStart)
+      scroller.removeEventListener("touchmove", onTouchMove)
+      scroller.removeEventListener("touchend", onTouchEnd)
+      scroller.removeEventListener("touchcancel", onTouchEnd)
+    }
+  }, [isMobile])
 
   useEffect(() => {
     if (!activeProject) return
@@ -61,14 +125,21 @@ export function ProjectsCarousel({ projects }: ProjectsCarouselProps) {
       </div>
 
       <div
+        ref={scrollRef}
         {...(!isMobile ? { "data-lenis-prevent": true } : {})}
         className="project-scroll -mx-4 flex snap-x snap-mandatory gap-3.5 overflow-x-auto px-4 pb-9 sm:-mx-6 sm:gap-4 sm:px-6 sm:pb-10"
         style={{
-          touchAction: "pan-x pan-y",
+          touchAction: isMobile ? "pan-y pinch-zoom" : "pan-x pan-y",
           overscrollBehaviorX: "contain",
           WebkitOverflowScrolling: "touch",
         }}
         aria-label={copy.home.projectsTitle}
+        onClickCapture={(event) => {
+          if (!suppressClickRef.current) return
+          event.preventDefault()
+          event.stopPropagation()
+          suppressClickRef.current = false
+        }}
       >
         {projects.map((project, index) => (
           <ProjectCard
