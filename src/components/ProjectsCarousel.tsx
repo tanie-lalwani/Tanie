@@ -2,6 +2,7 @@ import { ProjectCard } from "./ProjectCard"
 import { useLanguage } from "../context/LanguageContext"
 import { useEffect, useState } from "react"
 import { createPortal } from "react-dom"
+import { useIsMobile } from "../hooks/useIsMobile"
 
 export interface Project {
   id?: string
@@ -27,6 +28,7 @@ const projectDetails = [
 
 export function ProjectsCarousel({ projects }: ProjectsCarouselProps) {
   const { copy } = useLanguage()
+  const isMobile = useIsMobile()
   const [activeProject, setActiveProject] = useState<Project | null>(null)
   const detailTitleId = activeProject?.id ? `${activeProject.id}-detail-title` : "project-detail-title"
 
@@ -64,8 +66,9 @@ export function ProjectsCarousel({ projects }: ProjectsCarouselProps) {
       </div>
 
       <div
-        data-lenis-prevent
+        {...(!isMobile ? { "data-lenis-prevent": true } : {})}
         className="project-scroll -mx-4 flex snap-x snap-mandatory gap-3.5 overflow-x-auto px-4 pb-9 sm:-mx-6 sm:gap-4 sm:px-6 sm:pb-10"
+        style={isMobile ? { touchAction: "pan-y" } as React.CSSProperties : undefined}
         aria-label={copy.home.projectsTitle}
       >
         {projects.map((project, index) => (
