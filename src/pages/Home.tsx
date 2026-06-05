@@ -408,7 +408,10 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
                   {copy.home.aboutParagraphsMobile.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
                 </section>
               ) : null}
-              <div data-lenis-prevent className={`about-scroll max-h-[calc(78svh-13rem)] space-y-3.5 pr-3 text-[13px] font-medium leading-7 tracking-normal text-slate-200/54 sm:max-h-[calc(76vh-12rem)] sm:text-[13.5px] ${aboutExpanded ? "overflow-y-auto" : "overflow-hidden"}`}>
+              <div
+                {...(!isMobile ? { "data-lenis-prevent": true } : {})}
+                className={`about-scroll ${isMobile ? "max-h-none overflow-visible" : "max-h-[calc(78svh-13rem)] sm:max-h-[calc(76vh-12rem)]"} space-y-3.5 pr-3 text-[13px] font-medium leading-7 tracking-normal text-slate-200/54 sm:text-[13.5px] ${!isMobile && aboutExpanded ? "overflow-y-auto" : (!isMobile ? "overflow-hidden" : "")}`}
+              >
                 {aboutParagraphs.map((paragraph) => (
                   <p key={paragraph} dangerouslySetInnerHTML={{ __html: paragraph }} />
                 ))}
