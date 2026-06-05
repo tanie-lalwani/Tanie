@@ -27,11 +27,36 @@ export function ProjectsCarousel({ projects }: ProjectsCarouselProps) {
   const scrollRef = useRef<HTMLDivElement | null>(null)
   const suppressClickRef = useRef(false)
   const [activeProject, setActiveProject] = useState<Project | null>(null)
+  const [canScrollLeft, setCanScrollLeft] = useState(false)
+  const [canScrollRight, setCanScrollRight] = useState(false)
   const detailTitleId = activeProject?.id ? `${activeProject.id}-detail-title` : "project-detail-title"
 
-  useEffect(() => {
-    if (!isMobile) return
+  const updateScrollControls = () => {
+    const scroller = scrollRef.current
+    if (!scroller) return
 
+    const maxScrollLeft = scroller.scrollWidth - scroller.clientWidth
+    setCanScrollLeft(scroller.scrollLeft > 4)
+    setCanScrollRight(scroller.scrollLeft < maxScrollLeft - 4)
+  }
+
+  const scrollProjects = (direction: -1 | 1) => {
+    const scroller = scrollRef.current
+    if (!scroller) return
+
+    const card = scroller.querySelector("article")
+    const cardWidth = card?.getBoundingClientRect().width ?? scroller.clientWidth * 0.8
+    const computedStyle = window.getComputedStyle(scroller)
+    const gapValue = computedStyle.columnGap || computedStyle.gap || "0"
+    const gap = Number.parseFloat(gapValue) || 0
+
+    scroller.scrollBy({
+      left: direction * (cardWidth + gap),
+      behavior: "smooth",
+    })
+  }
+
+  useEffect(() => {
     const scroller = scrollRef.current
     if (!scroller) return
 
@@ -78,16 +103,37 @@ export function ProjectsCarousel({ projects }: ProjectsCarouselProps) {
       startScrollLeft = scroller.scrollLeft
     }
 
-    scroller.addEventListener("touchstart", onTouchStart, { passive: true })
-    scroller.addEventListener("touchmove", onTouchMove, { passive: false })
-    scroller.addEventListener("touchend", onTouchEnd)
-    scroller.addEventListener("touchcancel", onTouchEnd)
+    if (isMobile) {
+      scroller.addEventListener("touchstart", onTouchStart, { passive: true })
+      scroller.addEventListener("touchmove", onTouchMove, { passive: false })
+      scroller.addEventListener("touchend", onTouchEnd)
+      scroller.addEventListener("touchcancel", onTouchEnd)
+    }
+
+    const onWheel = (event: WheelEvent) => {
+      const horizontalDelta = Math.abs(event.deltaX) > Math.abs(event.deltaY) * 0.8
+      if (!horizontalDelta) return
+
+      event.preventDefault()
+      event.stopPropagation()
+      scroller.scrollLeft += event.deltaX
+    }
+
+    scroller.addEventListener("wheel", onWheel, { passive: false })
+
+    updateScrollControls()
+    window.addEventListener("resize", updateScrollControls)
+    const resizeObserver = new ResizeObserver(updateScrollControls)
+    resizeObserver.observe(scroller)
 
     return () => {
       scroller.removeEventListener("touchstart", onTouchStart)
       scroller.removeEventListener("touchmove", onTouchMove)
       scroller.removeEventListener("touchend", onTouchEnd)
       scroller.removeEventListener("touchcancel", onTouchEnd)
+      scroller.removeEventListener("wheel", onWheel)
+      window.removeEventListener("resize", updateScrollControls)
+      resizeObserver.disconnect()
     }
   }, [isMobile])
 
@@ -124,35 +170,62 @@ export function ProjectsCarousel({ projects }: ProjectsCarouselProps) {
         </a>
       </div>
 
-      <div
-        ref={scrollRef}
-        {...(!isMobile ? { "data-lenis-prevent": true } : {})}
-        className="project-scroll -mx-4 flex snap-x snap-mandatory gap-3.5 overflow-x-auto px-4 pb-9 sm:-mx-6 sm:gap-4 sm:px-6 sm:pb-10"
-        style={{
-          touchAction: isMobile ? "pan-y pinch-zoom" : "pan-x pan-y",
-          overscrollBehaviorX: "contain",
-          WebkitOverflowScrolling: "touch",
-        }}
-        aria-label={copy.home.projectsTitle}
-        onClickCapture={(event) => {
-          if (!suppressClickRef.current) return
-          event.preventDefault()
-          event.stopPropagation()
-          suppressClickRef.current = false
-        }}
-      >
-        {projects.map((project, index) => (
-          <ProjectCard
-            key={`${project.site}-${index}`}
-            titleId={project.id}
-            title={project.title}
-            description={project.description}
-            openLabel={copy.projectCard.open}
-            previewVideo={project.previewVideo}
-            previewFit={project.previewFit}
-            onOpen={() => setActiveProject(project)}
-          />
-        ))}
+      <div className="relative">
+        <div
+          ref={scrollRef}
+          className="project-scroll -mx-4 flex snap-x snap-mandatory gap-3.5 overflow-x-auto px-4 pb-9 sm:-mx-6 sm:gap-4 sm:px-6 sm:pb-10"
+          style={{
+            touchAction: isMobile ? "pan-y pinch-zoom" : "pan-x pan-y",
+            overscrollBehaviorX: "contain",
+            WebkitOverflowScrolling: "touch",
+          }}
+          aria-label={copy.home.projectsTitle}
+          onScroll={updateScrollControls}
+          onClickCapture={(event) => {
+            if (!suppressClickRef.current) return
+            event.preventDefault()
+            event.stopPropagation()
+            suppressClickRef.current = false
+          }}
+        >
+          {projects.map((project, index) => (
+            <ProjectCard
+              key={`${project.site}-${index}`}
+              titleId={project.id}
+              title={project.title}
+              description={project.description}
+              openLabel={copy.projectCard.open}
+              previewVideo={project.previewVideo}
+              previewFit={project.previewFit}
+              onOpen={() => setActiveProject(project)}
+            />
+          ))}
+        </div>
+
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 hidden translate-y-1/2 md:flex md:justify-between md:px-1 lg:px-0">
+          <button
+            type="button"
+            aria-label="Scroll projects left"
+            onClick={() => scrollProjects(-1)}
+            disabled={!canScrollLeft}
+            className="pointer-events-auto flex h-12 w-12 items-center justify-center rounded-none border-0 bg-transparent p-0 text-slate-100/85 shadow-none transition hover:text-white focus:outline-none focus:ring-0 disabled:cursor-not-allowed disabled:opacity-35"
+          >
+            <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <polyline points="15 6 9 12 15 18" />
+            </svg>
+          </button>
+          <button
+            type="button"
+            aria-label="Scroll projects right"
+            onClick={() => scrollProjects(1)}
+            disabled={!canScrollRight}
+            className="pointer-events-auto flex h-12 w-12 items-center justify-center rounded-none border-0 bg-transparent p-0 text-slate-100/85 shadow-none transition hover:text-white focus:outline-none focus:ring-0 disabled:cursor-not-allowed disabled:opacity-35"
+          >
+            <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <polyline points="9 6 15 12 9 18" />
+            </svg>
+          </button>
+        </div>
       </div>
 
       <section className="sr-only" aria-label={copy.projectCard.projectDetails}>
