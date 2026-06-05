@@ -5,12 +5,13 @@ interface ProjectCardProps {
   titleId?: string
   title: string
   description: string
+  openLabel: string
   previewVideo?: string
   previewFit?: "cover" | "contain"
   onOpen: () => void
 }
 
-export function ProjectCard({ titleId, title, description, previewVideo, previewFit = "cover", onOpen }: ProjectCardProps) {
+export function ProjectCard({ titleId, title, description, openLabel, previewVideo, previewFit = "cover", onOpen }: ProjectCardProps) {
   const resolvedTitleId = titleId ?? `project-${title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "")}`
 
   const openFromKeyboard = (event: KeyboardEvent<HTMLElement>) => {
@@ -54,7 +55,7 @@ export function ProjectCard({ titleId, title, description, previewVideo, preview
                 </div>
                 <div className="absolute right-3 top-3 h-2 w-2 rounded-full bg-sky-100/62 shadow-[0_0_18px_rgba(186,230,253,0.55)]" />
                 <p className="absolute bottom-3 right-3 text-[9px] font-medium uppercase tracking-[0.22em] text-slate-100/48" style={{ fontFamily: "var(--font-ui)" }}>
-                  Open
+                  {openLabel}
                 </p>
               </div>
             </div>
