@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import Lenis, { type VirtualScrollData } from "lenis";
 import "lenis/dist/lenis.css";
 import { Route, Routes, useLocation } from "react-router-dom";
+import { Analytics } from "@vercel/analytics/react";
 import ExternalRedirect from "./components/ExternalRedirect";
 import Navbar from "./components/Navbar.tsx";
 import SiteFooter from "./components/SiteFooter";
@@ -207,6 +208,7 @@ export default function App() {
       <AnimatePresence>
         {isWaitingForOceanScene ? <AppLoadingVeil key="app-loading-veil" /> : null}
       </AnimatePresence>
+      <Analytics />
     </div>
   );
 }
