@@ -12,7 +12,7 @@ export default function SEOHead({
   title,
   description,
   canonicalUrl,
-  ogImage = "https://tanie.me/og.png",
+  ogImage = "https://tanie.me/og.webp",
   ogType = "website",
 }: SEOHeadProps) {
   useEffect(() => {
