@@ -190,7 +190,7 @@ function InterviewPrompt() {
         >
           <button
             type="button"
-            className="absolute right-2 top-1.5 text-sm leading-none text-slate-200/38 transition hover:text-slate-100/70"
+            className="absolute right-1.5 top-1.5 flex h-7 w-7 items-center justify-center rounded-full text-sm leading-none text-slate-200/60 transition hover:bg-white/10 hover:text-slate-100"
             aria-label="Dismiss interview prompt"
             onClick={() => {
               setShow(false)

@@ -377,7 +377,7 @@ export default function QnA() {
             <button
               type="button"
               onClick={() => setOpenTranscriptIndex(null)}
-              className="rounded-full px-2 py-1 text-lg leading-none text-black/42 transition hover:bg-black/6 hover:text-black/72"
+              className="flex h-8 w-8 items-center justify-center rounded-full text-lg leading-none text-black/55 transition hover:bg-black/8 hover:text-black"
               aria-label="Close transcript"
             >
               ×
@@ -440,7 +440,7 @@ export default function QnA() {
               <button
                 type="button"
                 onClick={closeBot}
-                className="rounded-full px-2 py-1 text-lg leading-none text-black/42 transition hover:bg-black/6 hover:text-black/72"
+                className="flex h-8 w-8 items-center justify-center rounded-full text-lg leading-none text-black/55 transition hover:bg-black/8 hover:text-black"
                 aria-label="Close bot panel"
               >
                 ×
