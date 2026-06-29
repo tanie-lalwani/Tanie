@@ -8,7 +8,7 @@
     "dev:client": "vite",
     "dev:api": "node server/gemini-proxy.mjs",
     "build": "tsc -b && vite build",
-    "postbuild": "react-snap",
+    "postbuild": "node -e \"if(!process.env.VERCEL){require('child_process').execSync('react-snap',{stdio:'inherit'})}\"",
     "lint": "eslint .",
     "preview": "vite preview"
   },
@@ -42,7 +42,7 @@
   },
   "reactSnap": {
     "source": "dist",
-    "port": 45679,
+    "port": 0,
     "include": [
       "/",
       "/qna",
