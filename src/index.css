@@ -227,7 +227,8 @@ a:hover, .text-link:hover {
 		letter-spacing: var(--hero-role-tracking, 0.08em);
 		text-transform: uppercase;
 		white-space: nowrap;
-		color: #8b9db4;
+		color: #2D466F;
+		opacity: 0.4;
 		left: var(--hero-role-inset, 0);
 	}
 
@@ -253,22 +254,17 @@ a:hover, .text-link:hover {
 		}
 	}
 
-/* Mobile-only: make the hero role text slightly darker for contrast */
-@media (max-width: 639px) {
-	.hero-title-role {
- 		color: #6b8396;
- 	}
-
-	/* Reduce heavy panel framing on narrow viewports (fixes unexpected device-frame border) */
-	.surface-panel,
-	.surface-panel-soft,
-	.project-visual,
-	.project-video,
-	.hero-title-lockup {
-		border: none !important;
-		box-shadow: none !important;
+	@media (max-width: 639px) {
+		/* Reduce heavy panel framing on narrow viewports (fixes unexpected device-frame border) */
+		.surface-panel,
+		.surface-panel-soft,
+		.project-visual,
+		.project-video,
+		.hero-title-lockup {
+			border: none !important;
+			box-shadow: none !important;
+		}
 	}
-}
 
 	.copy-clamp {
 		display: -webkit-box;
