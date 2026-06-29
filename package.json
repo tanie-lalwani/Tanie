@@ -33,17 +33,31 @@
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.4.24",
     "globals": "^16.5.0",
+    "react-snap": "^1.23.0",
+    "sharp": "^0.35.2",
     "tailwindcss": "^4.2.1",
     "typescript": "~5.9.3",
     "typescript-eslint": "^8.48.0",
     "vite": "^7.3.1"
-  ,
-    "react-snap": "^1.23.0"
   },
   "reactSnap": {
     "source": "dist",
-    "include": ["/", "/qna", "/qna/"],
-    "puppeteerArgs": ["--no-sandbox", "--disable-setuid-sandbox"],
+    "port": 45679,
+    "include": [
+      "/",
+      "/qna",
+      "/qna/"
+    ],
+    "puppeteerArgs": [
+      "--no-sandbox",
+      "--disable-setuid-sandbox"
+    ],
     "waitFor": 1000
+  },
+  "overrides": {
+    "rimraf": "^5.0.1",
+    "glob": "^10.3.10",
+    "mkdirp": "^3.0.1",
+    "inflight": "npm:lru-cache@^10.0.0"
   }
 }
