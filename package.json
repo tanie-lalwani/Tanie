@@ -43,7 +43,7 @@
   },
   "reactSnap": {
     "source": "dist",
-    "port": 0,
+    "port": 48921,
     "include": [
       "/",
       "/qna",

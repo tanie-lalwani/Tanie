@@ -21,7 +21,7 @@ export function ProjectCard({ titleId, title, description, openLabel, previewVid
   }
 
   return (
-    <motion.article
+    <motion.div
       aria-labelledby={resolvedTitleId}
       role="button"
       tabIndex={0}
@@ -71,6 +71,6 @@ export function ProjectCard({ titleId, title, description, openLabel, previewVid
           </div>
         </div>
       </div>
-    </motion.article>
+    </motion.div>
   )
 }
