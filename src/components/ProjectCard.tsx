@@ -64,7 +64,7 @@ export function ProjectCard({ titleId, title, description, openLabel, previewVid
               <h3 id={resolvedTitleId} className="text-[10px] font-medium leading-5 tracking-[0.16em] text-slate-100/66 sm:text-[11px]" style={{ fontFamily: "var(--font-ui)" }}>
                 {title}
               </h3>
-              <p className="copy-clamp mt-1 max-w-[58ch] text-[11px] font-medium leading-5 tracking-normal text-slate-200/52 sm:text-[12px]">
+              <p className="copy-clamp mt-1 max-w-[58ch] text-[11px] font-medium leading-5 tracking-normal text-slate-200/82 sm:text-[12px]">
                 {description}
               </p>
             </div>

@@ -367,14 +367,14 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
             </motion.h1>
 
             <motion.div
-              className="mt-[2.625rem] max-w-[35.5rem] translate-x-[4px] text-[1.06rem] font-normal leading-[1.12] tracking-normal text-[#314A70] sm:mt-[2.875rem] sm:text-[1.12rem]"
+              className="mt-[2.625rem] max-w-[35.5rem] translate-x-[4px] text-[1.06rem] font-normal leading-[1.12] tracking-normal text-[#2D466F] sm:mt-[2.875rem] sm:text-[1.12rem]"
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.45, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
             >
               <p className="block">{heroLead}</p>
               {heroSubline ? (
-                <p className="mt-0 block w-full text-[0.94em] leading-[1.12] tracking-[0.05em] text-[#314A70CC]">
+                <p className="mt-0 block w-full text-[0.94em] leading-[1.12] tracking-[0.05em] text-[#2D466FCC]">
                   {heroSubline}
                 </p>
               ) : null}
