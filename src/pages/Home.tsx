@@ -8,6 +8,7 @@ import GlobalOceanBackdrop from "../experience/Scenes/GlobalOceanBackdrop"
 import { useIsMobile } from "../hooks/useIsMobile"
 import type { TimePhase } from "../experience/timePhase"
 import { useLanguage } from "../context/LanguageContext"
+import SEOHead from "../components/SEOHead"
 
 const ABOUT_SKILLS = [
   "React",
@@ -298,6 +299,11 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
 
   return (
     <main className="relative">
+      <SEOHead
+        title="Tanie Lalwani | Creative and Full Stack Developer"
+        description="Tanie Lalwani is a creative & full-stack developer building interactive websites and web experiences."
+        canonicalUrl="https://tanie.me/"
+      />
       <GlobalOceanBackdrop
         phase={phase}
         onReady={onSceneReady}

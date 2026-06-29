@@ -42,7 +42,7 @@
   },
   "reactSnap": {
     "source": "dist",
-    "include": ["/", "/qna"],
+    "include": ["/", "/qna", "/qna/"],
     "puppeteerArgs": ["--no-sandbox", "--disable-setuid-sandbox"],
     "waitFor": 1000
   }

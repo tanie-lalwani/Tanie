@@ -187,6 +187,14 @@ export default function App() {
                   </PageShell>
                 }
               />
+              <Route
+                path="/qna/"
+                element={
+                  <PageShell>
+                    <QnA />
+                  </PageShell>
+                }
+              />
               <Route path="/github" element={<ExternalRedirect to="https://github.com/tanie-lalwani" label="GitHub"/>} />
               <Route path="/instagram" element={<ExternalRedirect to="https://instagram.com/tanie.mp3" label="Instagram"/>} />
               <Route path="/linkedin" element={<ExternalRedirect to="https://www.linkedin.com/in/tanie-lalwani/" label="LinkedIn"/>} />

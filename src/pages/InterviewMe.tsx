@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, type FormEvent } from "react"
 import { Link, useLocation } from "react-router-dom"
 import { useLanguage } from "../context/LanguageContext"
 import { getBotReply } from "../lib/botAssistant"
+import SEOHead from "../components/SEOHead"
 
 // Removed unused: totalQuestions, smoothEase, ScrollDirection
 
@@ -161,8 +162,31 @@ export default function QnA() {
     setIsBotOpen(false)
   }
 
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": questions.map((q, idx) => ({
+      "@type": "Question",
+      "name": q,
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": transcriptReplies[idx] || ""
+      }
+    }))
+  };
+
   return (
     <main className="site-shell bg-[#dff4ff] text-black">
+      <SEOHead
+        title="Frontend Interview Questions & Answers | Tanie Lalwani"
+        description="A curated collection of frontend, React, JavaScript, performance optimization, and web development interview questions and answers by Tanie Lalwani."
+        canonicalUrl="https://tanie.me/qna/"
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
+      <h1 className="sr-only">Frontend & React Interview Questions & Answers — Tanie Lalwani</h1>
       <nav className="fixed left-0 top-0 z-40 hidden h-full w-20 flex-col items-center justify-between border-r border-black/10 bg-[#dff4ff]/88 py-8 backdrop-blur-xl md:flex">
         <div className="flex flex-col items-center gap-8">
           <Link
