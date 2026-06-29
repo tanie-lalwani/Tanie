@@ -8,7 +8,7 @@
     "dev:client": "vite",
     "dev:api": "node server/gemini-proxy.mjs",
     "build": "tsc -b && vite build",
-    "postbuild": "node -e \"if(!process.env.VERCEL){try{require('child_process').execSync('react-snap',{stdio:'inherit'})}catch(e){console.warn('react-snap pre-renderer skipped.')}}\"",
+    "postbuild": "node scripts/prerender.mjs",
     "lint": "eslint .",
     "preview": "vite preview"
   },
@@ -34,6 +34,7 @@
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.4.24",
     "globals": "^16.5.0",
+    "puppeteer": "^25.2.1",
     "react-snap": "^1.23.0",
     "sharp": "^0.35.2",
     "tailwindcss": "^4.2.1",

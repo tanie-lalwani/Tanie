@@ -14,7 +14,7 @@ import { useInspectProtection } from "./hooks/useInspectProtection";
 import { useLanguage } from "./context/LanguageContext";
 
 const loadHome = () => import("./pages/Home");
-const loadQnA = () => import("./pages/InterviewMe.tsx");
+const loadQnA = () => import("./pages/QnA.tsx");
 
 const Home = lazy(loadHome);
 const QnA = lazy(loadQnA);
