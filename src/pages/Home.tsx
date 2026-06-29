@@ -302,7 +302,7 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
       <SEOHead
         title="Tanie Lalwani | Creative and Full Stack Developer"
         description="Tanie Lalwani is a creative full-stack developer specializing in React.js, TypeScript, Three.js, and Next.js. Explore her portfolio, projects, experience, and interactive web development."
-        canonicalUrl="https://tanie.me/"
+        canonicalUrl="https://tanie.me"
       />
       <GlobalOceanBackdrop
         phase={phase}

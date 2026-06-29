@@ -348,7 +348,7 @@ export default function AmbientOceanAudio({ placement = "floating" }: AmbientOce
           isEnabled
             ? "border-cyan-100/20 bg-slate-950/72 text-sky-50 hover:border-cyan-100/34 hover:bg-slate-950/86"
             : "border-white/10 bg-slate-950/52 text-sky-100/72 hover:border-white/18 hover:bg-slate-950/70"
-        } ${isInline ? "h-8 w-8 justify-center p-0" : "gap-3 px-4 py-2.5"}`}
+        } ${isInline ? "h-10 w-10 justify-center p-0" : "gap-3 px-4 py-2.5"}`}
         onClick={() => {
           if (isMobile) {
             // Mobile: show a small transient notice instead of enabling audio
@@ -386,18 +386,18 @@ export default function AmbientOceanAudio({ placement = "floating" }: AmbientOce
         aria-label={isEnabled ? "Disable ocean ambient audio" : "Enable ocean ambient audio"}
       >
         <span
-          className={`relative flex items-center justify-center rounded-full border transition ${isEnabled ? "border-cyan-100/18 bg-cyan-100/8" : "border-white/8 bg-white/5"} ${isInline ? "h-8 w-8" : "h-10 w-10"}`}
+          className={`relative flex items-center justify-center rounded-full border transition ${isEnabled ? "border-cyan-100/18 bg-cyan-100/8" : "border-white/8 bg-white/5"} h-10 w-10`}
           aria-hidden="true"
         >
           <span className={`absolute inset-0 rounded-full ${isEnabled ? "animate-pulse bg-cyan-200/10" : "bg-transparent"}`} />
           {isEnabled ? (
-            <svg viewBox="0 0 24 24" className={`relative ${isInline ? "h-4.5 w-4.5" : "h-5 w-5"} ${isEnabled ? "text-cyan-100" : "text-sky-100/70"}`} fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+            <svg viewBox="0 0 24 24" className={`relative h-5 w-5 ${isEnabled ? "text-cyan-100" : "text-sky-100/70"}`} fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
               <path d="M11 5.5 6.2 9.1H3.5v5.8h2.7L11 18.5z" />
               <path d="M15.2 8.1a3.9 3.9 0 0 1 0 7.8" />
               <path d="M17.9 5.4a7.6 7.6 0 0 1 0 13.2" opacity="0.85" />
             </svg>
           ) : (
-            <svg viewBox="0 0 24 24" className={`relative ${isInline ? "h-4.5 w-4.5" : "h-5 w-5"} ${isEnabled ? "text-cyan-100" : "text-sky-100/70"}`} fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+            <svg viewBox="0 0 24 24" className={`relative h-5 w-5 ${isEnabled ? "text-cyan-100" : "text-sky-100/70"}`} fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
               <path d="M11 5.5 6.2 9.1H3.5v5.8h2.7L11 18.5z" />
               <path d="M14.8 9.2a4.1 4.1 0 0 1 .8 2.5c0 .9-.3 1.8-.8 2.5" />
               <path d="m17.5 6.5 4 4m0-4-4 4" />
