@@ -3,7 +3,7 @@ import type { FormEvent } from "react"
 import { useState } from "react"
 import { useLanguage } from "../context/LanguageContext"
 
-const FORM_ENDPOINT = import.meta.env.VITE_FORMSPREE_ENDPOINT ?? ""
+const FORM_ENDPOINT = import.meta.env.VITE_FORMSPREE_ENDPOINT || "https://formspree.io/f/mpqypqka"
 
 interface ContactFields {
   name: string
@@ -69,12 +69,18 @@ export function ContactForm() {
           setSubmitStatus("idle")
         }, 4000)
       } else {
+        const errorData = await response.json().catch(() => null)
+        const detailedError =
+          errorData?.errors?.map((err: { field?: string; message: string }) => `${err.field ? `${err.field}: ` : ""}${err.message}`).join(", ") ||
+          errorData?.error ||
+          `Server returned status ${response.status} (${response.statusText || "Error"})`
         setSubmitStatus("error")
-        setSubmitMessage(copy.contact.error)
+        setSubmitMessage(`Failed to send message: ${detailedError}`)
       }
-    } catch {
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : copy.contact.networkError
       setSubmitStatus("error")
-      setSubmitMessage(copy.contact.networkError)
+      setSubmitMessage(`Network error: ${errorMessage}`)
     } finally {
       setIsSubmitting(false)
     }
@@ -89,53 +95,66 @@ export function ContactForm() {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.45, ease: "easeOut" }}
     >
-      <label className="flex flex-col gap-1.5">
-        <span className={labelClass}>{copy.contact.labels.name}</span>
+      {/* Honeypot field to trap spam bots */}
+      <input type="text" name="_gotcha" tabIndex={-1} autoComplete="off" className="hidden" aria-hidden="true" />
+      <label htmlFor="contact-name" className="flex flex-col gap-1.5">
+        <span className={labelClass} style={{ fontFamily: "var(--font-ui)" }}>{copy.contact.labels.name}</span>
         <input
+          id="contact-name"
           type="text"
           name="name"
+          autoComplete="name"
           required
           value={fields.name}
           onChange={(event) => updateField("name", event.target.value)}
           className={inputClass}
+          style={{ fontFamily: "var(--font-ui)" }}
           placeholder={copy.contact.placeholders.name}
         />
       </label>
 
-      <label className="flex flex-col gap-1.5">
-        <span className={labelClass}>{copy.contact.labels.email}</span>
+      <label htmlFor="contact-email" className="flex flex-col gap-1.5">
+        <span className={labelClass} style={{ fontFamily: "var(--font-ui)" }}>{copy.contact.labels.email}</span>
         <input
+          id="contact-email"
           type="email"
           name="email"
-          required
+          autoComplete="email"
           value={fields.email}
           onChange={(event) => updateField("email", event.target.value)}
           className={inputClass}
+          style={{ fontFamily: "var(--font-ui)" }}
           placeholder={copy.contact.placeholders.email}
         />
       </label>
 
-      <label className="flex flex-col gap-1.5">
-        <span className={labelClass}>{copy.contact.labels.subject}</span>
+      <label htmlFor="contact-subject" className="flex flex-col gap-1.5">
+        <span className={labelClass} style={{ fontFamily: "var(--font-ui)" }}>{copy.contact.labels.subject}</span>
         <input
+          id="contact-subject"
           type="text"
           name="subject"
+          autoComplete="off"
           value={fields.subject}
           onChange={(event) => updateField("subject", event.target.value)}
           className={inputClass}
+          style={{ fontFamily: "var(--font-ui)" }}
           placeholder={copy.contact.placeholders.subject}
         />
       </label>
 
-      <label className="flex flex-col gap-1.5">
-        <span className={labelClass}>{copy.contact.labels.message}</span>
+      <label htmlFor="contact-message" className="flex flex-col gap-1.5">
+        <span className={labelClass} style={{ fontFamily: "var(--font-ui)" }}>{copy.contact.labels.message}</span>
         <textarea
+          id="contact-message"
           name="message"
+          autoComplete="off"
           required
           value={fields.message}
           onChange={(event) => updateField("message", event.target.value)}
           rows={3}
           className={`${inputClass} min-h-20 resize-y`}
+          style={{ fontFamily: "var(--font-ui)" }}
           placeholder={copy.contact.placeholders.message}
         />
       </label>
@@ -143,7 +162,8 @@ export function ContactForm() {
       <button
         type="submit"
         disabled={isSubmitting}
-        className="inline-flex h-8 items-center justify-center rounded-full border border-[#274472]/15 px-3.5 text-[9px] font-medium tracking-[0.04em] text-[#274472] transition hover:bg-white/5"
+        className="inline-flex h-8 items-center justify-center rounded-full border border-sky-300/30 px-4 text-[10px] font-medium tracking-[0.12em] text-sky-100 transition hover:bg-white/10"
+        style={{ fontFamily: "var(--font-ui)" }}
       >
         {isSubmitting ? copy.contact.sending : copy.contact.button}
       </button>
@@ -153,6 +173,7 @@ export function ContactForm() {
           className={`text-[12.5px] font-medium leading-6 tracking-normal sm:text-[13px] ${
             submitStatus === "success" ? "text-emerald-300" : "text-rose-300"
           }`}
+          style={{ fontFamily: "var(--font-ui)" }}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
         >
