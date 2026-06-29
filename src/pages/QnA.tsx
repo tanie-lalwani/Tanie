@@ -303,7 +303,7 @@ export default function QnA() {
                     <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_0%,transparent_54%,rgba(0,0,0,0.84)_100%)]" />
                     <div className="absolute inset-0 grid place-items-center">
                       <div
-                        className="rounded-full border border-white/14 bg-white/8 px-4 py-2 text-[11px] font-bold uppercase tracking-[0.18em] text-sky-50 backdrop-blur"
+                        className="rounded-full border border-white/14 bg-white/8 px-4 py-2 text-xs sm:text-[11px] font-bold uppercase tracking-[0.18em] text-sky-50 backdrop-blur"
                       >
                         {copy.qna.videoPlaceholder}
                       </div>
@@ -404,7 +404,7 @@ export default function QnA() {
           <button
             type="button"
             onClick={openBot}
-            className="max-w-56 rounded-[1.35rem] border border-black/10 bg-white/86 px-4 py-2 text-left text-[11px] font-semibold tracking-[0.14em] text-black shadow-[0_18px_45px_rgba(15,23,42,0.16)] backdrop-blur-xl transition hover:-translate-y-0.5 hover:bg-white"
+            className="max-w-56 rounded-[1.35rem] border border-black/10 bg-white/86 px-4 py-2 text-left text-xs sm:text-[11px] font-semibold tracking-[0.14em] text-black shadow-[0_18px_45px_rgba(15,23,42,0.16)] backdrop-blur-xl transition hover:-translate-y-0.5 hover:bg-white"
             aria-label="Open bot message"
           >
             hi im tanie
@@ -414,13 +414,13 @@ export default function QnA() {
         <button
           type="button"
           onClick={isBotOpen ? closeBot : openBot}
-          className="relative flex h-14 w-14 items-center justify-center rounded-full border border-black/10 bg-white/70 text-[10px] font-semibold tracking-[0.12em] text-black/58 shadow-[0_18px_45px_rgba(15,23,42,0.16)] backdrop-blur-xl transition hover:-translate-y-0.5 hover:bg-white/90"
+          className="relative flex h-14 w-14 items-center justify-center rounded-full border border-black/10 bg-white/70 text-xs sm:text-[10px] font-semibold tracking-[0.12em] text-black/58 shadow-[0_18px_45px_rgba(15,23,42,0.16)] backdrop-blur-xl transition hover:-translate-y-0.5 hover:bg-white/90"
           aria-expanded={isBotOpen}
           aria-controls="qna-bot-panel"
           aria-label={isBotOpen ? "Close bot panel" : "Open bot panel"}
         >
           <span className="absolute inset-[0.45rem] rounded-full border border-black/8 bg-[radial-gradient(circle_at_30%_30%,rgba(255,255,255,0.95),rgba(255,255,255,0.55)_48%,rgba(208,244,255,0.9)_100%)]" />
-          <span className="relative z-10 text-[9px] uppercase tracking-[0.22em] text-black/55">bot</span>
+          <span className="relative z-10 text-xs sm:text-[9px] uppercase tracking-[0.22em] text-black/55">bot</span>
           {botNotificationVisible ? (
             <span className="absolute -right-0.5 -top-0.5 h-3.5 w-3.5 rounded-full border-2 border-[#dff4ff] bg-[#ff6b6b] shadow-[0_0_0_6px_rgba(255,107,107,0.14)]" aria-hidden="true" />
           ) : null}
@@ -434,7 +434,7 @@ export default function QnA() {
           >
             <div className="flex items-center justify-between border-b border-black/6 px-4 py-3">
               <div>
-                <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-black/38">Assistant</p>
+                <p className="text-xs sm:text-[10px] font-semibold uppercase tracking-[0.22em] text-black/38">Assistant</p>
                 <p className="text-sm font-semibold text-black">Tanie bot</p>
               </div>
               <button
@@ -484,7 +484,7 @@ export default function QnA() {
                 <button
                   type="submit"
                   disabled={isReplying}
-                  className="rounded-full bg-[#0f172a] px-3.5 py-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-white transition hover:bg-[#1e293b] disabled:cursor-not-allowed disabled:opacity-60"
+                  className="rounded-full bg-[#0f172a] px-3.5 py-2 text-xs sm:text-[11px] font-semibold uppercase tracking-[0.16em] text-white transition hover:bg-[#1e293b] disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   {isReplying ? "..." : "Send"}
                 </button>

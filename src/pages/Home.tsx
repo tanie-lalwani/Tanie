@@ -398,7 +398,7 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
             />
 
           <div className="relative mb-5 flex flex-wrap items-center justify-end gap-2.5 border-b border-white/7 pb-2.5 sm:mb-6">
-            <a href="https://www.google.com/search?q=who+is+Tanie+Lalwani" target="_blank" rel="noopener noreferrer" className="inline-flex text-[11.5px] font-medium uppercase tracking-[0.2em] !text-sky-200/90 no-underline transition hover:!text-sky-100/80">
+            <a href="https://www.google.com/search?q=who+is+Tanie+Lalwani" target="_blank" rel="noopener noreferrer" className="inline-flex h-10 items-center text-[11.5px] font-medium uppercase tracking-[0.2em] !text-sky-200/90 no-underline transition hover:!text-sky-100/80">
               {copy.home.knowMore}
             </a>
           </div>
@@ -444,7 +444,7 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
 
               <div className="mt-5 overflow-hidden sm:mt-6 [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
                 <div
-                  className="skills-marquee-track flex w-max items-center whitespace-nowrap text-[11px] font-medium tracking-[0.18em] text-sky-200/90 sm:text-[12px]"
+                  className="skills-marquee-track flex w-max items-center whitespace-nowrap text-xs font-medium tracking-[0.18em] text-sky-200/90"
                   style={{ fontFamily: "var(--font-ui)" }}
                   aria-label="Skills and capabilities"
                 >

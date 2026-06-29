@@ -386,7 +386,7 @@ export default function AmbientOceanAudio({ placement = "floating" }: AmbientOce
         aria-label={isEnabled ? "Disable ocean ambient audio" : "Enable ocean ambient audio"}
       >
         <span
-          className={`relative flex items-center justify-center rounded-full border transition ${isEnabled ? "border-cyan-100/18 bg-cyan-100/8" : "border-white/8 bg-white/5"} h-10 w-10`}
+          className={`relative flex items-center justify-center rounded-full border transition ${isEnabled ? "border-cyan-100/18 bg-cyan-100/8" : "border-white/8 bg-white/5"} h-10 w-10 sm:h-12 sm:w-12`}
           aria-hidden="true"
         >
           <span className={`absolute inset-0 rounded-full ${isEnabled ? "animate-pulse bg-cyan-200/10" : "bg-transparent"}`} />
@@ -406,7 +406,7 @@ export default function AmbientOceanAudio({ placement = "floating" }: AmbientOce
         </span>
 
         <span className={`flex min-w-0 flex-col leading-tight ${isInline ? "hidden" : ""}`}>
-          <span className="text-[11px] font-semibold uppercase tracking-[0.24em] text-sky-100/46">Ambient</span>
+          <span className="text-xs sm:text-[11px] font-semibold uppercase tracking-[0.24em] text-sky-100/46">Ambient</span>
           <span className="text-sm font-medium text-white/88">
             {isEnabled
               ? (isUnderwaterSectionActive

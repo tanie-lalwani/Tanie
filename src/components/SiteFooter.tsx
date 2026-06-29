@@ -66,19 +66,19 @@ export default function SiteFooter({ className = "" }: SiteFooterProps) {
             <p className="mt-1 text-[0.86rem] font-medium text-sky-100/88">{copy.footer.role}</p>
             
           </div>
-          <div className="grid grid-cols-2 gap-2 gap-x-4 sm:gap-x-6">
+          <div className="grid grid-cols-2 gap-x-4 gap-y-4 sm:gap-x-6 sm:gap-y-5">
             {SOCIALS.map((social) => (
               <a
                 key={social.label}
                 href={social.href}
                 target={social.href.startsWith("mailto") ? undefined : "_blank"}
                 rel={social.href.startsWith("mailto") ? undefined : "me noopener noreferrer"}
-                className="group flex items-center gap-2.5 !no-underline text-sky-100 transition hover:!no-underline hover:text-white"
+                className="group flex h-12 items-center gap-2.5 sm:gap-3 !no-underline text-sky-100 transition hover:!no-underline hover:text-white"
               >
-                <span className="flex h-7 w-7 items-center justify-center rounded-md border border-white/14 bg-white/8 text-sky-100 transition group-hover:border-sky-200/40 group-hover:bg-white/14">
+                <span className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-md border border-white/14 bg-white/8 text-sky-100 transition group-hover:border-sky-200/40 group-hover:bg-white/14">
                   {social.icon}
                 </span>
-                <span className="text-[12.5px] font-medium tracking-wide leading-none">{social.label}</span>
+                <span className="text-[12.5px] sm:text-sm font-medium tracking-wide leading-none">{social.label}</span>
               </a>
             ))}
           </div>

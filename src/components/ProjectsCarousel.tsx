@@ -164,7 +164,7 @@ export function ProjectsCarousel({ projects }: ProjectsCarouselProps) {
           href="https://tanie.me/projects"
           target="_blank"
           rel="noopener noreferrer"
-          className="ml-auto inline-flex text-[11.5px] font-medium uppercase tracking-[0.2em] !text-sky-200/90 underline transition hover:!text-sky-100/80"
+          className="ml-auto inline-flex h-10 items-center text-[11.5px] font-medium uppercase tracking-[0.2em] !text-sky-200/90 underline transition hover:!text-sky-100/80"
         >
           {copy.projectCard.allProjects}
         </a>
@@ -208,9 +208,9 @@ export function ProjectsCarousel({ projects }: ProjectsCarouselProps) {
             aria-label="Scroll projects left"
             onClick={() => scrollProjects(-1)}
             disabled={!canScrollLeft}
-            className="pointer-events-auto flex h-10 w-10 items-center justify-center rounded-none border-0 bg-transparent p-0 text-slate-100/85 shadow-none transition hover:text-white focus:outline-none focus:ring-0 disabled:cursor-not-allowed disabled:opacity-35 sm:h-12 sm:w-12"
+            className="pointer-events-auto flex h-12 w-12 items-center justify-center rounded-none border-0 bg-transparent p-0 text-slate-100/85 shadow-none transition hover:text-white focus:outline-none focus:ring-0 disabled:cursor-not-allowed disabled:opacity-35"
           >
-            <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="sm:h-8.5 sm:w-8.5">
+            <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="h-7.5 w-7.5 sm:h-8.5 sm:w-8.5">
               <polyline points="15 6 9 12 15 18" />
             </svg>
           </button>
@@ -219,9 +219,9 @@ export function ProjectsCarousel({ projects }: ProjectsCarouselProps) {
             aria-label="Scroll projects right"
             onClick={() => scrollProjects(1)}
             disabled={!canScrollRight}
-            className="pointer-events-auto flex h-10 w-10 items-center justify-center rounded-none border-0 bg-transparent p-0 text-slate-100/85 shadow-none transition hover:text-white focus:outline-none focus:ring-0 disabled:cursor-not-allowed disabled:opacity-35 sm:h-12 sm:w-12"
+            className="pointer-events-auto flex h-12 w-12 items-center justify-center rounded-none border-0 bg-transparent p-0 text-slate-100/85 shadow-none transition hover:text-white focus:outline-none focus:ring-0 disabled:cursor-not-allowed disabled:opacity-35"
           >
-            <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="sm:h-8.5 sm:w-8.5">
+            <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="h-7.5 w-7.5 sm:h-8.5 sm:w-8.5">
               <polyline points="9 6 15 12 9 18" />
             </svg>
           </button>
@@ -276,7 +276,7 @@ export function ProjectsCarousel({ projects }: ProjectsCarouselProps) {
               </div>
 
               <div className="max-w-[60ch] lg:pl-4">
-                <p className="text-[10px] font-medium uppercase tracking-[0.24em] text-sky-200/44">
+                <p className="text-xs sm:text-[10px] font-medium uppercase tracking-[0.24em] text-sky-200/44">
                   {copy.home.projectsTitle}
                 </p>
                 <h2
@@ -296,7 +296,7 @@ export function ProjectsCarousel({ projects }: ProjectsCarouselProps) {
                     href={activeProject.site}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center rounded-full border border-sky-200/20 bg-sky-100/10 px-4 py-2 text-[10px] font-medium tracking-[0.18em] no-underline text-slate-100/78 transition hover:bg-sky-100/16 hover:text-white focus:outline-none focus:ring-2 focus:ring-sky-300/24"
+                    className="inline-flex items-center justify-center rounded-full border border-sky-200/20 bg-sky-100/10 px-4 py-2 text-xs sm:text-[10px] font-medium tracking-[0.18em] no-underline text-slate-100/78 transition hover:bg-sky-100/16 hover:text-white focus:outline-none focus:ring-2 focus:ring-sky-300/24"
                   >
                     {copy.projectCard.view}
                   </a>
@@ -305,7 +305,7 @@ export function ProjectsCarousel({ projects }: ProjectsCarouselProps) {
                       href={activeProject.code}
                       target="_blank"
                       rel="me noopener noreferrer"
-                      className="inline-flex items-center justify-center rounded-full border border-white/8 bg-white/5 px-4 py-2 text-[10px] font-medium tracking-[0.18em] no-underline text-slate-100/64 transition hover:bg-white/8 hover:text-white focus:outline-none focus:ring-2 focus:ring-sky-300/22"
+                      className="inline-flex items-center justify-center rounded-full border border-white/8 bg-white/5 px-4 py-2 text-xs sm:text-[10px] font-medium tracking-[0.18em] no-underline text-slate-100/64 transition hover:bg-white/8 hover:text-white focus:outline-none focus:ring-2 focus:ring-sky-300/22"
                     >
                       {copy.projectCard.code}
                     </a>

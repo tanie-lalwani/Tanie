@@ -54,17 +54,17 @@ export function ProjectCard({ titleId, title, description, openLabel, previewVid
                   <div className="project-video-progress h-full rounded-full bg-sky-100/42" />
                 </div>
                 <div className="absolute right-3 top-3 h-2 w-2 rounded-full bg-sky-100/62 shadow-[0_0_18px_rgba(186,230,253,0.55)]" />
-                <p className="absolute bottom-3 right-3 text-[9px] font-medium uppercase tracking-[0.22em] text-slate-100/48" style={{ fontFamily: "var(--font-ui)" }}>
+                <p className="absolute bottom-3 right-3 text-xs sm:text-[9px] font-medium uppercase tracking-[0.22em] text-slate-100/48" style={{ fontFamily: "var(--font-ui)" }}>
                   {openLabel}
                 </p>
               </div>
             </div>
 
             <div className="relative px-1 pt-0.5">
-              <h3 id={resolvedTitleId} className="text-[10px] font-medium leading-5 tracking-[0.16em] text-slate-100/66 sm:text-[11px]" style={{ fontFamily: "var(--font-ui)" }}>
+              <h3 id={resolvedTitleId} className="text-xs sm:text-[10px] font-medium leading-5 tracking-[0.16em] text-slate-100/66" style={{ fontFamily: "var(--font-ui)" }}>
                 {title}
               </h3>
-              <p className="copy-clamp mt-1 max-w-[58ch] text-[11px] font-medium leading-5 tracking-normal text-slate-200/82 sm:text-[12px]">
+              <p className="copy-clamp mt-1 max-w-[58ch] text-xs sm:text-[11px] font-medium leading-5 tracking-normal text-slate-200/82">
                 {description}
               </p>
             </div>

@@ -19,8 +19,8 @@ const initialFields: ContactFields = {
   message: "",
 }
 
-const labelClass = "text-[11.5px] font-medium tracking-[0.16em] text-slate-200/88 sm:text-[12.5px]"
-const inputClass = "rounded-xl border border-white/20 bg-white/10 px-4 py-2 text-[12.5px] font-medium leading-6 tracking-normal text-slate-100 outline-none transition placeholder:text-[12.5px] placeholder:tracking-normal placeholder:text-slate-200/68 focus:border-sky-300/60 focus:ring-2 focus:ring-sky-300/30 sm:text-[13px]"
+const labelClass = "text-xs font-medium tracking-[0.16em] text-slate-200/88 sm:text-[13px]"
+const inputClass = "w-full rounded-xl border border-white/20 bg-white/10 px-4 h-12 sm:h-14 text-xs sm:text-sm font-medium leading-normal text-slate-100 outline-none transition placeholder:text-xs sm:placeholder:text-sm placeholder:tracking-normal placeholder:text-slate-200/68 focus:border-sky-300/60 focus:ring-2 focus:ring-sky-300/30"
 
 export function ContactForm() {
   const { copy } = useLanguage()
@@ -97,8 +97,8 @@ export function ContactForm() {
     >
       {/* Honeypot field to trap spam bots */}
       <input type="text" name="_gotcha" tabIndex={-1} autoComplete="off" className="hidden" aria-hidden="true" />
-      <label htmlFor="contact-name" className="flex flex-col gap-1.5">
-        <span className={labelClass} style={{ fontFamily: "var(--font-ui)" }}>{copy.contact.labels.name}</span>
+      <div className="flex flex-col gap-1.5">
+        <label htmlFor="contact-name" className={labelClass} style={{ fontFamily: "var(--font-ui)" }}>{copy.contact.labels.name}</label>
         <input
           id="contact-name"
           type="text"
@@ -111,10 +111,10 @@ export function ContactForm() {
           style={{ fontFamily: "var(--font-ui)" }}
           placeholder={copy.contact.placeholders.name}
         />
-      </label>
+      </div>
 
-      <label htmlFor="contact-email" className="flex flex-col gap-1.5">
-        <span className={labelClass} style={{ fontFamily: "var(--font-ui)" }}>{copy.contact.labels.email}</span>
+      <div className="flex flex-col gap-1.5">
+        <label htmlFor="contact-email" className={labelClass} style={{ fontFamily: "var(--font-ui)" }}>{copy.contact.labels.email}</label>
         <input
           id="contact-email"
           type="email"
@@ -126,10 +126,10 @@ export function ContactForm() {
           style={{ fontFamily: "var(--font-ui)" }}
           placeholder={copy.contact.placeholders.email}
         />
-      </label>
+      </div>
 
-      <label htmlFor="contact-subject" className="flex flex-col gap-1.5">
-        <span className={labelClass} style={{ fontFamily: "var(--font-ui)" }}>{copy.contact.labels.subject}</span>
+      <div className="flex flex-col gap-1.5">
+        <label htmlFor="contact-subject" className={labelClass} style={{ fontFamily: "var(--font-ui)" }}>{copy.contact.labels.subject}</label>
         <input
           id="contact-subject"
           type="text"
@@ -141,10 +141,10 @@ export function ContactForm() {
           style={{ fontFamily: "var(--font-ui)" }}
           placeholder={copy.contact.placeholders.subject}
         />
-      </label>
+      </div>
 
-      <label htmlFor="contact-message" className="flex flex-col gap-1.5">
-        <span className={labelClass} style={{ fontFamily: "var(--font-ui)" }}>{copy.contact.labels.message}</span>
+      <div className="flex flex-col gap-1.5">
+        <label htmlFor="contact-message" className={labelClass} style={{ fontFamily: "var(--font-ui)" }}>{copy.contact.labels.message}</label>
         <textarea
           id="contact-message"
           name="message"
@@ -153,16 +153,16 @@ export function ContactForm() {
           value={fields.message}
           onChange={(event) => updateField("message", event.target.value)}
           rows={3}
-          className={`${inputClass} min-h-20 resize-y`}
+          className="w-full rounded-xl border border-white/20 bg-white/10 px-4 py-3 sm:py-4 min-h-24 sm:min-h-32 text-xs sm:text-sm font-medium leading-normal text-slate-100 outline-none transition placeholder:text-xs sm:placeholder:text-sm placeholder:tracking-normal placeholder:text-slate-200/68 focus:border-sky-300/60 focus:ring-2 focus:ring-sky-300/30 resize-y"
           style={{ fontFamily: "var(--font-ui)" }}
           placeholder={copy.contact.placeholders.message}
         />
-      </label>
+      </div>
 
       <button
         type="submit"
         disabled={isSubmitting}
-        className="inline-flex h-8 items-center justify-center rounded-full border border-sky-300/30 px-4 text-[10px] font-medium tracking-[0.12em] text-sky-100 transition hover:bg-white/10"
+        className="inline-flex h-12 w-full sm:w-auto items-center justify-center rounded-full border border-sky-300/30 px-6 sm:px-8 text-xs sm:text-sm font-medium tracking-[0.12em] text-sky-100 transition hover:bg-white/10"
         style={{ fontFamily: "var(--font-ui)" }}
       >
         {isSubmitting ? copy.contact.sending : copy.contact.button}
