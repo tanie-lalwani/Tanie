@@ -10,7 +10,7 @@ export default function PageHeader({ eyebrow, title, description, className = ""
   return (
     <header className={`mb-8 max-w-3xl ${className}`}>
       {eyebrow ? (
-        <p className="inline-flex text-[11.5px] font-medium uppercase tracking-[0.2em] text-sky-200/55" style={{ fontFamily: "var(--font-ui)" }}>
+        <p className="inline-flex text-[11.5px] font-medium uppercase tracking-[0.2em] text-sky-200/90" style={{ fontFamily: "var(--font-ui)" }}>
           {eyebrow}
         </p>
       ) : null}

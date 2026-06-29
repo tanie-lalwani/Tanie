@@ -19,8 +19,8 @@ const initialFields: ContactFields = {
   message: "",
 }
 
-const labelClass = "text-[11.5px] font-medium tracking-[0.16em] text-slate-200/50 sm:text-[12.5px]"
-const inputClass = "rounded-xl border border-white/14 bg-white/10 px-4 py-2 text-[12.5px] font-medium leading-6 tracking-normal text-slate-100/76 outline-none transition placeholder:text-[12.5px] placeholder:tracking-normal placeholder:text-slate-200/38 focus:border-sky-300/46 focus:ring-2 focus:ring-sky-300/20 sm:text-[13px]"
+const labelClass = "text-[11.5px] font-medium tracking-[0.16em] text-slate-200/88 sm:text-[12.5px]"
+const inputClass = "rounded-xl border border-white/20 bg-white/10 px-4 py-2 text-[12.5px] font-medium leading-6 tracking-normal text-slate-100 outline-none transition placeholder:text-[12.5px] placeholder:tracking-normal placeholder:text-slate-200/68 focus:border-sky-300/60 focus:ring-2 focus:ring-sky-300/30 sm:text-[13px]"
 
 export function ContactForm() {
   const { copy } = useLanguage()

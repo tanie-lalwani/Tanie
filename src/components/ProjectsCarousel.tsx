@@ -164,7 +164,7 @@ export function ProjectsCarousel({ projects }: ProjectsCarouselProps) {
           href="https://tanie.me/projects"
           target="_blank"
           rel="noopener noreferrer"
-          className="ml-auto inline-flex text-[11.5px] font-medium uppercase tracking-[0.2em] !text-sky-200/55 underline transition hover:!text-sky-100/80"
+          className="ml-auto inline-flex text-[11.5px] font-medium uppercase tracking-[0.2em] !text-sky-200/90 underline transition hover:!text-sky-100/80"
         >
           {copy.projectCard.allProjects}
         </a>
@@ -234,8 +234,8 @@ export function ProjectsCarousel({ projects }: ProjectsCarouselProps) {
             <h3>{project.title}</h3>
             <p>{project.description}</p>
             {(project.details ?? copy.projectCard.defaultProjectDetails).map((detail) => <p key={detail}>{detail}</p>)}
-            <a href={project.site}>{copy.projectCard.view}</a>
-            {project.code ? <a href={project.code}>{copy.projectCard.code}</a> : null}
+            <a href={project.site} tabIndex={-1}>{copy.projectCard.view}</a>
+            {project.code ? <a href={project.code} tabIndex={-1}>{copy.projectCard.code}</a> : null}
           </article>
         ))}
       </section>

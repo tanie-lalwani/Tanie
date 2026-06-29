@@ -63,7 +63,7 @@ export default function SiteFooter({ className = "" }: SiteFooterProps) {
             <p className="text-sm font-semibold tracking-normal text-white/92" style={{ fontFamily: "var(--font-display)" }}>
               Tanie Lalwani
             </p>
-            <p className="mt-1 text-[0.86rem] font-medium text-sky-100/58">{copy.footer.role}</p>
+            <p className="mt-1 text-[0.86rem] font-medium text-sky-100/88">{copy.footer.role}</p>
             
           </div>
           <div className="grid grid-cols-2 gap-2 gap-x-4 sm:gap-x-6">
@@ -73,9 +73,9 @@ export default function SiteFooter({ className = "" }: SiteFooterProps) {
                 href={social.href}
                 target={social.href.startsWith("mailto") ? undefined : "_blank"}
                 rel={social.href.startsWith("mailto") ? undefined : "me noopener noreferrer"}
-                className="group flex items-center gap-2.5 !no-underline text-sky-50/62 transition hover:!no-underline hover:text-white"
+                className="group flex items-center gap-2.5 !no-underline text-sky-100 transition hover:!no-underline hover:text-white"
               >
-                <span className="flex h-7 w-7 items-center justify-center rounded-md border border-white/8 bg-white/5 text-sky-50/72 transition group-hover:border-sky-200/28 group-hover:bg-white/10">
+                <span className="flex h-7 w-7 items-center justify-center rounded-md border border-white/14 bg-white/8 text-sky-100 transition group-hover:border-sky-200/40 group-hover:bg-white/14">
                   {social.icon}
                 </span>
                 <span className="text-[12.5px] font-medium tracking-wide leading-none">{social.label}</span>
@@ -84,7 +84,7 @@ export default function SiteFooter({ className = "" }: SiteFooterProps) {
           </div>
         </div>
         <div className="mt-5 h-px w-full bg-linear-to-r from-transparent via-white/8 to-transparent" />
-        <p className="mt-3 text-center text-[11.5px] text-sky-100/42">
+        <p className="mt-3 text-center text-[11.5px] text-sky-100/82">
         {copy.footer.copyright}{" "}
         </p>
       </div>
