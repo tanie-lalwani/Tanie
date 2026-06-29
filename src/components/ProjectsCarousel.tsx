@@ -202,15 +202,15 @@ export function ProjectsCarousel({ projects }: ProjectsCarouselProps) {
           ))}
         </div>
 
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 hidden translate-y-1/2 md:flex md:justify-between md:px-1 lg:px-0">
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 flex translate-y-1/2 justify-between px-1 lg:px-0">
           <button
             type="button"
             aria-label="Scroll projects left"
             onClick={() => scrollProjects(-1)}
             disabled={!canScrollLeft}
-            className="pointer-events-auto flex h-12 w-12 items-center justify-center rounded-none border-0 bg-transparent p-0 text-slate-100/85 shadow-none transition hover:text-white focus:outline-none focus:ring-0 disabled:cursor-not-allowed disabled:opacity-35"
+            className="pointer-events-auto flex h-10 w-10 items-center justify-center rounded-none border-0 bg-transparent p-0 text-slate-100/85 shadow-none transition hover:text-white focus:outline-none focus:ring-0 disabled:cursor-not-allowed disabled:opacity-35 sm:h-12 sm:w-12"
           >
-            <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="sm:h-8.5 sm:w-8.5">
               <polyline points="15 6 9 12 15 18" />
             </svg>
           </button>
@@ -219,9 +219,9 @@ export function ProjectsCarousel({ projects }: ProjectsCarouselProps) {
             aria-label="Scroll projects right"
             onClick={() => scrollProjects(1)}
             disabled={!canScrollRight}
-            className="pointer-events-auto flex h-12 w-12 items-center justify-center rounded-none border-0 bg-transparent p-0 text-slate-100/85 shadow-none transition hover:text-white focus:outline-none focus:ring-0 disabled:cursor-not-allowed disabled:opacity-35"
+            className="pointer-events-auto flex h-10 w-10 items-center justify-center rounded-none border-0 bg-transparent p-0 text-slate-100/85 shadow-none transition hover:text-white focus:outline-none focus:ring-0 disabled:cursor-not-allowed disabled:opacity-35 sm:h-12 sm:w-12"
           >
-            <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="sm:h-8.5 sm:w-8.5">
               <polyline points="9 6 15 12 9 18" />
             </svg>
           </button>
