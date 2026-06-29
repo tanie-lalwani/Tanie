@@ -5,6 +5,10 @@ import react from '@vitejs/plugin-react'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [tailwindcss(), react()],
+  esbuild: {
+    drop: ['console', 'debugger'],
+    legalComments: 'none',
+  },
   server: {
     proxy: {
       "/api": {
@@ -15,6 +19,9 @@ export default defineConfig({
   },
   build: {
     target: 'es2017',
+    sourcemap: false,
+    minify: 'esbuild',
+    cssMinify: true,
     rollupOptions: {
       output: {
         manualChunks(id) {

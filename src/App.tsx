@@ -10,6 +10,7 @@ import SiteFooter from "./components/SiteFooter";
 import { type TimePhase } from "./experience/timePhase";
 import { useCursorTrail } from "./hooks/useCursorTrail";
 import { useClickRipple } from "./hooks/useClickRipple";
+import { useInspectProtection } from "./hooks/useInspectProtection";
 import { useLanguage } from "./context/LanguageContext";
 
 const loadHome = () => import("./pages/Home");
@@ -139,9 +140,10 @@ export default function App() {
     setReadyOceanLocationKey(location.key);
   }, [location.key]);
 
-  // Animation hooks
+  // Animation & security hooks
   useCursorTrail()
   useClickRipple()
+  useInspectProtection()
 
 
   const showNavbar = location.pathname === "/"
