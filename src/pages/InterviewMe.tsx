@@ -179,7 +179,7 @@ export default function QnA() {
     <main className="site-shell bg-[#dff4ff] text-black">
       <SEOHead
         title="Frontend Interview Questions & Answers | Tanie Lalwani"
-        description="Tanie is a full-stack developer. She specializes in React.js, TypeScript, Three.js, and Next.js. Know more about her through these QnA's."
+        description="Interview questions by Tanie Lalwani covering About herself, React.js, TypeScript, Next.js, Three.js, interactive web development, and full-stack engineering"
         canonicalUrl="https://tanie.me/qna/"
       />
       <script
