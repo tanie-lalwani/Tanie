@@ -1,4 +1,17 @@
 {
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.tanie.me"
+        }
+      ],
+      "destination": "https://tanie.me/:path*",
+      "permanent": true
+    }
+  ],
   "rewrites": [
     { "source": "/(.*)", "destination": "/index.html" }
   ]
