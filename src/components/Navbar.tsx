@@ -96,13 +96,13 @@ export default function Navbar({ phase }: NavbarProps) {
     <header className="w-full">
       <nav
         aria-label="Primary navigation"
-        className="flex h-12 sm:h-16 w-full items-center justify-between border-b px-3 backdrop-blur-xl transition-colors duration-200 sm:px-5"
+        className="flex h-12 w-full items-center justify-between border-b px-3 backdrop-blur-xl transition-colors duration-200 sm:px-5"
         style={{ backgroundColor: 'transparent', borderColor: navBorder }}
       >
 
         <a
           href="/"
-          className="relative inline-flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center !no-underline"
+          className="relative inline-flex h-10 w-10 items-center justify-center !no-underline"
           data-phase={phase}
           aria-label="Home"
         >
@@ -116,7 +116,7 @@ export default function Navbar({ phase }: NavbarProps) {
               {link.href.startsWith('#') ? (
                 <a
                   href={link.href}
-                  className="inline-flex h-10 sm:h-12 items-center justify-center rounded-full border px-5 sm:px-6 text-sm sm:text-base font-medium !no-underline transition focus:outline-none focus:ring-2 focus:ring-sky-300"
+                  className="inline-flex h-10 items-center justify-center rounded-full border px-5 text-sm font-medium !no-underline transition focus:outline-none focus:ring-2 focus:ring-sky-300"
                   style={linkStyle()}
                 >
                   {copy.nav.qna}
@@ -124,7 +124,7 @@ export default function Navbar({ phase }: NavbarProps) {
               ) : (
                 <NavLink
                   to={link.href}
-                  className="inline-flex h-10 sm:h-12 items-center justify-center rounded-full border px-5 sm:px-6 text-sm sm:text-base font-medium !no-underline transition focus:outline-none focus:ring-2 focus:ring-sky-300"
+                  className="inline-flex h-10 items-center justify-center rounded-full border px-5 text-sm font-medium !no-underline transition focus:outline-none focus:ring-2 focus:ring-sky-300"
                   style={({ isActive }) => linkStyle(isActive)}
                 >
                   {copy.nav.qna}
@@ -136,7 +136,7 @@ export default function Navbar({ phase }: NavbarProps) {
           <li ref={languageMenuRef} className="relative">
             <button
               type="button"
-              className="inline-flex h-10 sm:h-12 items-center justify-center rounded-full border px-5 sm:px-6 text-sm sm:text-base font-medium !no-underline transition focus:outline-none focus:ring-2 focus:ring-sky-300"
+              className="inline-flex h-10 items-center justify-center rounded-full border px-5 text-sm font-medium !no-underline transition focus:outline-none focus:ring-2 focus:ring-sky-300"
               style={linkStyle(isLanguageMenuOpen)}
               aria-haspopup="menu"
               aria-expanded={isLanguageMenuOpen}
