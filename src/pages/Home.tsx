@@ -122,7 +122,7 @@ function OpenToCarousel() {
   }, [services.length])
 
   return (
-    <div className="ml-auto flex w-full items-center justify-end gap-2 overflow-hidden text-[11.5px] font-medium uppercase tracking-[0.2em] text-sky-200/90 sm:w-auto sm:gap-3" aria-labelledby="open-to-heading">
+    <div className="hidden md:flex ml-auto items-center justify-end gap-3 text-[11.5px] font-medium uppercase tracking-[0.2em] text-sky-200/90" aria-labelledby="open-to-heading">
       <span className="hidden md:inline shrink-0 pr-3 text-right">{copy.home.openToLabel}</span>
       <h3 id="open-to-heading" className="sr-only">{copy.home.openToAriaLabel}</h3>
       <ul className="sr-only">
@@ -481,7 +481,7 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
       <section
         id="contact"
         aria-labelledby="contact-title"
-        className="relative isolate flex min-h-[78svh] w-full items-start overflow-hidden px-4 pb-7 pt-6 sm:min-h-[76vh] sm:px-6 sm:pb-9 sm:pt-9"
+        className="relative isolate flex min-h-[78svh] w-full items-start overflow-hidden px-4 pb-16 pt-6 sm:min-h-[76vh] sm:px-6 sm:pb-24 sm:pt-9"
       >
         <div className="site-container relative z-10">
           <PageHeader

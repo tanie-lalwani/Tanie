@@ -55,30 +55,27 @@ export default function SiteFooter({ className = "" }: SiteFooterProps) {
   const { copy } = useLanguage()
 
   return (
-    <footer className={`relative z-20 w-full border-t border-white/8 bg-slate-950/56 px-4 py-5 backdrop-blur-xl sm:px-6 sm:py-6 ${className}`}>
+    <footer className={`relative z-20 w-full border-t border-white/8 bg-slate-950/56 px-4 pt-12 pb-6 backdrop-blur-xl sm:px-6 sm:pt-16 sm:pb-8 ${className}`}>
       <div className="site-container">
         <div className="h-px w-full bg-linear-to-r from-transparent via-white/10 to-transparent" />
-        <div className="mt-5 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        <div className="mt-5 flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <p className="text-sm font-semibold tracking-normal text-white/92" style={{ fontFamily: "var(--font-display)" }}>
               Tanie Lalwani
             </p>
             <p className="mt-1 text-[0.86rem] font-medium text-sky-100/88">{copy.footer.role}</p>
-            
           </div>
-          <div className="grid grid-cols-2 gap-x-4 gap-y-4 sm:gap-x-6 sm:gap-y-5">
+          <div className="flex flex-wrap items-center gap-3">
             {SOCIALS.map((social) => (
               <a
                 key={social.label}
                 href={social.href}
                 target={social.href.startsWith("mailto") ? undefined : "_blank"}
                 rel={social.href.startsWith("mailto") ? undefined : "me noopener noreferrer"}
-                className="group flex h-12 items-center gap-2.5 sm:gap-3 !no-underline text-sky-100 transition hover:!no-underline hover:text-white"
+                className="flex h-11 w-11 items-center justify-center rounded-xl border border-white/14 bg-white/8 text-sky-100 transition hover:border-sky-200/40 hover:bg-white/14 focus:outline-none focus:ring-2 focus:ring-sky-300"
+                aria-label={social.label}
               >
-                <span className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-md border border-white/14 bg-white/8 text-sky-100 transition group-hover:border-sky-200/40 group-hover:bg-white/14">
-                  {social.icon}
-                </span>
-                <span className="text-[12.5px] sm:text-sm font-medium tracking-wide leading-none">{social.label}</span>
+                {social.icon}
               </a>
             ))}
           </div>

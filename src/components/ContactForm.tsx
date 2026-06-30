@@ -128,7 +128,7 @@ export function ContactForm() {
         />
       </div>
 
-      <div className="flex flex-col gap-1.5">
+      <div className="hidden md:flex flex-col gap-1.5">
         <label htmlFor="contact-subject" className={labelClass} style={{ fontFamily: "var(--font-ui)" }}>{copy.contact.labels.subject}</label>
         <input
           id="contact-subject"
