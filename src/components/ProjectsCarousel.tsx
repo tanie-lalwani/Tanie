@@ -29,7 +29,33 @@ export function ProjectsCarousel({ projects }: ProjectsCarouselProps) {
   const [activeProject, setActiveProject] = useState<Project | null>(null)
   const [canScrollLeft, setCanScrollLeft] = useState(false)
   const [canScrollRight, setCanScrollRight] = useState(false)
+  const [shareStatus, setShareStatus] = useState<"idle" | "copied">("idle")
   const detailTitleId = activeProject?.id ? `${activeProject.id}-detail-title` : "project-detail-title"
+
+  const handleShare = async (project: Project) => {
+    const shareUrl = project.site || window.location.href
+    const shareText = `Check out ${project.title}: ${project.description}`
+
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: project.title,
+          text: shareText,
+          url: shareUrl,
+        })
+      } catch (err) {
+        console.warn("Share failed:", err)
+      }
+    } else {
+      try {
+        await navigator.clipboard.writeText(shareUrl)
+        setShareStatus("copied")
+        setTimeout(() => setShareStatus("idle"), 2000)
+      } catch (err) {
+        console.error("Failed to copy URL:", err)
+      }
+    }
+  }
 
   const updateScrollControls = () => {
     const scroller = scrollRef.current
@@ -310,6 +336,20 @@ export function ProjectsCarousel({ projects }: ProjectsCarouselProps) {
                       {copy.projectCard.code}
                     </a>
                   ) : null}
+                  <button
+                    type="button"
+                    onClick={() => handleShare(activeProject)}
+                    className="inline-flex items-center justify-center rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs sm:text-[10px] font-medium tracking-[0.18em] text-slate-100/64 transition hover:bg-white/8 hover:text-white focus:outline-none focus:ring-2 focus:ring-sky-300/22 cursor-pointer"
+                  >
+                    <svg
+                      viewBox="0 0 24 24"
+                      className="mr-1.5 h-3.5 w-3.5 fill-current text-sky-200/70"
+                      aria-hidden="true"
+                    >
+                      <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z" />
+                    </svg>
+                    {shareStatus === "copied" ? "Copied!" : copy.qna.share}
+                  </button>
                 </div>
               </div>
             </article>
