@@ -99,6 +99,7 @@ function NotFoundPage() {
 
 export default function App() {
   const location = useLocation();
+  const isHome = location.pathname === "/" || location.pathname === "/contact";
   const [readyOceanLocationKey, setReadyOceanLocationKey] = useState<string | null>(null);
   const timePhase: TimePhase = "default"
 
@@ -108,7 +109,7 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    if (location.pathname !== "/") return;
+    if (!isHome) return;
     const isMobileViewport = window.matchMedia("(max-width: 767px)").matches;
 
     const lenis = new Lenis({
@@ -134,7 +135,7 @@ export default function App() {
     return () => {
       lenis.destroy();
     };
-  }, [location.pathname]);
+  }, [isHome]);
 
   const handleOceanSceneReady = useCallback(() => {
     setReadyOceanLocationKey(location.key);
@@ -146,8 +147,8 @@ export default function App() {
   useInspectProtection()
 
 
-  const showNavbar = location.pathname === "/"
-  const isWaitingForOceanScene = location.pathname === "/" && readyOceanLocationKey !== location.key;
+  const showNavbar = isHome
+  const isWaitingForOceanScene = isHome && readyOceanLocationKey !== location.key;
 
   return (
   <div
@@ -175,6 +176,15 @@ export default function App() {
             <Routes location={location} key={location.pathname}>
               <Route
                 path="/"
+                element={
+                  <PageShell>
+                    <Home phase={timePhase} onSceneReady={handleOceanSceneReady} />
+                    <SiteFooter />
+                  </PageShell>
+                }
+              />
+              <Route
+                path="/contact"
                 element={
                   <PageShell>
                     <Home phase={timePhase} onSceneReady={handleOceanSceneReady} />

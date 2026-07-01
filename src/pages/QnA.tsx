@@ -201,7 +201,7 @@ export default function QnA() {
             </svg>
             <span className="text-xs font-semibold">{copy.qna.homeLabel}</span>
           </Link>
-          <Link to="/#contact" className="flex w-14 flex-col items-center rounded-[1.35rem] px-2 py-3 !text-black transition-all hover:bg-white/55 hover:!text-black" title={copy.qna.contactLabel}>
+          <Link to="/contact" className="flex w-14 flex-col items-center rounded-[1.35rem] px-2 py-3 !text-black transition-all hover:bg-white/55 hover:!text-black" title={copy.qna.contactLabel}>
             <svg width="28" height="28" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.7" className="mb-1">
               <path strokeLinecap="round" strokeLinejoin="round" d="M21 10.5V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2h7.5" />
               <path strokeLinecap="round" strokeLinejoin="round" d="M21 10.5l-9 6.5-9-6.5" />

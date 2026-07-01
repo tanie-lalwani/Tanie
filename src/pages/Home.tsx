@@ -1,6 +1,6 @@
 import { AnimatePresence, motion, useScroll, useTransform } from "framer-motion"
 import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties } from "react"
-import { Link } from "react-router-dom"
+import { Link, useLocation } from "react-router-dom"
 import PageHeader from "../components/PageHeader"
 import { ProjectsCarousel, type Project as CarouselProject } from "../components/ProjectsCarousel"
 import { ContactForm } from "../components/ContactForm"
@@ -211,7 +211,63 @@ function InterviewPrompt() {
 
 export default function Home({ phase, onSceneReady }: HomeProps) {
   const { copy } = useLanguage()
+  const location = useLocation()
   const [aboutExpanded, _setAboutExpanded] = useState(true)
+
+  const isScrollingToContact = useRef(location.pathname === "/contact")
+
+  useEffect(() => {
+    if (location.pathname === "/contact") {
+      isScrollingToContact.current = true
+      const contactSection = document.getElementById("contact")
+      if (contactSection) {
+        const timer = setTimeout(() => {
+          contactSection.scrollIntoView({ behavior: "smooth" })
+        }, 150)
+
+        const resetTimer = setTimeout(() => {
+          isScrollingToContact.current = false
+        }, 2000)
+
+        return () => {
+          clearTimeout(timer)
+          clearTimeout(resetTimer)
+        }
+      }
+    }
+  }, [location.pathname])
+
+  useEffect(() => {
+    const contactSection = document.getElementById("contact")
+    if (!contactSection) return
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            isScrollingToContact.current = false
+            if (window.location.pathname !== "/contact") {
+              window.history.replaceState(null, "", "/contact")
+            }
+          } else {
+            if (!isScrollingToContact.current) {
+              if (window.location.pathname === "/contact") {
+                window.history.replaceState(null, "", "/")
+              }
+            }
+          }
+        })
+      },
+      {
+        threshold: 0.2,
+      }
+    )
+
+    observer.observe(contactSection)
+    return () => {
+      observer.disconnect()
+    }
+  }, [])
   const isMobile = useIsMobile()
   const { scrollYProgress } = useScroll()
   const worldDiveProgress = useTransform(scrollYProgress, [0, isMobile ? 0.22 : 0.34], [0, 1])

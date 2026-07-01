@@ -48,6 +48,7 @@
     "port": 48921,
     "include": [
       "/",
+      "/contact",
       "/qna",
       "/qna/"
     ],
