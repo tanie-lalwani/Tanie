@@ -58,7 +58,7 @@ function normalizeToken(value) {
 }
 
 function isContactQuery(query) {
-    return /\b(contact|email|mail|reach|hire|linkedin|github|instagram|x|twitter|social)\b/i.test(query)
+    return /\b(contact|email|mail|reach|hire|linkedin|github|instagram|x|twitter|social|google|gdev)\b/i.test(query)
 }
 
 function isGreetingQuery(query) {
@@ -74,7 +74,7 @@ function isSupportedServiceQuery(query) {
 }
 
 function buildContactReply() {
-    return "Use the contact form or email tanielalwani@gmail.com. Links: GitHub github.com/tanie-lalwani, LinkedIn linkedin.com/in/tanie-lalwani/, Instagram instagram.com/tanie.mp3, X x.com/tanielalwani."
+    return "Use the contact form or email tanielalwani@gmail.com. Links: GitHub github.com/tanie-lalwani, LinkedIn linkedin.com/in/tanie-lalwani/, Instagram instagram.com/tanie.mp3, X x.com/tanielalwani, Google Developers me.developers.google.com/u/tanielalwani."
 }
 
 function findRelevantKnowledge(query, knowledge, limit = 6) {

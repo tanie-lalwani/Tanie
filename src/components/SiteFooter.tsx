@@ -36,6 +36,15 @@ const SOCIALS: SocialItem[] = [
     ),
   },
   {
+    label: "Google Developers",
+    href: "https://me.developers.google.com/u/tanielalwani",
+    icon: (
+      <svg viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5" aria-hidden="true">
+        <path d="M12.24 10.285V14.4h6.887c-.648 2.41-2.519 4.113-5.136 4.113-3.41 0-6.173-2.763-6.173-6.173 0-3.41 2.763-6.173 6.173-6.173 1.485 0 2.842.525 3.9 1.4l3.017-3.017C17.848 1.54 15.22.75 12.24.75 5.866.75.7 5.916.7 12.29s5.166 11.54 11.54 11.54c6.643 0 11.055-4.665 11.055-11.26 0-.756-.067-1.485-.195-2.285H12.24z" />
+      </svg>
+    ),
+  },
+  {
     label: "X",
     href: "https://x.com/tanielalwani",
     icon: (

@@ -212,6 +212,8 @@ export default function App() {
               <Route path="/instagram" element={<ExternalRedirect to="https://instagram.com/tanie.mp3" label="Instagram"/>} />
               <Route path="/linkedin" element={<ExternalRedirect to="https://www.linkedin.com/in/tanie-lalwani/" label="LinkedIn"/>} />
               <Route path="/x" element={<ExternalRedirect to="https://x.com/tanielalwani" label="X (Twitter)"/>} />
+              <Route path="/gdev" element={<ExternalRedirect to="https://me.developers.google.com/u/tanielalwani" label="Google Developers"/>} />
+              <Route path="/google" element={<ExternalRedirect to="https://me.developers.google.com/u/tanielalwani" label="Google Developers"/>} />
               <Route path="*" element={<NotFoundPage />} />
             </Routes>
           </AnimatePresence>
