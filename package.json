@@ -9,6 +9,7 @@
     "dev:api": "node server/gemini-proxy.mjs",
     "build": "tsc -b && vite build",
     "postbuild": "node scripts/prerender.mjs",
+    "submit-indexnow": "node scripts/submit-indexnow.mjs",
     "lint": "eslint .",
     "preview": "vite preview"
   },
