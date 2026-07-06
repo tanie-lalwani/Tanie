@@ -9,6 +9,7 @@ import { useIsMobile } from "../hooks/useIsMobile"
 import type { TimePhase } from "../experience/timePhase"
 import { useLanguage } from "../context/LanguageContext"
 import SEOHead from "../components/SEOHead"
+import { loadCustomProjects } from "../lib/projectStorage"
 
 const ABOUT_SKILLS = [
   "React",
@@ -318,11 +319,16 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
     }
   }, [heroRoleLead, heroRoleTail, heroTitleLead, heroTitleTail])
 
+  const [customProjects, setCustomProjects] = useState<CarouselProject[]>([])
+
   useEffect(() => {
     document.title = "Tanie Lalwani | Creative and Full Stack Developer"
+    loadCustomProjects().then((loaded) => {
+      setCustomProjects(loaded)
+    })
   }, [])
 
-  const projects: CarouselProject[] = Array.from({ length: 7 }, (_, index) => {
+  const defaultProjects: CarouselProject[] = Array.from({ length: 7 }, (_, index) => {
     const base = copy.home.projects[index % copy.home.projects.length]
     const project = { ...base, previewVideo: "/project-preview.mp4", detailVideo: "/project-preview.mp4" }
     const projectId = PROJECT_TITLE_IDS[index] ?? `project-${base.title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "")}-${index + 1}`
@@ -352,6 +358,8 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
       code: project.code ? `${project.code}?instance=${uniqueIndex}` : undefined,
     }
   })
+
+  const projects = [...customProjects, ...defaultProjects]
 
   return (
     <main className="relative">

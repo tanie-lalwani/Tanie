@@ -15,9 +15,11 @@ import { useLanguage } from "./context/LanguageContext";
 
 const loadHome = () => import("./pages/Home");
 const loadQnA = () => import("./pages/QnA.tsx");
+const loadAdmin = () => import("./pages/Admin.tsx");
 
 const Home = lazy(loadHome);
 const QnA = lazy(loadQnA);
+const Admin = lazy(loadAdmin);
 
 function AppLoadingVeil() {
   const { copy } = useLanguage()
@@ -205,6 +207,14 @@ export default function App() {
                 element={
                   <PageShell>
                     <QnA />
+                  </PageShell>
+                }
+              />
+              <Route
+                path="/admin"
+                element={
+                  <PageShell>
+                    <Admin />
                   </PageShell>
                 }
               />

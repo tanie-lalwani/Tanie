@@ -3,6 +3,7 @@ import { useLanguage } from "../context/LanguageContext"
 import { useEffect, useRef, useState } from "react"
 import { createPortal } from "react-dom"
 import { useIsMobile } from "../hooks/useIsMobile"
+import { getVimeoEmbedUrl } from "../lib/projectStorage"
 
 export interface Project {
   id?: string
@@ -289,15 +290,25 @@ export function ProjectsCarousel({ projects }: ProjectsCarouselProps) {
 
             <article className="grid min-h-[calc(100vh-2rem)] content-center gap-5 py-12 sm:min-h-[calc(100vh-3rem)] sm:py-14 lg:grid-cols-[minmax(0,1.28fr)_minmax(18rem,0.72fr)] lg:items-center">
               <div className="project-visual project-video relative aspect-video w-full overflow-hidden rounded-2xl border border-white/8 shadow-[0_26px_75px_rgba(2,8,23,0.35)]">
-                <video
-                  src={activeProject.detailVideo ?? "/project-preview.mp4"}
-                  className="absolute inset-0 h-full w-full object-cover opacity-72"
-                  autoPlay
-                  muted
-                  loop
-                  playsInline
-                  aria-hidden="true"
-                />
+                {activeProject.detailVideo && getVimeoEmbedUrl(activeProject.detailVideo) ? (
+                  <iframe
+                    src={getVimeoEmbedUrl(activeProject.detailVideo) || ""}
+                    className="absolute inset-0 h-full w-full opacity-72 border-0"
+                    allow="autoplay; fullscreen; picture-in-picture"
+                    allowFullScreen
+                    title={activeProject.title}
+                  />
+                ) : (
+                  <video
+                    src={activeProject.detailVideo ?? "/project-preview.mp4"}
+                    className="absolute inset-0 h-full w-full object-cover opacity-72"
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    aria-hidden="true"
+                  />
+                )}
                 <div className="absolute inset-0 bg-linear-to-t from-slate-950/56 via-slate-950/12 to-transparent" />
               </div>
 

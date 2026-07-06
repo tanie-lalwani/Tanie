@@ -4,6 +4,7 @@ const data = {
   keyLocation: "https://tanie.me/60819618108e413da5dc129be54eb8f3.txt",
   urlList: [
     "https://tanie.me/",
+    "https://tanie.me/contact",
     "https://tanie.me/qna"
   ]
 };
