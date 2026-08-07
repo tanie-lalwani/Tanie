@@ -1,5 +1,5 @@
 import { AnimatePresence, motion, useScroll, useTransform } from "framer-motion"
-import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties } from "react"
+import { useEffect, useLayoutEffect, useRef, useState, useMemo, type CSSProperties } from "react"
 import { Link, useLocation } from "react-router-dom"
 import PageHeader from "../components/PageHeader"
 import { ProjectsCarousel, type Project as CarouselProject } from "../components/ProjectsCarousel"
@@ -30,15 +30,7 @@ const ABOUT_SKILLS = [
 
 const ABOUT_SKILLS_LINE = ABOUT_SKILLS.join(" · ")
 
-const PROJECT_TITLE_IDS = [
-  "project-viziona-webapp-1",
-  "project-finchpay-checkout-1",
-  "project-leafline-marketing-1",
-  "project-innomedia-agency-1",
-  "project-lunara-portfolio-1",
-  "project-neuroflow-dashboard-1",
-  "project-pixelhaven-storefront-1",
-]
+
 
 type HeroRoleMetrics = {
   tracking?: number
@@ -211,7 +203,7 @@ function InterviewPrompt() {
 }
 
 export default function Home({ phase, onSceneReady }: HomeProps) {
-  const { copy } = useLanguage()
+  const { copy, locale } = useLanguage()
   const location = useLocation()
   const [aboutExpanded, _setAboutExpanded] = useState(true)
 
@@ -319,47 +311,38 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
     }
   }, [heroRoleLead, heroRoleTail, heroTitleLead, heroTitleTail])
 
-  const [customProjects, setCustomProjects] = useState<CarouselProject[]>([])
+  const [dbProjects, setDbProjects] = useState<CarouselProject[]>([])
 
   useEffect(() => {
     document.title = "Tanie Lalwani | Creative and Full Stack Developer"
     loadCustomProjects().then((loaded) => {
-      setCustomProjects(loaded)
+      setDbProjects(loaded)
     })
   }, [])
 
-  const defaultProjects: CarouselProject[] = Array.from({ length: 7 }, (_, index) => {
-    const base = copy.home.projects[index % copy.home.projects.length]
-    const project = { ...base, previewVideo: "/project-preview.mp4", detailVideo: "/project-preview.mp4" }
-    const projectId = PROJECT_TITLE_IDS[index] ?? `project-${base.title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "")}-${index + 1}`
-
-    if (index === 4) {
-      const featuredProject = copy.home.featuredProject
-
-      return {
-        ...project,
-        id: projectId,
-        title: featuredProject.title,
-        description: featuredProject.description,
-        techStack: featuredProject.techStack,
-        previewVideo: "/Innomedia.mp4",
-        previewFit: "contain",
-        details: featuredProject.details,
-      }
+  const resolvedProjects = useMemo(() => {
+    if (dbProjects && dbProjects.length > 0) {
+      return dbProjects.map((p) => {
+        const getField = (baseKey: string) => {
+          if (locale === "en") return (p as any)[baseKey]
+          const key = `${baseKey}_${locale}`
+          return (p as any)[key] || (p as any)[baseKey] || ""
+        }
+        const getDetails = () => {
+          if (locale === "en") return p.details || []
+          const key = `details_${locale}`
+          return (p as any)[key] || p.details || []
+        }
+        return {
+          ...p,
+          title: getField("title"),
+          description: getField("description"),
+          details: getDetails()
+        }
+      })
     }
-
-    // Ensure each generated project instance has unique content/ids for SEO
-    const uniqueIndex = index + 1
-    return {
-      ...project,
-      id: projectId,
-      description: `${project.description} (${copy.projectCard.demoLabel} ${uniqueIndex})`,
-      site: `${project.site}?instance=${uniqueIndex}`,
-      code: project.code ? `${project.code}?instance=${uniqueIndex}` : undefined,
-    }
-  })
-
-  const projects = [...customProjects, ...defaultProjects]
+    return copy.home.projects
+  }, [dbProjects, copy.home.projects, locale])
 
   return (
     <main className="relative">
@@ -537,7 +520,7 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
             className="mb-4 max-w-[62ch]"
             />
           <div className="relative w-full">
-            <ProjectsCarousel projects={projects} />
+            <ProjectsCarousel projects={resolvedProjects} />
           </div>
         </div>
       </section>

@@ -1,10 +1,10 @@
-import { useEffect, useRef, useState, type FormEvent } from "react"
+import { useEffect, useRef, useState, useMemo, type FormEvent } from "react"
 import { Link, useLocation } from "react-router-dom"
 import { useLanguage } from "../context/LanguageContext"
 import { getBotReply } from "../lib/botAssistant"
 import SEOHead from "../components/SEOHead"
-
-// Removed unused: totalQuestions, smoothEase, ScrollDirection
+import { loadReels, type Reel } from "../lib/reelStorage"
+import { getVimeoEmbedUrl } from "../lib/projectStorage"
 
 type BotMessage = {
   id: number
@@ -12,7 +12,7 @@ type BotMessage = {
   text: string
 }
 
-const transcriptReplies = [
+const transcriptRepliesFallback = [
   "I am Tanie Lalwani, a creative developer focused on React, TypeScript, UI design, full-stack experiments, and interactive web experiences. I got into tech through curiosity: building, redesigning, fixing details, and learning how interfaces can feel memorable instead of just functional.",
   "A project I am proud of is Viziona, because it reflects how I think about product work: responsive layouts, clear interaction, visual hierarchy, and practical execution. I care about making the interface feel polished, readable, and easy to move through.",
   "When I handle bugs in production, I start by reproducing the issue, checking the user impact, reading logs or browser errors, and narrowing the cause before changing code. I prefer small fixes, clear testing, and documenting what broke so the same issue is less likely to return.",
@@ -47,12 +47,11 @@ function getQuestionCards() {
   return Array.from(document.querySelectorAll('article.qna-card')) as HTMLElement[];
 }
 
-
 export default function QnA() {
-  const { copy } = useLanguage()
+  const { copy, locale } = useLanguage()
   const location = useLocation()
-  // Removed unused isMobile
   const scrollContainerRef = useRef<HTMLElement | null>(null)
+  
   const [isBotOpen, setIsBotOpen] = useState(false)
   const [openTranscriptIndex, setOpenTranscriptIndex] = useState<number | null>(null)
   const [botNotificationVisible, setBotNotificationVisible] = useState(true)
@@ -62,13 +61,55 @@ export default function QnA() {
     { id: 1, role: "bot", text: "hi im tanie" },
   ])
 
-  // Track which card is centered in the viewport
+  // Reels state
+  const [dbReels, setDbReels] = useState<Reel[]>([])
+  const [isLoadingReels, setIsLoadingReels] = useState(true)
+
+  // Track centered card
   const [activeIndex, setActiveIndex] = useState(0);
-  const questions = copy.qna.questions
 
   useEffect(() => {
     document.title = "About Tanie Lalwani | Interview QnA"
+    
+    // Fetch reels from Supabase
+    loadReels()
+      .then((loaded) => {
+        setDbReels(loaded)
+      })
+      .finally(() => setIsLoadingReels(false))
   }, [])
+
+  // Resolve Multilingual Reels (either db or static fallback)
+  const resolvedReels = useMemo(() => {
+    if (dbReels.length > 0) {
+      return dbReels.map((reel) => {
+        const getField = (baseKey: string) => {
+          if (locale === "en") return (reel as any)[baseKey]
+          const key = `${baseKey}_${locale}`
+          return (reel as any)[key] || (reel as any)[baseKey] || ""
+        }
+
+        return {
+          id: reel.id,
+          videoUrl: reel.videoUrl,
+          videoAlt: reel.videoAlt || "",
+          question: getField("question"),
+          caption: getField("caption"),
+          transcript: getField("transcript")
+        }
+      })
+    }
+
+    // Static fallback using local copy
+    return copy.qna.questions.map((question, idx) => ({
+      id: `fallback-${idx}`,
+      videoUrl: "",
+      videoAlt: "Placeholder reel visual presentation",
+      question,
+      caption: copy.qna.videoPlaceholder,
+      transcript: transcriptRepliesFallback[idx] || ""
+    }))
+  }, [dbReels, copy.qna.questions, locale])
 
   const scrollToQuestion = (index: number) => {
     const cards = getQuestionCards();
@@ -77,19 +118,19 @@ export default function QnA() {
     setActiveIndex(nextIndex);
   };
 
-  // Listen for scroll to update activeIndex and enable keyboard navigation
+  // Keyboard and scroll listeners
   useEffect(() => {
     const onScroll = () => setActiveIndex(getCenteredCardIndex());
     const container = scrollContainerRef.current;
     if (container) {
       container.addEventListener('scroll', onScroll, { passive: true });
     }
-    // Keyboard navigation
+    
     const onKeyDown = (event: KeyboardEvent) => {
       if (["ArrowDown", "PageDown", "ArrowUp", "PageUp"].includes(event.key)) {
         event.preventDefault();
         if (event.key === 'ArrowDown' || event.key === 'PageDown') {
-          if (activeIndex < questions.length - 1) {
+          if (activeIndex < resolvedReels.length - 1) {
             scrollToQuestion(activeIndex + 1);
             setTimeout(() => setActiveIndex(getCenteredCardIndex()), 400);
           }
@@ -106,11 +147,7 @@ export default function QnA() {
       if (container) container.removeEventListener('scroll', onScroll);
       window.removeEventListener('keydown', onKeyDown);
     };
-  }, [activeIndex, questions.length]);
-
-
-
-
+  }, [activeIndex, resolvedReels.length]);
 
   const handleBotSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -162,18 +199,18 @@ export default function QnA() {
     setIsBotOpen(false)
   }
 
-  const faqSchema = {
+  const faqSchema = useMemo(() => ({
     "@context": "https://schema.org",
     "@type": "FAQPage",
-    "mainEntity": questions.map((q, idx) => ({
+    "mainEntity": resolvedReels.map((reel) => ({
       "@type": "Question",
-      "name": q,
+      "name": reel.question,
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": transcriptReplies[idx] || ""
+        "text": reel.transcript
       }
     }))
-  };
+  }), [resolvedReels]);
 
   return (
     <main className="site-shell bg-[#dff4ff] text-black">
@@ -240,7 +277,7 @@ export default function QnA() {
           onClick={() => {
             if (activeIndex > 0) {
               scrollToQuestion(activeIndex - 1);
-              setTimeout(() => setActiveIndex(getCenteredCardIndex()), 400); // force update after scroll
+              setTimeout(() => setActiveIndex(getCenteredCardIndex()), 400);
             }
           }}
           className="flex h-12 w-12 items-center justify-center rounded-full border border-black/12 bg-white/55 text-black shadow-sm backdrop-blur transition hover:bg-white/80 disabled:cursor-not-allowed disabled:opacity-35"
@@ -255,14 +292,14 @@ export default function QnA() {
           type="button"
           aria-label="Next question"
           onClick={() => {
-            if (activeIndex < questions.length - 1) {
+            if (activeIndex < resolvedReels.length - 1) {
               scrollToQuestion(activeIndex + 1);
-              setTimeout(() => setActiveIndex(getCenteredCardIndex()), 400); // force update after scroll
+              setTimeout(() => setActiveIndex(getCenteredCardIndex()), 400);
             }
           }}
           className="flex h-12 w-12 items-center justify-center rounded-full border border-black/12 bg-white/55 text-black shadow-sm backdrop-blur transition hover:bg-white/80 disabled:cursor-not-allowed disabled:opacity-35"
           tabIndex={0}
-          disabled={activeIndex === questions.length - 1}
+          disabled={activeIndex === resolvedReels.length - 1}
         >
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
             <polyline points="6 9 12 15 18 9" />
@@ -270,107 +307,144 @@ export default function QnA() {
         </button>
       </div>
 
-      <section
-        ref={scrollContainerRef}
-        aria-label="Interview reel questions"
-        className={
-          // Always apply scroll snap and smooth scrolling for both mobile and desktop
-          "h-screen overflow-y-auto overscroll-y-contain bg-[#dff4ff] touch-pan-y [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden snap-y snap-mandatory"
-        }
-        style={{
-          WebkitOverflowScrolling: "touch",
-          scrollBehavior: "smooth",
-          scrollSnapType: "y mandatory",
-          scrollPaddingTop: "10vh",
-          scrollPaddingBottom: "10vh"
-        }}
-      >
-        <div className="site-container mx-auto flex min-h-full items-stretch justify-center px-0 py-0 md:px-6 md:py-8 md:pl-24 md:pr-24">
-          <div className="w-full max-w-3xl">
-            {questions.map((question, index) => (
-              <article
-                key={question}
-                aria-labelledby={`qna-question-${index}`}
-                className="qna-card flex min-h-[90vh] items-center justify-center py-0 md:py-6 snap-center transition-all duration-300"
-                style={{
-                  scrollSnapAlign: "center",
-                  scrollSnapStop: "always",
-                  scrollMarginTop: "10vh",
-                  scrollMarginBottom: "10vh"
-                }}
-              >
-                <div className="flex w-full items-end justify-center gap-3 md:gap-5">
-                  <div
-                    className="surface-panel relative w-[82vw] max-w-[18rem] overflow-hidden rounded-[1.4rem] md:w-[min(34vw,24rem)] md:max-w-none md:rounded-4xl"
-                    style={{ aspectRatio: "9 / 16", maxHeight: "92vh", transition: 'box-shadow 0.3s cubic-bezier(0.22,1,0.36,1)' }}
-                  >
-                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_22%_12%,rgba(255,255,255,0.16),transparent_30%),linear-gradient(160deg,#1e293b_0%,#0f172a_42%,#020617_100%)]" />
-                    <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_0%,transparent_54%,rgba(0,0,0,0.84)_100%)]" />
-                    <div className="absolute inset-0 grid place-items-center">
-                      <div
-                        className="rounded-full border border-white/14 bg-white/8 px-4 py-2 text-xs sm:text-[11px] font-bold uppercase tracking-[0.18em] text-sky-50 backdrop-blur"
-                      >
-                        {copy.qna.videoPlaceholder}
-                      </div>
-                    </div>
-                    <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-5">
-                      <h2
-                        id={`qna-question-${index}`}
-                        className="text-center text-base font-bold text-white md:text-lg"
-                      >
-                        {question}
-                      </h2>
-                    </div>
-                    <button
-                      type="button"
-                      className="absolute right-4 top-4 grid h-10 w-10 place-items-center rounded-full border border-white/14 bg-black/30 text-white/82 backdrop-blur transition hover:bg-black/42 md:hidden"
-                      onClick={() => setOpenTranscriptIndex(index)}
-                      aria-label={`Open transcript for ${question}`}
-                      aria-haspopup="dialog"
-                    >
-                      <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.2" aria-hidden="true">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
-                      </svg>
-                    </button>
-                  </div>
-                  <div className="mb-3 hidden flex-col items-center gap-4 text-black md:flex">
-                      <button className="transition hover:text-black/62" title={copy.qna.like} aria-label={copy.qna.like}>
-                      <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.2">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M4.318 6.318a4.5 4.5 0 016.364 0L12 7.636l1.318-1.318a4.5 4.5 0 116.364 6.364L12 21.682l-7.682-7.682a4.5 4.5 0 010-6.364z" />
-                      </svg>
-                    </button>
-                      <button
-                        type="button"
-                        className="comment-pulse transition hover:text-black/62"
-                        title={copy.qna.comment}
-                        aria-label={`Open transcript for ${question}`}
-                        aria-haspopup="dialog"
-                        onClick={() => setOpenTranscriptIndex(index)}
-                      >
-                      <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.2">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
-                      </svg>
-                    </button>
-                      <button className="transition hover:text-black/62" title={copy.qna.share} aria-label={copy.qna.share}>
-                      <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.2">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M4 12v7a2 2 0 002 2h12a2 2 0 002-2v-7" />
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M16 6l-4-4-4 4M12 2v14" />
-                      </svg>
-                    </button>
-                      <button className="transition hover:text-black/62" title={copy.qna.save} aria-label={copy.qna.save}>
-                      <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.2">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-5-7 5V5z" />
-                      </svg>
-                    </button>
-                  </div>
-                </div>
-              </article>
-            ))}
+      {isLoadingReels ? (
+        <div className="flex h-screen w-full items-center justify-center bg-[#dff4ff]">
+          <div className="text-center">
+            <div className="mb-4 h-8 w-8 animate-spin rounded-full border-2 border-sky-500/20 border-t-sky-500 mx-auto" />
+            <p className="text-xs text-sky-950/50 uppercase tracking-widest">Loading Interview Reels...</p>
           </div>
         </div>
-      </section>
+      ) : (
+        <section
+          ref={scrollContainerRef}
+          aria-label="Interview reel questions"
+          className="h-screen overflow-y-auto overscroll-y-contain bg-[#dff4ff] touch-pan-y [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden snap-y snap-mandatory"
+          style={{
+            WebkitOverflowScrolling: "touch",
+            scrollBehavior: "smooth",
+            scrollSnapType: "y mandatory",
+            scrollPaddingTop: "10vh",
+            scrollPaddingBottom: "10vh"
+          }}
+        >
+          <div className="site-container mx-auto flex min-h-full items-stretch justify-center px-0 py-0 md:px-6 md:py-8 md:pl-24 md:pr-24">
+            <div className="w-full max-w-3xl">
+              {resolvedReels.map((reel, index) => {
+                const isVimeo = reel.videoUrl.includes("vimeo.com")
+                const embedUrl = isVimeo ? getVimeoEmbedUrl(reel.videoUrl) : null
 
-      {openTranscriptIndex !== null ? (
+                return (
+                  <article
+                    key={reel.id}
+                    aria-labelledby={`qna-question-${index}`}
+                    className="qna-card flex min-h-[90vh] items-center justify-center py-0 md:py-6 snap-center transition-all duration-300"
+                    style={{
+                      scrollSnapAlign: "center",
+                      scrollSnapStop: "always",
+                      scrollMarginTop: "10vh",
+                      scrollMarginBottom: "10vh"
+                    }}
+                  >
+                    <div className="flex w-full items-end justify-center gap-3 md:gap-5">
+                      <div
+                        className="surface-panel relative w-[82vw] max-w-[18rem] overflow-hidden rounded-[1.4rem] md:w-[min(34vw,24rem)] md:max-w-none md:rounded-4xl"
+                        style={{ aspectRatio: "9 / 16", maxHeight: "92vh", transition: 'box-shadow 0.3s' }}
+                      >
+                        <div className="absolute inset-0 bg-[#020617]" />
+                        {reel.videoUrl ? (
+                          isVimeo && embedUrl ? (
+                            <iframe
+                              src={embedUrl}
+                              className="absolute inset-0 h-full w-full object-cover border-0"
+                              allow="autoplay; fullscreen; picture-in-picture"
+                              title={reel.videoAlt || reel.question}
+                              style={{ pointerEvents: "none" }}
+                            />
+                          ) : (
+                            <video
+                              src={reel.videoUrl}
+                              className="absolute inset-0 h-full w-full object-cover"
+                              autoPlay
+                              loop
+                              muted
+                              playsInline
+                              aria-label={reel.videoAlt || reel.question}
+                            />
+                          )
+                        ) : (
+                          <>
+                            <div className="absolute inset-0 bg-[radial-gradient(circle_at_22%_12%,rgba(255,255,255,0.16),transparent_30%),linear-gradient(160deg,#1e293b_0%,#0f172a_42%,#020617_100%)]" />
+                            <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_0%,transparent_54%,rgba(0,0,0,0.84)_100%)]" />
+                            <div className="absolute inset-0 grid place-items-center">
+                              <div className="rounded-full border border-white/14 bg-white/8 px-4 py-2 text-xs sm:text-[11px] font-bold uppercase tracking-[0.18em] text-sky-50 backdrop-blur">
+                                {copy.qna.videoPlaceholder}
+                              </div>
+                            </div>
+                          </>
+                        )}
+                        <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-5 z-10 bg-gradient-to-t from-black/90 to-transparent">
+                          <h2
+                            id={`qna-question-${index}`}
+                            className="text-center text-base font-bold text-white md:text-lg"
+                          >
+                            {reel.question}
+                          </h2>
+                          {reel.caption && reel.caption !== copy.qna.videoPlaceholder && (
+                            <p className="text-center text-[10px] text-sky-300 font-semibold uppercase tracking-wider mt-1">{reel.caption}</p>
+                          )}
+                        </div>
+                        <button
+                          type="button"
+                          className="absolute right-4 top-4 grid h-10 w-10 place-items-center rounded-full border border-white/14 bg-black/30 text-white/82 backdrop-blur z-25 hover:bg-black/42 md:hidden"
+                          onClick={() => setOpenTranscriptIndex(index)}
+                          aria-label={`Open transcript for ${reel.question}`}
+                          aria-haspopup="dialog"
+                        >
+                          <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.2" aria-hidden="true">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
+                          </svg>
+                        </button>
+                      </div>
+                      <div className="mb-3 hidden flex-col items-center gap-4 text-black md:flex">
+                        <button className="transition hover:text-black/62" title={copy.qna.like} aria-label={copy.qna.like}>
+                          <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.2">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M4.318 6.318a4.5 4.5 0 016.364 0L12 7.636l1.318-1.318a4.5 4.5 0 116.364 6.364L12 21.682l-7.682-7.682a4.5 4.5 0 010-6.364z" />
+                          </svg>
+                        </button>
+                        <button
+                          type="button"
+                          className="comment-pulse transition hover:text-black/62"
+                          title={copy.qna.comment}
+                          aria-label={`Open transcript for ${reel.question}`}
+                          aria-haspopup="dialog"
+                          onClick={() => setOpenTranscriptIndex(index)}
+                        >
+                          <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.2">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
+                          </svg>
+                        </button>
+                        <button className="transition hover:text-black/62" title={copy.qna.share} aria-label={copy.qna.share}>
+                          <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.2">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M4 12v7a2 2 0 002 2h12a2 2 0 002-2v-7" />
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M16 6l-4-4-4 4M12 2v14" />
+                          </svg>
+                        </button>
+                        <button className="transition hover:text-black/62" title={copy.qna.save} aria-label={copy.qna.save}>
+                          <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.2">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-5-7 5V5z" />
+                          </svg>
+                        </button>
+                      </div>
+                    </div>
+                  </article>
+                )
+              })}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {openTranscriptIndex !== null && resolvedReels[openTranscriptIndex] ? (
         <aside
           className="fixed inset-x-4 bottom-4 z-50 max-h-[70vh] overflow-hidden rounded-[1.6rem] border border-black/10 bg-white/94 shadow-[0_26px_75px_rgba(15,23,42,0.22)] backdrop-blur-xl md:inset-x-auto md:bottom-auto md:right-[7rem] md:top-1/2 md:w-[24rem] md:-translate-y-1/2"
           role="dialog"
@@ -389,17 +463,17 @@ export default function QnA() {
             </button>
           </header>
           <article className="max-h-[calc(70vh-3.5rem)] overflow-y-auto px-4 py-4">
-            <h2 className="text-sm font-semibold leading-6 text-black">{questions[openTranscriptIndex]}</h2>
-            <p className="mt-3 text-sm leading-7 tracking-normal text-black/68">{transcriptReplies[openTranscriptIndex]}</p>
+            <h2 className="text-sm font-semibold leading-6 text-black">{resolvedReels[openTranscriptIndex].question}</h2>
+            <p className="mt-3 text-sm leading-7 tracking-normal text-black/68 whitespace-pre-wrap">{resolvedReels[openTranscriptIndex].transcript}</p>
           </article>
         </aside>
       ) : null}
 
       <section className="sr-only" aria-label="Readable interview transcripts">
-        {questions.map((question, index) => (
-          <article key={`${question}-transcript`}>
-            <h2>{question}</h2>
-            <p>{transcriptReplies[index]}</p>
+        {resolvedReels.map((reel) => (
+          <article key={`${reel.id}-transcript`}>
+            <h2>{reel.question}</h2>
+            <p>{reel.transcript}</p>
           </article>
         ))}
       </section>

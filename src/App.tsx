@@ -15,11 +15,9 @@ import { useLanguage } from "./context/LanguageContext";
 
 const loadHome = () => import("./pages/Home");
 const loadQnA = () => import("./pages/QnA.tsx");
-const loadAdmin = () => import("./pages/Admin.tsx");
 
 const Home = lazy(loadHome);
 const QnA = lazy(loadQnA);
-const Admin = lazy(loadAdmin);
 
 function AppLoadingVeil() {
   const { copy } = useLanguage()
@@ -210,14 +208,7 @@ export default function App() {
                   </PageShell>
                 }
               />
-              <Route
-                path="/admin"
-                element={
-                  <PageShell>
-                    <Admin />
-                  </PageShell>
-                }
-              />
+
               <Route path="/github" element={<ExternalRedirect to="https://github.com/tanie-lalwani" label="GitHub"/>} />
               <Route path="/instagram" element={<ExternalRedirect to="https://instagram.com/tanie.mp3" label="Instagram"/>} />
               <Route path="/linkedin" element={<ExternalRedirect to="https://www.linkedin.com/in/tanie-lalwani/" label="LinkedIn"/>} />

@@ -16,6 +16,32 @@ export interface Project {
   detailVideo?: string
   previewFit?: "cover" | "contain"
   details?: string[]
+  order?: number
+  
+  // Multilingual translations
+  title_es?: string
+  description_es?: string
+  details_es?: string[]
+  title_fr?: string
+  description_fr?: string
+  details_fr?: string[]
+  title_hi?: string
+  description_hi?: string
+  details_hi?: string[]
+  title_ja?: string
+  description_ja?: string
+  details_ja?: string[]
+  title_ur?: string
+  description_ur?: string
+  details_ur?: string[]
+  title_zh?: string
+  description_zh?: string
+  details_zh?: string[]
+
+  // SEO and Accessibility
+  metaTitle?: string
+  metaDescription?: string
+  videoAlt?: string
 }
 
 interface ProjectsCarouselProps {

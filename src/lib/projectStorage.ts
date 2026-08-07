@@ -34,9 +34,21 @@ export async function loadCustomProjects(): Promise<Project[]> {
     const { data, error } = await supabase
       .from("projects")
       .select("*")
+      .order("order", { ascending: true })
       .order("created_at", { ascending: false })
 
     if (error) {
+      if (error.code === "42703" || error.message.includes("order")) {
+        const fallback = await supabase
+          .from("projects")
+          .select("*")
+          .order("created_at", { ascending: false })
+        if (fallback.error) {
+          console.error("Failed fallback load:", fallback.error)
+          return []
+        }
+        return fallback.data || []
+      }
       console.error("Failed to load projects from Supabase:", error)
       return []
     }
@@ -99,8 +111,17 @@ export async function addCustomProject(project: Omit<Project, "id"> & { id?: str
       .insert([dataToInsert])
 
     if (error) {
-      console.error("Failed to add project to Supabase:", error)
-      throw error
+      if ((error.code === "PGRST204" || error.message.includes("order")) && "order" in dataToInsert) {
+        const { order, ...rest } = dataToInsert
+        const retry = await supabase.from("projects").insert([rest])
+        if (retry.error) {
+          console.error("Retry add project failed:", retry.error)
+          throw retry.error
+        }
+      } else {
+        console.error("Failed to add project to Supabase:", error)
+        throw error
+      }
     }
     return loadCustomProjects()
   } catch (error) {
@@ -125,8 +146,17 @@ export async function updateCustomProject(updatedProject: Project): Promise<Proj
       .eq("id", id)
 
     if (error) {
-      console.error("Failed to update project in Supabase:", error)
-      throw error
+      if ((error.code === "PGRST204" || error.message.includes("order")) && "order" in rest) {
+        const { order, ...retryRest } = rest
+        const retry = await supabase.from("projects").update(retryRest).eq("id", id)
+        if (retry.error) {
+          console.error("Retry update project failed:", retry.error)
+          throw retry.error
+        }
+      } else {
+        console.error("Failed to update project in Supabase:", error)
+        throw error
+      }
     }
     return loadCustomProjects()
   } catch (error) {

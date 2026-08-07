@@ -9,11 +9,16 @@ export type LanguageOption = {
 }
 
 export type ProjectCopy = {
+  id?: string
   title: string
   description: string
   techStack: string[]
   site: string
   code?: string
+  previewVideo?: string
+  detailVideo?: string
+  previewFit?: "cover" | "contain"
+  details?: string[]
 }
 
 type FeaturedProjectCopy = {
@@ -161,10 +166,16 @@ const translations: Record<Locale, SiteCopy> = {
         {
           title: "Viziona",
           description:
-            "A responsive web application shaped around clear interaction, UI/UX design, and practical product execution.",
-          techStack: ["React", "TypeScript", "UI/UX"],
-          site: "https://viziona.com",
+            "An AI-powered visualization and manifestation experience featuring immersive 3D scenes. Describe your goal—a dream country, city, lifestyle, or aspiration—and step into a cinematic, personalized environment instead of just reading text.",
+          techStack: ["React", "TypeScript", "Three.js", "Tailwind CSS"],
+          site: "https://viziona.vercel.app/",
           code: "https://github.com/tanie-lalwani/viziona",
+          previewVideo: "/viziona-full.mp4",
+          detailVideo: "/viziona-full.mp4",
+          details: [
+            "Viziona is an AI-powered visualization/manifestation experience with immersive 3D scenes where users describe a goal (country, city, lifestyle, dream, etc.) and receive cinematic, personalized environments instead of just text.",
+            "Currently, the prototype features a curated set of high-quality visualization experiences as a proof-of-concept, establishing the design and visual foundation for a fully dynamic, AI-based generative virtual world."
+          ],
         },
         {
           title: "Checkout Performance Overhaul - FinchPay",
@@ -299,10 +310,16 @@ const translations: Record<Locale, SiteCopy> = {
         {
           title: "Viziona",
           description:
-            "Una aplicación web responsive diseñada alrededor de una interacción clara, diseño UI/UX y ejecución práctica de producto.",
-          techStack: ["React", "TypeScript", "UI/UX"],
-          site: "https://viziona.com",
+            "Una experiencia de visualización y manifestación impulsada por IA con escenas 3D inmersivas. Describe tu meta (un país, ciudad, estilo de vida o sueño) y recibe un entorno cinemático y personalizado en lugar de solo texto.",
+          techStack: ["React", "TypeScript", "Three.js", "Tailwind CSS"],
+          site: "https://viziona.vercel.app/",
           code: "https://github.com/tanie-lalwani/viziona",
+          previewVideo: "/viziona-full.mp4",
+          detailVideo: "/viziona-full.mp4",
+          details: [
+            "Viziona es una experiencia de visualización/manifestación impulsada por IA con escenas 3D inmersivas donde los usuarios describen una meta (país, ciudad, estilo de vida, sueño, etc.) y reciben entornos cinemáticos y personalizados en lugar de solo texto.",
+            "Actualmente, el prototipo cuenta con una selección curada de experiencias de visualización de alta calidad como prueba de concepto, sentando las bases visuales y de diseño para un mundo virtual generativo y dinámico basado en IA."
+          ],
         },
         {
           title: "Mejora de rendimiento de checkout - FinchPay",
@@ -437,10 +454,16 @@ const translations: Record<Locale, SiteCopy> = {
         {
           title: "Viziona",
           description:
-            "Une application web responsive conçue autour d’interactions claires, du design UI/UX et d’une exécution produit pratique.",
-          techStack: ["React", "TypeScript", "UI/UX"],
-          site: "https://viziona.com",
+            "Une expérience de visualisation et de manifestation propulsée par l'IA avec des scènes 3D immersives. Décrivez votre objectif (un pays, une ville, un style de vie ou un rêve) et recevez un environnement cinématique personnalisé au lieu d'un simple texte.",
+          techStack: ["React", "TypeScript", "Three.js", "Tailwind CSS"],
+          site: "https://viziona.vercel.app/",
           code: "https://github.com/tanie-lalwani/viziona",
+          previewVideo: "/viziona-full.mp4",
+          detailVideo: "/viziona-full.mp4",
+          details: [
+            "Viziona est une expérience de visualisation/manifestation propulsée par l'IA avec des scènes 3D immersives où les utilisateurs décrivent un objectif (pays, ville, style de vie, rêve, etc.) et reçoivent des environnements cinématiques personnalisés au lieu de simple texte.",
+            "Actuellement, le prototype présente une sélection d'expériences de visualisation de haute qualité en tant que preuve de concept, établissant les bases de conception et de visuels pour un monde virtuel dynamique et génératif basé sur l'IA."
+          ],
         },
         {
           title: "Optimisation des performances checkout - FinchPay",
@@ -575,10 +598,16 @@ const translations: Record<Locale, SiteCopy> = {
         {
           title: "Viziona",
           description:
-            "एक responsive web application, जिसे clear interaction, UI/UX design और practical product execution के around बनाया गया.",
-          techStack: ["React", "TypeScript", "UI/UX"],
-          site: "https://viziona.com",
+            "इमर्सिव 3D दृश्यों के साथ एक एआई-संचालित विज़ुअलाइज़ेशन और अभिव्यक्ति अनुभव। अपने लक्ष्य (सपनों का देश, शहर, जीवन शैली या सपना) का वर्णन करें और केवल टेक्स्ट के बजाय एक सिनेमाई, व्यक्तिगत वातावरण प्राप्त करें।",
+          techStack: ["React", "TypeScript", "Three.js", "Tailwind CSS"],
+          site: "https://viziona.vercel.app/",
           code: "https://github.com/tanie-lalwani/viziona",
+          previewVideo: "/viziona-full.mp4",
+          detailVideo: "/viziona-full.mp4",
+          details: [
+            "Viziona इमर्सिव 3D दृश्यों के साथ एक एआई-संचालित विज़ुअलाइज़ेशन/अभिव्यक्ति अनुभव है जहां उपयोगकर्ता अपने लक्ष्य (देश, शहर, जीवन शैली, सपना, आदि) का वर्णन करते हैं और केवल टेक्स्ट के बजाय सिनेमाई, व्यक्तिगत वातावरण प्राप्त करते हैं।",
+            "वर्तमान में, इस प्रोटोटाइप में अवधारणा के प्रमाण (proof-of-concept) के रूप में विज़ुअलाइज़ेशन अनुभवों का एक क्यूरेटेड सेट शामिल है, जो पूरी तरह से गतिशील, एआई-आधारित जेनरेटिव वर्चुअल दुनिया के लिए डिज़ाइन और विज़ुअल आधार स्थापित करता है।"
+          ],
         },
         {
           title: "Checkout performance overhaul - FinchPay",
@@ -713,10 +742,16 @@ const translations: Record<Locale, SiteCopy> = {
         {
           title: "Viziona",
           description:
-            "明確な interaction、UI/UX design、実用的な product execution を軸に作られた responsive web application。",
-          techStack: ["React", "TypeScript", "UI/UX"],
-          site: "https://viziona.com",
+            "没入感のある3Dシーンを備えた、AI駆動のビジュアライゼーションおよびマニフェステーション（引き寄せ）体験。目標（夢の国、都市、ライフスタイル、夢など）を入力すると、テキストだけでなく、映画のようなパーソナライズされた空間を受け取ることができます。",
+          techStack: ["React", "TypeScript", "Three.js", "Tailwind CSS"],
+          site: "https://viziona.vercel.app/",
           code: "https://github.com/tanie-lalwani/viziona",
+          previewVideo: "/viziona-full.mp4",
+          detailVideo: "/viziona-full.mp4",
+          details: [
+            "Vizionaは、没入感のある3Dシーンを備えたAI駆動のビジュアライゼーション/マニフェステーション体験です。ユーザーが目標（国、都市、ライフスタイル、夢など）を記述すると、単なるテキストではなく、映画のようにパーソナライズされた環境が提供されます。",
+            "現在、このプロトタイプは概念実証（proof-of-concept）として厳選されたビジュアライゼーション体験を備えており、完全にダイナミックなAIベースの生成仮想世界のための設計およびビジュアルの基盤を確立しています。"
+          ],
         },
         {
           title: "Checkout performance overhaul - FinchPay",
@@ -851,10 +886,16 @@ const translations: Record<Locale, SiteCopy> = {
         {
           title: "Viziona",
           description:
-            "ایک responsive web application جو clear interaction، UI/UX design، اور practical product execution کے around بنائی گئی۔",
-          techStack: ["React", "TypeScript", "UI/UX"],
-          site: "https://viziona.com",
+            "عمیق 3D مناظر کے ساتھ ایک AI سے چلنے والا تصور اور اظہار کا تجربہ۔ اپنے مقصد (خوابوں کا ملک، شہر، طرز زندگی، یا خواب) کا بیان کریں اور محض متن کے بجائے ایک فلمی، ذاتی نوعیت کا ماحول حاصل کریں۔",
+          techStack: ["React", "TypeScript", "Three.js", "Tailwind CSS"],
+          site: "https://viziona.vercel.app/",
           code: "https://github.com/tanie-lalwani/viziona",
+          previewVideo: "/viziona-full.mp4",
+          detailVideo: "/viziona-full.mp4",
+          details: [
+            "Viziona ایک AI سے چلنے والا تصور/اظہار کا تجربہ ہے جس میں عمیق 3D مناظر شامل ہیں، جہاں صارفین اپنے مقصد (ملک، شہر، طرز زندگی، خواب، وغیرہ) کی وضاحت کرتے ہیں اور صرف متن کے بجائے فلمی اور ذاتی نوعیت کے ماحول حاصل کرتے ہیں۔",
+            "فی الحال, یہ پروٹوٹائپ بطور ثبوتِ تصور (proof-of-concept) اعلیٰ معیار کے تصوراتی تجربات کے ایک منتخب سیٹ پر مشتمل ہے، جو مکمل طور پر متحرک اور AI پر مبنی تخلیقی ورچوئل دنیا کے لیے ڈیزائن اور بصری بنیاد فراہم کرتا ہے۔"
+          ],
         },
         {
           title: "Checkout performance overhaul - FinchPay",
@@ -989,10 +1030,16 @@ const translations: Record<Locale, SiteCopy> = {
         {
           title: "Viziona",
           description:
-            "一个围绕清晰交互、UI/UX design 和实际产品执行构建的 responsive web application。",
-          techStack: ["React", "TypeScript", "UI/UX"],
-          site: "https://viziona.com",
+            "一个包含沉浸式 3D 场景的 AI 辅助愿景可视化与显化体验。描述你的目标（梦想中的国家、城市、生活方式或愿愿望），你将获得电影般的、个性化的视觉环境，而不仅仅是文字。",
+          techStack: ["React", "TypeScript", "Three.js", "Tailwind CSS"],
+          site: "https://viziona.vercel.app/",
           code: "https://github.com/tanie-lalwani/viziona",
+          previewVideo: "/viziona-full.mp4",
+          detailVideo: "/viziona-full.mp4",
+          details: [
+            "Viziona 是一款结合沉浸式 3D 场景的 AI 驱动愿景可视化与显化体验，用户只需描述一个目标（如国家、城市、生活方式、梦想等），即可获得电影般个性化的视觉环境，而非单调的文字。",
+            "目前，该原型仅包含一组精选的高质量可视化场景作为概念验证，为未来构建完全动态、基于 AI 的生成式虚拟世界奠定了设计和视觉基础。"
+          ],
         },
         {
           title: "Checkout performance overhaul - FinchPay",
