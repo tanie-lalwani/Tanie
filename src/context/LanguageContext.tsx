@@ -170,7 +170,7 @@ const translations: Record<Locale, SiteCopy> = {
           techStack: ["React", "TypeScript", "Three.js", "Tailwind CSS"],
           site: "https://viziona.vercel.app/",
           code: "https://github.com/tanie-lalwani/viziona",
-          previewVideo: "/viziona-full.mp4",
+          previewVideo: "/project-preview.mp4",
           detailVideo: "/viziona-full.mp4",
           details: [
             "Viziona is an AI-powered visualization/manifestation experience with immersive 3D scenes where users describe a goal (country, city, lifestyle, dream, etc.) and receive cinematic, personalized environments instead of just text.",
@@ -314,7 +314,7 @@ const translations: Record<Locale, SiteCopy> = {
           techStack: ["React", "TypeScript", "Three.js", "Tailwind CSS"],
           site: "https://viziona.vercel.app/",
           code: "https://github.com/tanie-lalwani/viziona",
-          previewVideo: "/viziona-full.mp4",
+          previewVideo: "/project-preview.mp4",
           detailVideo: "/viziona-full.mp4",
           details: [
             "Viziona es una experiencia de visualización/manifestación impulsada por IA con escenas 3D inmersivas donde los usuarios describen una meta (país, ciudad, estilo de vida, sueño, etc.) y reciben entornos cinemáticos y personalizados en lugar de solo texto.",
@@ -458,7 +458,7 @@ const translations: Record<Locale, SiteCopy> = {
           techStack: ["React", "TypeScript", "Three.js", "Tailwind CSS"],
           site: "https://viziona.vercel.app/",
           code: "https://github.com/tanie-lalwani/viziona",
-          previewVideo: "/viziona-full.mp4",
+          previewVideo: "/project-preview.mp4",
           detailVideo: "/viziona-full.mp4",
           details: [
             "Viziona est une expérience de visualisation/manifestation propulsée par l'IA avec des scènes 3D immersives où les utilisateurs décrivent un objectif (pays, ville, style de vie, rêve, etc.) et reçoivent des environnements cinématiques personnalisés au lieu de simple texte.",
@@ -602,7 +602,7 @@ const translations: Record<Locale, SiteCopy> = {
           techStack: ["React", "TypeScript", "Three.js", "Tailwind CSS"],
           site: "https://viziona.vercel.app/",
           code: "https://github.com/tanie-lalwani/viziona",
-          previewVideo: "/viziona-full.mp4",
+          previewVideo: "/project-preview.mp4",
           detailVideo: "/viziona-full.mp4",
           details: [
             "Viziona इमर्सिव 3D दृश्यों के साथ एक एआई-संचालित विज़ुअलाइज़ेशन/अभिव्यक्ति अनुभव है जहां उपयोगकर्ता अपने लक्ष्य (देश, शहर, जीवन शैली, सपना, आदि) का वर्णन करते हैं और केवल टेक्स्ट के बजाय सिनेमाई, व्यक्तिगत वातावरण प्राप्त करते हैं।",
@@ -746,7 +746,7 @@ const translations: Record<Locale, SiteCopy> = {
           techStack: ["React", "TypeScript", "Three.js", "Tailwind CSS"],
           site: "https://viziona.vercel.app/",
           code: "https://github.com/tanie-lalwani/viziona",
-          previewVideo: "/viziona-full.mp4",
+          previewVideo: "/project-preview.mp4",
           detailVideo: "/viziona-full.mp4",
           details: [
             "Vizionaは、没入感のある3Dシーンを備えたAI駆動のビジュアライゼーション/マニフェステーション体験です。ユーザーが目標（国、都市、ライフスタイル、夢など）を記述すると、単なるテキストではなく、映画のようにパーソナライズされた環境が提供されます。",
@@ -890,7 +890,7 @@ const translations: Record<Locale, SiteCopy> = {
           techStack: ["React", "TypeScript", "Three.js", "Tailwind CSS"],
           site: "https://viziona.vercel.app/",
           code: "https://github.com/tanie-lalwani/viziona",
-          previewVideo: "/viziona-full.mp4",
+          previewVideo: "/project-preview.mp4",
           detailVideo: "/viziona-full.mp4",
           details: [
             "Viziona ایک AI سے چلنے والا تصور/اظہار کا تجربہ ہے جس میں عمیق 3D مناظر شامل ہیں، جہاں صارفین اپنے مقصد (ملک، شہر، طرز زندگی، خواب، وغیرہ) کی وضاحت کرتے ہیں اور صرف متن کے بجائے فلمی اور ذاتی نوعیت کے ماحول حاصل کرتے ہیں۔",
@@ -1034,7 +1034,7 @@ const translations: Record<Locale, SiteCopy> = {
           techStack: ["React", "TypeScript", "Three.js", "Tailwind CSS"],
           site: "https://viziona.vercel.app/",
           code: "https://github.com/tanie-lalwani/viziona",
-          previewVideo: "/viziona-full.mp4",
+          previewVideo: "/project-preview.mp4",
           detailVideo: "/viziona-full.mp4",
           details: [
             "Viziona 是一款结合沉浸式 3D 场景的 AI 驱动愿景可视化与显化体验，用户只需描述一个目标（如国家、城市、生活方式、梦想等），即可获得电影般个性化的视觉环境，而非单调的文字。",
