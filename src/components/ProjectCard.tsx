@@ -8,11 +8,13 @@ interface ProjectCardProps {
   openLabel: string
   previewVideo?: string
   previewFit?: "cover" | "contain"
+  previewOpacity?: string
   onOpen: () => void
 }
 
-export function ProjectCard({ titleId, title, description, openLabel, previewVideo, previewFit = "cover", onOpen }: ProjectCardProps) {
+export function ProjectCard({ titleId, title, description, openLabel, previewVideo, previewFit = "cover", previewOpacity, onOpen }: ProjectCardProps) {
   const resolvedTitleId = titleId ?? `project-${title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "")}`
+  const resolvedOpacity = previewOpacity || (previewFit === "contain" ? "opacity-82" : "opacity-62")
 
   const openFromKeyboard = (event: KeyboardEvent<HTMLElement>) => {
     if (event.key !== "Enter" && event.key !== " ") return
@@ -42,7 +44,7 @@ export function ProjectCard({ titleId, title, description, openLabel, previewVid
               >
                 <video
                   src={previewVideo ?? "/project-preview.mp4"}
-                  className={`absolute inset-0 h-full w-full ${previewFit === "contain" ? "border border-white/14 bg-slate-950/70 object-contain p-1 opacity-82" : "object-cover opacity-62"}`}
+                  className={`absolute inset-0 h-full w-full ${previewFit === "contain" ? "border border-white/14 bg-slate-950/70 object-contain p-1" : "object-cover"} ${resolvedOpacity}`}
                   autoPlay
                   muted
                   loop

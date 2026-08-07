@@ -15,6 +15,7 @@ export interface Project {
   previewVideo?: string
   detailVideo?: string
   previewFit?: "cover" | "contain"
+  previewOpacity?: string
   details?: string[]
   order?: number
   
@@ -250,6 +251,7 @@ export function ProjectsCarousel({ projects }: ProjectsCarouselProps) {
               openLabel={copy.projectCard.open}
               previewVideo={project.previewVideo}
               previewFit={project.previewFit}
+              previewOpacity={project.previewOpacity}
               onOpen={() => setActiveProject(project)}
             />
           ))}
