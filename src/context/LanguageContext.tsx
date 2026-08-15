@@ -165,6 +165,20 @@ const translations: Record<Locale, SiteCopy> = {
       ],
       projects: [
         {
+          title: "UAE ATS Resume Generator AI",
+          description:
+            "An AI-powered resume generator engineered specifically for UAE recruiters and ATS standards. Built using curated recruiter feedback and data, it crafts targeted, job-tailored resumes matching specific job descriptions to maximize interview callbacks.",
+          techStack: ["React", "TypeScript", "AI / LLM", "ATS Optimization", "Tailwind CSS"],
+          site: "#",
+          previewVideo: "/UAEResume.mp4",
+          previewOpacity: "opacity-95",
+          detailVideo: "/UAEResume.mp4",
+          details: [
+            "An intelligent AI-driven resume builder tailored specifically for the UAE job market, optimized to navigate regional Applicant Tracking Systems (ATS) and recruiter preferences.",
+            "Leveraging structured recruiter feedback and job description matching algorithms, it optimizes keyword distribution, formatting, and impact metrics to help candidates stand out and secure interviews."
+          ],
+        },
+        {
           title: "Viziona",
           description:
             "An AI-powered visualization and manifestation experience featuring immersive 3D scenes. Describe your goal—a dream country, city, lifestyle, or aspiration—and step into a cinematic, personalized environment instead of just reading text.",
@@ -309,6 +323,20 @@ const translations: Record<Locale, SiteCopy> = {
         "Proyectos web creativos",
       ],
       projects: [
+        {
+          title: "Generador de Currículum AI para ATS de los EAU",
+          description:
+            "Creador de currículums impulsado por IA diseñado para estándares ATS y reclutadores de EAU. Utiliza retroalimentación de reclutadores para adaptar currículums a descripciones de trabajo específicas.",
+          techStack: ["React", "TypeScript", "AI / LLM", "Optimización ATS", "Tailwind CSS"],
+          site: "#",
+          previewVideo: "/UAEResume.mp4",
+          previewOpacity: "opacity-95",
+          detailVideo: "/UAEResume.mp4",
+          details: [
+            "Un creador inteligente de currículums con IA diseñado para el mercado laboral de EAU, optimizado para superar filtros ATS y adaptarse a las preferencias de los reclutadores.",
+            "Utiliza algoritmos de coincidencia con descripciones de empleo y datos de reclutadores para optimizar palabras clave, formato y métricas de impacto."
+          ],
+        },
         {
           title: "Viziona",
           description:
@@ -455,6 +483,20 @@ const translations: Record<Locale, SiteCopy> = {
       ],
       projects: [
         {
+          title: "Générateur de CV IA pour ATS & Recruteurs ÉAU",
+          description:
+            "Un créateur de CV propulsé par l'IA conçu pour le marché des ÉAU et les normes ATS. Optimise les CV selon les descriptions de poste à partir de retours de recruteurs.",
+          techStack: ["React", "TypeScript", "AI / LLM", "Optimisation ATS", "Tailwind CSS"],
+          site: "#",
+          previewVideo: "/UAEResume.mp4",
+          previewOpacity: "opacity-95",
+          detailVideo: "/UAEResume.mp4",
+          details: [
+            "Un générateur de CV intelligent alimenté par l'IA et adapté au marché de l'emploi des Émirats arabes unis, conçu pour optimiser la sélection par les systèmes ATS.",
+            "Grâce à des données de recruteurs et un ciblage par offre d'emploi, il ajuste les mots-clés, la mise en page et les métriques d'impact pour maximiser les entretiens."
+          ],
+        },
+        {
           title: "Viziona",
           description:
             "Une expérience de visualisation et de manifestation propulsée par l'IA avec des scènes 3D immersives. Décrivez votre objectif (un pays, une ville, un style de vie ou un rêve) et recevez un environnement cinématique personnalisé au lieu d'un simple texte.",
@@ -599,6 +641,20 @@ const translations: Record<Locale, SiteCopy> = {
         "Creative web projects",
       ],
       projects: [
+        {
+          title: "UAE ATS और रिक्रूटर AI रेज़्यूमे जनरेटर",
+          description:
+            "यूएई के रिक्रूटर्स और ATS मानकों के लिए विशेष रूप से तैयार एआई-संचालित रेज़्यूमे बिल्डर। रिक्रूटर फीडबैक और जॉब डिस्क्रिप्शन के आधार पर परफेक्ट रेज़्यूमे तैयार करता है।",
+          techStack: ["React", "TypeScript", "AI / LLM", "ATS Optimization", "Tailwind CSS"],
+          site: "#",
+          previewVideo: "/UAEResume.mp4",
+          previewOpacity: "opacity-95",
+          detailVideo: "/UAEResume.mp4",
+          details: [
+            "यूएई जॉब मार्केट के लिए विशेष रूप से डिज़ाइन किया गया एक इंटेलिजेंट AI रेज़्यूमे जनरेटर, जो एटीएस फ़िल्टर और रिक्रूटर प्राथमिकताओं को ध्यान में रखकर बनाया गया है।",
+            "रिक्रूटर फीडबैक और जॉब डिस्क्रिप्शन मैचिंग का उपयोग करके यह कीवर्ड्स, फ़ॉर्मेटिंग और इम्पैक्ट मैट्रिक्स को ऑप्टिमाइज़ करता है।"
+          ],
+        },
         {
           title: "Viziona",
           description:
@@ -745,6 +801,20 @@ const translations: Record<Locale, SiteCopy> = {
       ],
       projects: [
         {
+          title: "UAE ATS & リクルーター AI レジュメジェネレーター",
+          description:
+            "UAEのリクルーターやATS基準に特化したAI駆動型履歴書作成ツール。採用担当者のフィードバックと求人票データに基づき、最適化された履歴書を自動生成します。",
+          techStack: ["React", "TypeScript", "AI / LLM", "ATS Optimization", "Tailwind CSS"],
+          site: "#",
+          previewVideo: "/UAEResume.mp4",
+          previewOpacity: "opacity-95",
+          detailVideo: "/UAEResume.mp4",
+          details: [
+            "UAEの就職市場に合わせて設計されたスマートなAIレジュメビルダー。ATS選考と採用担当者の視点に最適化されています。",
+            "求人要件とのマッチングアルゴリズムとリクルーターのフィードバックを活用し、キーワードやフォーマットを最適化して面接獲得率を高めます。"
+          ],
+        },
+        {
           title: "Viziona",
           description:
             "没入感のある3Dシーンを備えた、AI駆動のビジュアライゼーションおよびマニフェステーション（引き寄せ）体験。目標（夢の国、都市、ライフスタイル、夢など）を入力すると、テキストだけでなく、映画のようなパーソナライズされた空間を受け取ることができます。",
@@ -890,6 +960,20 @@ const translations: Record<Locale, SiteCopy> = {
       ],
       projects: [
         {
+          title: "UAE ATS اور بھرتی کنندگان AI ریزیومے جنریٹر",
+          description:
+            "UAE کے بھرتی کنندگان اور ATS کے معیار کے مطابق تیار کردہ ایک AI سے چلنے والا ریزیومے بلڈر جو جاب کی تفصیلات کے مطابق بہترین ریزیومے تیار کرتا ہے۔",
+          techStack: ["React", "TypeScript", "AI / LLM", "ATS Optimization", "Tailwind CSS"],
+          site: "#",
+          previewVideo: "/UAEResume.mp4",
+          previewOpacity: "opacity-95",
+          detailVideo: "/UAEResume.mp4",
+          details: [
+            "UAE کی جاب مارکیٹ کے لیے تیار کردہ ذہین AI ریزیومے جنریٹر جو علاقائی ATS سسٹمز اور ریکروٹر کی ترجیحات کے مطابق ڈیزائن کیا گیا ہے۔",
+            "ریکروٹر فیڈ بیک اور جاب ڈسکرپشن میچنگ کا استعمال کرتے ہوئے یہ کی ورڈز اور فارمیٹنگ کو بہتر بناتا ہے۔"
+          ],
+        },
+        {
           title: "Viziona",
           description:
             "عمیق 3D مناظر کے ساتھ ایک AI سے چلنے والا تصور اور اظہار کا تجربہ۔ اپنے مقصد (خوابوں کا ملک، شہر، طرز زندگی، یا خواب) کا بیان کریں اور محض متن کے بجائے ایک فلمی، ذاتی نوعیت کا ماحول حاصل کریں۔",
@@ -1034,6 +1118,20 @@ const translations: Record<Locale, SiteCopy> = {
         "创意 Web 项目",
       ],
       projects: [
+        {
+          title: "UAE ATS & 招聘人员 AI 简历生成器",
+          description:
+            "专为阿联酋 (UAE) 招聘人员和 ATS 标准打造的 AI 简历生成工具。结合招聘官反馈数据，根据具体职位描述定制高匹配度简历。",
+          techStack: ["React", "TypeScript", "AI / LLM", "ATS 优化", "Tailwind CSS"],
+          site: "#",
+          previewVideo: "/UAEResume.mp4",
+          previewOpacity: "opacity-95",
+          detailVideo: "/UAEResume.mp4",
+          details: [
+            "针对阿联酋求职市场量身定制的 AI 智能简历生成器，旨在轻松通过 ATS 筛选并迎合当地招聘官的偏好。",
+            "基于招聘官反馈与职位描述匹配算法，优化关键词分布与版面格式，大幅提升面试邀请率。"
+          ],
+        },
         {
           title: "Viziona",
           description:
