@@ -46,6 +46,7 @@ server.listen(PORT, async () => {
   const routes = [
     { path: "/", output: "index.html" },
     { path: "/contact", output: "contact/index.html" },
+    { path: "/projects", output: "projects/index.html" },
     { path: "/qna", output: "qna/index.html" },
   ];
 

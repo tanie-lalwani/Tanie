@@ -14,9 +14,11 @@ import { useInspectProtection } from "./hooks/useInspectProtection";
 import { useLanguage } from "./context/LanguageContext";
 
 const loadHome = () => import("./pages/Home");
+const loadProjects = () => import("./pages/Projects");
 const loadQnA = () => import("./pages/QnA.tsx");
 
 const Home = lazy(loadHome);
+const Projects = lazy(loadProjects);
 const QnA = lazy(loadQnA);
 
 function AppLoadingVeil() {
@@ -105,6 +107,7 @@ export default function App() {
 
   useEffect(() => {
     void loadHome();
+    void loadProjects();
     void loadQnA();
   }, []);
 
@@ -189,6 +192,22 @@ export default function App() {
                   <PageShell>
                     <Home phase={timePhase} onSceneReady={handleOceanSceneReady} />
                     <SiteFooter />
+                  </PageShell>
+                }
+              />
+              <Route
+                path="/projects"
+                element={
+                  <PageShell>
+                    <Projects />
+                  </PageShell>
+                }
+              />
+              <Route
+                path="/projects/"
+                element={
+                  <PageShell>
+                    <Projects />
                   </PageShell>
                 }
               />

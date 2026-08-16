@@ -1,12 +1,7 @@
-import { NavLink } from 'react-router-dom'
 import { useEffect, useRef, useState, type CSSProperties } from 'react'
 import type { TimePhase } from '../experience/timePhase'
 import { languageOptions, useLanguage } from '../context/LanguageContext'
 import AmbientOceanAudio from './AmbientOceanAudio'
-
-const navLinks = [
-  { href: '/qna' },
-]
 
 type NavbarProps = {
   phase: TimePhase
@@ -111,28 +106,6 @@ export default function Navbar({ phase }: NavbarProps) {
         </a>
 
         <ul className="relative flex items-center gap-1.5 text-sm font-medium">
-          {navLinks.map((link) => (
-            <li key={link.href}>
-              {link.href.startsWith('#') ? (
-                <a
-                  href={link.href}
-                  className="inline-flex h-10 items-center justify-center rounded-full border px-5 text-sm font-medium !no-underline transition focus:outline-none focus:ring-2 focus:ring-sky-300"
-                  style={linkStyle()}
-                >
-                  {copy.nav.qna}
-                </a>
-              ) : (
-                <NavLink
-                  to={link.href}
-                  className="inline-flex h-10 items-center justify-center rounded-full border px-5 text-sm font-medium !no-underline transition focus:outline-none focus:ring-2 focus:ring-sky-300"
-                  style={({ isActive }) => linkStyle(isActive)}
-                >
-                  {copy.nav.qna}
-                </NavLink>
-              )}
-            </li>
-          ))}
-
           <li ref={languageMenuRef} className="relative">
             <button
               type="button"

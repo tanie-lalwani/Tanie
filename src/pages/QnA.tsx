@@ -225,25 +225,49 @@ export default function QnA() {
       />
       <h1 className="sr-only">Frontend & React Interview Questions & Answers — Tanie Lalwani</h1>
       <nav className="fixed left-0 top-0 z-40 hidden h-full w-20 flex-col items-center justify-between border-r border-black/10 bg-[#dff4ff]/88 py-8 backdrop-blur-xl md:flex">
-        <div className="flex flex-col items-center gap-8">
+        <div className="flex flex-col items-center gap-6">
           <Link
             to="/"
-            className={`flex w-14 flex-col items-center rounded-[1.35rem] px-2 py-3 transition-all ${
+            className={`flex w-14 flex-col items-center rounded-[1.35rem] px-2 py-3 !no-underline transition-all ${
               location.pathname === "/" ? "bg-[#c8ecff] !text-black" : "!text-black hover:bg-white/55 hover:!text-black"
             }`}
             title={copy.qna.homeLabel}
           >
-            <svg width="28" height="28" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.7" className="mb-1">
+            <svg width="26" height="26" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.7" className="mb-1">
               <path strokeLinecap="round" strokeLinejoin="round" d="M3 12l9-8 9 8M4 10v10a1 1 0 001 1h3m10-11v10a1 1 0 01-1 1h-3m-6 0h6" />
             </svg>
-            <span className="text-xs font-semibold">{copy.qna.homeLabel}</span>
+            <span className="text-[11px] font-semibold">{copy.qna.homeLabel}</span>
           </Link>
-          <Link to="/contact" className="flex w-14 flex-col items-center rounded-[1.35rem] px-2 py-3 !text-black transition-all hover:bg-white/55 hover:!text-black" title={copy.qna.contactLabel}>
-            <svg width="28" height="28" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.7" className="mb-1">
+          <Link
+            to="/projects"
+            className={`flex w-14 flex-col items-center rounded-[1.35rem] px-2 py-3 !no-underline transition-all ${
+              location.pathname === "/projects" ? "bg-[#c8ecff] !text-black" : "!text-black hover:bg-white/55 hover:!text-black"
+            }`}
+            title="Projects"
+          >
+            <svg width="26" height="26" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.7" className="mb-1">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+            </svg>
+            <span className="text-[11px] font-semibold">Projects</span>
+          </Link>
+          <Link
+            to="/qna"
+            className={`flex w-14 flex-col items-center rounded-[1.35rem] px-2 py-3 !no-underline transition-all ${
+              location.pathname === "/qna" ? "bg-[#c8ecff] !text-black" : "!text-black hover:bg-white/55 hover:!text-black"
+            }`}
+            title={copy.nav.qna}
+          >
+            <svg width="26" height="26" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.7" className="mb-1">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span className="text-[11px] font-semibold">{copy.nav.qna}</span>
+          </Link>
+          <Link to="/contact" className="flex w-14 flex-col items-center rounded-[1.35rem] px-2 py-3 !text-black !no-underline transition-all hover:bg-white/55 hover:!text-black" title={copy.qna.contactLabel}>
+            <svg width="26" height="26" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.7" className="mb-1">
               <path strokeLinecap="round" strokeLinejoin="round" d="M21 10.5V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2h7.5" />
               <path strokeLinecap="round" strokeLinejoin="round" d="M21 10.5l-9 6.5-9-6.5" />
             </svg>
-            <span className="text-xs font-semibold">{copy.qna.contactLabel}</span>
+            <span className="text-[11px] font-semibold">{copy.qna.contactLabel}</span>
           </Link>
         </div>
         <div className="mb-2 flex flex-col items-center gap-4">
