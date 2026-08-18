@@ -37,17 +37,6 @@ const nextConfig: NextConfig = {
         destination: "https://me.developers.google.com/u/tanielalwani",
         permanent: false,
       },
-      {
-        source: "/:path*",
-        has: [
-          {
-            type: "host",
-            value: "www.tanie.me",
-          },
-        ],
-        destination: "https://tanie.me/:path*",
-        permanent: true,
-      },
     ];
   },
 };
