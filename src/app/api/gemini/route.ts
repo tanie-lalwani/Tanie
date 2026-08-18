@@ -94,7 +94,7 @@ async function replyWithGemini(query: string): Promise<string> {
     process.env.GOOGLE_API_KEY ||
     process.env.VITE_GEMINI_API_KEY ||
     "";
-  const geminiModel = process.env.GEMINI_MODEL || process.env.VITE_GEMINI_MODEL || "gemini-2.5-flash";
+  const geminiModel = process.env.GEMINI_MODEL || process.env.VITE_GEMINI_MODEL || "gemini-3.6-flash";
 
   if (!geminiApiKey) {
     return buildFallbackReply(query);
