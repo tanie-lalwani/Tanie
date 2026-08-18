@@ -1,8 +1,10 @@
+"use client";
+
 import { ProjectCard } from "./ProjectCard"
 import { useLanguage } from "../context/LanguageContext"
 import { useEffect, useRef, useState } from "react"
 import { createPortal } from "react-dom"
-import { Link } from "react-router-dom"
+import Link from "next/link"
 import { useIsMobile } from "../hooks/useIsMobile"
 import { getVimeoEmbedUrl } from "../lib/projectStorage"
 
@@ -216,7 +218,7 @@ export function ProjectsCarousel({ projects }: ProjectsCarouselProps) {
     <div className="relative w-full" aria-label={copy.home.projectsTitle}>
       <div className="relative mb-3 flex flex-wrap items-center justify-between gap-2.5 border-b border-white/7 pb-2.5 sm:mb-4">
         <Link
-          to="/projects"
+          href="/projects"
           className="ml-auto inline-flex h-10 items-center text-[11.5px] font-medium uppercase tracking-[0.2em] !text-sky-200/90 underline transition hover:!text-sky-100/80"
         >
           {copy.projectCard.allProjects}

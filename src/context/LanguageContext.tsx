@@ -1,3 +1,5 @@
+"use client";
+
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react"
 
 export type Locale = "en" | "es" | "fr" | "hi" | "ja" | "ur" | "zh"

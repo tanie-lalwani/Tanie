@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useRef, useState, type CSSProperties } from 'react'
 import type { TimePhase } from '../experience/timePhase'
 import { languageOptions, useLanguage } from '../context/LanguageContext'

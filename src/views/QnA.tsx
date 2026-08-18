@@ -1,5 +1,8 @@
+"use client";
+
 import { useEffect, useRef, useState, useMemo, type FormEvent } from "react"
-import { Link, useLocation } from "react-router-dom"
+import Link from "next/link"
+import { usePathname } from "next/navigation"
 import { useLanguage } from "../context/LanguageContext"
 import { getBotReply } from "../lib/botAssistant"
 import SEOHead from "../components/SEOHead"
@@ -48,8 +51,8 @@ function getQuestionCards() {
 }
 
 export default function QnA() {
+  const pathname = usePathname()
   const { copy, locale } = useLanguage()
-  const location = useLocation()
   const scrollContainerRef = useRef<HTMLElement | null>(null)
   
   const [isBotOpen, setIsBotOpen] = useState(false)
@@ -109,7 +112,7 @@ export default function QnA() {
       caption: copy.qna.videoPlaceholder,
       transcript: transcriptRepliesFallback[idx] || ""
     }))
-  }, [dbReels, copy.qna.questions, locale])
+  }, [dbReels, copy.qna.questions, copy.qna.videoPlaceholder, locale])
 
   const scrollToQuestion = (index: number) => {
     const cards = getQuestionCards();
@@ -227,9 +230,9 @@ export default function QnA() {
       <nav className="fixed left-0 top-0 z-40 hidden h-full w-20 flex-col items-center justify-between border-r border-black/10 bg-[#dff4ff]/88 py-8 backdrop-blur-xl md:flex">
         <div className="flex flex-col items-center gap-6">
           <Link
-            to="/"
+            href="/"
             className={`flex w-14 flex-col items-center rounded-[1.35rem] px-2 py-3 !no-underline transition-all ${
-              location.pathname === "/" ? "bg-[#c8ecff] !text-black" : "!text-black hover:bg-white/55 hover:!text-black"
+              pathname === "/" ? "bg-[#c8ecff] !text-black" : "!text-black hover:bg-white/55 hover:!text-black"
             }`}
             title={copy.qna.homeLabel}
           >
@@ -239,9 +242,9 @@ export default function QnA() {
             <span className="text-[11px] font-semibold">{copy.qna.homeLabel}</span>
           </Link>
           <Link
-            to="/projects"
+            href="/projects"
             className={`flex w-14 flex-col items-center rounded-[1.35rem] px-2 py-3 !no-underline transition-all ${
-              location.pathname === "/projects" ? "bg-[#c8ecff] !text-black" : "!text-black hover:bg-white/55 hover:!text-black"
+              pathname === "/projects" ? "bg-[#c8ecff] !text-black" : "!text-black hover:bg-white/55 hover:!text-black"
             }`}
             title="Projects"
           >
@@ -251,9 +254,9 @@ export default function QnA() {
             <span className="text-[11px] font-semibold">Projects</span>
           </Link>
           <Link
-            to="/qna"
+            href="/qna"
             className={`flex w-14 flex-col items-center rounded-[1.35rem] px-2 py-3 !no-underline transition-all ${
-              location.pathname === "/qna" ? "bg-[#c8ecff] !text-black" : "!text-black hover:bg-white/55 hover:!text-black"
+              pathname === "/qna" ? "bg-[#c8ecff] !text-black" : "!text-black hover:bg-white/55 hover:!text-black"
             }`}
             title={copy.nav.qna}
           >
@@ -262,7 +265,7 @@ export default function QnA() {
             </svg>
             <span className="text-[11px] font-semibold">{copy.nav.qna}</span>
           </Link>
-          <Link to="/contact" className="flex w-14 flex-col items-center rounded-[1.35rem] px-2 py-3 !text-black !no-underline transition-all hover:bg-white/55 hover:!text-black" title={copy.qna.contactLabel}>
+          <Link href="/contact" className="flex w-14 flex-col items-center rounded-[1.35rem] px-2 py-3 !text-black !no-underline transition-all hover:bg-white/55 hover:!text-black" title={copy.qna.contactLabel}>
             <svg width="26" height="26" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.7" className="mb-1">
               <path strokeLinecap="round" strokeLinejoin="round" d="M21 10.5V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2h7.5" />
               <path strokeLinecap="round" strokeLinejoin="round" d="M21 10.5l-9 6.5-9-6.5" />

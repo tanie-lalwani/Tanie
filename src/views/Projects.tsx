@@ -1,5 +1,8 @@
+"use client";
+
 import { useEffect, useRef, useState, useMemo, type FormEvent } from "react"
-import { Link, useLocation } from "react-router-dom"
+import Link from "next/link"
+import { usePathname } from "next/navigation"
 import { useLanguage } from "../context/LanguageContext"
 import { getBotReply } from "../lib/botAssistant"
 import SEOHead from "../components/SEOHead"
@@ -39,8 +42,8 @@ function getProjectCards() {
 }
 
 export default function Projects() {
+  const pathname = usePathname()
   const { copy, locale } = useLanguage()
-  const location = useLocation()
   const scrollContainerRef = useRef<HTMLElement | null>(null)
 
   const [isBotOpen, setIsBotOpen] = useState(false)
@@ -297,9 +300,9 @@ interface ResolvedProject {
       >
         <div className="flex flex-col items-center gap-6">
           <Link
-            to="/"
+            href="/"
             className={`flex w-14 flex-col items-center rounded-[1.35rem] px-2 py-3 !no-underline transition-all ${
-              location.pathname === "/" ? "bg-[#c8ecff] !text-black" : "!text-black hover:bg-white/55 hover:!text-black"
+              pathname === "/" ? "bg-[#c8ecff] !text-black" : "!text-black hover:bg-white/55 hover:!text-black"
             }`}
             title={copy.qna.homeLabel}
           >
@@ -310,7 +313,7 @@ interface ResolvedProject {
           </Link>
 
           <Link
-            to="/projects"
+            href="/projects"
             className="flex w-14 flex-col items-center rounded-[1.35rem] bg-[#c8ecff] px-2 py-3 !text-black !no-underline shadow-xs transition-all"
             title="Projects"
           >
@@ -321,7 +324,7 @@ interface ResolvedProject {
           </Link>
 
           <Link
-            to="/qna"
+            href="/qna"
             className="flex w-14 flex-col items-center rounded-[1.35rem] px-2 py-3 !text-black !no-underline transition-all hover:bg-white/55 hover:!text-black"
             title={copy.nav.qna}
           >
@@ -332,7 +335,7 @@ interface ResolvedProject {
           </Link>
 
           <Link
-            to="/contact"
+            href="/contact"
             className="flex w-14 flex-col items-center rounded-[1.35rem] px-2 py-3 !text-black !no-underline transition-all hover:bg-white/55 hover:!text-black"
             title={copy.qna.contactLabel}
           >
@@ -394,7 +397,7 @@ interface ResolvedProject {
 
       {/* Mobile Top Header */}
       <header className="fixed left-0 top-0 z-30 flex h-14 w-full items-center justify-between border-b border-black/10 bg-[#dff4ff]/88 px-4 backdrop-blur-xl md:hidden">
-        <Link to="/" className="flex items-center gap-2 !no-underline !text-black font-semibold text-sm">
+        <Link href="/" className="flex items-center gap-2 !no-underline !text-black font-semibold text-sm">
           <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
             <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
           </svg>
@@ -403,7 +406,7 @@ interface ResolvedProject {
         <span className="text-xs font-bold uppercase tracking-widest text-black/70">
           {copy.home.projectsTitle || "Projects"}
         </span>
-        <Link to="/qna" className="!no-underline !text-black text-xs font-semibold px-2.5 py-1 rounded-full bg-white/50 border border-black/10">
+        <Link href="/qna" className="!no-underline !text-black text-xs font-semibold px-2.5 py-1 rounded-full bg-white/50 border border-black/10">
           {copy.nav.qna}
         </Link>
       </header>

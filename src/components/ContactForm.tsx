@@ -1,9 +1,14 @@
+"use client";
+
 import { motion } from "framer-motion"
 import type { FormEvent } from "react"
 import { useState } from "react"
 import { useLanguage } from "../context/LanguageContext"
 
-const FORM_ENDPOINT = import.meta.env.VITE_FORMSPREE_ENDPOINT || "https://formspree.io/f/mpqypqka"
+const FORM_ENDPOINT =
+  process.env.NEXT_PUBLIC_FORMSPREE_ENDPOINT ||
+  process.env.VITE_FORMSPREE_ENDPOINT ||
+  "https://formspree.io/f/mpqypqka"
 
 interface ContactFields {
   name: string

@@ -1,6 +1,9 @@
+"use client";
+
 import { AnimatePresence, motion, useScroll, useTransform } from "framer-motion"
 import { useEffect, useLayoutEffect, useRef, useState, useMemo, type CSSProperties } from "react"
-import { Link, useLocation } from "react-router-dom"
+import Link from "next/link"
+import { usePathname } from "next/navigation"
 import PageHeader from "../components/PageHeader"
 import { ProjectsCarousel, type Project as CarouselProject } from "../components/ProjectsCarousel"
 import { ContactForm } from "../components/ContactForm"
@@ -192,7 +195,7 @@ function InterviewPrompt() {
           >
             ×
           </button>
-          <Link to="/qna" className="!no-underline text-inherit">
+          <Link href="/qna" className="!no-underline text-inherit">
             {copy.nav.interviewPrompt}
           </Link>
           <span className="absolute right-6 -top-5 h-5 w-px bg-sky-100/22" aria-hidden="true" />
@@ -204,13 +207,13 @@ function InterviewPrompt() {
 
 export default function Home({ phase, onSceneReady }: HomeProps) {
   const { copy, locale } = useLanguage()
-  const location = useLocation()
+  const pathname = usePathname()
   const [aboutExpanded, _setAboutExpanded] = useState(true)
 
-  const isScrollingToContact = useRef(location.pathname === "/contact")
+  const isScrollingToContact = useRef(pathname === "/contact")
 
   useEffect(() => {
-    if (location.pathname === "/contact") {
+    if (pathname === "/contact") {
       isScrollingToContact.current = true
       const contactSection = document.getElementById("contact")
       if (contactSection) {
@@ -228,7 +231,7 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
         }
       }
     }
-  }, [location.pathname])
+  }, [pathname])
 
   useEffect(() => {
     const contactSection = document.getElementById("contact")
@@ -445,7 +448,7 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
             />
 
           <div className="relative mb-5 flex flex-wrap items-center justify-end gap-2.5 border-b border-white/7 pb-2.5 sm:mb-6">
-            <Link to="/qna" className="inline-flex h-10 items-center text-[11.5px] font-medium uppercase tracking-[0.2em] !text-sky-200/90 no-underline transition hover:!text-sky-100/80">
+            <Link href="/qna" className="inline-flex h-10 items-center text-[11.5px] font-medium uppercase tracking-[0.2em] !text-sky-200/90 no-underline transition hover:!text-sky-100/80">
               {copy.home.knowMore}
             </Link>
           </div>
