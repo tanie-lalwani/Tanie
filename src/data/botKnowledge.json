@@ -80,6 +80,21 @@
     "keywords": ["portfolio", "site", "website", "tanie.me", "built", "three.js", "ocean", "qna"]
   },
   {
+    "title": "Timelines & Availability",
+    "content": "Project timelines typically range from 1 to 2 weeks for landing pages and 2 to 4+ weeks for full interactive web applications, 3D WebGL experiences, or custom portfolio sites depending on scope. For exact timelines and start dates, reach out through the contact form or email tanielalwani@gmail.com.",
+    "keywords": ["timeline", "timelines", "duration", "how long", "timeframe", "turnaround", "availability", "deadline", "schedule", "when"]
+  },
+  {
+    "title": "Pricing & Quotes",
+    "content": "Project quotes are tailored based on project scope, design complexity, 3D/animation requirements, and deadlines. You can discuss budget and get a custom estimate by sending a message through the contact form or emailing tanielalwani@gmail.com.",
+    "keywords": ["pricing", "cost", "quote", "rate", "budget", "estimate", "how much", "charges", "fees"]
+  },
+  {
+    "title": "Services & Offerings",
+    "content": "Tanie specializes in creative frontend development, React & Next.js web applications, interactive 3D WebGL/Three.js web experiences, animated landing pages, UI/UX implementation, and frontend performance optimization.",
+    "keywords": ["services", "offer", "offerings", "what can you do", "build", "hire", "work together", "collaborate"]
+  },
+  {
     "title": "Site map",
     "content": "The homepage contains the ocean-inspired portfolio, About, Projects, Contact, and links sections. The /qna route contains the Interview Tanie QnA page with transcript cards, a readable transcript section, and the bot panel. Social redirects exist at /github, /instagram, /linkedin, and /x.",
     "keywords": ["where", "location", "locate", "map", "section", "home", "homepage", "about", "projects", "contact", "qna", "interview", "redirect", "path", "route"]

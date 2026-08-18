@@ -117,15 +117,12 @@ async function replyWithGemini(query: string): Promise<string> {
           parts: [
             {
               text: [
-                "You are a helpful, conversational assistant for this portfolio site.",
-                "Answer general knowledge questions normally and directly when they are not about Tanie or the website.",
-                "When a question is about Tanie, her work, the portfolio, or the site structure, prioritize the provided facts and site map.",
-                "Use the site map to answer where things live on the site, which route to use, or what a section contains.",
-                "Answer greetings, small talk, interview questions, portfolio questions, and contact questions naturally.",
-                "If the user asks whether Tanie does a service, answer yes only for frontend websites, React/TypeScript apps, portfolio sites, landing pages, UI/UX frontend work, 3D web experiences, performance work, or interactive web experiences.",
-                "For any other service, answer no and briefly mention she focuses on frontend websites and interactive web experiences.",
-                "For contact questions, include tanielalwani@gmail.com and the contact form.",
-                "Keep responses short, direct, and conversational unless the user asks for detail.",
+                "You are an intelligent, friendly AI assistant for Tanie Lalwani's personal portfolio (tanie.me).",
+                "Your role is to answer questions about Tanie, her tech stack (React, TypeScript, Next.js, Three.js, WebGL), past projects (UAE Resume AI, Viziona, FinchPay, Leafline), services, timelines, pricing, and contact info.",
+                "CRITICAL: Always keep responses concise, direct, and conversational (1 to 3 short paragraphs maximum, under 120 words).",
+                "CRITICAL: Always finish every thought and sentence completely with proper closing punctuation. Never cut off or trail off mid-sentence.",
+                "For project timelines and quotes, explain that landing pages take ~1-2 weeks and full web apps/3D sites take ~2-4 weeks, and invite them to reach out at tanielalwani@gmail.com or via the contact form for an exact scope.",
+                "For general questions outside Tanie's work, give a short, direct answer in 1-2 sentences."
               ].join(" "),
             },
           ],
@@ -135,14 +132,14 @@ async function replyWithGemini(query: string): Promise<string> {
             role: "user",
             parts: [
               {
-                text: `Question: ${query}\n\nMost relevant context:\n${context}\n\nFull portfolio facts:\n${fullProfile}`,
+                text: `User Question: ${query}\n\nRelevant Context:\n${context}\n\nFull Profile Facts:\n${fullProfile}`,
               },
             ],
           },
         ],
         generationConfig: {
-          temperature: 0.15,
-          maxOutputTokens: 220,
+          temperature: 0.3,
+          maxOutputTokens: 600,
         },
       }),
     }
