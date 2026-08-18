@@ -104,7 +104,7 @@ const jsonLd = {
       mainEntityOfPage: "https://tanie.me/",
       jobTitle: "Creative & Full-Stack Developer",
       description:
-        "Tanie Lalwani is a creative full-stack developer specializing in React.js, TypeScript, Three.js, and Next.js. Explore her portfolio, projects, experience, and interactive web development.",
+        "Tanie Lalwani is a creative full-stack developer based in India specializing in React, TypeScript, Three.js, and Next.js, building interactive 3D web experiences, landing pages, and frontend applications.",
       knowsAbout: [
         "React",
         "Next.js",
@@ -113,6 +113,8 @@ const jsonLd = {
         "Frontend Development",
         "Creative Development",
         "Interactive Web Experiences",
+        "WebGL",
+        "Performance Optimization"
       ],
       sameAs: [
         "https://github.com/tanie-lalwani",
@@ -126,32 +128,11 @@ const jsonLd = {
       "@type": "WebSite",
       "@id": "https://tanie.me/#website",
       url: "https://tanie.me/",
-      name: "Tanie Lalwani",
+      name: "Tanie Lalwani Portfolio",
       alternateName: "Tanie",
       description:
-        "Tanie Lalwani is a creative full-stack developer specializing in React.js, TypeScript, Three.js, and Next.js. Explore her portfolio, projects, experience, and interactive web development.",
+        "Official portfolio and creative web engineering showcase of Tanie Lalwani.",
       publisher: {
-        "@id": "https://tanie.me/#person",
-      },
-      about: {
-        "@id": "https://tanie.me/#person",
-      },
-      inLanguage: "en",
-    },
-    {
-      "@type": "WebPage",
-      "@id": "https://tanie.me/#webpage",
-      url: "https://tanie.me/",
-      name: "Tanie Lalwani",
-      description:
-        "Tanie Lalwani is a creative full-stack developer specializing in React.js, TypeScript, Three.js, and Next.js. Explore her portfolio, projects, experience, and interactive web development.",
-      isPartOf: {
-        "@id": "https://tanie.me/#website",
-      },
-      mainEntity: {
-        "@id": "https://tanie.me/#person",
-      },
-      author: {
         "@id": "https://tanie.me/#person",
       },
       about: {
@@ -163,7 +144,7 @@ const jsonLd = {
       "@type": "ProfilePage",
       "@id": "https://tanie.me/#profile-page",
       url: "https://tanie.me/",
-      name: "Tanie Lalwani",
+      name: "Tanie Lalwani | Creative and Full Stack Developer",
       isPartOf: {
         "@id": "https://tanie.me/#website",
       },
@@ -173,6 +154,7 @@ const jsonLd = {
       about: {
         "@id": "https://tanie.me/#person",
       },
+      inLanguage: "en",
     },
     {
       "@type": "CreativeWork",
