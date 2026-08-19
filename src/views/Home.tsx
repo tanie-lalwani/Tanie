@@ -1,7 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion, useScroll, useTransform } from "framer-motion"
-import { useEffect, useLayoutEffect, useRef, useState, useMemo, type CSSProperties } from "react"
+import { useCallback, useEffect, useLayoutEffect, useRef, useState, useMemo, type CSSProperties } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import PageHeader from "../components/PageHeader"
@@ -11,6 +11,7 @@ import GlobalOceanBackdrop from "../experience/Scenes/GlobalOceanBackdrop"
 import { useIsMobile } from "../hooks/useIsMobile"
 import type { TimePhase } from "../experience/timePhase"
 import { useLanguage } from "../context/LanguageContext"
+import { useLoading } from "../context/LoadingContext"
 import SEOHead from "../components/SEOHead"
 import { loadCustomProjects } from "../lib/projectStorage"
 
@@ -207,8 +208,14 @@ function InterviewPrompt() {
 
 export default function Home({ phase, onSceneReady }: HomeProps) {
   const { copy, locale } = useLanguage()
+  const { markOceanReady } = useLoading()
   const pathname = usePathname()
   const [aboutExpanded, _setAboutExpanded] = useState(true)
+
+  const handleSceneReady = useCallback(() => {
+    onSceneReady?.()
+    markOceanReady()
+  }, [onSceneReady, markOceanReady])
 
   const isScrollingToContact = useRef(pathname === "/contact")
 
@@ -356,7 +363,7 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
       />
       <GlobalOceanBackdrop
         phase={phase}
-        onReady={onSceneReady}
+        onReady={handleSceneReady}
         position="fixed"
         depthStage="surface"
         enableContinuousDive
