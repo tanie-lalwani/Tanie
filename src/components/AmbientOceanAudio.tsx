@@ -47,15 +47,8 @@ function createNoiseBuffer(context: AudioContext, durationSeconds = 4): AudioBuf
 }
 
 export default function AmbientOceanAudio({ placement = "floating" }: AmbientOceanAudioProps) {
-  const [isEnabled, setIsEnabled] = useState(() => {
-    if (typeof window === "undefined") return true
-    try {
-      const storedValue = window.localStorage.getItem(AMBIENT_ENABLED_KEY)
-      return storedValue === null ? true : storedValue === "true"
-    } catch {
-      return true
-    }
-  })
+  const [isEnabled, setIsEnabled] = useState(true)
+  const isInitializedRef = useRef(false)
   const [isAudioReady, setIsAudioReady] = useState(false)
   const [isUnderwaterSectionActive, setIsUnderwaterSectionActive] = useState(false)
   const graphRef = useRef<AmbientGraph | null>(null)
@@ -63,6 +56,20 @@ export default function AmbientOceanAudio({ placement = "floating" }: AmbientOce
   const underwaterAudioRef = useRef<HTMLAudioElement | null>(null)
 
   useEffect(() => {
+    try {
+      const storedValue = window.localStorage.getItem(AMBIENT_ENABLED_KEY)
+      if (storedValue !== null) {
+        setIsEnabled(storedValue === "true")
+      }
+    } catch {
+      // Ignore storage failures in private browsing or locked-down contexts.
+    } finally {
+      isInitializedRef.current = true
+    }
+  }, [])
+
+  useEffect(() => {
+    if (!isInitializedRef.current) return
     try {
       window.localStorage.setItem(AMBIENT_ENABLED_KEY, String(isEnabled))
     } catch {
