@@ -5,9 +5,11 @@ import Link from "next/link";
 import {
   getWebsitePackages,
   submitBooking,
+  submitLead,
   type WebsitePackage,
   DEFAULT_PACKAGES,
 } from "@/lib/portalServices";
+import { supabase, isSupabaseConfigured } from "@/lib/supabaseClient";
 import Navbar from "@/components/Navbar";
 import SiteFooter from "@/components/SiteFooter";
 
@@ -20,6 +22,17 @@ export default function PackagesView() {
   const [bookingSuccess, setBookingSuccess] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // Lead Collection & Pricing Gate State
+  const [isPricingUnlocked, setIsPricingUnlocked] = useState(false);
+  const [unlockedEmail, setUnlockedEmail] = useState<string>("");
+  const [isUnlockModalOpen, setIsUnlockModalOpen] = useState(false);
+  const [leadName, setLeadName] = useState("");
+  const [leadEmail, setLeadEmail] = useState("");
+  const [leadCompany, setLeadCompany] = useState("");
+  const [leadPhone, setLeadPhone] = useState("");
+  const [leadTimeline, setLeadTimeline] = useState("Immediate (1-2 weeks)");
+  const [isUnlocking, setIsUnlocking] = useState(false);
+
   // Booking Form State
   const [clientName, setClientName] = useState("");
   const [clientEmail, setClientEmail] = useState("");
@@ -28,6 +41,32 @@ export default function PackagesView() {
   const [projectDescription, setProjectDescription] = useState("");
 
   useEffect(() => {
+    // Check if user already unlocked pricing or has active session
+    if (typeof window !== "undefined") {
+      const savedLead = localStorage.getItem("pricing_unlocked_lead");
+      if (savedLead) {
+        setIsPricingUnlocked(true);
+        setUnlockedEmail(savedLead);
+        setClientEmail(savedLead);
+      }
+    }
+
+    async function checkUser() {
+      if (isSupabaseConfigured()) {
+        try {
+          const { data } = await supabase.auth.getSession();
+          if (data.session?.user) {
+            setIsPricingUnlocked(true);
+            setUnlockedEmail(data.session.user.email || "");
+            setClientEmail(data.session.user.email || "");
+          }
+        } catch (e) {
+          console.warn("Session check error:", e);
+        }
+      }
+    }
+    checkUser();
+
     async function load() {
       const data = await getWebsitePackages();
       if (data && data.length > 0) {
@@ -44,7 +83,7 @@ export default function PackagesView() {
     );
   };
 
-  // Calculate dynamic total price
+  // Dynamic Total Price Calculation
   const basePrice = currency === "USD" ? selectedPackage.price_usd : selectedPackage.price_inr;
   const addonsTotal = selectedPackage.addons
     ? selectedPackage.addons
@@ -53,6 +92,47 @@ export default function PackagesView() {
     : 0;
   const grandTotal = basePrice + addonsTotal;
 
+  // Handle Lead Unlock Submit
+  const handleLeadUnlockSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!leadEmail.trim() || !leadName.trim()) {
+      alert("Please enter your name and email.");
+      return;
+    }
+
+    setIsUnlocking(true);
+    try {
+      await submitLead({
+        client_name: leadName.trim(),
+        client_email: leadEmail.trim(),
+        company_name: leadCompany.trim(),
+        phone: leadPhone.trim(),
+        package_interest: selectedPackage.name,
+        timeline: leadTimeline,
+        source: "Pricing Unlock Gate",
+      });
+
+      // Save unlock state to localStorage
+      if (typeof window !== "undefined") {
+        localStorage.setItem("pricing_unlocked_lead", leadEmail.trim());
+      }
+      setIsPricingUnlocked(true);
+      setUnlockedEmail(leadEmail.trim());
+      setClientName(leadName.trim());
+      setClientEmail(leadEmail.trim());
+      setCompanyName(leadCompany.trim());
+      setIsUnlockModalOpen(false);
+    } catch (err) {
+      console.error("Error unlocking pricing:", err);
+      // Fallback unlock so user experience is not blocked
+      setIsPricingUnlocked(true);
+      setIsUnlockModalOpen(false);
+    } finally {
+      setIsUnlocking(false);
+    }
+  };
+
+  // Handle Booking Intake Submit
   const handleBookingSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -91,38 +171,66 @@ export default function PackagesView() {
             Bespoke Digital Experiences Engineered to Convert.
           </h1>
           <p className="mt-4 text-base text-slate-300 sm:text-lg">
-            Transparent investment tiers tailored for high-profile portfolios, visionary tech startups, and luxury
-            brands. Every project includes full client portal access, asset management, and digital e-contracts.
+            High-tier web architecture for visionary brands, high-profile portfolios, and SaaS startups. Every project
+            includes full client portal access, asset management, and digital e-contracts.
           </p>
 
-          {/* Currency Switcher */}
-          <div className="mt-8 inline-flex items-center rounded-full border border-white/10 bg-slate-950/80 p-1 backdrop-blur-xl">
-            <button
-              type="button"
-              onClick={() => setCurrency("USD")}
-              className={`rounded-full px-5 py-1.5 text-xs font-bold transition ${
-                currency === "USD" ? "bg-sky-400 text-slate-950 shadow-[0_0_12px_rgba(56,189,248,0.4)]" : "text-slate-400 hover:text-white"
-              }`}
-            >
-              USD ($)
-            </button>
-            <button
-              type="button"
-              onClick={() => setCurrency("INR")}
-              className={`rounded-full px-5 py-1.5 text-xs font-bold transition ${
-                currency === "INR" ? "bg-sky-400 text-slate-950 shadow-[0_0_12px_rgba(56,189,248,0.4)]" : "text-slate-400 hover:text-white"
-              }`}
-            >
-              INR (₹)
-            </button>
-          </div>
+          {/* Pricing Unlock Status Banner */}
+          {isPricingUnlocked ? (
+            <div className="mt-6 inline-flex items-center gap-2 rounded-full border border-emerald-500/40 bg-emerald-500/10 px-5 py-2 text-xs font-semibold text-emerald-300 backdrop-blur-xl">
+              <span>✓</span> Full Pricing & Customizer Unlocked for{" "}
+              <strong className="text-white">{unlockedEmail}</strong>
+            </div>
+          ) : (
+            <div className="mt-6 inline-flex items-center gap-3 rounded-full border border-sky-400/30 bg-slate-950/80 px-5 py-2.5 text-xs font-medium text-slate-300 backdrop-blur-xl shadow-lg">
+              <span>🔒 Transparent rates & customizer available upon brief unlock</span>
+              <button
+                type="button"
+                onClick={() => setIsUnlockModalOpen(true)}
+                className="rounded-full bg-gradient-to-r from-sky-400 to-cyan-500 px-4 py-1 text-xs font-bold uppercase tracking-wider text-slate-950 hover:brightness-110"
+              >
+                Unlock Pricing →
+              </button>
+            </div>
+          )}
+
+          {/* Currency Switcher (Visible if unlocked) */}
+          {isPricingUnlocked && (
+            <div className="mt-6 inline-flex items-center rounded-full border border-white/10 bg-slate-950/80 p-1 backdrop-blur-xl">
+              <button
+                type="button"
+                onClick={() => setCurrency("USD")}
+                className={`rounded-full px-5 py-1.5 text-xs font-bold transition ${
+                  currency === "USD"
+                    ? "bg-sky-400 text-slate-950 shadow-[0_0_12px_rgba(56,189,248,0.4)]"
+                    : "text-slate-400 hover:text-white"
+                }`}
+              >
+                USD ($)
+              </button>
+              <button
+                type="button"
+                onClick={() => setCurrency("INR")}
+                className={`rounded-full px-5 py-1.5 text-xs font-bold transition ${
+                  currency === "INR"
+                    ? "bg-sky-400 text-slate-950 shadow-[0_0_12px_rgba(56,189,248,0.4)]"
+                    : "text-slate-400 hover:text-white"
+                }`}
+              >
+                INR (₹)
+              </button>
+            </div>
+          )}
         </div>
 
         {/* PACKAGE TIERS CARDS */}
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-3 mb-16">
           {packages.map((pkg) => {
             const isSelected = selectedPackage.id === pkg.id;
-            const price = currency === "USD" ? `$${pkg.price_usd.toLocaleString("en-US")}` : `₹${pkg.price_inr.toLocaleString("en-IN")}`;
+            const price =
+              currency === "USD"
+                ? `$${pkg.price_usd.toLocaleString("en-US")}`
+                : `₹${pkg.price_inr.toLocaleString("en-IN")}`;
 
             return (
               <div
@@ -154,10 +262,32 @@ export default function PackagesView() {
                   <h3 className="mt-4 text-2xl font-bold text-white">{pkg.name}</h3>
                   <p className="mt-2 text-xs text-slate-300 leading-relaxed">{pkg.tagline}</p>
 
-                  {/* Price */}
+                  {/* Pricing Display (Gated vs Unlocked) */}
                   <div className="my-6 border-y border-white/8 py-4">
-                    <div className="text-3xl font-black text-white">{price}</div>
-                    <div className="text-xs text-slate-400 mt-0.5">Fixed Investment • 30-Day Hypercare Included</div>
+                    {isPricingUnlocked ? (
+                      <div>
+                        <div className="text-3xl font-black text-white">{price}</div>
+                        <div className="text-xs text-slate-400 mt-0.5">
+                          Fixed Investment • 30-Day Hypercare Included
+                        </div>
+                      </div>
+                    ) : (
+                      <div
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setSelectedPackage(pkg);
+                          setIsUnlockModalOpen(true);
+                        }}
+                        className="rounded-2xl border border-sky-400/30 bg-sky-500/10 p-3.5 text-center transition hover:bg-sky-500/20"
+                      >
+                        <div className="flex items-center justify-center gap-1.5 text-xs font-bold text-sky-300 uppercase tracking-wider">
+                          <span>🔒</span> Unlock Exact Rate
+                        </div>
+                        <span className="text-[11px] text-slate-400 block mt-0.5">
+                          Sign up with brief to view rate card & customizer
+                        </span>
+                      </div>
+                    )}
                   </div>
 
                   {/* Features List */}
@@ -175,21 +305,35 @@ export default function PackagesView() {
                 </div>
 
                 <div className="mt-8 border-t border-white/8 pt-6">
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setSelectedPackage(pkg);
-                      setIsBookingOpen(true);
-                    }}
-                    className={`w-full rounded-2xl py-3 text-xs font-bold uppercase tracking-wider transition ${
-                      isSelected
-                        ? "bg-gradient-to-r from-sky-400 to-cyan-500 text-slate-950 shadow-[0_0_20px_rgba(56,189,248,0.3)] hover:brightness-110"
-                        : "bg-slate-900 text-white border border-white/10 hover:bg-sky-500/20 hover:text-sky-200"
-                    }`}
-                  >
-                    Select & Book Tier →
-                  </button>
+                  {isPricingUnlocked ? (
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setSelectedPackage(pkg);
+                        setIsBookingOpen(true);
+                      }}
+                      className={`w-full rounded-2xl py-3 text-xs font-bold uppercase tracking-wider transition ${
+                        isSelected
+                          ? "bg-gradient-to-r from-sky-400 to-cyan-500 text-slate-950 shadow-[0_0_20px_rgba(56,189,248,0.3)] hover:brightness-110"
+                          : "bg-slate-900 text-white border border-white/10 hover:bg-sky-500/20 hover:text-sky-200"
+                      }`}
+                    >
+                      Select & Book Tier →
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setSelectedPackage(pkg);
+                        setIsUnlockModalOpen(true);
+                      }}
+                      className="w-full rounded-2xl bg-slate-900 py-3 text-xs font-bold uppercase tracking-wider text-sky-300 border border-sky-400/30 hover:bg-sky-500/20 hover:text-white transition"
+                    >
+                      Unlock Rates & Book Tier →
+                    </button>
+                  )}
                 </div>
               </div>
             );
@@ -197,23 +341,25 @@ export default function PackagesView() {
         </div>
 
         {/* INTERACTIVE ADD-ONS & ESTIMATOR */}
-        <div className="rounded-3xl border border-sky-400/20 bg-slate-950/80 p-8 backdrop-blur-2xl shadow-2xl mb-16">
+        <div className="rounded-3xl border border-sky-400/20 bg-slate-950/80 p-8 backdrop-blur-2xl shadow-2xl mb-16 relative overflow-hidden">
           <div className="flex flex-wrap items-center justify-between gap-4 border-b border-white/10 pb-6">
             <div>
               <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-sky-300">
                 <span>⚙️</span> Interactive Scope Customizer
               </div>
-              <h3 className="mt-1 text-2xl font-bold text-white">
-                Customize: {selectedPackage.name}
-              </h3>
+              <h3 className="mt-1 text-2xl font-bold text-white">Customize: {selectedPackage.name}</h3>
             </div>
 
             <div className="text-right">
               <span className="text-xs uppercase tracking-wider text-slate-400">Estimated Total Investment</span>
-              <div className="text-3xl font-black text-sky-300">
-                {currency === "USD" ? `$${grandTotal.toLocaleString("en-US")}` : `₹${grandTotal.toLocaleString("en-IN")}`}{" "}
-                <span className="text-xs font-normal text-slate-400">{currency}</span>
-              </div>
+              {isPricingUnlocked ? (
+                <div className="text-3xl font-black text-sky-300">
+                  {currency === "USD" ? `$${grandTotal.toLocaleString("en-US")}` : `₹${grandTotal.toLocaleString("en-IN")}`}{" "}
+                  <span className="text-xs font-normal text-slate-400">{currency}</span>
+                </div>
+              ) : (
+                <div className="text-xl font-bold text-sky-300 font-mono">🔒 Locked until sign-up</div>
+              )}
             </div>
           </div>
 
@@ -231,7 +377,13 @@ export default function PackagesView() {
                 return (
                   <div
                     key={addon.id}
-                    onClick={() => toggleAddon(addon.id)}
+                    onClick={() => {
+                      if (!isPricingUnlocked) {
+                        setIsUnlockModalOpen(true);
+                        return;
+                      }
+                      toggleAddon(addon.id);
+                    }}
                     className={`cursor-pointer rounded-2xl border p-4 transition ${
                       isChecked
                         ? "border-sky-400/80 bg-sky-500/15 shadow-[0_0_16px_rgba(56,189,248,0.2)]"
@@ -244,7 +396,9 @@ export default function PackagesView() {
                         {isChecked ? "✓" : ""}
                       </span>
                     </div>
-                    <div className="mt-2 text-xs font-mono text-sky-300 font-semibold">+{addonPrice}</div>
+                    <div className="mt-2 text-xs font-mono text-sky-300 font-semibold">
+                      {isPricingUnlocked ? `+${addonPrice}` : "🔒 Available with unlock"}
+                    </div>
                   </div>
                 );
               })}
@@ -253,15 +407,26 @@ export default function PackagesView() {
 
           <div className="mt-8 flex flex-wrap items-center justify-between gap-4 border-t border-white/8 pt-6">
             <div className="text-xs text-slate-400 max-w-md">
-              Selected package includes source code handover, Vercel deployment, client portal onboarding, and e-contract execution.
+              Selected package includes source code handover, Vercel deployment, client portal onboarding, and e-contract
+              execution.
             </div>
-            <button
-              type="button"
-              onClick={() => setIsBookingOpen(true)}
-              className="rounded-full bg-gradient-to-r from-sky-400 to-cyan-500 px-8 py-3 text-sm font-bold text-slate-950 shadow-[0_0_20px_rgba(56,189,248,0.35)] hover:brightness-110"
-            >
-              Proceed to Booking & Contract Kickoff →
-            </button>
+            {isPricingUnlocked ? (
+              <button
+                type="button"
+                onClick={() => setIsBookingOpen(true)}
+                className="rounded-full bg-gradient-to-r from-sky-400 to-cyan-500 px-8 py-3 text-sm font-bold text-slate-950 shadow-[0_0_20px_rgba(56,189,248,0.35)] hover:brightness-110"
+              >
+                Proceed to Booking & Contract Kickoff →
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={() => setIsUnlockModalOpen(true)}
+                className="rounded-full bg-gradient-to-r from-sky-400 to-cyan-500 px-8 py-3 text-sm font-bold text-slate-950 shadow-[0_0_20px_rgba(56,189,248,0.35)] hover:brightness-110"
+              >
+                Unlock Pricing & Rate Card →
+              </button>
+            )}
           </div>
         </div>
 
@@ -272,34 +437,146 @@ export default function PackagesView() {
             <div className="rounded-2xl border border-white/6 bg-slate-900/40 p-5">
               <h4 className="font-bold text-white text-sm">How does the contract and payment flow work?</h4>
               <p className="mt-2 text-slate-300 leading-relaxed">
-                Once booked, a tailored digital agreement is generated in your Client Portal. You can sign directly via our e-signature pad. Engagements standardly require a 50% kickoff deposit and 50% upon final delivery.
+                Once booked, a tailored digital agreement is generated in your Client Portal. You can sign directly via
+                our e-signature pad. Engagements standardly require a 50% kickoff deposit and 50% upon final delivery.
               </p>
             </div>
 
             <div className="rounded-2xl border border-white/6 bg-slate-900/40 p-5">
               <h4 className="font-bold text-white text-sm">Can I upload assets and provide copy directly?</h4>
               <p className="mt-2 text-slate-300 leading-relaxed">
-                Yes! Your Client Workspace features a dedicated Asset Dropzone powered by Supabase Cloud Storage. You can upload SVGs, PNGs, PDFs, fonts, and copy files at any time during development.
+                Yes! Your Client Workspace features a dedicated Asset Dropzone powered by Supabase Cloud Storage. You can
+                upload SVGs, PNGs, PDFs, fonts, and copy files at any time during development.
               </p>
             </div>
 
             <div className="rounded-2xl border border-white/6 bg-slate-900/40 p-5">
               <h4 className="font-bold text-white text-sm">What happens after launch?</h4>
               <p className="mt-2 text-slate-300 leading-relaxed">
-                Every tier includes a 30-day (or 45-day) hypercare warranty covering technical stabilization, bug fixes, and continuous Lighthouse performance optimization.
+                Every tier includes a 30-day (or 45-day) hypercare warranty covering technical stabilization, bug fixes,
+                and continuous Lighthouse performance optimization.
               </p>
             </div>
 
             <div className="rounded-2xl border border-white/6 bg-slate-900/40 p-5">
               <h4 className="font-bold text-white text-sm">Do you offer custom enterprise engineering?</h4>
               <p className="mt-2 text-slate-300 leading-relaxed">
-                Absolutely. For custom 3D web applications, custom CMS architectures, or bespoke WebGL pipelines, reach out directly through our contact form.
+                Absolutely. For custom 3D web applications, custom CMS architectures, or bespoke WebGL pipelines, reach
+                out directly through our contact form.
               </p>
             </div>
           </div>
         </div>
 
-        {/* MODAL: BOOKING INTAKE */}
+        {/* MODAL 1: PRICING UNLOCK & LEAD COLLECTION GATE */}
+        {isUnlockModalOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 p-4 backdrop-blur-md">
+            <div className="w-full max-w-lg rounded-3xl border border-sky-400/40 bg-slate-950 p-6 shadow-2xl sm:p-8">
+              <div className="flex items-center justify-between border-b border-white/10 pb-4">
+                <div>
+                  <div className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-sky-300">
+                    <span>⚡</span> Instant Rate Card Access
+                  </div>
+                  <h3 className="text-xl font-bold text-white mt-1">Unlock Full Pricing & Scope Matrix</h3>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setIsUnlockModalOpen(false)}
+                  className="rounded-lg bg-slate-900 p-1.5 text-slate-400 hover:text-white"
+                >
+                  ✕
+                </button>
+              </div>
+
+              <p className="text-xs text-slate-300 mt-3">
+                Share a few quick details about your project to instantly unlock exact pricing tiers, add-on rates, and
+                intake scheduling.
+              </p>
+
+              <form onSubmit={handleLeadUnlockSubmit} className="mt-6 space-y-4 text-xs">
+                <div>
+                  <label className="block font-medium uppercase tracking-wider text-slate-300">Your Full Name</label>
+                  <input
+                    type="text"
+                    required
+                    value={leadName}
+                    onChange={(e) => setLeadName(e.target.value)}
+                    placeholder="e.g. Alex Sterling"
+                    className="mt-1 w-full rounded-xl border border-white/10 bg-slate-900 px-3.5 py-2.5 text-white placeholder-slate-500 focus:border-sky-400 focus:outline-none"
+                  />
+                </div>
+
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                  <div>
+                    <label className="block font-medium uppercase tracking-wider text-slate-300">Work Email</label>
+                    <input
+                      type="email"
+                      required
+                      value={leadEmail}
+                      onChange={(e) => setLeadEmail(e.target.value)}
+                      placeholder="alex@company.com"
+                      className="mt-1 w-full rounded-xl border border-white/10 bg-slate-900 px-3.5 py-2.5 text-white placeholder-slate-500 focus:border-sky-400 focus:outline-none"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block font-medium uppercase tracking-wider text-slate-300">
+                      Company / Studio
+                    </label>
+                    <input
+                      type="text"
+                      value={leadCompany}
+                      onChange={(e) => setLeadCompany(e.target.value)}
+                      placeholder="e.g. Aetheria Studios"
+                      className="mt-1 w-full rounded-xl border border-white/10 bg-slate-900 px-3.5 py-2.5 text-white placeholder-slate-500 focus:border-sky-400 focus:outline-none"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                  <div>
+                    <label className="block font-medium uppercase tracking-wider text-slate-300">Phone / WhatsApp</label>
+                    <input
+                      type="tel"
+                      value={leadPhone}
+                      onChange={(e) => setLeadPhone(e.target.value)}
+                      placeholder="+1 (555) 000-0000"
+                      className="mt-1 w-full rounded-xl border border-white/10 bg-slate-900 px-3.5 py-2.5 text-white placeholder-slate-500 focus:border-sky-400 focus:outline-none"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block font-medium uppercase tracking-wider text-slate-300">
+                      Target Project Timeline
+                    </label>
+                    <select
+                      value={leadTimeline}
+                      onChange={(e) => setLeadTimeline(e.target.value)}
+                      className="mt-1 w-full rounded-xl border border-white/10 bg-slate-900 px-3.5 py-2.5 text-white focus:border-sky-400 focus:outline-none"
+                    >
+                      <option value="Immediate (1-2 weeks sprint)">Immediate (1-2 weeks sprint)</option>
+                      <option value="Standard (3-5 weeks)">Standard (3-5 weeks)</option>
+                      <option value="Next Month">Next Month</option>
+                      <option value="Just exploring">Just exploring</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className="pt-3">
+                  <button
+                    type="submit"
+                    disabled={isUnlocking}
+                    className="w-full rounded-xl bg-gradient-to-r from-sky-400 to-cyan-500 py-3 font-bold text-slate-950 shadow-[0_0_20px_rgba(56,189,248,0.35)] hover:brightness-110 disabled:opacity-50"
+                  >
+                    {isUnlocking ? "Unlocking Rates..." : "Unlock Full Pricing & Scope Matrix →"}
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
+
+        {/* MODAL 2: BOOKING INTAKE */}
         {isBookingOpen && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 backdrop-blur-md">
             <div className="w-full max-w-xl rounded-3xl border border-sky-400/30 bg-slate-950 p-6 shadow-2xl sm:p-8">
@@ -309,7 +586,10 @@ export default function PackagesView() {
                   <p className="text-xs text-slate-400 mt-0.5">
                     Estimated Investment:{" "}
                     <strong className="text-sky-300 font-mono">
-                      {currency === "USD" ? `$${grandTotal.toLocaleString("en-US")}` : `₹${grandTotal.toLocaleString("en-IN")}`} {currency}
+                      {currency === "USD"
+                        ? `$${grandTotal.toLocaleString("en-US")}`
+                        : `₹${grandTotal.toLocaleString("en-IN")}`}{" "}
+                      {currency}
                     </strong>
                   </p>
                 </div>
@@ -332,7 +612,8 @@ export default function PackagesView() {
                   </div>
                   <h4 className="text-xl font-bold text-white">Booking Inquiry Submitted!</h4>
                   <p className="text-xs text-slate-300 max-w-md mx-auto">
-                    Thank you, {clientName}! Your project brief has been recorded. We will initialize your project contract in your Client Portal.
+                    Thank you, {clientName}! Your project brief has been recorded. We will initialize your project
+                    contract in your Client Portal.
                   </p>
                   <div className="pt-4 flex justify-center gap-3">
                     <Link
@@ -373,7 +654,9 @@ export default function PackagesView() {
 
                   <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                     <div>
-                      <label className="block font-medium uppercase tracking-wider text-slate-300">Company / Brand (Optional)</label>
+                      <label className="block font-medium uppercase tracking-wider text-slate-300">
+                        Company / Brand (Optional)
+                      </label>
                       <input
                         type="text"
                         value={companyName}

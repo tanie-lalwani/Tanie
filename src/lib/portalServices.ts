@@ -106,6 +106,18 @@ export interface BookingSubmission {
   project_description: string;
 }
 
+export interface LeadItem {
+  id: string;
+  client_name: string;
+  client_email: string;
+  company_name?: string;
+  phone?: string;
+  package_interest?: string;
+  source?: string;
+  status: "pending" | "contacted" | "converted" | "archived";
+  created_at: string;
+}
+
 // --------------------------------------------------------------------------------
 // DEFAULT FALLBACK DATA (Guarantees zero-blank states and rapid offline preview)
 // --------------------------------------------------------------------------------
@@ -641,10 +653,187 @@ export async function deleteProjectAsset(assetId: string, storagePath: string): 
   if (idx >= 0) DEMO_ASSETS.splice(idx, 1);
 }
 
+export const DEMO_LEADS: LeadItem[] = [
+  {
+    id: "lead-001",
+    client_name: "Elena Rostova",
+    client_email: "elena@lumina.design",
+    company_name: "Lumina Design Group",
+    phone: "+1 (555) 234-5678",
+    package_interest: "3D Interactive & Brand Experience",
+    source: "Pricing Unlock Gate",
+    status: "pending",
+    created_at: "2026-08-26T14:10:00Z"
+  },
+  {
+    id: "lead-002",
+    client_name: "Marcus Vance",
+    client_email: "marcus@hypergrowth.vc",
+    company_name: "Hypergrowth Capital",
+    phone: "+1 (555) 987-6543",
+    package_interest: "Full-Stack Web App / SaaS MVP",
+    source: "Intake Booking Modal",
+    status: "contacted",
+    created_at: "2026-08-25T18:30:00Z"
+  }
+];
+
+/**
+ * Submit a lead from the Pricing Unlock Gate or Website Inquiry
+ */
+export async function submitLead(lead: {
+  client_name: string;
+  client_email: string;
+  company_name?: string;
+  phone?: string;
+  package_interest?: string;
+  timeline?: string;
+  source?: string;
+}): Promise<{ success: boolean; id?: string }> {
+  const formspreeEndpoint = process.env.NEXT_PUBLIC_FORMSPREE_ENDPOINT;
+
+  // 1. Dispatch to Formspree if endpoint configured for instant email notification
+  if (formspreeEndpoint) {
+    try {
+      await fetch(formspreeEndpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({
+          type: "Lead Collection & Rate Card Unlock",
+          name: lead.client_name,
+          email: lead.client_email,
+          company: lead.company_name || "N/A",
+          phone: lead.phone || "N/A",
+          package: lead.package_interest || "All Packages",
+          timeline: lead.timeline || "N/A",
+          source: lead.source || "Pricing Unlock Gate",
+          timestamp: new Date().toISOString()
+        })
+      });
+    } catch (e) {
+      console.warn("Formspree lead notification error:", e);
+    }
+  }
+
+  const newLead: LeadItem = {
+    id: typeof crypto !== "undefined" && crypto.randomUUID ? crypto.randomUUID() : `lead-${Date.now()}`,
+    client_name: lead.client_name,
+    client_email: lead.client_email.toLowerCase(),
+    company_name: lead.company_name || "",
+    phone: lead.phone || "",
+    package_interest: lead.package_interest || "General Inquiry",
+    source: lead.source || "Pricing Unlock Gate",
+    status: "pending",
+    created_at: new Date().toISOString()
+  };
+
+  // 2. Save into Supabase bookings table
+  if (isSupabaseConfigured()) {
+    try {
+      const { data, error } = await supabase
+        .from("bookings")
+        .insert([
+          {
+            client_name: newLead.client_name,
+            client_email: newLead.client_email,
+            company_name: newLead.company_name,
+            project_description: `[Lead Collected via ${newLead.source}] Package of Interest: ${newLead.package_interest}${lead.phone ? ` | Phone: ${lead.phone}` : ""}`,
+            status: "pending"
+          }
+        ])
+        .select()
+        .single();
+
+      if (!error && data) {
+        DEMO_LEADS.unshift(newLead);
+        return { success: true, id: data.id };
+      }
+    } catch (err) {
+      console.warn("Supabase lead insert fallback:", err);
+    }
+  }
+
+  DEMO_LEADS.unshift(newLead);
+  return { success: true, id: newLead.id };
+}
+
+/**
+ * Fetch all collected leads (Admin)
+ */
+export async function getAllLeads(): Promise<LeadItem[]> {
+  try {
+    if (!isSupabaseConfigured()) {
+      return DEMO_LEADS;
+    }
+    const { data, error } = await supabase
+      .from("bookings")
+      .select("*")
+      .order("created_at", { ascending: false });
+
+    if (error || !data || data.length === 0) {
+      return DEMO_LEADS;
+    }
+
+    return data.map((b: any) => ({
+      id: b.id,
+      client_name: b.client_name || "Prospective Client",
+      client_email: b.client_email || "",
+      company_name: b.company_name || "",
+      phone: "",
+      package_interest: b.package_id || "Website Package",
+      source: b.project_description?.includes("[Lead Collected") ? "Pricing Unlock Gate" : "Booking Inquiry",
+      status: b.status || "pending",
+      created_at: b.created_at || new Date().toISOString()
+    }));
+  } catch (err) {
+    return DEMO_LEADS;
+  }
+}
+
+/**
+ * Update lead status (Admin)
+ */
+export async function updateLeadStatus(leadId: string, status: LeadItem["status"]): Promise<void> {
+  if (isSupabaseConfigured()) {
+    try {
+      await supabase.from("bookings").update({ status }).eq("id", leadId);
+    } catch (err) {
+      console.error("Update lead status err:", err);
+    }
+  }
+  const item = DEMO_LEADS.find((l) => l.id === leadId);
+  if (item) item.status = status;
+}
+
 /**
  * Submit a package booking or project intake inquiry
  */
 export async function submitBooking(booking: BookingSubmission): Promise<{ success: boolean; id?: string }> {
+  const formspreeEndpoint = process.env.NEXT_PUBLIC_FORMSPREE_ENDPOINT;
+
+  if (formspreeEndpoint) {
+    try {
+      await fetch(formspreeEndpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({
+          type: "Website Package Booking Kickoff",
+          name: booking.client_name,
+          email: booking.client_email,
+          company: booking.company_name || "N/A",
+          package: booking.package_id,
+          budget_usd: booking.estimated_budget_usd,
+          timeline: booking.timeline_requirement,
+          description: booking.project_description,
+          addons: booking.selected_addons?.join(", ") || "None",
+          timestamp: new Date().toISOString()
+        })
+      });
+    } catch (e) {
+      console.warn("Formspree booking notification error:", e);
+    }
+  }
+
   try {
     if (isSupabaseConfigured()) {
       const { data, error } = await supabase
@@ -675,3 +864,4 @@ export async function submitBooking(booking: BookingSubmission): Promise<{ succe
     return { success: true };
   }
 }
+

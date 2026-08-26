@@ -8,6 +8,8 @@ import {
   getAllContracts,
   getAllAssets,
   getWebsitePackages,
+  getAllLeads,
+  updateLeadStatus,
   createClientProject,
   updateProject,
   saveWebsitePackage,
@@ -15,6 +17,7 @@ import {
   type EContract,
   type ProjectAsset,
   type WebsitePackage,
+  type LeadItem,
 } from "@/lib/portalServices";
 import Navbar from "@/components/Navbar";
 import SiteFooter from "@/components/SiteFooter";
@@ -24,11 +27,12 @@ export default function AdminPortal() {
   const [adminPasscode, setAdminPasscode] = useState("");
   const [authError, setAuthError] = useState("");
 
-  const [activeTab, setActiveTab] = useState<"metrics" | "projects" | "contracts" | "assets" | "packages">("metrics");
+  const [activeTab, setActiveTab] = useState<"metrics" | "projects" | "leads" | "contracts" | "assets" | "packages">("metrics");
   const [projects, setProjects] = useState<ClientProject[]>([]);
   const [contracts, setContracts] = useState<EContract[]>([]);
   const [assets, setAssets] = useState<ProjectAsset[]>([]);
   const [packages, setPackages] = useState<WebsitePackage[]>([]);
+  const [leads, setLeads] = useState<LeadItem[]>([]);
   const [loading, setLoading] = useState(true);
 
   // New Project Form Modal
@@ -55,17 +59,19 @@ export default function AdminPortal() {
     async function loadData() {
       setLoading(true);
       try {
-        const [pkgs, projs, ctrs, asts] = await Promise.all([
+        const [pkgs, projs, ctrs, asts, lds] = await Promise.all([
           getWebsitePackages(),
           getAllProjects(),
           getAllContracts(),
           getAllAssets(),
+          getAllLeads(),
         ]);
         if (!isMounted) return;
         setPackages(pkgs);
         setProjects(projs);
         setContracts(ctrs);
         setAssets(asts);
+        setLeads(lds);
       } catch (err) {
         console.error("Admin data loading error:", err);
       } finally {
@@ -241,6 +247,7 @@ export default function AdminPortal() {
             <div className="mb-6 flex flex-wrap items-center gap-2 border-b border-white/10 pb-3">
               {[
                 { id: "metrics", label: "Executive Metrics", icon: "📈" },
+                { id: "leads", label: "Leads & Prospects", count: leads.length, icon: "🎯" },
                 { id: "projects", label: "Client Projects", count: projects.length, icon: "💻" },
                 { id: "contracts", label: "Contracts & Signatures", count: contracts.length, icon: "📜" },
                 { id: "assets", label: "Asset Vault", count: assets.length, icon: "🗄️" },
@@ -271,39 +278,47 @@ export default function AdminPortal() {
             {activeTab === "metrics" && (
               <div className="space-y-8">
                 {/* Metric Summary Cards */}
-                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                  <div className="rounded-3xl border border-sky-400/20 bg-slate-950/70 p-6 backdrop-blur-xl">
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
+                  <div className="rounded-3xl border border-sky-400/20 bg-slate-950/70 p-5 backdrop-blur-xl">
                     <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">
                       Total Pipeline Value
                     </span>
-                    <div className="mt-2 text-3xl font-black text-white">
+                    <div className="mt-2 text-2xl font-black text-white">
                       ${totalPipelineValue.toLocaleString("en-US")}
                     </div>
-                    <span className="mt-1 block text-xs text-emerald-400">Across active engagements</span>
+                    <span className="mt-1 block text-[11px] text-emerald-400">Active contracts</span>
                   </div>
 
-                  <div className="rounded-3xl border border-sky-400/20 bg-slate-950/70 p-6 backdrop-blur-xl">
+                  <div className="rounded-3xl border border-sky-400/20 bg-slate-950/70 p-5 backdrop-blur-xl">
+                    <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">
+                      Captured Leads
+                    </span>
+                    <div className="mt-2 text-2xl font-black text-amber-300">{leads.length}</div>
+                    <span className="mt-1 block text-[11px] text-amber-400/80">From price gate & booking</span>
+                  </div>
+
+                  <div className="rounded-3xl border border-sky-400/20 bg-slate-950/70 p-5 backdrop-blur-xl">
                     <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">
                       Active Engagements
                     </span>
-                    <div className="mt-2 text-3xl font-black text-sky-300">{activeProjectsCount}</div>
-                    <span className="mt-1 block text-xs text-slate-400">In Design / Dev / Review</span>
+                    <div className="mt-2 text-2xl font-black text-sky-300">{activeProjectsCount}</div>
+                    <span className="mt-1 block text-[11px] text-slate-400">In Design / Dev / Review</span>
                   </div>
 
-                  <div className="rounded-3xl border border-sky-400/20 bg-slate-950/70 p-6 backdrop-blur-xl">
+                  <div className="rounded-3xl border border-sky-400/20 bg-slate-950/70 p-5 backdrop-blur-xl">
                     <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">
                       Executed Contracts
                     </span>
-                    <div className="mt-2 text-3xl font-black text-emerald-400">{signedContractsCount}</div>
-                    <span className="mt-1 block text-xs text-emerald-400/80">With digital signature stamp</span>
+                    <div className="mt-2 text-2xl font-black text-emerald-400">{signedContractsCount}</div>
+                    <span className="mt-1 block text-[11px] text-emerald-400/80">With e-signature stamp</span>
                   </div>
 
-                  <div className="rounded-3xl border border-sky-400/20 bg-slate-950/70 p-6 backdrop-blur-xl">
+                  <div className="rounded-3xl border border-sky-400/20 bg-slate-950/70 p-5 backdrop-blur-xl">
                     <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">
-                      Uploaded Client Assets
+                      Client Assets
                     </span>
-                    <div className="mt-2 text-3xl font-black text-cyan-300">{assets.length}</div>
-                    <span className="mt-1 block text-xs text-slate-400">In Supabase Storage</span>
+                    <div className="mt-2 text-2xl font-black text-cyan-300">{assets.length}</div>
+                    <span className="mt-1 block text-[11px] text-slate-400">In Cloud Storage</span>
                   </div>
                 </div>
 
@@ -375,6 +390,122 @@ export default function AdminPortal() {
                       </tbody>
                     </table>
                   </div>
+                </div>
+              </div>
+            )}
+
+            {/* TAB: LEADS & PROSPECTS */}
+            {activeTab === "leads" && (
+              <div className="space-y-6">
+                <div className="flex items-center justify-between rounded-3xl border border-sky-400/20 bg-slate-950/70 p-6 backdrop-blur-xl">
+                  <div>
+                    <h3 className="text-xl font-bold text-white">Captured Leads & Rate Card Inquiries ({leads.length})</h3>
+                    <p className="text-xs text-slate-400">
+                      Prospective clients who signed up to unlock pricing or submitted booking intakes.
+                    </p>
+                  </div>
+                  <span className="rounded-full bg-amber-500/10 px-4 py-1.5 text-xs font-bold text-amber-300 border border-amber-500/30">
+                    Auto-synced with Supabase & Formspree
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-1 gap-4">
+                  {leads.length > 0 ? (
+                    leads.map((lead) => (
+                      <div
+                        key={lead.id}
+                        className="rounded-2xl border border-white/10 bg-slate-950/80 p-5 backdrop-blur-xl shadow-lg flex flex-wrap items-center justify-between gap-4"
+                      >
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <h4 className="text-base font-bold text-white">{lead.client_name}</h4>
+                            <span className="rounded-md bg-sky-500/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-sky-300 border border-sky-400/20">
+                              {lead.source || "Pricing Unlock"}
+                            </span>
+                            <span
+                              className={`rounded-md px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${
+                                lead.status === "converted"
+                                  ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30"
+                                  : lead.status === "contacted"
+                                  ? "bg-sky-500/20 text-sky-300 border border-sky-500/30"
+                                  : "bg-amber-500/20 text-amber-300 border border-amber-500/30"
+                              }`}
+                            >
+                              {lead.status}
+                            </span>
+                          </div>
+
+                          <div className="mt-1.5 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-slate-300">
+                            <span>
+                              ✉️ <strong>{lead.client_email}</strong>
+                            </span>
+                            {lead.company_name && <span>🏢 {lead.company_name}</span>}
+                            {lead.phone && <span>📞 {lead.phone}</span>}
+                            {lead.package_interest && (
+                              <span className="text-sky-300 font-medium">💎 {lead.package_interest}</span>
+                            )}
+                            <span className="text-slate-500">
+                              🕒 {new Date(lead.created_at).toLocaleString()}
+                            </span>
+                          </div>
+                        </div>
+
+                        <div className="flex flex-wrap items-center gap-2">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              navigator.clipboard.writeText(lead.client_email);
+                              alert(`Copied ${lead.client_email} to clipboard!`);
+                            }}
+                            className="rounded-lg bg-slate-900 px-3 py-1.5 text-xs font-medium text-slate-300 hover:text-white border border-white/10"
+                          >
+                            Copy Email
+                          </button>
+
+                          <button
+                            type="button"
+                            onClick={async () => {
+                              const nextStatus: LeadItem["status"] =
+                                lead.status === "pending" ? "contacted" : lead.status === "contacted" ? "converted" : "pending";
+                              await updateLeadStatus(lead.id, nextStatus);
+                              setLeads((prev) =>
+                                prev.map((l) => (l.id === lead.id ? { ...l, status: nextStatus } : l))
+                              );
+                            }}
+                            className="rounded-lg bg-slate-900 px-3 py-1.5 text-xs font-medium text-amber-300 hover:bg-amber-500/20 border border-amber-500/30"
+                          >
+                            Toggle: {lead.status} →
+                          </button>
+
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setNewProjectData({
+                                client_name: lead.client_name,
+                                client_email: lead.client_email,
+                                company_name: lead.company_name || "",
+                                title: `${lead.company_name || lead.client_name} Interactive Web Project`,
+                                description: `Project initialized from lead inquiry for ${lead.package_interest || "Website Package"}.`,
+                                package_id: "interactive-3d-experience",
+                                budget_usd: 3499,
+                                target_launch_date: "",
+                                live_preview_url: "",
+                                figma_url: "",
+                              });
+                              setShowNewProjectModal(true);
+                            }}
+                            className="rounded-lg bg-gradient-to-r from-sky-400 to-cyan-500 px-3.5 py-1.5 text-xs font-bold text-slate-950 hover:brightness-110"
+                          >
+                            Convert to Project +
+                          </button>
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="py-12 text-center text-xs text-slate-400 rounded-2xl border border-white/8 bg-slate-900/40">
+                      No leads collected yet. When visitors sign up to unlock rates, they will appear here in real-time.
+                    </div>
+                  )}
                 </div>
               </div>
             )}
