@@ -91,9 +91,26 @@ export default function SiteFooter({ className = "" }: SiteFooterProps) {
             ))}
           </div>
         </div>
+        <div className="mt-5 flex flex-wrap items-center justify-center gap-6 text-xs text-slate-400">
+          <a href="/packages" className="transition hover:text-sky-300">
+            Website Packages
+          </a>
+          <span>•</span>
+          <a href="/client" className="transition hover:text-sky-300">
+            Client Workspace
+          </a>
+          <span>•</span>
+          <a href="/admin" className="transition hover:text-sky-300">
+            Studio Admin
+          </a>
+          <span>•</span>
+          <a href="/contact" className="transition hover:text-sky-300">
+            Get in Touch
+          </a>
+        </div>
         <div className="mt-5 h-px w-full bg-linear-to-r from-transparent via-white/8 to-transparent" />
         <p className="mt-3 text-center text-[11.5px] text-sky-100/82">
-        {copy.footer.copyright}{" "}
+          {copy.footer.copyright}{" "}
         </p>
       </div>
     </footer>
