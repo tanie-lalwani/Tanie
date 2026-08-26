@@ -48,6 +48,7 @@ function createNoiseBuffer(context: AudioContext, durationSeconds = 4): AudioBuf
 
 export default function AmbientOceanAudio({ placement = "floating" }: AmbientOceanAudioProps) {
   const [isEnabled, setIsEnabled] = useState(() => {
+    if (typeof window === "undefined") return true
     try {
       const storedValue = window.localStorage.getItem(AMBIENT_ENABLED_KEY)
       return storedValue === null ? true : storedValue === "true"
