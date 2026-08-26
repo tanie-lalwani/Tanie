@@ -1,28 +1,34 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import {
-  getWebsitePackages,
-  submitBooking,
-  submitLead,
-  type WebsitePackage,
-  DEFAULT_PACKAGES,
-} from "@/lib/portalServices";
+  WEBSITE_FORMATS,
+  EXPERIENCE_LAYERS,
+  VISUAL_STYLES,
+  CONFIGURATOR_ADDONS,
+  type FormatOption,
+  type ExperienceLayer,
+  type VisualStyleOption,
+  type FeatureAddon,
+} from "@/data/configuratorCatalog";
+import { submitBooking, submitLead } from "@/lib/portalServices";
 import { supabase, isSupabaseConfigured } from "@/lib/supabaseClient";
 import Navbar from "@/components/Navbar";
 import SiteFooter from "@/components/SiteFooter";
 
 export default function PackagesView() {
-  const [packages, setPackages] = useState<WebsitePackage[]>(DEFAULT_PACKAGES);
+  // Configurator Selection State
+  const [selectedFormat, setSelectedFormat] = useState<FormatOption>(WEBSITE_FORMATS[0]);
+  const [selectedExperiences, setSelectedExperiences] = useState<string[]>(["webgl-physics"]);
+  const [selectedStyles, setSelectedStyles] = useState<string[]>(["surrealism", "dark-mode-luxury"]);
+  const [selectedAddons, setSelectedAddons] = useState<string[]>(["headless-cms"]);
   const [currency, setCurrency] = useState<"USD" | "INR">("USD");
-  const [selectedPackage, setSelectedPackage] = useState<WebsitePackage>(DEFAULT_PACKAGES[0]);
-  const [selectedAddons, setSelectedAddons] = useState<string[]>([]);
-  const [isBookingOpen, setIsBookingOpen] = useState(false);
-  const [bookingSuccess, setBookingSuccess] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Lead Collection & Pricing Gate State
+  // Visual Style Filter
+  const [styleFilter, setStyleFilter] = useState<string>("All");
+
+  // Lead Collection & Gated Rate State
   const [isPricingUnlocked, setIsPricingUnlocked] = useState(false);
   const [unlockedEmail, setUnlockedEmail] = useState<string>("");
   const [isUnlockModalOpen, setIsUnlockModalOpen] = useState(false);
@@ -33,15 +39,20 @@ export default function PackagesView() {
   const [leadTimeline, setLeadTimeline] = useState("Immediate (1-2 weeks)");
   const [isUnlocking, setIsUnlocking] = useState(false);
 
-  // Booking Form State
+  // Booking Modal State
+  const [isBookingOpen, setIsBookingOpen] = useState(false);
+  const [bookingSuccess, setBookingSuccess] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [clientName, setClientName] = useState("");
   const [clientEmail, setClientEmail] = useState("");
   const [companyName, setCompanyName] = useState("");
   const [timelineReq, setTimelineReq] = useState("Flexible (3-5 weeks)");
   const [projectDescription, setProjectDescription] = useState("");
 
+  // Inspect Style Detail Modal
+  const [inspectedStyle, setInspectedStyle] = useState<VisualStyleOption | null>(null);
+
   useEffect(() => {
-    // Check if user already unlocked pricing or has active session
     if (typeof window !== "undefined") {
       const savedLead = localStorage.getItem("pricing_unlocked_lead");
       if (savedLead) {
@@ -66,31 +77,62 @@ export default function PackagesView() {
       }
     }
     checkUser();
-
-    async function load() {
-      const data = await getWebsitePackages();
-      if (data && data.length > 0) {
-        setPackages(data);
-        setSelectedPackage(data[0]);
-      }
-    }
-    load();
   }, []);
 
-  const toggleAddon = (addonId: string) => {
-    setSelectedAddons((prev) =>
-      prev.includes(addonId) ? prev.filter((id) => id !== addonId) : [...prev, addonId]
+  // Filtered Styles
+  const filteredStyles = useMemo(() => {
+    if (styleFilter === "All") return VISUAL_STYLES;
+    return VISUAL_STYLES.filter((s) => s.category === styleFilter);
+  }, [styleFilter]);
+
+  // Selection Toggles
+  const toggleExperience = (id: string) => {
+    setSelectedExperiences((prev) =>
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
     );
   };
 
-  // Dynamic Total Price Calculation
-  const basePrice = currency === "USD" ? selectedPackage.price_usd : selectedPackage.price_inr;
-  const addonsTotal = selectedPackage.addons
-    ? selectedPackage.addons
-        .filter((a) => selectedAddons.includes(a.id))
-        .reduce((sum, a) => sum + (currency === "USD" ? a.price_usd : a.price_usd * 83), 0)
-    : 0;
-  const grandTotal = basePrice + addonsTotal;
+  const toggleStyle = (id: string) => {
+    setSelectedStyles((prev) => {
+      if (prev.includes(id)) {
+        return prev.filter((item) => item !== id);
+      }
+      if (prev.length >= 3) {
+        // Keep max 3 combinations for focused aesthetic
+        return [...prev.slice(1), id];
+      }
+      return [...prev, id];
+    });
+  };
+
+  const toggleAddon = (id: string) => {
+    setSelectedAddons((prev) =>
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
+    );
+  };
+
+  // Dynamic Investment Calculation
+  const formatBasePrice =
+    currency === "USD" ? selectedFormat.basePriceUsd : selectedFormat.basePriceInr;
+
+  const experienceCost = EXPERIENCE_LAYERS.filter((e) => selectedExperiences.includes(e.id)).reduce(
+    (sum, e) => sum + (currency === "USD" ? e.priceUsd : e.priceUsd * 83),
+    0
+  );
+
+  const addonCost = CONFIGURATOR_ADDONS.filter((a) => selectedAddons.includes(a.id)).reduce(
+    (sum, a) => sum + (currency === "USD" ? a.priceUsd : a.priceUsd * 83),
+    0
+  );
+
+  const grandTotal = formatBasePrice + experienceCost + addonCost;
+
+  // Selected Style Names for Blueprint Summary
+  const selectedStyleObjects = VISUAL_STYLES.filter((s) => selectedStyles.includes(s.id));
+  const styleCombinationSummary =
+    selectedStyleObjects.length > 0
+      ? selectedStyleObjects.map((s) => s.name).join(" + ")
+      : "Custom Direction";
 
   // Handle Lead Unlock Submit
   const handleLeadUnlockSubmit = async (e: React.FormEvent) => {
@@ -107,12 +149,11 @@ export default function PackagesView() {
         client_email: leadEmail.trim(),
         company_name: leadCompany.trim(),
         phone: leadPhone.trim(),
-        package_interest: selectedPackage.name,
+        package_interest: `${selectedFormat.name} (${styleCombinationSummary})`,
         timeline: leadTimeline,
-        source: "Pricing Unlock Gate",
+        source: "Configurator Rate Gate",
       });
 
-      // Save unlock state to localStorage
       if (typeof window !== "undefined") {
         localStorage.setItem("pricing_unlocked_lead", leadEmail.trim());
       }
@@ -124,7 +165,6 @@ export default function PackagesView() {
       setIsUnlockModalOpen(false);
     } catch (err) {
       console.error("Error unlocking pricing:", err);
-      // Fallback unlock so user experience is not blocked
       setIsPricingUnlocked(true);
       setIsUnlockModalOpen(false);
     } finally {
@@ -132,25 +172,49 @@ export default function PackagesView() {
     }
   };
 
-  // Handle Booking Intake Submit
+  // Handle Booking Submit
   const handleBookingSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
+
+    const fullBlueprintDescription = `
+Configured Blueprint:
+• Format: ${selectedFormat.name} (${selectedFormat.tagline})
+• Visual Direction: ${styleCombinationSummary}
+• Experience Layers: ${
+      selectedExperiences.length > 0
+        ? EXPERIENCE_LAYERS.filter((e) => selectedExperiences.includes(e.id))
+            .map((e) => e.name)
+            .join(", ")
+        : "Standard Interaction"
+    }
+• Add-ons & Modules: ${
+      selectedAddons.length > 0
+        ? CONFIGURATOR_ADDONS.filter((a) => selectedAddons.includes(a.id))
+            .map((a) => a.name)
+            .join(", ")
+        : "None"
+    }
+
+Client Vision & Notes:
+${projectDescription}
+    `.trim();
+
     try {
       await submitBooking({
         client_name: clientName,
         client_email: clientEmail,
         company_name: companyName,
-        package_id: selectedPackage.id,
-        selected_addons: selectedAddons,
+        package_id: selectedFormat.id,
+        selected_addons: [...selectedExperiences, ...selectedAddons],
         estimated_budget_usd: currency === "USD" ? grandTotal : Math.round(grandTotal / 83),
         timeline_requirement: timelineReq,
-        project_description: projectDescription,
+        project_description: fullBlueprintDescription,
       });
       setBookingSuccess(true);
     } catch (err) {
       console.error("Booking error:", err);
-      alert("Failed to submit booking inquiry. Please try again.");
+      alert("Failed to submit booking blueprint. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
@@ -162,313 +226,480 @@ export default function PackagesView() {
 
       <main className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
         {/* HERO SECTION */}
-        <div className="text-center max-w-3xl mx-auto mb-16">
+        <div className="text-center max-w-4xl mx-auto mb-12">
           <div className="inline-flex items-center gap-2 rounded-full border border-sky-400/30 bg-sky-500/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-sky-300">
             <span className="h-2 w-2 rounded-full bg-sky-400 animate-pulse" />
-            Website Engineering & Creative Packages
+            Creative Developer Experience & Style Catalogue
           </div>
+
           <h1 className="mt-4 text-4xl font-extrabold tracking-tight text-white sm:text-5xl lg:text-6xl">
-            Bespoke Digital Experiences Engineered to Convert.
+            Website Experience & Design Configurator
           </h1>
-          <p className="mt-4 text-base text-slate-300 sm:text-lg">
-            High-tier web architecture for visionary brands, high-profile portfolios, and SaaS startups. Every project
-            includes full client portal access, asset management, and digital e-contracts.
+
+          <p className="mt-4 text-base text-slate-300 sm:text-lg max-w-2xl mx-auto">
+            Combine your bespoke <strong>Website Format</strong>, <strong>Interaction Layer</strong>, and{" "}
+            <strong>Visual Aesthetics</strong> into a custom digital blueprint.
           </p>
 
-          {/* Pricing Unlock Status Banner */}
-          {isPricingUnlocked ? (
-            <div className="mt-6 inline-flex items-center gap-2 rounded-full border border-emerald-500/40 bg-emerald-500/10 px-5 py-2 text-xs font-semibold text-emerald-300 backdrop-blur-xl">
-              <span>✓</span> Full Pricing & Customizer Unlocked for{" "}
-              <strong className="text-white">{unlockedEmail}</strong>
-            </div>
-          ) : (
-            <div className="mt-6 inline-flex items-center gap-3 rounded-full border border-sky-400/30 bg-slate-950/80 px-5 py-2.5 text-xs font-medium text-slate-300 backdrop-blur-xl shadow-lg">
-              <span>🔒 Transparent rates & customizer available upon brief unlock</span>
+          {/* FORMULA PILL LOCKUP */}
+          <div className="mt-8 inline-flex flex-wrap items-center justify-center gap-2 rounded-3xl border border-sky-400/30 bg-slate-950/90 p-3 text-xs backdrop-blur-2xl shadow-[0_10px_35px_rgba(2,8,23,0.6)]">
+            <span className="rounded-full bg-sky-500/20 px-3 py-1 font-bold text-sky-300 border border-sky-400/30">
+              {selectedFormat.name}
+            </span>
+            <span className="text-slate-500 font-bold">×</span>
+            <span className="rounded-full bg-teal-500/20 px-3 py-1 font-bold text-teal-300 border border-teal-400/30">
+              {selectedExperiences.length} Experience Layers
+            </span>
+            <span className="text-slate-500 font-bold">×</span>
+            <span className="rounded-full bg-purple-500/20 px-3 py-1 font-bold text-purple-300 border border-purple-400/30">
+              {styleCombinationSummary}
+            </span>
+            <span className="text-slate-500 font-bold">×</span>
+            <span className="rounded-full bg-amber-500/20 px-3 py-1 font-bold text-amber-300 border border-amber-400/30">
+              {selectedAddons.length} Modules
+            </span>
+          </div>
+
+          {/* Pricing Unlock Status & Currency Switcher */}
+          <div className="mt-6 flex flex-wrap items-center justify-center gap-4">
+            {isPricingUnlocked ? (
+              <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/40 bg-emerald-500/10 px-4 py-1.5 text-xs font-semibold text-emerald-300">
+                <span>✓</span> Rates Unlocked for <strong className="text-white">{unlockedEmail}</strong>
+              </div>
+            ) : (
               <button
                 type="button"
                 onClick={() => setIsUnlockModalOpen(true)}
-                className="rounded-full bg-gradient-to-r from-sky-400 to-cyan-500 px-4 py-1 text-xs font-bold uppercase tracking-wider text-slate-950 hover:brightness-110"
+                className="inline-flex items-center gap-2 rounded-full border border-sky-400/30 bg-sky-500/10 px-4 py-1.5 text-xs font-bold text-sky-300 hover:bg-sky-500/20 transition"
               >
-                Unlock Pricing →
+                <span>🔒</span> Unlock Exact Rate Card & Customizer
               </button>
-            </div>
-          )}
+            )}
 
-          {/* Currency Switcher (Visible if unlocked) */}
-          {isPricingUnlocked && (
-            <div className="mt-6 inline-flex items-center rounded-full border border-white/10 bg-slate-950/80 p-1 backdrop-blur-xl">
-              <button
-                type="button"
-                onClick={() => setCurrency("USD")}
-                className={`rounded-full px-5 py-1.5 text-xs font-bold transition ${
-                  currency === "USD"
-                    ? "bg-sky-400 text-slate-950 shadow-[0_0_12px_rgba(56,189,248,0.4)]"
-                    : "text-slate-400 hover:text-white"
-                }`}
-              >
-                USD ($)
-              </button>
-              <button
-                type="button"
-                onClick={() => setCurrency("INR")}
-                className={`rounded-full px-5 py-1.5 text-xs font-bold transition ${
-                  currency === "INR"
-                    ? "bg-sky-400 text-slate-950 shadow-[0_0_12px_rgba(56,189,248,0.4)]"
-                    : "text-slate-400 hover:text-white"
-                }`}
-              >
-                INR (₹)
-              </button>
-            </div>
-          )}
+            {isPricingUnlocked && (
+              <div className="inline-flex items-center rounded-full border border-white/10 bg-slate-950/80 p-1">
+                <button
+                  type="button"
+                  onClick={() => setCurrency("USD")}
+                  className={`rounded-full px-4 py-1 text-xs font-bold transition ${
+                    currency === "USD"
+                      ? "bg-sky-400 text-slate-950 shadow-[0_0_12px_rgba(56,189,248,0.4)]"
+                      : "text-slate-400 hover:text-white"
+                  }`}
+                >
+                  USD ($)
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setCurrency("INR")}
+                  className={`rounded-full px-4 py-1 text-xs font-bold transition ${
+                    currency === "INR"
+                      ? "bg-sky-400 text-slate-950 shadow-[0_0_12px_rgba(56,189,248,0.4)]"
+                      : "text-slate-400 hover:text-white"
+                  }`}
+                >
+                  INR (₹)
+                </button>
+              </div>
+            )}
+          </div>
         </div>
 
-        {/* PACKAGE TIERS CARDS */}
-        <div className="grid grid-cols-1 gap-8 lg:grid-cols-3 mb-16">
-          {packages.map((pkg) => {
-            const isSelected = selectedPackage.id === pkg.id;
-            const price =
-              currency === "USD"
-                ? `$${pkg.price_usd.toLocaleString("en-US")}`
-                : `₹${pkg.price_inr.toLocaleString("en-IN")}`;
+        {/* STEP 1: WEBSITE FORMAT (CORE ARCHITECTURE) */}
+        <section className="mb-16">
+          <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
+            <div>
+              <div className="text-xs font-bold uppercase tracking-widest text-sky-400">01. Architecture</div>
+              <h2 className="text-2xl font-bold text-white">Choose Your Website Format</h2>
+            </div>
+            <span className="text-xs text-slate-400">Select the foundational technical platform</span>
+          </div>
 
-            return (
-              <div
-                key={pkg.id}
-                onClick={() => {
-                  setSelectedPackage(pkg);
-                  setSelectedAddons([]);
-                }}
-                className={`relative flex flex-col justify-between rounded-3xl border p-8 backdrop-blur-2xl transition-all cursor-pointer ${
-                  isSelected
-                    ? "border-sky-400 bg-gradient-to-b from-sky-950/60 via-slate-950/90 to-slate-950 shadow-[0_0_40px_rgba(56,189,248,0.25)] scale-[1.02]"
-                    : "border-white/10 bg-slate-950/70 hover:border-sky-400/40 hover:bg-slate-900/60"
-                }`}
-              >
-                {pkg.popular && (
-                  <span className="absolute -top-3.5 right-8 rounded-full bg-gradient-to-r from-sky-400 to-cyan-500 px-4 py-1 text-xs font-bold uppercase tracking-wider text-slate-950 shadow-[0_0_16px_rgba(56,189,248,0.4)]">
-                    Most Popular
-                  </span>
-                )}
+          <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
+            {WEBSITE_FORMATS.map((format) => {
+              const isSelected = selectedFormat.id === format.id;
+              const formatPrice =
+                currency === "USD"
+                  ? `$${format.basePriceUsd.toLocaleString("en-US")}`
+                  : `₹${format.basePriceInr.toLocaleString("en-IN")}`;
 
-                <div>
-                  <div className="flex items-center justify-between">
-                    <span className="rounded-md bg-sky-500/10 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider text-sky-300 border border-sky-400/30">
-                      {pkg.badge || "Tier"}
+              return (
+                <div
+                  key={format.id}
+                  onClick={() => setSelectedFormat(format)}
+                  className={`cursor-pointer rounded-3xl border p-6 backdrop-blur-xl transition-all relative flex flex-col justify-between ${
+                    isSelected
+                      ? "border-sky-400 bg-gradient-to-b from-sky-950/70 via-slate-950/90 to-slate-950 shadow-[0_0_35px_rgba(56,189,248,0.25)] scale-[1.02]"
+                      : "border-white/10 bg-slate-950/60 hover:border-sky-400/40 hover:bg-slate-900/50"
+                  }`}
+                >
+                  {format.badge && (
+                    <span className="absolute -top-3 right-6 rounded-full bg-gradient-to-r from-sky-400 to-cyan-500 px-3 py-0.5 text-[10px] font-bold uppercase tracking-wider text-slate-950">
+                      {format.badge}
                     </span>
-                    <span className="text-xs text-slate-400 font-medium">⏳ {pkg.turnaround_weeks}</span>
+                  )}
+
+                  <div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-2xl">{format.icon}</span>
+                      <span className="text-xs text-slate-400 font-mono">⏳ {format.turnaround}</span>
+                    </div>
+
+                    <h3 className="mt-3 text-lg font-bold text-white">{format.name}</h3>
+                    <p className="mt-1 text-xs text-slate-300 leading-relaxed">{format.tagline}</p>
+                    <p className="mt-2 text-xs text-slate-400 line-clamp-2">{format.description}</p>
+
+                    {/* Deliverables summary */}
+                    <div className="mt-4 border-t border-white/8 pt-3 space-y-1.5">
+                      {format.keyDeliverables.slice(0, 2).map((deliv, i) => (
+                        <div key={i} className="flex items-center gap-1.5 text-[11px] text-slate-300">
+                          <span className="text-sky-400">•</span>
+                          <span className="truncate">{deliv}</span>
+                        </div>
+                      ))}
+                    </div>
                   </div>
 
-                  <h3 className="mt-4 text-2xl font-bold text-white">{pkg.name}</h3>
-                  <p className="mt-2 text-xs text-slate-300 leading-relaxed">{pkg.tagline}</p>
-
-                  {/* Pricing Display (Gated vs Unlocked) */}
-                  <div className="my-6 border-y border-white/8 py-4">
+                  <div className="mt-6 flex items-center justify-between border-t border-white/8 pt-4">
                     {isPricingUnlocked ? (
                       <div>
-                        <div className="text-3xl font-black text-white">{price}</div>
-                        <div className="text-xs text-slate-400 mt-0.5">
-                          Fixed Investment • 30-Day Hypercare Included
-                        </div>
+                        <span className="text-[10px] uppercase tracking-wider text-slate-400 block">
+                          Base Architecture
+                        </span>
+                        <span className="text-base font-black text-white">{formatPrice}</span>
                       </div>
                     ) : (
-                      <div
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setSelectedPackage(pkg);
-                          setIsUnlockModalOpen(true);
-                        }}
-                        className="rounded-2xl border border-sky-400/30 bg-sky-500/10 p-3.5 text-center transition hover:bg-sky-500/20"
-                      >
-                        <div className="flex items-center justify-center gap-1.5 text-xs font-bold text-sky-300 uppercase tracking-wider">
-                          <span>🔒</span> Unlock Exact Rate
-                        </div>
-                        <span className="text-[11px] text-slate-400 block mt-0.5">
-                          Sign up with brief to view rate card & customizer
-                        </span>
-                      </div>
+                      <span className="text-xs text-sky-300 font-medium">🔒 Rate Card Gated</span>
                     )}
-                  </div>
 
-                  {/* Features List */}
-                  <div className="space-y-2.5">
-                    <div className="text-xs font-bold uppercase tracking-wider text-slate-400">Included Scope</div>
-                    <ul className="space-y-2 text-xs text-slate-200">
-                      {pkg.features.map((feature, i) => (
-                        <li key={i} className="flex items-start gap-2">
-                          <span className="text-sky-400 shrink-0 mt-0.5">✓</span>
-                          <span>{feature}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-
-                <div className="mt-8 border-t border-white/8 pt-6">
-                  {isPricingUnlocked ? (
                     <button
                       type="button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setSelectedPackage(pkg);
-                        setIsBookingOpen(true);
-                      }}
-                      className={`w-full rounded-2xl py-3 text-xs font-bold uppercase tracking-wider transition ${
+                      className={`rounded-full px-4 py-1.5 text-xs font-bold uppercase tracking-wider transition ${
                         isSelected
-                          ? "bg-gradient-to-r from-sky-400 to-cyan-500 text-slate-950 shadow-[0_0_20px_rgba(56,189,248,0.3)] hover:brightness-110"
-                          : "bg-slate-900 text-white border border-white/10 hover:bg-sky-500/20 hover:text-sky-200"
+                          ? "bg-sky-400 text-slate-950 shadow-[0_0_12px_rgba(56,189,248,0.4)]"
+                          : "bg-slate-900 text-slate-300 border border-white/10 hover:text-white"
                       }`}
                     >
-                      Select & Book Tier →
+                      {isSelected ? "Selected ✓" : "Select"}
                     </button>
-                  ) : (
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </section>
+
+        {/* STEP 2: INTERACTION & EXPERIENCE LAYER */}
+        <section className="mb-16 rounded-3xl border border-sky-400/20 bg-slate-950/80 p-8 backdrop-blur-2xl shadow-2xl">
+          <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
+            <div>
+              <div className="text-xs font-bold uppercase tracking-widest text-teal-400">02. Interaction</div>
+              <h2 className="text-2xl font-bold text-white">Experience & Physics Layers</h2>
+            </div>
+            <span className="text-xs text-slate-400">Select multi-sensory and interactive mechanics</span>
+          </div>
+
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {EXPERIENCE_LAYERS.map((exp) => {
+              const isSelected = selectedExperiences.includes(exp.id);
+              const price =
+                currency === "USD" ? `+$${exp.priceUsd}` : `+₹${(exp.priceUsd * 83).toLocaleString("en-IN")}`;
+
+              return (
+                <div
+                  key={exp.id}
+                  onClick={() => toggleExperience(exp.id)}
+                  className={`cursor-pointer rounded-2xl border p-5 transition flex flex-col justify-between ${
+                    isSelected
+                      ? "border-teal-400 bg-teal-500/15 shadow-[0_0_20px_rgba(45,212,191,0.2)]"
+                      : "border-white/8 bg-slate-900/60 hover:border-white/20"
+                  }`}
+                >
+                  <div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-2xl">{exp.icon}</span>
+                      <span
+                        className={`h-5 w-5 rounded-full border flex items-center justify-center text-xs font-bold ${
+                          isSelected ? "border-teal-400 bg-teal-400 text-slate-950" : "border-white/20 text-transparent"
+                        }`}
+                      >
+                        ✓
+                      </span>
+                    </div>
+
+                    <h4 className="mt-3 text-sm font-bold text-white">{exp.name}</h4>
+                    <p className="mt-1 text-xs text-slate-300">{exp.tagline}</p>
+                    <p className="mt-2 text-[11px] text-slate-400">{exp.description}</p>
+                  </div>
+
+                  <div className="mt-4 border-t border-white/8 pt-3 text-xs font-mono text-teal-300 font-bold">
+                    {isPricingUnlocked ? price : "🔒 Unlocks with brief"}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </section>
+
+        {/* STEP 3: VISUAL DIRECTION & AESTHETIC CATALOGUE */}
+        <section className="mb-16">
+          <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
+            <div>
+              <div className="text-xs font-bold uppercase tracking-widest text-purple-400">03. Aesthetics</div>
+              <h2 className="text-2xl font-bold text-white">Visual Direction Catalogue</h2>
+              <p className="text-xs text-slate-300 mt-1">
+                Select 1 to 3 styles to fuse your unique visual identity (e.g.{" "}
+                <strong className="text-purple-300">Surrealism + Wabi-Sabi</strong> or{" "}
+                <strong className="text-purple-300">Cyberpunk + Pixel Art</strong>).
+              </p>
+            </div>
+
+            {/* Category Filter Pills */}
+            <div className="flex flex-wrap gap-1.5 rounded-full bg-slate-950/80 p-1 border border-white/10 text-xs">
+              {[
+                "All",
+                "Modern & Clean",
+                "Artistic & Avant-Garde",
+                "Retro & Cyber",
+                "Luxury & Editorial",
+                "Tactile & Experimental",
+              ].map((cat) => (
+                <button
+                  key={cat}
+                  type="button"
+                  onClick={() => setStyleFilter(cat)}
+                  className={`rounded-full px-3 py-1 font-medium transition ${
+                    styleFilter === cat
+                      ? "bg-purple-500/30 text-purple-200 border border-purple-400/40 shadow-[0_0_10px_rgba(168,85,247,0.3)]"
+                      : "text-slate-400 hover:text-white"
+                  }`}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Visual Style Cards Grid */}
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {filteredStyles.map((style) => {
+              const isSelected = selectedStyles.includes(style.id);
+
+              return (
+                <div
+                  key={style.id}
+                  onClick={() => toggleStyle(style.id)}
+                  className={`cursor-pointer rounded-3xl border p-6 backdrop-blur-xl transition-all relative flex flex-col justify-between ${
+                    isSelected
+                      ? "border-purple-400 bg-gradient-to-b from-purple-950/70 via-slate-950/90 to-slate-950 shadow-[0_0_35px_rgba(168,85,247,0.25)] scale-[1.02]"
+                      : "border-white/10 bg-slate-950/60 hover:border-purple-400/40 hover:bg-slate-900/50"
+                  }`}
+                >
+                  <div>
+                    {/* Header with Category & Selection Checkbox */}
+                    <div className="flex items-center justify-between">
+                      <span className="rounded-md bg-purple-500/10 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-purple-300 border border-purple-400/20">
+                        {style.category}
+                      </span>
+                      <span
+                        className={`h-5 w-5 rounded-full border flex items-center justify-center text-xs font-bold ${
+                          isSelected
+                            ? "border-purple-400 bg-purple-400 text-slate-950"
+                            : "border-white/20 text-transparent"
+                        }`}
+                      >
+                        ✓
+                      </span>
+                    </div>
+
+                    <h3 className="mt-3 text-lg font-bold text-white">{style.name}</h3>
+                    <div className="text-xs text-purple-300 font-medium">{style.mood}</div>
+
+                    <p className="mt-2 text-xs text-slate-300 leading-relaxed">{style.description}</p>
+
+                    {/* Color Swatch Preview */}
+                    <div className="mt-4">
+                      <span className="text-[10px] uppercase tracking-wider text-slate-400 block mb-1.5">
+                        Palette DNA
+                      </span>
+                      <div className="flex items-center gap-1.5">
+                        {style.palette.map((color, idx) => (
+                          <div
+                            key={idx}
+                            style={{ backgroundColor: color }}
+                            className="h-4 flex-1 rounded border border-white/10 shadow-sm"
+                            title={color}
+                          />
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Typography Note */}
+                    <div className="mt-3 text-[11px] text-slate-400 bg-slate-900/60 p-2 rounded-xl border border-white/6">
+                      <span className="text-slate-300 font-semibold">Typography:</span> {style.typography}
+                    </div>
+
+                    {/* Keywords Badges */}
+                    <div className="mt-3 flex flex-wrap gap-1">
+                      {style.exemplarKeywords.map((kw, i) => (
+                        <span
+                          key={i}
+                          className="rounded bg-white/5 px-2 py-0.5 text-[10px] font-medium text-slate-300 border border-white/6"
+                        >
+                          {kw}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Footer Action */}
+                  <div className="mt-5 border-t border-white/8 pt-3 flex items-center justify-between text-xs">
                     <button
                       type="button"
                       onClick={(e) => {
                         e.stopPropagation();
-                        setSelectedPackage(pkg);
-                        setIsUnlockModalOpen(true);
+                        setInspectedStyle(style);
                       }}
-                      className="w-full rounded-2xl bg-slate-900 py-3 text-xs font-bold uppercase tracking-wider text-sky-300 border border-sky-400/30 hover:bg-sky-500/20 hover:text-white transition"
+                      className="text-purple-300 hover:text-white underline underline-offset-4"
                     >
-                      Unlock Rates & Book Tier →
+                      Inspect Blueprint Note ↗
                     </button>
-                  )}
+                    <span className="font-bold text-slate-300">
+                      {isSelected ? "Active in Formula ✓" : "+ Add to Formula"}
+                    </span>
+                  </div>
                 </div>
-              </div>
-            );
-          })}
-        </div>
+              );
+            })}
+          </div>
+        </section>
 
-        {/* INTERACTIVE ADD-ONS & ESTIMATOR */}
-        <div className="rounded-3xl border border-sky-400/20 bg-slate-950/80 p-8 backdrop-blur-2xl shadow-2xl mb-16 relative overflow-hidden">
-          <div className="flex flex-wrap items-center justify-between gap-4 border-b border-white/10 pb-6">
+        {/* STEP 4: FEATURES & ADD-ONS */}
+        <section className="mb-16 rounded-3xl border border-amber-400/20 bg-slate-950/80 p-8 backdrop-blur-2xl shadow-2xl">
+          <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
             <div>
-              <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-sky-300">
-                <span>⚙️</span> Interactive Scope Customizer
+              <div className="text-xs font-bold uppercase tracking-widest text-amber-400">04. Features & Add-Ons</div>
+              <h2 className="text-2xl font-bold text-white">Architectural Modules & Integrations</h2>
+            </div>
+            <span className="text-xs text-slate-400">Add content studios, localization, or AI intelligence</span>
+          </div>
+
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {CONFIGURATOR_ADDONS.map((addon) => {
+              const isSelected = selectedAddons.includes(addon.id);
+              const price =
+                currency === "USD" ? `+$${addon.priceUsd}` : `+₹${(addon.priceUsd * 83).toLocaleString("en-IN")}`;
+
+              return (
+                <div
+                  key={addon.id}
+                  onClick={() => toggleAddon(addon.id)}
+                  className={`cursor-pointer rounded-2xl border p-5 transition flex flex-col justify-between ${
+                    isSelected
+                      ? "border-amber-400 bg-amber-500/15 shadow-[0_0_20px_rgba(251,191,36,0.2)]"
+                      : "border-white/8 bg-slate-900/60 hover:border-white/20"
+                  }`}
+                >
+                  <div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-2xl">{addon.icon}</span>
+                      <span
+                        className={`h-5 w-5 rounded-full border flex items-center justify-center text-xs font-bold ${
+                          isSelected
+                            ? "border-amber-400 bg-amber-400 text-slate-950"
+                            : "border-white/20 text-transparent"
+                        }`}
+                      >
+                        ✓
+                      </span>
+                    </div>
+
+                    <h4 className="mt-3 text-sm font-bold text-white">{addon.name}</h4>
+                    <p className="mt-1 text-xs text-slate-300 leading-relaxed">{addon.description}</p>
+                  </div>
+
+                  <div className="mt-4 border-t border-white/8 pt-3 text-xs font-mono text-amber-300 font-bold">
+                    {isPricingUnlocked ? price : "🔒 Unlocks with brief"}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </section>
+
+        {/* LIVE BLUEPRINT SUMMARY & BOOKING DOCK */}
+        <div className="rounded-3xl border border-sky-400/40 bg-gradient-to-r from-slate-950 via-sky-950/60 to-slate-950 p-8 backdrop-blur-2xl shadow-2xl mb-16">
+          <div className="flex flex-wrap items-start justify-between gap-6 border-b border-white/10 pb-6">
+            <div>
+              <div className="inline-flex items-center gap-2 rounded-full border border-sky-400/30 bg-sky-500/10 px-3.5 py-1 text-xs font-bold uppercase tracking-wider text-sky-300">
+                <span>💎</span> Configured Project Blueprint
               </div>
-              <h3 className="mt-1 text-2xl font-bold text-white">Customize: {selectedPackage.name}</h3>
+              <h3 className="mt-2 text-2xl font-bold text-white sm:text-3xl">
+                {selectedFormat.name} × {styleCombinationSummary}
+              </h3>
+              <p className="mt-1 text-xs text-slate-300 max-w-2xl">
+                Includes private GitHub source code handover, Vercel Edge CDN setup, Client Workspace asset vault, and
+                e-contract signing.
+              </p>
             </div>
 
-            <div className="text-right">
-              <span className="text-xs uppercase tracking-wider text-slate-400">Estimated Total Investment</span>
+            <div className="rounded-2xl border border-white/10 bg-slate-900/90 p-5 text-right min-w-[240px]">
+              <span className="text-xs font-medium uppercase tracking-wider text-slate-400 block">
+                Estimated Total Investment
+              </span>
               {isPricingUnlocked ? (
-                <div className="text-3xl font-black text-sky-300">
-                  {currency === "USD" ? `$${grandTotal.toLocaleString("en-US")}` : `₹${grandTotal.toLocaleString("en-IN")}`}{" "}
-                  <span className="text-xs font-normal text-slate-400">{currency}</span>
+                <div>
+                  <div className="text-3xl font-black text-white">
+                    {currency === "USD"
+                      ? `$${grandTotal.toLocaleString("en-US")}`
+                      : `₹${grandTotal.toLocaleString("en-IN")}`}{" "}
+                    <span className="text-xs font-normal text-slate-400">{currency}</span>
+                  </div>
+                  <span className="text-[11px] text-emerald-400 font-medium">Turnaround: {selectedFormat.turnaround}</span>
                 </div>
               ) : (
-                <div className="text-xl font-bold text-sky-300 font-mono">🔒 Locked until sign-up</div>
+                <div className="text-lg font-bold text-sky-300 font-mono">🔒 Locked until sign-up</div>
               )}
             </div>
           </div>
 
-          {/* Add-ons Selector */}
-          <div className="mt-6">
-            <h4 className="text-xs font-bold uppercase tracking-wider text-slate-300 mb-3">
-              Optional Add-Ons & Architectural Modules
-            </h4>
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              {selectedPackage.addons?.map((addon) => {
-                const isChecked = selectedAddons.includes(addon.id);
-                const addonPrice =
-                  currency === "USD" ? `$${addon.price_usd}` : `₹${(addon.price_usd * 83).toLocaleString("en-IN")}`;
-
-                return (
-                  <div
-                    key={addon.id}
-                    onClick={() => {
-                      if (!isPricingUnlocked) {
-                        setIsUnlockModalOpen(true);
-                        return;
-                      }
-                      toggleAddon(addon.id);
-                    }}
-                    className={`cursor-pointer rounded-2xl border p-4 transition ${
-                      isChecked
-                        ? "border-sky-400/80 bg-sky-500/15 shadow-[0_0_16px_rgba(56,189,248,0.2)]"
-                        : "border-white/8 bg-slate-900/60 hover:border-white/20"
-                    }`}
-                  >
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs font-bold text-white">{addon.name}</span>
-                      <span className="h-4 w-4 rounded border flex items-center justify-center text-[10px] font-bold border-sky-400 text-sky-300">
-                        {isChecked ? "✓" : ""}
-                      </span>
-                    </div>
-                    <div className="mt-2 text-xs font-mono text-sky-300 font-semibold">
-                      {isPricingUnlocked ? `+${addonPrice}` : "🔒 Available with unlock"}
-                    </div>
-                  </div>
-                );
-              })}
+          <div className="mt-6 flex flex-wrap items-center justify-between gap-4">
+            <div className="text-xs text-slate-300 space-y-1">
+              <div>
+                • <strong>Core Format:</strong> {selectedFormat.name} ({selectedFormat.turnaround})
+              </div>
+              <div>
+                • <strong>Visual Aesthetics:</strong> {styleCombinationSummary}
+              </div>
+              <div>
+                • <strong>Experience Mechanics:</strong> {selectedExperiences.length} selected
+              </div>
+              <div>
+                • <strong>Add-on Modules:</strong> {selectedAddons.length} selected
+              </div>
             </div>
-          </div>
 
-          <div className="mt-8 flex flex-wrap items-center justify-between gap-4 border-t border-white/8 pt-6">
-            <div className="text-xs text-slate-400 max-w-md">
-              Selected package includes source code handover, Vercel deployment, client portal onboarding, and e-contract
-              execution.
-            </div>
             {isPricingUnlocked ? (
               <button
                 type="button"
                 onClick={() => setIsBookingOpen(true)}
-                className="rounded-full bg-gradient-to-r from-sky-400 to-cyan-500 px-8 py-3 text-sm font-bold text-slate-950 shadow-[0_0_20px_rgba(56,189,248,0.35)] hover:brightness-110"
+                className="rounded-full bg-gradient-to-r from-sky-400 to-cyan-500 px-8 py-3.5 text-sm font-bold text-slate-950 shadow-[0_0_25px_rgba(56,189,248,0.4)] hover:brightness-110 transition cursor-pointer"
               >
-                Proceed to Booking & Contract Kickoff →
+                Book This Configured Blueprint →
               </button>
             ) : (
               <button
                 type="button"
                 onClick={() => setIsUnlockModalOpen(true)}
-                className="rounded-full bg-gradient-to-r from-sky-400 to-cyan-500 px-8 py-3 text-sm font-bold text-slate-950 shadow-[0_0_20px_rgba(56,189,248,0.35)] hover:brightness-110"
+                className="rounded-full bg-gradient-to-r from-sky-400 to-cyan-500 px-8 py-3.5 text-sm font-bold text-slate-950 shadow-[0_0_25px_rgba(56,189,248,0.4)] hover:brightness-110 transition cursor-pointer"
               >
-                Unlock Pricing & Rate Card →
+                Unlock Pricing & Book Blueprint →
               </button>
             )}
           </div>
         </div>
 
-        {/* FAQ SECTION */}
-        <div className="rounded-3xl border border-white/10 bg-slate-950/60 p-8 backdrop-blur-xl mb-12">
-          <h3 className="text-2xl font-bold text-white text-center mb-8">Frequently Asked Questions</h3>
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 text-xs">
-            <div className="rounded-2xl border border-white/6 bg-slate-900/40 p-5">
-              <h4 className="font-bold text-white text-sm">How does the contract and payment flow work?</h4>
-              <p className="mt-2 text-slate-300 leading-relaxed">
-                Once booked, a tailored digital agreement is generated in your Client Portal. You can sign directly via
-                our e-signature pad. Engagements standardly require a 50% kickoff deposit and 50% upon final delivery.
-              </p>
-            </div>
-
-            <div className="rounded-2xl border border-white/6 bg-slate-900/40 p-5">
-              <h4 className="font-bold text-white text-sm">Can I upload assets and provide copy directly?</h4>
-              <p className="mt-2 text-slate-300 leading-relaxed">
-                Yes! Your Client Workspace features a dedicated Asset Dropzone powered by Supabase Cloud Storage. You can
-                upload SVGs, PNGs, PDFs, fonts, and copy files at any time during development.
-              </p>
-            </div>
-
-            <div className="rounded-2xl border border-white/6 bg-slate-900/40 p-5">
-              <h4 className="font-bold text-white text-sm">What happens after launch?</h4>
-              <p className="mt-2 text-slate-300 leading-relaxed">
-                Every tier includes a 30-day (or 45-day) hypercare warranty covering technical stabilization, bug fixes,
-                and continuous Lighthouse performance optimization.
-              </p>
-            </div>
-
-            <div className="rounded-2xl border border-white/6 bg-slate-900/40 p-5">
-              <h4 className="font-bold text-white text-sm">Do you offer custom enterprise engineering?</h4>
-              <p className="mt-2 text-slate-300 leading-relaxed">
-                Absolutely. For custom 3D web applications, custom CMS architectures, or bespoke WebGL pipelines, reach
-                out directly through our contact form.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* MODAL 1: PRICING UNLOCK & LEAD COLLECTION GATE */}
+        {/* MODAL 1: PRICING UNLOCK & LEAD GATE */}
         {isUnlockModalOpen && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 p-4 backdrop-blur-md">
             <div className="w-full max-w-lg rounded-3xl border border-sky-400/40 bg-slate-950 p-6 shadow-2xl sm:p-8">
@@ -576,21 +807,15 @@ export default function PackagesView() {
           </div>
         )}
 
-        {/* MODAL 2: BOOKING INTAKE */}
+        {/* MODAL 2: BOOKING INTAKE FOR CONFIGURED BLUEPRINT */}
         {isBookingOpen && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 backdrop-blur-md">
             <div className="w-full max-w-xl rounded-3xl border border-sky-400/30 bg-slate-950 p-6 shadow-2xl sm:p-8">
               <div className="flex items-center justify-between border-b border-white/10 pb-4">
                 <div>
-                  <h3 className="text-xl font-bold text-white">Book Package: {selectedPackage.name}</h3>
-                  <p className="text-xs text-slate-400 mt-0.5">
-                    Estimated Investment:{" "}
-                    <strong className="text-sky-300 font-mono">
-                      {currency === "USD"
-                        ? `$${grandTotal.toLocaleString("en-US")}`
-                        : `₹${grandTotal.toLocaleString("en-IN")}`}{" "}
-                      {currency}
-                    </strong>
+                  <h3 className="text-xl font-bold text-white">Book Configured Blueprint</h3>
+                  <p className="text-xs text-sky-300 mt-0.5">
+                    {selectedFormat.name} × {styleCombinationSummary}
                   </p>
                 </div>
                 <button
@@ -610,17 +835,17 @@ export default function PackagesView() {
                   <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-emerald-500/20 text-3xl border border-emerald-400/40 text-emerald-300">
                     ✓
                   </div>
-                  <h4 className="text-xl font-bold text-white">Booking Inquiry Submitted!</h4>
+                  <h4 className="text-xl font-bold text-white">Configured Blueprint Booked!</h4>
                   <p className="text-xs text-slate-300 max-w-md mx-auto">
-                    Thank you, {clientName}! Your project brief has been recorded. We will initialize your project
-                    contract in your Client Portal.
+                    Thank you, {clientName}! Your custom configuration has been saved. Your project agreement and asset
+                    vault are initialized in your Client Workspace.
                   </p>
                   <div className="pt-4 flex justify-center gap-3">
                     <Link
                       href="/client"
                       className="rounded-full bg-gradient-to-r from-sky-400 to-cyan-500 px-6 py-2.5 text-xs font-bold uppercase tracking-wider text-slate-950 hover:brightness-110"
                     >
-                      Go to Client Portal →
+                      Open Client Workspace →
                     </Link>
                   </div>
                 </div>
@@ -682,14 +907,13 @@ export default function PackagesView() {
 
                   <div>
                     <label className="block font-medium uppercase tracking-wider text-slate-300">
-                      Project Vision & Key Requirements
+                      Additional Vision & Reference Links
                     </label>
                     <textarea
                       rows={3}
-                      required
                       value={projectDescription}
                       onChange={(e) => setProjectDescription(e.target.value)}
-                      placeholder="Briefly describe your goals, required pages, reference links, and target audience..."
+                      placeholder="Share reference URLs, branding notes, or specific shader/3D expectations..."
                       className="mt-1 w-full rounded-xl border border-white/10 bg-slate-900 px-3.5 py-2.5 text-white placeholder-slate-500 focus:border-sky-400 focus:outline-none"
                     />
                   </div>
@@ -707,11 +931,79 @@ export default function PackagesView() {
                       disabled={isSubmitting}
                       className="rounded-xl bg-gradient-to-r from-sky-400 to-cyan-500 px-6 py-2.5 font-bold text-slate-950 shadow-[0_0_20px_rgba(56,189,248,0.3)] hover:brightness-110 disabled:opacity-50"
                     >
-                      {isSubmitting ? "Submitting Intake..." : "Confirm Booking & Start Contract"}
+                      {isSubmitting ? "Submitting Blueprint..." : "Confirm Blueprint & Start Contract"}
                     </button>
                   </div>
                 </form>
               )}
+            </div>
+          </div>
+        )}
+
+        {/* MODAL 3: STYLE BLUEPRINT INSPECTOR */}
+        {inspectedStyle && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 backdrop-blur-md">
+            <div className="w-full max-w-lg rounded-3xl border border-purple-400/30 bg-slate-950 p-6 shadow-2xl">
+              <div className="flex items-center justify-between border-b border-white/10 pb-4">
+                <div>
+                  <span className="rounded-md bg-purple-500/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-purple-300">
+                    {inspectedStyle.category}
+                  </span>
+                  <h3 className="text-xl font-bold text-white mt-1">{inspectedStyle.name}</h3>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setInspectedStyle(null)}
+                  className="rounded-lg bg-slate-900 p-1 text-slate-400 hover:text-white"
+                >
+                  ✕
+                </button>
+              </div>
+
+              <div className="mt-4 space-y-4 text-xs">
+                <div>
+                  <span className="text-slate-400 font-medium uppercase tracking-wider">Aesthetic Mood</span>
+                  <p className="text-slate-200 text-sm font-semibold mt-0.5">{inspectedStyle.mood}</p>
+                </div>
+
+                <div>
+                  <span className="text-slate-400 font-medium uppercase tracking-wider">Philosophy & Direction</span>
+                  <p className="text-slate-300 leading-relaxed mt-0.5">{inspectedStyle.description}</p>
+                </div>
+
+                <div>
+                  <span className="text-slate-400 font-medium uppercase tracking-wider">Color Swatch DNA</span>
+                  <div className="mt-1.5 flex gap-2">
+                    {inspectedStyle.palette.map((c, i) => (
+                      <div key={i} className="flex-1 text-center">
+                        <div
+                          style={{ backgroundColor: c }}
+                          className="h-8 w-full rounded-lg border border-white/10 shadow-md"
+                        />
+                        <span className="text-[10px] font-mono text-slate-400 block mt-1">{c}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div>
+                  <span className="text-slate-400 font-medium uppercase tracking-wider">Typography Stack</span>
+                  <p className="text-purple-300 font-mono mt-0.5">{inspectedStyle.typography}</p>
+                </div>
+
+                <div className="flex justify-end pt-4 border-t border-white/10">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      toggleStyle(inspectedStyle.id);
+                      setInspectedStyle(null);
+                    }}
+                    className="rounded-xl bg-purple-500 px-5 py-2 font-bold text-slate-950 hover:bg-purple-400"
+                  >
+                    {selectedStyles.includes(inspectedStyle.id) ? "Remove from Formula" : "Add to Formula +"}
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         )}
