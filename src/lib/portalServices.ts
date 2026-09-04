@@ -689,6 +689,7 @@ export async function submitLead(lead: {
   package_interest?: string;
   timeline?: string;
   source?: string;
+  project_description?: string;
 }): Promise<{ success: boolean; id?: string }> {
   const formspreeEndpoint = process.env.NEXT_PUBLIC_FORMSPREE_ENDPOINT;
 
@@ -707,6 +708,7 @@ export async function submitLead(lead: {
           package: lead.package_interest || "All Packages",
           timeline: lead.timeline || "N/A",
           source: lead.source || "Pricing Unlock Gate",
+          description: lead.project_description || "N/A",
           timestamp: new Date().toISOString()
         })
       });
@@ -730,6 +732,7 @@ export async function submitLead(lead: {
   // 2. Save into Supabase bookings table
   if (isSupabaseConfigured()) {
     try {
+      const description = lead.project_description || `[Lead Collected via ${newLead.source}] Package of Interest: ${newLead.package_interest}${lead.phone ? ` | Phone: ${lead.phone}` : ""}`;
       const { data, error } = await supabase
         .from("bookings")
         .insert([
@@ -737,7 +740,7 @@ export async function submitLead(lead: {
             client_name: newLead.client_name,
             client_email: newLead.client_email,
             company_name: newLead.company_name,
-            project_description: `[Lead Collected via ${newLead.source}] Package of Interest: ${newLead.package_interest}${lead.phone ? ` | Phone: ${lead.phone}` : ""}`,
+            project_description: description,
             status: "pending"
           }
         ])

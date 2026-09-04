@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, useMemo, type FormEvent } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useLanguage } from "../context/LanguageContext"
+import SEOHead from "../components/SEOHead"
 import { getBotReply } from "../lib/botAssistant"
 import { getVimeoEmbedUrl } from "../lib/projectStorage"
 
@@ -440,18 +441,10 @@ export default function Projects() {
         </button>
       </div>
 
-      {isLoadingProjects ? (
-        <div className="flex h-screen w-full items-center justify-center bg-[#dff4ff]">
-          <div className="text-center">
-            <div className="mb-4 h-8 w-8 animate-spin rounded-full border-2 border-sky-500/20 border-t-sky-500 mx-auto" />
-            <p className="text-xs text-sky-950/50 uppercase tracking-widest">Loading Projects...</p>
-          </div>
-        </div>
-      ) : (
-        <section
-          ref={scrollContainerRef}
-          aria-label="Projects showcase"
-          className="h-screen overflow-y-auto overscroll-y-contain bg-[#dff4ff] touch-pan-y [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden snap-y snap-mandatory pt-14 md:pt-0"
+      <section
+        ref={scrollContainerRef}
+        aria-label="Projects showcase"
+        className="h-screen overflow-y-auto overscroll-y-contain bg-[#dff4ff] touch-pan-y [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden snap-y snap-mandatory pt-14 md:pt-0"
           style={{
             WebkitOverflowScrolling: "touch",
             scrollBehavior: "smooth",
@@ -713,7 +706,6 @@ export default function Projects() {
             </div>
           </div>
         </section>
-      )}
 
       {/* Project Details Modal / Drawer */}
       {openDetailIndex !== null && resolvedProjects[openDetailIndex] ? (

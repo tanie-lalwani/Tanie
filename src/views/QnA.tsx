@@ -337,18 +337,10 @@ export default function QnA() {
         </button>
       </div>
 
-      {isLoadingReels ? (
-        <div className="flex h-screen w-full items-center justify-center bg-[#dff4ff]">
-          <div className="text-center">
-            <div className="mb-4 h-8 w-8 animate-spin rounded-full border-2 border-sky-500/20 border-t-sky-500 mx-auto" />
-            <p className="text-xs text-sky-950/50 uppercase tracking-widest">Loading Interview Reels...</p>
-          </div>
-        </div>
-      ) : (
-        <section
-          ref={scrollContainerRef}
-          aria-label="Interview reel questions"
-          className="h-screen overflow-y-auto overscroll-y-contain bg-[#dff4ff] touch-pan-y [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden snap-y snap-mandatory"
+      <section
+        ref={scrollContainerRef}
+        aria-label="Interview reel questions"
+        className="h-screen overflow-y-auto overscroll-y-contain bg-[#dff4ff] touch-pan-y [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden snap-y snap-mandatory"
           style={{
             WebkitOverflowScrolling: "touch",
             scrollBehavior: "smooth",
@@ -472,7 +464,6 @@ export default function QnA() {
             </div>
           </div>
         </section>
-      )}
 
       {openTranscriptIndex !== null && resolvedReels[openTranscriptIndex] ? (
         <aside
