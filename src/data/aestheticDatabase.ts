@@ -623,19 +623,20 @@ export const AESTHETIC_STYLES: AestheticStyle[] = [
 ];
 
 // ==============================================================================
-// 3. WIZARD QUESTIONNAIRE DATA
+// 3. WIZARD QUESTIONNAIRE DATA (GLOBAL & SITE-FOCUSED)
 // ==============================================================================
 export const WIZARD_QUESTIONS: WizardQuestion[] = [
   {
     id: "industry",
-    title: "What is your primary industry or niche?",
-    subtitle: "Select the domain you are building for so we can tailor the visual language and conversion patterns.",
+    title: "What type of website or digital experience are you building?",
+    subtitle: "Select the primary format so we can tailor the layout structure and conversion flow.",
     options: [
-      { id: "real-estate", label: "Real Estate & Architecture", description: "Developments, spatial properties, architecture studios" },
-      { id: "saas-ai", label: "B2B SaaS & AI Platform", description: "Software tools, AI apps, cloud platforms, dev tools" },
-      { id: "creative-studio", label: "Creative Studio & Portfolio", description: "Design agencies, directors, architects, creative talent" },
-      { id: "luxury-ecommerce", label: "Luxury Brand & E-Commerce", description: "High-ticket products, fashion, lifestyle goods" },
-      { id: "fintech-consulting", label: "FinTech & High-Ticket Advisory", description: "Financial tools, wealth management, executive consulting" }
+      { id: "landing-launchpad", label: "High-Converting Landing Page & Launchpad", description: "Focused single-page conversion for new products, drops, or campaigns" },
+      { id: "interactive-3d", label: "Interactive 3D / Spatial Experience", description: "Immersive Three.js WebGL canvas, 3D model exploration, tactile depth" },
+      { id: "saas-webapp", label: "Modern Web Application & SaaS Platform", description: "Feature-dense Bento grids, live product simulations, user onboarding" },
+      { id: "portfolio-studio", label: "Bespoke Portfolio & Studio Showcase", description: "Editorial typography, asymmetric grids, case studies, showreels" },
+      { id: "ecommerce-flagship", label: "Flagship E-Commerce & Product Spotlight", description: "Interactive product configurators, rich media galleries, brand storytelling" },
+      { id: "client-portal", label: "Interactive Client Portal & Service Hub", description: "Client dashboard, milestone tracker, digital contracts, and asset vault" }
     ]
   },
   {
@@ -643,11 +644,11 @@ export const WIZARD_QUESTIONS: WizardQuestion[] = [
     title: "What visual vibe and aesthetic appeals to you most?",
     subtitle: "Every aesthetic creates a distinct emotional impression and sets you apart from competitors.",
     options: [
+      { id: "glassmorphism", label: "Liquid Glassmorphism & AI Glow", description: "Translucent frosted cards, glowing gradient borders, modern tech feel" },
       { id: "3d-interactive", label: "Interactive 3D & WebGL Canvas", description: "Hardware-accelerated 3D models, spatial flythroughs, luxury depth" },
-      { id: "glassmorphism", label: "Liquid Glassmorphism & AI Glow", description: "Translucent frosted cards, glowing gradient borders, modern tech vibe" },
       { id: "swiss-editorial", label: "Minimalist Swiss Editorial", description: "Stark typography, asymmetric grids, black & white mastery" },
       { id: "neo-brutalist", label: "Neo-Brutalist & High-Energy Pop", description: "Bold black borders, saturated pastel cards, playful viral energy" },
-      { id: "cyberpunk", label: "Cyber Obsidian & Holographic Glow", description: "Pitch-black canvas, neon teal/magenta gridlines, particle fields" },
+      { id: "cyberpunk", label: "Cyberpunk Obsidian & Holographic Glow", description: "Pitch-black canvas, neon teal/magenta gridlines, particle fields" },
       { id: "organic-warm", label: "Organic Pastel & Serene Motion", description: "Earthy terracotta, warm sand, soothing breathing animations" }
     ]
   },
@@ -657,15 +658,15 @@ export const WIZARD_QUESTIONS: WizardQuestion[] = [
     subtitle: "The flow defines how visitors navigate from initial awareness to taking high-value actions.",
     options: [
       { id: "saas-growth-funnel", label: "SaaS Product & Growth Funnel", description: "Hero product demo -> Bento grid features -> ROI calculator -> Pricing matrix" },
-      { id: "spatial-3d-walkthrough", label: "3D Spatial Walkthrough & VIP Booking", description: "3D model scene -> Unit inspection -> Lifestyle map -> Private calendar reservation" },
-      { id: "editorial-luxury-showcase", label: "Curated Works & Project Case Studies", description: "Fullscreen video reveal -> Project chapters -> Accordion manifesto -> Commission intake" },
+      { id: "spatial-3d-walkthrough", label: "3D Spatial Walkthrough & Hotspot Explorer", description: "3D canvas model -> Unit/product inspection -> Spatial map -> Private VIP booking" },
+      { id: "editorial-luxury-showcase", label: "Curated Works, Case Studies & Showreels", description: "Fullscreen video reveal -> Project chapters -> Accordion manifesto -> Commission intake" },
       { id: "client-portal-booking-engine", label: "Client Hub, E-Contracts & File Vault", description: "Package discovery -> Authenticated dashboard -> Sprint milestones -> E-signatures" }
     ]
   },
   {
     id: "scope",
-    title: "What is your target launch timeline?",
-    subtitle: "Helps us recommend the best sprint scope and milestone structure for your build.",
+    title: "What is your target launch timeline & sprint scope?",
+    subtitle: "Helps us recommend the best milestone structure and technical deliverables for your build.",
     options: [
       { id: "mvp-sprint", label: "Fast MVP Sprint (2 - 3 Weeks)", description: "High-impact landing page + key functional flow ready for immediate launch" },
       { id: "custom-flagship", label: "Custom Flagship Build (4 - 6 Weeks)", description: "Full multi-page architecture, bespoke animations, and integrated client tools" },
@@ -695,18 +696,20 @@ export function calculateAestheticRecommendation(answers: Partial<WizardAnswers>
 } {
   // Determine Primary Style
   let primaryStyle = AESTHETIC_STYLES[0]; // fallback
-  if (answers.vibe === "3d-interactive" || answers.industry === "real-estate") {
+  if (answers.vibe === "3d-interactive" || answers.industry === "interactive-3d") {
     primaryStyle = AESTHETIC_STYLES.find((s) => s.id === "3d-spatial-architecture") || AESTHETIC_STYLES[0];
-  } else if (answers.vibe === "glassmorphism" || answers.industry === "saas-ai") {
+  } else if (answers.vibe === "glassmorphism" || answers.industry === "saas-webapp") {
     primaryStyle = AESTHETIC_STYLES.find((s) => s.id === "liquid-glassmorphism") || AESTHETIC_STYLES[1];
-  } else if (answers.vibe === "swiss-editorial" || answers.industry === "creative-studio") {
+  } else if (answers.vibe === "swiss-editorial" || answers.industry === "portfolio-studio") {
     primaryStyle = AESTHETIC_STYLES.find((s) => s.id === "minimalist-swiss-editorial") || AESTHETIC_STYLES[2];
-  } else if (answers.vibe === "neo-brutalist") {
+  } else if (answers.vibe === "neo-brutalist" || answers.industry === "landing-launchpad") {
     primaryStyle = AESTHETIC_STYLES.find((s) => s.id === "neo-brutalist-pop") || AESTHETIC_STYLES[3];
-  } else if (answers.vibe === "cyberpunk" || answers.industry === "fintech-consulting") {
+  } else if (answers.vibe === "cyberpunk") {
     primaryStyle = AESTHETIC_STYLES.find((s) => s.id === "cyberpunk-obsidian-glow") || AESTHETIC_STYLES[4];
-  } else if (answers.vibe === "organic-warm" || answers.industry === "luxury-ecommerce") {
+  } else if (answers.vibe === "organic-warm" || answers.industry === "ecommerce-flagship") {
     primaryStyle = AESTHETIC_STYLES.find((s) => s.id === "organic-pastel-serene") || AESTHETIC_STYLES[5];
+  } else if (answers.industry === "client-portal") {
+    primaryStyle = AESTHETIC_STYLES.find((s) => s.id === "b2b-saas-conversion-engine") || AESTHETIC_STYLES[7];
   }
 
   // Determine Matched Flow

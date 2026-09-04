@@ -26,9 +26,9 @@ export default function PackagesView() {
   // Wizard state
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [answers, setAnswers] = useState<Partial<WizardAnswers>>({
-    industry: "real-estate",
-    vibe: "3d-interactive",
-    flow: "spatial-3d-walkthrough",
+    industry: "landing-launchpad",
+    vibe: "glassmorphism",
+    flow: "saas-growth-funnel",
     scope: "custom-flagship"
   });
 
@@ -306,16 +306,16 @@ export default function PackagesView() {
           
           {/* Header Title & Segmented Switcher */}
           <div className="text-center max-w-3xl mx-auto mb-8 sm:mb-12">
-            <div className="inline-flex items-center gap-2 rounded-full border border-sky-300/60 bg-white/60 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-slate-800 shadow-xs mb-3">
+            <div className="inline-flex items-center gap-2 rounded-full border border-sky-300/60 bg-white/60 px-4 py-1.5 text-xs font-bold uppercase tracking-wider shadow-xs mb-3" style={{ color: "#0f172a" }}>
               <span className="h-2 w-2 rounded-full bg-sky-500 animate-pulse" />
               Website Design Archetypes & Architecture
             </div>
             
-            <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 sm:text-5xl mb-4">
+            <h1 className="text-3xl font-extrabold tracking-tight sm:text-5xl mb-4" style={{ color: "#090d16" }}>
               Choose Your Aesthetic & Flow
             </h1>
-            <p className="text-base text-slate-600 sm:text-lg max-w-2xl mx-auto leading-relaxed">
-              Every brand requires a distinct visual soul and functional flow. Use our 4-step interactive generator or explore the full design matrix below.
+            <p className="text-base sm:text-lg max-w-2xl mx-auto leading-relaxed" style={{ color: "#334155" }}>
+              Every brand requires a distinct visual soul and functional flow. Use our interactive generator to discover tailored archetypes or explore the full design matrix below.
             </p>
 
             {/* Mode Switcher Tabs */}
@@ -326,7 +326,7 @@ export default function PackagesView() {
                 className={`flex items-center gap-2 rounded-full px-5 py-2 text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
                   activeTab === "wizard"
                     ? "bg-slate-950 text-white shadow-md"
-                    : "text-slate-600 hover:text-black hover:bg-black/5"
+                    : "text-slate-700 hover:text-black hover:bg-black/5"
                 }`}
               >
                 <span>🪄</span>
@@ -339,7 +339,7 @@ export default function PackagesView() {
                 className={`flex items-center gap-2 rounded-full px-5 py-2 text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
                   activeTab === "catalog"
                     ? "bg-slate-950 text-white shadow-md"
-                    : "text-slate-600 hover:text-black hover:bg-black/5"
+                    : "text-slate-700 hover:text-black hover:bg-black/5"
                 }`}
               >
                 <span>🎨</span>
@@ -355,7 +355,7 @@ export default function PackagesView() {
                 className={`flex items-center gap-2 rounded-full px-5 py-2 text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
                   activeTab === "blueprint"
                     ? "bg-sky-600 text-white shadow-md"
-                    : "text-slate-600 hover:text-black hover:bg-black/5"
+                    : "text-slate-700 hover:text-black hover:bg-black/5"
                 }`}
               >
                 <span>{isUnlocked ? "⚡" : "🔒"}</span>
@@ -374,33 +374,23 @@ export default function PackagesView() {
           {/* ------------------------------------------------------------- */}
           {activeTab === "wizard" && (
             <div className="max-w-4xl mx-auto">
-              <div className="rounded-[2.2rem] border border-black/10 bg-white/80 p-6 shadow-xl backdrop-blur-xl sm:p-10">
+              <div className="rounded-[2.2rem] border border-black/10 bg-white/85 p-6 shadow-xl backdrop-blur-xl sm:p-10">
                 
-                {/* Stepper Progress Bar */}
-                <div className="mb-8">
-                  <div className="flex items-center justify-between text-xs font-bold uppercase tracking-widest text-slate-500 mb-2">
-                    <span>Step {currentStepIndex + 1} of {WIZARD_QUESTIONS.length + 1}</span>
-                    <span>{Math.round(((currentStepIndex + 1) / (WIZARD_QUESTIONS.length + 1)) * 100)}% Complete</span>
-                  </div>
-                  <div className="h-2 w-full rounded-full bg-slate-200 overflow-hidden">
-                    <div
-                      className="h-full bg-gradient-to-r from-sky-500 to-indigo-600 transition-all duration-300"
-                      style={{ width: `${((currentStepIndex + 1) / (WIZARD_QUESTIONS.length + 1)) * 100}%` }}
-                    />
-                  </div>
-                </div>
-
                 {/* Question Steps 0 to 3 */}
                 {currentStepIndex < WIZARD_QUESTIONS.length && (
                   <div>
-                    <h2 className="text-2xl font-bold text-slate-900 mb-2 sm:text-3xl">
-                      {WIZARD_QUESTIONS[currentStepIndex].title}
-                    </h2>
-                    <p className="text-sm text-slate-600 mb-6 sm:text-base">
-                      {WIZARD_QUESTIONS[currentStepIndex].subtitle}
-                    </p>
+                    {/* Top of Card: Pure Focus on Question & Options */}
+                    <div className="mb-6 sm:mb-8">
+                      <h2 className="text-2xl font-bold mb-2 sm:text-3xl tracking-tight" style={{ color: "#090d16" }}>
+                        {WIZARD_QUESTIONS[currentStepIndex].title}
+                      </h2>
+                      <p className="text-sm sm:text-base leading-relaxed" style={{ color: "#475569" }}>
+                        {WIZARD_QUESTIONS[currentStepIndex].subtitle}
+                      </p>
+                    </div>
 
-                    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                    {/* Options Grid */}
+                    <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-2">
                       {WIZARD_QUESTIONS[currentStepIndex].options?.map((option) => {
                         const questionKey = WIZARD_QUESTIONS[currentStepIndex].id as "industry" | "vibe" | "flow" | "scope";
                         const isSelected = answers[questionKey] === option.id;
@@ -416,40 +406,57 @@ export default function PackagesView() {
                                 : "border-black/8 bg-white/70 hover:border-black/20 hover:bg-white hover:shadow-xs"
                             }`}
                           >
-                            <div className="flex items-center justify-between mb-1">
-                              <span className="text-base font-bold text-slate-900">{option.label}</span>
+                            <div className="flex items-center justify-between mb-1.5">
+                              <span className="text-base font-bold" style={{ color: "#090d16" }}>{option.label}</span>
                               <span className={`h-5 w-5 rounded-full flex items-center justify-center text-xs ${
-                                isSelected ? "bg-sky-600 text-white" : "border border-slate-300 text-transparent"
+                                isSelected ? "bg-sky-600 text-white font-bold" : "border border-slate-300 text-transparent"
                               }`}>
                                 ✓
                               </span>
                             </div>
                             {option.description && (
-                              <p className="text-xs text-slate-500 leading-relaxed">{option.description}</p>
+                              <p className="text-xs leading-relaxed" style={{ color: "#475569" }}>{option.description}</p>
                             )}
                           </button>
                         );
                       })}
                     </div>
 
-                    {/* Step Navigation Controls */}
-                    <div className="mt-8 flex items-center justify-between border-t border-black/8 pt-6">
-                      <button
-                        type="button"
-                        onClick={() => setCurrentStepIndex((prev) => Math.max(0, prev - 1))}
-                        disabled={currentStepIndex === 0}
-                        className="rounded-full px-5 py-2.5 text-xs font-bold uppercase tracking-wider text-slate-600 hover:text-black disabled:opacity-30 cursor-pointer"
-                      >
-                        ← Back
-                      </button>
+                    {/* Bottom: Step Progress & Navigation Controls */}
+                    <div className="mt-8 pt-6 border-t border-black/8 space-y-4">
+                      {/* Stepper Progress Bar at Bottom */}
+                      <div>
+                        <div className="flex items-center justify-between text-xs font-bold uppercase tracking-widest text-slate-500 mb-2">
+                          <span>Step {currentStepIndex + 1} of {WIZARD_QUESTIONS.length + 1}</span>
+                          <span>{Math.round(((currentStepIndex + 1) / (WIZARD_QUESTIONS.length + 1)) * 100)}% Complete</span>
+                        </div>
+                        <div className="h-2 w-full rounded-full bg-slate-200 overflow-hidden">
+                          <div
+                            className="h-full bg-gradient-to-r from-sky-500 to-indigo-600 transition-all duration-300"
+                            style={{ width: `${((currentStepIndex + 1) / (WIZARD_QUESTIONS.length + 1)) * 100}%` }}
+                          />
+                        </div>
+                      </div>
 
-                      <button
-                        type="button"
-                        onClick={() => setCurrentStepIndex((prev) => prev + 1)}
-                        className="rounded-full bg-slate-950 px-7 py-3 text-xs font-bold uppercase tracking-widest text-white shadow-lg transition hover:bg-slate-800 cursor-pointer"
-                      >
-                        Continue →
-                      </button>
+                      {/* Back / Next Buttons */}
+                      <div className="flex items-center justify-between pt-1">
+                        <button
+                          type="button"
+                          onClick={() => setCurrentStepIndex((prev) => Math.max(0, prev - 1))}
+                          disabled={currentStepIndex === 0}
+                          className="rounded-full px-5 py-2.5 text-xs font-bold uppercase tracking-wider text-slate-600 hover:text-black disabled:opacity-30 cursor-pointer"
+                        >
+                          ← Back
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={() => setCurrentStepIndex((prev) => prev + 1)}
+                          className="rounded-full bg-slate-950 px-7 py-3 text-xs font-bold uppercase tracking-widest text-white shadow-lg transition hover:bg-slate-800 cursor-pointer"
+                        >
+                          Continue →
+                        </button>
+                      </div>
                     </div>
                   </div>
                 )}
@@ -460,16 +467,16 @@ export default function PackagesView() {
                     <div className="inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-sky-100 text-2xl text-sky-600 mb-4">
                       ✨
                     </div>
-                    <h2 className="text-2xl font-bold text-slate-900 sm:text-3xl mb-2">
+                    <h2 className="text-2xl font-bold sm:text-3xl mb-2 tracking-tight" style={{ color: "#090d16" }}>
                       Your Customized Blueprint is Generated!
                     </h2>
-                    <p className="text-sm text-slate-600 mb-6">
+                    <p className="text-sm mb-6" style={{ color: "#475569" }}>
                       Enter your details below to save your personalized moodboard, interactive palette customizer, and functional scope estimate.
                     </p>
 
                     <form onSubmit={handleWizardLeadSubmit} className="space-y-4 text-left">
                       <div>
-                        <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
+                        <label className="block text-xs font-bold uppercase tracking-wider mb-1" style={{ color: "#334155" }}>
                           Full Name *
                         </label>
                         <input
@@ -478,12 +485,13 @@ export default function PackagesView() {
                           value={leadName}
                           onChange={(e) => setLeadName(e.target.value)}
                           placeholder="e.g. Sarah Jenkins"
-                          className="w-full rounded-xl border border-black/12 bg-white px-4 py-3 text-sm text-black outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-200"
+                          style={{ color: "#090d16" }}
+                          className="w-full rounded-xl border border-black/12 bg-white px-4 py-3 text-sm outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-200"
                         />
                       </div>
 
                       <div>
-                        <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
+                        <label className="block text-xs font-bold uppercase tracking-wider mb-1" style={{ color: "#334155" }}>
                           Work Email *
                         </label>
                         <input
@@ -492,12 +500,13 @@ export default function PackagesView() {
                           value={leadEmail}
                           onChange={(e) => setLeadEmail(e.target.value)}
                           placeholder="sarah@company.com"
-                          className="w-full rounded-xl border border-black/12 bg-white px-4 py-3 text-sm text-black outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-200"
+                          style={{ color: "#090d16" }}
+                          className="w-full rounded-xl border border-black/12 bg-white px-4 py-3 text-sm outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-200"
                         />
                       </div>
 
                       <div>
-                        <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
+                        <label className="block text-xs font-bold uppercase tracking-wider mb-1" style={{ color: "#334155" }}>
                           Company / Website (Optional)
                         </label>
                         <input
@@ -505,7 +514,8 @@ export default function PackagesView() {
                           value={leadCompany}
                           onChange={(e) => setLeadCompany(e.target.value)}
                           placeholder="e.g. Apex Living / apex.com"
-                          className="w-full rounded-xl border border-black/12 bg-white px-4 py-3 text-sm text-black outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-200"
+                          style={{ color: "#090d16" }}
+                          className="w-full rounded-xl border border-black/12 bg-white px-4 py-3 text-sm outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-200"
                         />
                       </div>
 
@@ -517,6 +527,24 @@ export default function PackagesView() {
                         {isSubmittingLead ? "Generating Blueprint..." : "Unlock My Tailored Blueprint →"}
                       </button>
                     </form>
+
+                    {/* Step Progress indicator at Bottom for final step */}
+                    <div className="mt-8 pt-6 border-t border-black/8">
+                      <div className="flex items-center justify-between text-xs font-bold uppercase tracking-widest text-slate-500 mb-2">
+                        <span>Step {WIZARD_QUESTIONS.length + 1} of {WIZARD_QUESTIONS.length + 1}</span>
+                        <span>100% Ready</span>
+                      </div>
+                      <div className="h-2 w-full rounded-full bg-slate-200 overflow-hidden mb-3">
+                        <div className="h-full bg-gradient-to-r from-sky-500 to-emerald-500 w-full" />
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => setCurrentStepIndex(WIZARD_QUESTIONS.length - 1)}
+                        className="text-xs font-bold text-slate-500 hover:text-black cursor-pointer"
+                      >
+                        ← Back to previous questions
+                      </button>
+                    </div>
 
                     <p className="mt-4 text-[11px] text-slate-400">
                       🔒 No spam. Instant access to interactive moodboards, wireframes, and pricing breakdown.
@@ -595,16 +623,16 @@ export default function PackagesView() {
                       </div>
 
                       {/* Title & Tagline */}
-                      <h3 className="text-xl font-bold text-slate-900 mb-1">
+                      <h3 className="text-xl font-bold mb-1" style={{ color: "#090d16" }}>
                         {style.name}
                       </h3>
-                      <p className="text-xs text-slate-500 mb-4 leading-relaxed line-clamp-2">
+                      <p className="text-xs mb-4 leading-relaxed line-clamp-2" style={{ color: "#475569" }}>
                         {style.tagline}
                       </p>
 
                       {/* Color Palette Swatches */}
                       <div className="mb-4">
-                        <span className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">
+                        <span className="block text-[10px] font-bold uppercase tracking-wider mb-1.5" style={{ color: "#64748b" }}>
                           Signature Palette
                         </span>
                         <div className="flex items-center gap-2">
@@ -624,7 +652,7 @@ export default function PackagesView() {
                         {style.techStack.slice(0, 3).map((tech) => (
                           <span
                             key={tech}
-                            className="rounded-md border border-black/8 bg-slate-100/70 px-2 py-0.5 text-[10px] font-semibold text-slate-600"
+                            className="rounded-md border border-black/8 bg-slate-100/80 px-2 py-0.5 text-[10px] font-semibold text-slate-700"
                           >
                             {tech}
                           </span>
@@ -669,10 +697,10 @@ export default function PackagesView() {
                       <span>✓</span>
                       <span>{recommendation.matchScore}% Match for Your Domain</span>
                     </div>
-                    <h2 className="text-2xl sm:text-4xl font-extrabold text-slate-900 mb-2">
+                    <h2 className="text-2xl sm:text-4xl font-extrabold mb-2" style={{ color: "#090d16" }}>
                       {recommendation.primaryStyle.name}
                     </h2>
-                    <p className="text-sm sm:text-base text-slate-600 max-w-2xl leading-relaxed">
+                    <p className="text-sm sm:text-base max-w-2xl leading-relaxed" style={{ color: "#334155" }}>
                       {recommendation.primaryStyle.description}
                     </p>
                   </div>
@@ -699,10 +727,10 @@ export default function PackagesView() {
                 <div className="mt-8 pt-8 border-t border-black/8">
                   <div className="flex items-center justify-between mb-4">
                     <div>
-                      <h4 className="text-xs font-bold uppercase tracking-wider text-slate-700">
+                      <h4 className="text-xs font-bold uppercase tracking-wider" style={{ color: "#334155" }}>
                         Interactive Palette Explorer
                       </h4>
-                      <p className="text-xs text-slate-500">Click a palette below to dynamically preview contrast and mood.</p>
+                      <p className="text-xs" style={{ color: "#64748b" }}>Click a palette below to dynamically preview contrast and mood.</p>
                     </div>
                   </div>
 
@@ -728,7 +756,7 @@ export default function PackagesView() {
                           ))}
                         </div>
                         <div className="text-left">
-                          <span className="block text-xs font-bold text-slate-900">{pal.name}</span>
+                          <span className="block text-xs font-bold" style={{ color: "#090d16" }}>{pal.name}</span>
                           <span className="block text-[10px] text-slate-500">{pal.description.slice(0, 32)}...</span>
                         </div>
                       </button>
@@ -744,10 +772,10 @@ export default function PackagesView() {
                     <span className="text-xs font-extrabold uppercase tracking-widest text-sky-600">
                       Tailored Architecture Blueprint
                     </span>
-                    <h3 className="text-2xl font-bold text-slate-900 mt-1">
+                    <h3 className="text-2xl font-bold mt-1" style={{ color: "#090d16" }}>
                       {recommendation.matchedFlow.name}
                     </h3>
-                    <p className="text-sm text-slate-600 mt-1">
+                    <p className="text-sm mt-1" style={{ color: "#334155" }}>
                       {recommendation.matchedFlow.description}
                     </p>
                   </div>
@@ -768,10 +796,10 @@ export default function PackagesView() {
                         <div className="h-7 w-7 rounded-full bg-slate-950 text-white flex items-center justify-center text-xs font-bold mb-3">
                           {step.order}
                         </div>
-                        <h4 className="text-sm font-bold text-slate-900 mb-1.5">
+                        <h4 className="text-sm font-bold mb-1.5" style={{ color: "#090d16" }}>
                           {step.title}
                         </h4>
-                        <p className="text-xs text-slate-500 leading-relaxed mb-4">
+                        <p className="text-xs leading-relaxed mb-4" style={{ color: "#475569" }}>
                           {step.description}
                         </p>
                       </div>
@@ -808,7 +836,7 @@ export default function PackagesView() {
 
               {/* Alternative Archetypes */}
               <div>
-                <h3 className="text-xl font-bold text-slate-900 mb-4">
+                <h3 className="text-xl font-bold mb-4" style={{ color: "#090d16" }}>
                   Alternative Visual Directions to Consider
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -818,7 +846,7 @@ export default function PackagesView() {
                       className="rounded-2xl border border-black/10 bg-white/70 p-5 shadow-xs transition hover:shadow-md"
                     >
                       <span className="text-[10px] font-bold text-sky-600 uppercase tracking-wider">{style.category}</span>
-                      <h4 className="text-base font-bold text-slate-900 mt-1 mb-1">{style.name}</h4>
+                      <h4 className="text-base font-bold mt-1 mb-1" style={{ color: "#090d16" }}>{style.name}</h4>
                       <p className="text-xs text-slate-500 line-clamp-2 mb-3">{style.tagline}</p>
                       <button
                         type="button"
@@ -856,10 +884,10 @@ export default function PackagesView() {
               <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-sky-100 text-sky-600 text-xl mb-3">
                 🔐
               </div>
-              <h3 className="text-xl font-bold text-slate-900">
+              <h3 className="text-xl font-bold" style={{ color: "#090d16" }}>
                 Unlock Your Tailored Blueprint
               </h3>
-              <p className="text-xs text-slate-500 mt-1">
+              <p className="text-xs mt-1" style={{ color: "#64748b" }}>
                 Log in or test instantly to view your interactive moodboard, color switcher, and functional wireframes.
               </p>
             </div>
@@ -873,7 +901,7 @@ export default function PackagesView() {
               )}
 
               <div>
-                <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-600 mb-1">
+                <label className="block text-[11px] font-bold uppercase tracking-wider mb-1" style={{ color: "#334155" }}>
                   Email
                 </label>
                 <input
@@ -881,12 +909,13 @@ export default function PackagesView() {
                   required
                   value={authEmail}
                   onChange={(e) => setAuthEmail(e.target.value)}
-                  className="w-full rounded-xl border border-black/15 px-3.5 py-2.5 text-sm text-black outline-none focus:border-sky-500"
+                  style={{ color: "#090d16" }}
+                  className="w-full rounded-xl border border-black/15 px-3.5 py-2.5 text-sm outline-none focus:border-sky-500"
                 />
               </div>
 
               <div>
-                <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-600 mb-1">
+                <label className="block text-[11px] font-bold uppercase tracking-wider mb-1" style={{ color: "#334155" }}>
                   Password
                 </label>
                 <input
@@ -894,7 +923,8 @@ export default function PackagesView() {
                   required
                   value={authPassword}
                   onChange={(e) => setAuthPassword(e.target.value)}
-                  className="w-full rounded-xl border border-black/15 px-3.5 py-2.5 text-sm text-black outline-none focus:border-sky-500"
+                  style={{ color: "#090d16" }}
+                  className="w-full rounded-xl border border-black/15 px-3.5 py-2.5 text-sm outline-none focus:border-sky-500"
                 />
               </div>
 
@@ -948,16 +978,16 @@ export default function PackagesView() {
             <span className="text-[10px] font-extrabold uppercase tracking-widest text-sky-600">
               {selectedStyleModal.category}
             </span>
-            <h3 className="text-2xl font-bold text-slate-900 mt-1 mb-2">
+            <h3 className="text-2xl font-bold mt-1 mb-2" style={{ color: "#090d16" }}>
               {selectedStyleModal.name}
             </h3>
-            <p className="text-sm text-slate-600 mb-6 leading-relaxed">
+            <p className="text-sm mb-6 leading-relaxed" style={{ color: "#475569" }}>
               {selectedStyleModal.description}
             </p>
 
             {/* Visual DNA */}
             <div className="mb-6">
-              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-800 mb-2">Visual DNA Principles</h4>
+              <h4 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: "#334155" }}>Visual DNA Principles</h4>
               <ul className="space-y-1.5">
                 {selectedStyleModal.visualDna.map((dna) => (
                   <li key={dna} className="flex items-start gap-2 text-xs text-slate-600">
@@ -970,7 +1000,7 @@ export default function PackagesView() {
 
             {/* Tech Stack */}
             <div className="mb-6">
-              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-800 mb-2">Recommended Tech Stack</h4>
+              <h4 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: "#334155" }}>Recommended Tech Stack</h4>
               <div className="flex flex-wrap gap-1.5">
                 {selectedStyleModal.techStack.map((tech) => (
                   <span key={tech} className="rounded-md bg-slate-100 border border-black/8 px-2.5 py-1 text-xs font-semibold text-slate-700">
@@ -1013,10 +1043,10 @@ export default function PackagesView() {
             <span className="text-[10px] font-extrabold uppercase tracking-widest text-sky-600">
               Project Inquiry
             </span>
-            <h3 className="text-2xl font-bold text-slate-900 mt-1 mb-1">
+            <h3 className="text-2xl font-bold mt-1 mb-1" style={{ color: "#090d16" }}>
               {inquiryAesthetic.name}
             </h3>
-            <p className="text-xs text-slate-500 mb-6">
+            <p className="text-xs mb-6" style={{ color: "#64748b" }}>
               Let&apos;s build a custom project in this aesthetic. Fill in your vision below to receive a scoped sprint proposal.
             </p>
 
@@ -1028,7 +1058,7 @@ export default function PackagesView() {
             ) : (
               <form onSubmit={handleInquirySubmit} className="space-y-3.5">
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
+                  <label className="block text-xs font-bold uppercase tracking-wider mb-1" style={{ color: "#334155" }}>
                     Your Name *
                   </label>
                   <input
@@ -1037,12 +1067,13 @@ export default function PackagesView() {
                     value={inquiryName}
                     onChange={(e) => setInquiryName(e.target.value)}
                     placeholder="Sarah Jenkins"
-                    className="w-full rounded-xl border border-black/15 bg-white px-3.5 py-2.5 text-sm text-black outline-none focus:border-sky-500"
+                    style={{ color: "#090d16" }}
+                    className="w-full rounded-xl border border-black/15 bg-white px-3.5 py-2.5 text-sm outline-none focus:border-sky-500"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
+                  <label className="block text-xs font-bold uppercase tracking-wider mb-1" style={{ color: "#334155" }}>
                     Your Email *
                   </label>
                   <input
@@ -1051,12 +1082,13 @@ export default function PackagesView() {
                     value={inquiryEmail}
                     onChange={(e) => setInquiryEmail(e.target.value)}
                     placeholder="sarah@company.com"
-                    className="w-full rounded-xl border border-black/15 bg-white px-3.5 py-2.5 text-sm text-black outline-none focus:border-sky-500"
+                    style={{ color: "#090d16" }}
+                    className="w-full rounded-xl border border-black/15 bg-white px-3.5 py-2.5 text-sm outline-none focus:border-sky-500"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
+                  <label className="block text-xs font-bold uppercase tracking-wider mb-1" style={{ color: "#334155" }}>
                     Company / Organization (Optional)
                   </label>
                   <input
@@ -1064,12 +1096,13 @@ export default function PackagesView() {
                     value={inquiryCompany}
                     onChange={(e) => setInquiryCompany(e.target.value)}
                     placeholder="Apex Living Ltd."
-                    className="w-full rounded-xl border border-black/15 bg-white px-3.5 py-2.5 text-sm text-black outline-none focus:border-sky-500"
+                    style={{ color: "#090d16" }}
+                    className="w-full rounded-xl border border-black/15 bg-white px-3.5 py-2.5 text-sm outline-none focus:border-sky-500"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
+                  <label className="block text-xs font-bold uppercase tracking-wider mb-1" style={{ color: "#334155" }}>
                     Project Vision & Goals
                   </label>
                   <textarea
@@ -1077,7 +1110,8 @@ export default function PackagesView() {
                     value={inquiryMessage}
                     onChange={(e) => setInquiryMessage(e.target.value)}
                     placeholder="Tell us about the key features, timeline, and audience for your website..."
-                    className="w-full rounded-xl border border-black/15 bg-white px-3.5 py-2.5 text-sm text-black outline-none focus:border-sky-500 resize-none"
+                    style={{ color: "#090d16" }}
+                    className="w-full rounded-xl border border-black/15 bg-white px-3.5 py-2.5 text-sm outline-none focus:border-sky-500 resize-none"
                   />
                 </div>
 
