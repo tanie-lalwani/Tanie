@@ -73,7 +73,7 @@ export default function PackagesView() {
   const isUnlocked = isAuthenticated || isDemoUnlocked || Boolean(user);
 
   // Categories for catalog filter
-  const categories = ["All", "3D & Spatial", "Modern SaaS", "Editorial & Minimal", "Bold & Pop", "Cyber & Glow", "Organic & Warm"];
+  const categories = ["All", "3D & Spatial", "Modern SaaS & Bento", "Editorial & Luxury", "Retro, Cyber & Y2K", "Pop & Brutalist", "Tactile & Organic", "Artistic & Avant-Garde"];
 
   const filteredStyles = useMemo(() => {
     if (activeCategory === "All") return AESTHETIC_STYLES;
