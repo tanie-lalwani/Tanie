@@ -171,7 +171,7 @@ const translations: Record<Locale, SiteCopy> = {
           description:
             "An AI-powered resume generator engineered specifically for UAE recruiters and ATS standards. Built using curated recruiter feedback and data, it crafts targeted, job-tailored resumes matching specific job descriptions to maximize interview callbacks.",
           techStack: ["React", "TypeScript", "AI / LLM", "ATS Optimization", "Tailwind CSS"],
-          site: "#",
+          site: "https://emiratescv.in",
           previewVideo: "/UAEResume.mp4",
           previewOpacity: "opacity-95",
           detailVideo: "/UAEResume.mp4",
@@ -330,7 +330,7 @@ const translations: Record<Locale, SiteCopy> = {
           description:
             "Creador de currículums impulsado por IA diseñado para estándares ATS y reclutadores de EAU. Utiliza retroalimentación de reclutadores para adaptar currículums a descripciones de trabajo específicas.",
           techStack: ["React", "TypeScript", "AI / LLM", "Optimización ATS", "Tailwind CSS"],
-          site: "#",
+          site: "https://emiratescv.in",
           previewVideo: "/UAEResume.mp4",
           previewOpacity: "opacity-95",
           detailVideo: "/UAEResume.mp4",
@@ -489,7 +489,7 @@ const translations: Record<Locale, SiteCopy> = {
           description:
             "Un créateur de CV propulsé par l'IA conçu pour le marché des ÉAU et les normes ATS. Optimise les CV selon les descriptions de poste à partir de retours de recruteurs.",
           techStack: ["React", "TypeScript", "AI / LLM", "Optimisation ATS", "Tailwind CSS"],
-          site: "#",
+          site: "https://emiratescv.in",
           previewVideo: "/UAEResume.mp4",
           previewOpacity: "opacity-95",
           detailVideo: "/UAEResume.mp4",
@@ -648,7 +648,7 @@ const translations: Record<Locale, SiteCopy> = {
           description:
             "यूएई के रिक्रूटर्स और ATS मानकों के लिए विशेष रूप से तैयार एआई-संचालित रेज़्यूमे बिल्डर। रिक्रूटर फीडबैक और जॉब डिस्क्रिप्शन के आधार पर परफेक्ट रेज़्यूमे तैयार करता है।",
           techStack: ["React", "TypeScript", "AI / LLM", "ATS Optimization", "Tailwind CSS"],
-          site: "#",
+          site: "https://emiratescv.in",
           previewVideo: "/UAEResume.mp4",
           previewOpacity: "opacity-95",
           detailVideo: "/UAEResume.mp4",
@@ -807,7 +807,7 @@ const translations: Record<Locale, SiteCopy> = {
           description:
             "UAEのリクルーターやATS基準に特化したAI駆動型履歴書作成ツール。採用担当者のフィードバックと求人票データに基づき、最適化された履歴書を自動生成します。",
           techStack: ["React", "TypeScript", "AI / LLM", "ATS Optimization", "Tailwind CSS"],
-          site: "#",
+          site: "https://emiratescv.in",
           previewVideo: "/UAEResume.mp4",
           previewOpacity: "opacity-95",
           detailVideo: "/UAEResume.mp4",
@@ -966,7 +966,7 @@ const translations: Record<Locale, SiteCopy> = {
           description:
             "UAE کے بھرتی کنندگان اور ATS کے معیار کے مطابق تیار کردہ ایک AI سے چلنے والا ریزیومے بلڈر جو جاب کی تفصیلات کے مطابق بہترین ریزیومے تیار کرتا ہے۔",
           techStack: ["React", "TypeScript", "AI / LLM", "ATS Optimization", "Tailwind CSS"],
-          site: "#",
+          site: "https://emiratescv.in",
           previewVideo: "/UAEResume.mp4",
           previewOpacity: "opacity-95",
           detailVideo: "/UAEResume.mp4",
@@ -1125,7 +1125,7 @@ const translations: Record<Locale, SiteCopy> = {
           description:
             "专为阿联酋 (UAE) 招聘人员和 ATS 标准打造的 AI 简历生成工具。结合招聘官反馈数据，根据具体职位描述定制高匹配度简历。",
           techStack: ["React", "TypeScript", "AI / LLM", "ATS 优化", "Tailwind CSS"],
-          site: "#",
+          site: "https://emiratescv.in",
           previewVideo: "/UAEResume.mp4",
           previewOpacity: "opacity-95",
           detailVideo: "/UAEResume.mp4",

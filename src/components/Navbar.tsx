@@ -161,26 +161,6 @@ export default function Navbar({ phase }: NavbarProps) {
             ) : null}
           </li>
 
-          <li>
-            <a
-              href="/packages"
-              className="inline-flex h-10 items-center justify-center rounded-full border px-4 text-xs font-semibold uppercase tracking-wider !no-underline transition hover:brightness-110 focus:outline-none"
-              style={linkStyle(false)}
-            >
-              Packages
-            </a>
-          </li>
-
-          <li>
-            <a
-              href="/client"
-              className="inline-flex h-10 items-center justify-center rounded-full border px-4 text-xs font-semibold uppercase tracking-wider !no-underline transition hover:brightness-110 focus:outline-none"
-              style={linkStyle(false)}
-            >
-              Client Hub
-            </a>
-          </li>
-
           <li className="relative">
             <AmbientOceanAudio placement="inline" />
           </li>

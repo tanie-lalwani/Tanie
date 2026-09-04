@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useState, useTransition } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
-import { supabase, isSupabaseConfigured } from "@/lib/supabaseClient";
+import { useAuth } from "@/hooks/useAuth";
 import {
   getClientProjects,
   getContractForProject,
@@ -19,14 +19,22 @@ import {
 } from "@/lib/portalServices";
 import SignaturePad from "@/components/SignaturePad";
 import Navbar from "@/components/Navbar";
-import SiteFooter from "@/components/SiteFooter";
 
 export default function ClientPortal() {
-  const [sessionUser, setSessionUser] = useState<{ email?: string; id?: string } | null>(null);
+  const {
+    user,
+    loading: authLoading,
+    signInWithPassword,
+    signUp,
+    signInWithOtp,
+    signOut,
+  } = useAuth();
+
   const [authEmail, setAuthEmail] = useState("");
   const [authPassword, setAuthPassword] = useState("");
   const [authMode, setAuthMode] = useState<"login" | "signup" | "magic">("login");
   const [authMessage, setAuthMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
+  const [isSubmittingAuth, setIsSubmittingAuth] = useState(false);
   const [isDemoMode, setIsDemoMode] = useState(false);
 
   // Portal State
@@ -49,34 +57,12 @@ export default function ClientPortal() {
   const [contractSignedSuccess, setContractSignedSuccess] = useState(false);
   const [legalAgreed, setLegalAgreed] = useState(false);
 
-  const [, startTransition] = useTransition();
-
-  // Check Supabase Auth session on mount
-  useEffect(() => {
-    async function checkAuth() {
-      if (isSupabaseConfigured()) {
-        try {
-          const { data } = await supabase.auth.getSession();
-          if (data.session?.user) {
-            setSessionUser({
-              email: data.session.user.email,
-              id: data.session.user.id,
-            });
-          }
-        } catch (e) {
-          console.warn("Auth session check error:", e);
-        }
-      }
-    }
-    checkAuth();
-  }, []);
-
   // Load project, contract, assets, and packages when user or demo mode changes
   useEffect(() => {
     let isMounted = true;
     async function loadPortalData() {
       setLoadingData(true);
-      const email = sessionUser?.email || (isDemoMode ? "client@demo.com" : "");
+      const email = user?.email || (isDemoMode ? "client@demo.com" : "");
 
       try {
         const [pkgs, projs] = await Promise.all([
@@ -107,7 +93,7 @@ export default function ClientPortal() {
       }
     }
 
-    if (sessionUser || isDemoMode) {
+    if (user || isDemoMode) {
       loadPortalData();
     } else {
       setLoadingData(false);
@@ -116,7 +102,7 @@ export default function ClientPortal() {
     return () => {
       isMounted = false;
     };
-  }, [sessionUser, isDemoMode]);
+  }, [user, isDemoMode]);
 
   // Auth Handlers
   const handleAuthSubmit = async (e: React.FormEvent) => {
@@ -128,56 +114,42 @@ export default function ClientPortal() {
       return;
     }
 
-    if (isSupabaseConfigured()) {
-      try {
-        if (authMode === "magic") {
-          const { error } = await supabase.auth.signInWithOtp({
-            email: authEmail.trim(),
-            options: { emailRedirectTo: typeof window !== "undefined" ? window.location.href : undefined },
-          });
-          if (error) throw error;
-          setAuthMessage({ type: "success", text: "Magic link sent! Check your inbox to sign in." });
+    setIsSubmittingAuth(true);
+
+    try {
+      if (authMode === "magic") {
+        const res = await signInWithOtp(authEmail.trim());
+        if (res?.error) throw res.error;
+        setAuthMessage({
+          type: "success",
+          text: "✨ Magic link sent! Check your inbox to sign in directly.",
+        });
+      } else if (authMode === "signup") {
+        if (!authPassword || authPassword.length < 6) {
+          setAuthMessage({ type: "error", text: "Password must be at least 6 characters." });
+          setIsSubmittingAuth(false);
           return;
         }
-
-        if (authMode === "signup") {
-          const { data, error } = await supabase.auth.signUp({
-            email: authEmail.trim(),
-            password: authPassword,
-          });
-          if (error) throw error;
-          if (data.user) {
-            setSessionUser({ email: data.user.email, id: data.user.id });
-            setAuthMessage({ type: "success", text: "Account created successfully!" });
-          }
-        } else {
-          const { data, error } = await supabase.auth.signInWithPassword({
-            email: authEmail.trim(),
-            password: authPassword,
-          });
-          if (error) throw error;
-          if (data.user) {
-            setSessionUser({ email: data.user.email, id: data.user.id });
-          }
-        }
-      } catch (err: any) {
-        setAuthMessage({ type: "error", text: err?.message || "Authentication failed. Please try again." });
+        const res = await signUp(authEmail.trim(), authPassword);
+        if (res?.error) throw res.error;
+        setAuthMessage({ type: "success", text: "🎉 Account created successfully! Signing in..." });
+      } else {
+        const res = await signInWithPassword(authEmail.trim(), authPassword);
+        if (res?.error) throw res.error;
+        setAuthMessage(null);
       }
-    } else {
-      // Fallback local session if Supabase is in initial setup
-      setSessionUser({ email: authEmail.trim(), id: "local-user" });
+    } catch (err: unknown) {
+      setAuthMessage({
+        type: "error",
+        text: (err as Error)?.message || "Authentication failed. Please check your credentials.",
+      });
+    } finally {
+      setIsSubmittingAuth(false);
     }
   };
 
   const handleSignOut = async () => {
-    if (isSupabaseConfigured()) {
-      try {
-        await supabase.auth.signOut();
-      } catch (e) {
-        console.warn("Sign out err:", e);
-      }
-    }
-    setSessionUser(null);
+    await signOut();
     setIsDemoMode(false);
   };
 
@@ -192,7 +164,12 @@ export default function ClientPortal() {
     try {
       for (let i = 0; i < files.length; i++) {
         const file = files[i];
-        const newAsset = await uploadProjectAsset(file, selectedProject.id, uploadCategory, uploadDescription);
+        const newAsset = await uploadProjectAsset(
+          file,
+          selectedProject.id,
+          uploadCategory,
+          uploadDescription
+        );
         setAssets((prev) => [newAsset, ...prev]);
       }
       setUploadDescription("");
@@ -241,6 +218,8 @@ export default function ClientPortal() {
   const stages = ["Discovery", "Design", "Development", "Review", "Launch", "Completed"];
   const currentStageIndex = selectedProject ? stages.indexOf(selectedProject.status) : 0;
 
+  const isAuthenticatedUser = Boolean(user) || isDemoMode;
+
   return (
     <div className="min-h-screen bg-[#04111b] text-slate-100 selection:bg-sky-500/30 selection:text-white">
       <Navbar phase="default" />
@@ -251,15 +230,17 @@ export default function ClientPortal() {
           <div>
             <div className="inline-flex items-center gap-2 rounded-full border border-sky-400/30 bg-sky-500/10 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-sky-300">
               <span className="h-2 w-2 animate-ping rounded-full bg-sky-400" />
-              Client Portal & Hub
+              {isAuthenticatedUser ? "Client Workspace & Active Hub" : "Client Portal & Gateway"}
             </div>
             <h1 className="mt-2 text-2xl font-bold tracking-tight text-white sm:text-3xl">
-              {sessionUser || isDemoMode
-                ? `Welcome, ${selectedProject?.client_name || sessionUser?.email?.split("@")[0] || "Partner"}`
+              {isAuthenticatedUser
+                ? `Welcome, ${selectedProject?.client_name || user?.email?.split("@")[0] || "Partner"}`
                 : "Client Management & Workspace"}
             </h1>
             <p className="text-sm text-slate-300">
-              Manage your website project, track milestones, upload brand assets, and sign e-contracts securely.
+              {isAuthenticatedUser
+                ? "Track live project milestones, upload brand assets, access staging deliverables, and sign e-contracts securely."
+                : "A centralized private engineering portal for design reviews, sprint tracking, digital agreements, and asset management."}
             </p>
           </div>
 
@@ -271,13 +252,13 @@ export default function ClientPortal() {
               Browse Packages
             </Link>
 
-            {sessionUser || isDemoMode ? (
+            {isAuthenticatedUser ? (
               <button
                 type="button"
                 onClick={handleSignOut}
                 className="rounded-full border border-white/10 bg-slate-800/80 px-4 py-2 text-xs font-medium text-slate-300 transition hover:bg-rose-500/20 hover:text-rose-300 hover:border-rose-400/30"
               >
-                Sign Out ({isDemoMode ? "Demo Mode" : sessionUser?.email})
+                Sign Out ({isDemoMode ? "Demo Client" : user?.email})
               </button>
             ) : (
               <button
@@ -285,117 +266,245 @@ export default function ClientPortal() {
                 onClick={() => setIsDemoMode(true)}
                 className="rounded-full bg-gradient-to-r from-sky-400 to-cyan-500 px-5 py-2 text-xs font-bold uppercase tracking-wider text-slate-950 shadow-[0_0_16px_rgba(56,189,248,0.3)] transition hover:brightness-110"
               >
-                Explore Demo Client Workspace
+                Explore Demo Client Workspace ⚡
               </button>
             )}
           </div>
         </div>
 
-        {/* AUTH VIEW (If Not Logged In and Not Demo Mode) */}
-        {!sessionUser && !isDemoMode ? (
-          <div className="mx-auto max-w-md rounded-3xl border border-sky-400/20 bg-slate-950/80 p-8 backdrop-blur-2xl shadow-2xl">
-            <div className="text-center">
-              <h2 className="text-xl font-bold text-white">Sign In to Your Workspace</h2>
-              <p className="mt-1 text-xs text-slate-400">
-                Access your active project deliverables, contracts & asset dropzone.
-              </p>
-            </div>
-
-            {/* Auth Mode Tabs */}
-            <div className="mt-6 flex rounded-full bg-slate-900/90 p-1 border border-white/10 text-xs">
-              <button
-                type="button"
-                onClick={() => setAuthMode("login")}
-                className={`flex-1 rounded-full py-1.5 font-semibold transition ${
-                  authMode === "login" ? "bg-sky-500/20 text-sky-300 border border-sky-400/40" : "text-slate-400"
-                }`}
-              >
-                Password Login
-              </button>
-              <button
-                type="button"
-                onClick={() => setAuthMode("magic")}
-                className={`flex-1 rounded-full py-1.5 font-semibold transition ${
-                  authMode === "magic" ? "bg-sky-500/20 text-sky-300 border border-sky-400/40" : "text-slate-400"
-                }`}
-              >
-                Magic Link
-              </button>
-              <button
-                type="button"
-                onClick={() => setAuthMode("signup")}
-                className={`flex-1 rounded-full py-1.5 font-semibold transition ${
-                  authMode === "signup" ? "bg-sky-500/20 text-sky-300 border border-sky-400/40" : "text-slate-400"
-                }`}
-              >
-                Sign Up
-              </button>
-            </div>
-
-            {authMessage && (
-              <div
-                className={`mt-4 rounded-xl p-3 text-xs ${
-                  authMessage.type === "success"
-                    ? "border border-emerald-500/30 bg-emerald-500/10 text-emerald-300"
-                    : "border border-rose-500/30 bg-rose-500/10 text-rose-300"
-                }`}
-              >
-                {authMessage.text}
-              </div>
-            )}
-
-            <form onSubmit={handleAuthSubmit} className="mt-6 space-y-4">
-              <div>
-                <label className="block text-xs font-medium uppercase tracking-wider text-slate-300">
-                  Email Address
-                </label>
-                <input
-                  type="email"
-                  required
-                  value={authEmail}
-                  onChange={(e) => setAuthEmail(e.target.value)}
-                  placeholder="client@company.com"
-                  className="mt-1.5 w-full rounded-xl border border-white/10 bg-slate-900/80 px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:border-sky-400 focus:outline-none focus:ring-1 focus:ring-sky-400"
-                />
-              </div>
-
-              {authMode !== "magic" && (
-                <div>
-                  <label className="block text-xs font-medium uppercase tracking-wider text-slate-300">
-                    Password
-                  </label>
-                  <input
-                    type="password"
-                    required
-                    value={authPassword}
-                    onChange={(e) => setAuthPassword(e.target.value)}
-                    placeholder="••••••••"
-                    className="mt-1.5 w-full rounded-xl border border-white/10 bg-slate-900/80 px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:border-sky-400 focus:outline-none focus:ring-1 focus:ring-sky-400"
-                  />
+        {/* ------------------------------------------------------------- */}
+        {/* VIEW 1: UNAUTHENTICATED GUEST / DISCOVERY UI                   */}
+        {/* ------------------------------------------------------------- */}
+        {!isAuthenticatedUser ? (
+          <div className="space-y-12">
+            {/* Feature Showcase Grid for Prospective Clients */}
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+              <div className="rounded-3xl border border-sky-400/20 bg-slate-950/60 p-6 backdrop-blur-xl transition hover:border-sky-400/40 shadow-lg">
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-sky-500/10 border border-sky-400/30 text-2xl">
+                  📊
                 </div>
-              )}
+                <h3 className="mt-4 text-base font-bold text-white">Live Sprint Milestones</h3>
+                <p className="mt-2 text-xs text-slate-400 leading-relaxed">
+                  Real-time timeline tracking across Discovery, Figma Design, Development, Staging Review, and Production Launch.
+                </p>
+              </div>
 
-              <button
-                type="submit"
-                className="w-full rounded-xl bg-gradient-to-r from-sky-400 to-cyan-500 py-3 text-sm font-bold text-slate-950 shadow-[0_0_20px_rgba(56,189,248,0.3)] transition hover:brightness-110"
-              >
-                {authMode === "login" ? "Sign In to Portal" : authMode === "magic" ? "Send Magic Sign-In Link" : "Create Account"}
-              </button>
-            </form>
+              <div className="rounded-3xl border border-sky-400/20 bg-slate-950/60 p-6 backdrop-blur-xl transition hover:border-sky-400/40 shadow-lg">
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-sky-500/10 border border-sky-400/30 text-2xl">
+                  📁
+                </div>
+                <h3 className="mt-4 text-base font-bold text-white">Cloud Asset Dropzone</h3>
+                <p className="mt-2 text-xs text-slate-400 leading-relaxed">
+                  Upload logos, vector graphics, typography files, copy docs, and 3D assets directly to Supabase cloud storage.
+                </p>
+              </div>
 
-            <div className="mt-6 border-t border-white/10 pt-4 text-center">
-              <p className="text-xs text-slate-400">Want to test the full client experience right away?</p>
-              <button
-                type="button"
-                onClick={() => setIsDemoMode(true)}
-                className="mt-2 text-xs font-semibold text-sky-400 underline underline-offset-4 hover:text-sky-300"
-              >
-                Launch One-Click Demo Client Workspace →
-              </button>
+              <div className="rounded-3xl border border-sky-400/20 bg-slate-950/60 p-6 backdrop-blur-xl transition hover:border-sky-400/40 shadow-lg">
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-sky-500/10 border border-sky-400/30 text-2xl">
+                  ✍️
+                </div>
+                <h3 className="mt-4 text-base font-bold text-white">Digital E-Contracts</h3>
+                <p className="mt-2 text-xs text-slate-400 leading-relaxed">
+                  Review clear scope summaries, legal warranties, milestone payment schedules, and execute signatures with cryptographic IP stamping.
+                </p>
+              </div>
+
+              <div className="rounded-3xl border border-sky-400/20 bg-slate-950/60 p-6 backdrop-blur-xl transition hover:border-sky-400/40 shadow-lg">
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-sky-500/10 border border-sky-400/30 text-2xl">
+                  💎
+                </div>
+                <h3 className="mt-4 text-base font-bold text-white">Deliverables Vault</h3>
+                <p className="mt-2 text-xs text-slate-400 leading-relaxed">
+                  Direct one-click access to staging deployment previews, Figma design boards, production code repositories, and documentation.
+                </p>
+              </div>
+            </div>
+
+            {/* Authentication Card & Demo CTA Section */}
+            <div className="grid grid-cols-1 gap-8 lg:grid-cols-12 items-start">
+              {/* Left Column: Interactive Auth Card */}
+              <div className="lg:col-span-6 rounded-3xl border border-sky-400/30 bg-slate-950/85 p-8 backdrop-blur-2xl shadow-[0_16px_50px_rgba(2,8,23,0.7)]">
+                <div className="text-center">
+                  <div className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-sky-500/20 border border-sky-400/40 text-sky-300 mb-3">
+                    🔐
+                  </div>
+                  <h2 className="text-xl font-bold text-white">Sign In to Your Client Hub</h2>
+                  <p className="mt-1 text-xs text-slate-400">
+                    Enter your registered email to access your active workspace.
+                  </p>
+                </div>
+
+                {/* Auth Mode Tabs */}
+                <div className="mt-6 flex rounded-full bg-slate-900/90 p-1 border border-white/10 text-xs">
+                  <button
+                    type="button"
+                    onClick={() => setAuthMode("login")}
+                    className={`flex-1 rounded-full py-1.5 font-semibold transition ${
+                      authMode === "login"
+                        ? "bg-sky-500/20 text-sky-300 border border-sky-400/40 shadow-sm"
+                        : "text-slate-400 hover:text-white"
+                    }`}
+                  >
+                    Password Login
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setAuthMode("magic")}
+                    className={`flex-1 rounded-full py-1.5 font-semibold transition ${
+                      authMode === "magic"
+                        ? "bg-sky-500/20 text-sky-300 border border-sky-400/40 shadow-sm"
+                        : "text-slate-400 hover:text-white"
+                    }`}
+                  >
+                    Magic Link
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setAuthMode("signup")}
+                    className={`flex-1 rounded-full py-1.5 font-semibold transition ${
+                      authMode === "signup"
+                        ? "bg-sky-500/20 text-sky-300 border border-sky-400/40 shadow-sm"
+                        : "text-slate-400 hover:text-white"
+                    }`}
+                  >
+                    Create Account
+                  </button>
+                </div>
+
+                {authMessage && (
+                  <div
+                    className={`mt-4 rounded-xl p-3 text-xs ${
+                      authMessage.type === "success"
+                        ? "border border-emerald-500/30 bg-emerald-500/10 text-emerald-300"
+                        : "border border-rose-500/30 bg-rose-500/10 text-rose-300"
+                    }`}
+                  >
+                    {authMessage.text}
+                  </div>
+                )}
+
+                <form onSubmit={handleAuthSubmit} className="mt-6 space-y-4">
+                  <div>
+                    <label className="block text-xs font-medium uppercase tracking-wider text-slate-300">
+                      Client Email Address
+                    </label>
+                    <input
+                      type="email"
+                      required
+                      value={authEmail}
+                      onChange={(e) => setAuthEmail(e.target.value)}
+                      placeholder="client@company.com"
+                      className="mt-1.5 w-full rounded-xl border border-white/10 bg-slate-900/80 px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:border-sky-400 focus:outline-none focus:ring-1 focus:ring-sky-400"
+                    />
+                  </div>
+
+                  {authMode !== "magic" && (
+                    <div>
+                      <label className="block text-xs font-medium uppercase tracking-wider text-slate-300">
+                        Password
+                      </label>
+                      <input
+                        type="password"
+                        required
+                        value={authPassword}
+                        onChange={(e) => setAuthPassword(e.target.value)}
+                        placeholder="••••••••"
+                        className="mt-1.5 w-full rounded-xl border border-white/10 bg-slate-900/80 px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:border-sky-400 focus:outline-none focus:ring-1 focus:ring-sky-400"
+                      />
+                    </div>
+                  )}
+
+                  <button
+                    type="submit"
+                    disabled={isSubmittingAuth || authLoading}
+                    className="w-full rounded-xl bg-gradient-to-r from-sky-400 to-cyan-500 py-3 text-sm font-bold text-slate-950 shadow-[0_0_20px_rgba(56,189,248,0.3)] transition hover:brightness-110 disabled:opacity-60"
+                  >
+                    {isSubmittingAuth
+                      ? "Processing..."
+                      : authMode === "login"
+                      ? "Sign In to Client Workspace"
+                      : authMode === "magic"
+                      ? "Send Magic Sign-In Link"
+                      : "Create Client Account"}
+                  </button>
+                </form>
+
+                <div className="mt-6 border-t border-white/10 pt-4 text-center">
+                  <p className="text-xs text-slate-400">Want to test the full client experience right away?</p>
+                  <button
+                    type="button"
+                    onClick={() => setIsDemoMode(true)}
+                    className="mt-2 inline-flex items-center gap-1.5 text-xs font-semibold text-sky-400 underline underline-offset-4 hover:text-sky-300"
+                  >
+                    <span>Launch One-Click Demo Client Workspace</span>
+                    <span>→</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Right Column: Interactive Demo Experience Highlight */}
+              <div className="lg:col-span-6 space-y-6">
+                <div className="rounded-3xl border border-sky-400/20 bg-gradient-to-br from-slate-950/90 via-slate-900/70 to-sky-950/40 p-8 backdrop-blur-2xl shadow-xl">
+                  <span className="inline-block rounded-md border border-cyan-400/30 bg-cyan-500/10 px-2.5 py-0.5 text-xs font-semibold uppercase tracking-wider text-cyan-300">
+                    Interactive Walkthrough
+                  </span>
+                  <h3 className="mt-3 text-xl font-bold text-white">Test-Drive the Client Hub</h3>
+                  <p className="mt-2 text-xs text-slate-300 leading-relaxed">
+                    Experience what it feels like to collaborate with Tanie Lalwani. With the demo workspace, you can inspect live milestone progression, try the canvas signature pad, and test the cloud asset dropzone.
+                  </p>
+
+                  <div className="mt-6 space-y-3">
+                    <div className="flex items-center gap-3 rounded-2xl border border-white/5 bg-slate-900/60 p-3 text-xs text-slate-300">
+                      <span className="text-emerald-400">✓</span>
+                      <span>No sign-up or credit card required for demo exploration</span>
+                    </div>
+                    <div className="flex items-center gap-3 rounded-2xl border border-white/5 bg-slate-900/60 p-3 text-xs text-slate-300">
+                      <span className="text-emerald-400">✓</span>
+                      <span>Simulated real-world e-contract agreement & signature pad</span>
+                    </div>
+                    <div className="flex items-center gap-3 rounded-2xl border border-white/5 bg-slate-900/60 p-3 text-xs text-slate-300">
+                      <span className="text-emerald-400">✓</span>
+                      <span>Active sprint milestone tracker with progress analytics</span>
+                    </div>
+                  </div>
+
+                  <div className="mt-8 flex flex-wrap items-center gap-4">
+                    <button
+                      type="button"
+                      onClick={() => setIsDemoMode(true)}
+                      className="rounded-xl bg-gradient-to-r from-sky-400 to-cyan-500 px-6 py-3 text-xs font-bold uppercase tracking-wider text-slate-950 shadow-[0_0_20px_rgba(56,189,248,0.3)] transition hover:brightness-110"
+                    >
+                      Open Demo Workspace ⚡
+                    </button>
+                    <Link
+                      href="/contact"
+                      className="rounded-xl border border-white/10 bg-slate-800/80 px-6 py-3 text-xs font-semibold uppercase tracking-wider text-slate-200 transition hover:bg-slate-700/80"
+                    >
+                      Inquire for New Project
+                    </Link>
+                  </div>
+                </div>
+
+                {/* Direct Help Callout */}
+                <div className="rounded-2xl border border-white/10 bg-slate-950/60 p-5 flex items-center justify-between">
+                  <div>
+                    <h4 className="text-sm font-semibold text-white">Have questions before starting?</h4>
+                    <p className="text-xs text-slate-400 mt-0.5">Explore package options or get in touch directly.</p>
+                  </div>
+                  <Link
+                    href="/packages"
+                    className="rounded-full bg-sky-500/10 px-4 py-2 text-xs font-bold text-sky-300 border border-sky-400/30 hover:bg-sky-500/20"
+                  >
+                    View Packages →
+                  </Link>
+                </div>
+              </div>
             </div>
           </div>
         ) : (
-          /* AUTHENTICATED / DEMO CLIENT PORTAL VIEW */
+          /* ------------------------------------------------------------- */
+          /* VIEW 2: AUTHENTICATED CLIENT DASHBOARD / DEMO MODE            */
+          /* ------------------------------------------------------------- */
           <div>
             {/* Navigation Tabs */}
             <div className="mb-6 flex flex-wrap items-center gap-2 border-b border-white/10 pb-3">
@@ -798,224 +907,201 @@ export default function ClientPortal() {
                       <div>
                         <div className="flex items-center gap-2">
                           <span className="text-xl">📜</span>
-                          <h2 className="text-2xl font-bold text-white">Client Engagement Agreement</h2>
+                          <span className="text-xs font-bold uppercase tracking-wider text-sky-300">
+                            Digital Engineering Agreement
+                          </span>
                         </div>
-                        <p className="text-xs text-slate-400 mt-1">
-                          Document ID: <span className="font-mono text-sky-300">{contract.id}</span>
+                        <h2 className="mt-1 text-2xl font-bold text-white">{contract.package_name}</h2>
+                        <p className="text-xs text-slate-400">
+                          Client: {contract.client_name} ({contract.client_email})
                         </p>
                       </div>
 
                       <div className="flex items-center gap-3">
                         <span
-                          className={`rounded-full px-3.5 py-1 text-xs font-bold uppercase tracking-wider ${
+                          className={`rounded-full px-3 py-1 text-xs font-bold ${
                             contract.status === "signed"
                               ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/40"
-                              : "bg-amber-500/20 text-amber-300 border border-amber-500/40"
+                              : "bg-amber-500/20 text-amber-300 border border-amber-500/40 animate-pulse"
                           }`}
                         >
-                          {contract.status === "signed" ? "Executed & Signed ✓" : "Pending Signature"}
+                          {contract.status === "signed" ? "Executed & Signed ✓" : "Pending Signature ✍️"}
                         </span>
-                        <button
-                          type="button"
-                          onClick={() => window.print()}
-                          className="rounded-full border border-white/10 bg-slate-900 px-3.5 py-1 text-xs font-medium text-slate-300 hover:text-white"
-                        >
-                          Print / Save PDF
-                        </button>
                       </div>
                     </div>
 
-                    {/* Contract Parties & Summary */}
-                    <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 rounded-2xl bg-slate-900/60 p-5 border border-white/6 text-xs">
-                      <div>
-                        <span className="font-semibold uppercase tracking-wider text-slate-400">Developer</span>
-                        <p className="mt-1 font-bold text-white text-sm">Tanie Lalwani</p>
-                        <p className="text-slate-300">Creative & Full-Stack Web Engineer</p>
-                        <p className="text-slate-400">Website: https://tanie.me</p>
-                      </div>
-                      <div>
-                        <span className="font-semibold uppercase tracking-wider text-slate-400">Client</span>
-                        <p className="mt-1 font-bold text-white text-sm">{contract.client_name}</p>
-                        <p className="text-slate-300">{contract.client_email}</p>
-                        <p className="text-slate-400">Package: {contract.package_name}</p>
-                      </div>
-                    </div>
-
-                    {/* Scope & Financial Terms */}
-                    <div className="mt-6 space-y-4">
-                      <div>
-                        <h4 className="text-xs font-bold uppercase tracking-wider text-sky-300">1. Project Scope</h4>
-                        <p className="mt-1.5 text-sm text-slate-200 bg-slate-900/40 p-4 rounded-xl border border-white/6 leading-relaxed">
+                    {/* Contract Details */}
+                    <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
+                      <div className="rounded-2xl border border-white/8 bg-slate-900/60 p-5">
+                        <h4 className="text-xs font-bold uppercase tracking-wider text-sky-300 mb-2">
+                          1. Project Scope & Deliverables
+                        </h4>
+                        <p className="text-xs text-slate-300 leading-relaxed whitespace-pre-line">
                           {contract.scope_summary}
                         </p>
                       </div>
 
-                      <div>
-                        <h4 className="text-xs font-bold uppercase tracking-wider text-sky-300">
-                          2. Compensation & Payment Schedule
+                      <div className="rounded-2xl border border-white/8 bg-slate-900/60 p-5">
+                        <h4 className="text-xs font-bold uppercase tracking-wider text-sky-300 mb-2">
+                          2. Total Fee & Payment Schedule
                         </h4>
-                        <div className="mt-1.5 rounded-xl bg-slate-900/40 p-4 border border-white/6 flex flex-wrap items-center justify-between gap-4">
-                          <div>
-                            <div className="text-xs text-slate-400">Agreed Fixed Total Investment</div>
-                            <div className="text-2xl font-bold text-white">
-                              ${contract.total_amount_usd.toLocaleString("en-US")} USD
-                            </div>
-                          </div>
-                          <div className="text-xs text-slate-300 max-w-md">{contract.payment_terms}</div>
+                        <div className="text-xl font-bold text-white mb-2">
+                          ${contract.total_amount_usd?.toLocaleString() || "3,200"} USD
                         </div>
+                        <p className="text-xs text-slate-300 leading-relaxed whitespace-pre-line">
+                          {contract.payment_terms}
+                        </p>
                       </div>
 
-                      <div>
-                        <h4 className="text-xs font-bold uppercase tracking-wider text-sky-300">
-                          3. Legal Provisions, IP Transfer & Warranty
+                      <div className="col-span-full rounded-2xl border border-white/8 bg-slate-900/60 p-5">
+                        <h4 className="text-xs font-bold uppercase tracking-wider text-sky-300 mb-2">
+                          3. Legal Terms & Warranties
                         </h4>
-                        <pre className="mt-1.5 whitespace-pre-wrap font-sans text-xs text-slate-300 bg-slate-900/40 p-4 rounded-xl border border-white/6 leading-relaxed max-h-48 overflow-y-auto about-scroll">
+                        <p className="text-xs text-slate-300 leading-relaxed whitespace-pre-line">
                           {contract.legal_terms}
-                        </pre>
+                        </p>
                       </div>
                     </div>
 
-                    {/* SIGNATURE SECTION */}
+                    {/* Signature Section */}
                     <div className="mt-8 border-t border-white/10 pt-6">
                       {contract.status === "signed" ? (
                         <div className="rounded-2xl border border-emerald-500/30 bg-emerald-500/10 p-6">
                           <div className="flex flex-wrap items-center justify-between gap-4">
                             <div>
-                              <div className="inline-flex items-center gap-2 text-emerald-300 font-bold text-sm">
-                                <span>🛡️</span> Digital Certificate of Execution
+                              <div className="text-xs font-bold uppercase tracking-wider text-emerald-400">
+                                Legally Executed Signature
                               </div>
-                              <p className="mt-1 text-xs text-slate-300">
-                                Legally executed by <strong className="text-white">{contract.signature_name}</strong> on{" "}
-                                {new Date(contract.signed_at || "").toUTCString()}.
-                              </p>
-                              <p className="text-[11px] font-mono text-emerald-400/80 mt-0.5">
-                                Verification IP / Stamp: {contract.signed_ip}
-                              </p>
+                              <div className="text-lg font-bold text-white mt-1">
+                                {contract.signature_name || contract.client_name}
+                              </div>
+                              <div className="text-xs text-slate-400 mt-1">
+                                Signed on: {new Date(contract.signed_at || "").toLocaleString()}
+                              </div>
+                              {contract.signed_ip && (
+                                <div className="text-[10px] text-slate-500">Cryptographic IP: {contract.signed_ip}</div>
+                              )}
                             </div>
 
                             {contract.signature_url && (
-                              <div className="rounded-xl border border-white/10 bg-slate-950/80 p-3 text-center">
+                              <div className="rounded-xl border border-white/10 bg-slate-900/80 p-3">
+                                {/* eslint-disable-next-line @next/next/no-img-element */}
                                 <img
                                   src={contract.signature_url}
                                   alt="Client Signature"
                                   className="h-16 max-w-[200px] object-contain"
                                 />
-                                <span className="text-[10px] text-slate-400 block mt-1">Verified Client Signature</span>
                               </div>
                             )}
                           </div>
                         </div>
                       ) : (
-                        <div>
-                          <div className="mb-4">
-                            <label className="flex items-center gap-2 cursor-pointer text-xs text-slate-200">
-                              <input
-                                type="checkbox"
-                                checked={legalAgreed}
-                                onChange={(e) => setLegalAgreed(e.target.checked)}
-                                className="h-4 w-4 rounded border-white/20 bg-slate-900 text-sky-500 focus:ring-sky-400"
-                              />
-                              <span>
-                                I acknowledge that I have reviewed and agree to the project scope, payment schedule, and
-                                terms above.
-                              </span>
+                        <div className="space-y-4">
+                          <div className="flex items-start gap-3">
+                            <input
+                              type="checkbox"
+                              id="agreeTerms"
+                              checked={legalAgreed}
+                              onChange={(e) => setLegalAgreed(e.target.checked)}
+                              className="mt-1 h-4 w-4 rounded border-white/20 bg-slate-900 text-sky-500 focus:ring-sky-400"
+                            />
+                            <label htmlFor="agreeTerms" className="text-xs text-slate-300 cursor-pointer">
+                              I confirm that I have authority to execute this agreement on behalf of my organization,
+                              and agree to the terms, scope, and milestone payment schedules set forth above.
                             </label>
                           </div>
 
-                          <SignaturePad
-                            onSave={handleSaveSignature}
-                            defaultName={contract.client_name}
-                            isSaving={isSigning}
-                          />
+                          <div className="rounded-2xl border border-sky-400/20 bg-slate-900/70 p-4">
+                            <h4 className="text-xs font-bold uppercase tracking-wider text-sky-300 mb-3">
+                              Draw or Type Your Signature Below
+                            </h4>
+                            <SignaturePad
+                              onSave={handleSaveSignature}
+                              defaultName={contract.client_name}
+                              isSaving={isSigning}
+                            />
+                          </div>
+
+                          {contractSignedSuccess && (
+                            <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-4 text-center text-xs font-bold text-emerald-300">
+                              🎉 Agreement successfully signed and recorded!
+                            </div>
+                          )}
                         </div>
                       )}
                     </div>
                   </div>
                 ) : (
-                  <div className="rounded-3xl border border-sky-400/20 bg-slate-950/70 p-12 text-center text-slate-400">
-                    No active contract document found. Once a project is initiated, your tailored agreement will appear
-                    here for digital execution.
+                  <div className="rounded-3xl border border-sky-400/20 bg-slate-950/70 p-12 text-center backdrop-blur-xl">
+                    <span className="text-4xl">📜</span>
+                    <h3 className="mt-3 text-lg font-bold text-white">No Pending Contracts</h3>
+                    <p className="mt-1 text-xs text-slate-400 max-w-md mx-auto">
+                      All agreements for this active sprint are up to date. Once a new milestone contract is created, it will appear here for one-click signature.
+                    </p>
                   </div>
                 )}
               </div>
             )}
 
-            {/* TAB 4: WEBSITE PACKAGES & UPGRADES */}
+            {/* TAB 4: PACKAGES & SPRINT ADDONS */}
             {activeTab === "packages" && (
               <div className="space-y-6">
                 <div className="rounded-3xl border border-sky-400/20 bg-slate-950/70 p-6 backdrop-blur-xl">
-                  <h3 className="text-xl font-bold text-white">Website Packages & Add-on Upgrades</h3>
-                  <p className="text-xs text-slate-300 mt-1">
-                    Explore available website engineering tiers, add dynamic 3D shaders, multi-language localization,
-                    or CMS integrations.
+                  <h3 className="text-xl font-bold text-white">Available Packages & Sprint Expansions</h3>
+                  <p className="text-xs text-slate-400 mt-1">
+                    Expand your project with dedicated sprint modules, AI integrations, or speed optimization packages.
                   </p>
-                </div>
 
-                <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-                  {packages.map((pkg) => {
-                    const isCurrent = selectedProject?.package_id === pkg.id;
-
-                    return (
+                  <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-3">
+                    {packages.map((pkg) => (
                       <div
                         key={pkg.id}
-                        className={`relative flex flex-col justify-between rounded-3xl border p-6 backdrop-blur-xl transition-all ${
-                          isCurrent
-                            ? "border-sky-400 bg-gradient-to-b from-sky-950/50 via-slate-950/80 to-slate-950 shadow-[0_0_30px_rgba(56,189,248,0.2)]"
-                            : "border-white/10 bg-slate-950/70 hover:border-sky-400/40"
+                        className={`flex flex-col justify-between rounded-3xl border p-6 transition backdrop-blur-xl ${
+                          pkg.popular
+                            ? "border-sky-400/50 bg-gradient-to-b from-sky-950/40 to-slate-900/80 shadow-[0_0_30px_rgba(56,189,248,0.15)]"
+                            : "border-white/10 bg-slate-900/50 hover:border-sky-400/30"
                         }`}
                       >
-                        {pkg.badge && (
-                          <span className="absolute -top-3 right-6 rounded-full bg-gradient-to-r from-sky-400 to-cyan-500 px-3 py-0.5 text-[10px] font-bold uppercase tracking-wider text-slate-950">
-                            {pkg.badge}
-                          </span>
-                        )}
-
                         <div>
-                          <h4 className="text-lg font-bold text-white">{pkg.name}</h4>
-                          <p className="mt-1 text-xs text-slate-400">{pkg.tagline}</p>
-
-                          <div className="my-4 flex items-baseline gap-1">
-                            <span className="text-2xl font-black text-white">
-                              ${pkg.price_usd.toLocaleString("en-US")}
+                          {pkg.badge && (
+                            <span className="inline-block rounded-md bg-sky-500/20 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-sky-300 border border-sky-400/30">
+                              {pkg.badge}
                             </span>
-                            <span className="text-xs text-slate-400">USD ({pkg.turnaround_weeks})</span>
+                          )}
+                          <h4 className="mt-2 text-lg font-bold text-white">{pkg.name}</h4>
+                          <p className="mt-1 text-xs text-slate-400">{pkg.tagline}</p>
+                          <div className="mt-4 flex items-baseline gap-2">
+                            <span className="text-2xl font-extrabold text-white">${pkg.price_usd}</span>
+                            <span className="text-xs text-slate-400">USD / sprint</span>
                           </div>
 
-                          <ul className="space-y-2 text-xs text-slate-300">
-                            {pkg.features?.slice(0, 5).map((f, i) => (
-                              <li key={i} className="flex items-start gap-2">
-                                <span className="text-sky-400">✓</span>
-                                <span>{f}</span>
+                          <ul className="mt-5 space-y-2 text-xs text-slate-300">
+                            {pkg.features.slice(0, 5).map((feat, i) => (
+                              <li key={i} className="flex items-center gap-2">
+                                <span className="text-emerald-400">✓</span>
+                                <span>{feat}</span>
                               </li>
                             ))}
                           </ul>
                         </div>
 
-                        <div className="mt-6 border-t border-white/8 pt-4">
-                          {isCurrent ? (
-                            <div className="rounded-xl bg-sky-500/20 py-2.5 text-center text-xs font-bold text-sky-300 border border-sky-400/40">
-                              Currently Active Tier
-                            </div>
-                          ) : (
-                            <Link
-                              href="/packages"
-                              className="block w-full rounded-xl bg-slate-900 py-2.5 text-center text-xs font-semibold text-white border border-white/10 hover:bg-sky-500/20 hover:text-sky-200"
-                            >
-                              Explore Tier Details →
-                            </Link>
-                          )}
+                        <div className="mt-6 border-t border-white/10 pt-4">
+                          <Link
+                            href="/contact"
+                            className="block w-full rounded-xl bg-sky-500/20 py-2.5 text-center text-xs font-bold text-sky-200 border border-sky-400/30 transition hover:bg-sky-500/30"
+                          >
+                            Request Add-On Sprint →
+                          </Link>
                         </div>
                       </div>
-                    );
-                  })}
+                    ))}
+                  </div>
                 </div>
               </div>
             )}
           </div>
         )}
       </main>
-
-      <SiteFooter />
     </div>
   );
 }
