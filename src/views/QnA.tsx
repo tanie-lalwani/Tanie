@@ -64,55 +64,24 @@ export default function QnA() {
     { id: 1, role: "bot", text: "hi im tanie" },
   ])
 
-  // Reels state
-  const [dbReels, setDbReels] = useState<Reel[]>([])
-  const [isLoadingReels, setIsLoadingReels] = useState(true)
-
   // Track centered card
   const [activeIndex, setActiveIndex] = useState(0);
 
   useEffect(() => {
     document.title = "About Tanie Lalwani | Interview QnA"
-    
-    // Fetch reels from Supabase
-    loadReels()
-      .then((loaded) => {
-        setDbReels(loaded)
-      })
-      .finally(() => setIsLoadingReels(false))
   }, [])
 
-  // Resolve Multilingual Reels (either db or static fallback)
+  // Multilingual Reels from local copy & transcripts
   const resolvedReels = useMemo(() => {
-    if (dbReels.length > 0) {
-      return dbReels.map((reel) => {
-        const getField = (baseKey: string) => {
-          if (locale === "en") return (reel as any)[baseKey]
-          const key = `${baseKey}_${locale}`
-          return (reel as any)[key] || (reel as any)[baseKey] || ""
-        }
-
-        return {
-          id: reel.id,
-          videoUrl: reel.videoUrl,
-          videoAlt: reel.videoAlt || "",
-          question: getField("question"),
-          caption: getField("caption"),
-          transcript: getField("transcript")
-        }
-      })
-    }
-
-    // Static fallback using local copy
     return copy.qna.questions.map((question, idx) => ({
-      id: `fallback-${idx}`,
+      id: `reel-${idx}`,
       videoUrl: "",
-      videoAlt: "Placeholder reel visual presentation",
+      videoAlt: "Tanie Lalwani Interview Q&A Presentation",
       question,
       caption: copy.qna.videoPlaceholder,
       transcript: transcriptRepliesFallback[idx] || ""
     }))
-  }, [dbReels, copy.qna.questions, copy.qna.videoPlaceholder, locale])
+  }, [copy.qna.questions, copy.qna.videoPlaceholder])
 
   const scrollToQuestion = (index: number) => {
     const cards = getQuestionCards();

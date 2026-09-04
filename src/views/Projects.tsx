@@ -5,9 +5,7 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useLanguage } from "../context/LanguageContext"
 import { getBotReply } from "../lib/botAssistant"
-import SEOHead from "../components/SEOHead"
-import { loadCustomProjects, getVimeoEmbedUrl } from "../lib/projectStorage"
-import type { Project as CarouselProject } from "../components/ProjectsCarousel"
+import { getVimeoEmbedUrl } from "../lib/projectStorage"
 
 type BotMessage = {
   id: number
@@ -56,8 +54,6 @@ export default function Projects() {
   ])
 
   // Projects state
-  const [dbProjects, setDbProjects] = useState<CarouselProject[]>([])
-  const [isLoadingProjects, setIsLoadingProjects] = useState(true)
   const [likedProjects, setLikedProjects] = useState<Record<string, boolean>>({})
   const [copiedId, setCopiedId] = useState<string | null>(null)
 
@@ -66,67 +62,27 @@ export default function Projects() {
 
   useEffect(() => {
     document.title = "Projects & Works | Tanie Lalwani"
-
-    // Fetch projects from Supabase or fallback
-    loadCustomProjects()
-      .then((loaded) => {
-        setDbProjects(loaded)
-      })
-      .finally(() => setIsLoadingProjects(false))
   }, [])
 
-interface ResolvedProject {
-  id: string
-  title: string
-  description: string
-  techStack: string[]
-  site: string
-  code?: string
-  previewVideo?: string
-  detailVideo?: string
-  previewFit?: "cover" | "contain"
-  previewOpacity?: string
-  details: string[]
-  videoAlt?: string
-}
+  interface ResolvedProject {
+    id: string
+    title: string
+    description: string
+    techStack: string[]
+    site: string
+    code?: string
+    previewVideo?: string
+    detailVideo?: string
+    previewFit?: "cover" | "contain"
+    previewOpacity?: string
+    details: string[]
+    videoAlt?: string
+  }
 
-  // Resolve Multilingual Projects (either db or static fallback from LanguageContext)
+  // Multilingual Projects from LanguageContext
   const resolvedProjects: ResolvedProject[] = useMemo(() => {
-    if (dbProjects.length > 0) {
-      return dbProjects.map((p, idx) => {
-        const getField = (baseKey: string): string => {
-          if (locale === "en") return (p as any)[baseKey] || ""
-          const key = `${baseKey}_${locale}`
-          return (p as any)[key] || (p as any)[baseKey] || ""
-        }
-        const getDetails = (): string[] => {
-          if (locale === "en") return p.details || []
-          const key = `details_${locale}`
-          return (p as any)[key] || p.details || []
-        }
-
-        const detailsList = getDetails()
-
-        return {
-          id: p.id || `project-${idx}`,
-          title: getField("title") || p.title,
-          description: getField("description") || p.description,
-          techStack: p.techStack || [],
-          site: p.site || "",
-          code: p.code || "",
-          previewVideo: p.previewVideo || "",
-          detailVideo: p.detailVideo || "",
-          previewFit: p.previewFit || "cover",
-          previewOpacity: p.previewOpacity,
-          details: detailsList.length > 0 ? detailsList : (p.details ?? copy.projectCard.defaultProjectDetails),
-          videoAlt: p.videoAlt || p.title,
-        }
-      })
-    }
-
-    // Static fallback using copy.home.projects
     return copy.home.projects.map((project, idx) => ({
-      id: project.id || `fallback-proj-${idx}`,
+      id: project.id || `proj-${idx}`,
       title: project.title,
       description: project.description,
       techStack: project.techStack || [],
@@ -139,7 +95,7 @@ interface ResolvedProject {
       details: project.details ?? copy.projectCard.defaultProjectDetails,
       videoAlt: project.title,
     }))
-  }, [dbProjects, copy.home.projects, copy.projectCard.defaultProjectDetails, locale])
+  }, [copy.home.projects, copy.projectCard.defaultProjectDetails])
 
   const scrollToProject = (index: number) => {
     const cards = getProjectCards()

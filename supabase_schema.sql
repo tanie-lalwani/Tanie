@@ -1,8 +1,12 @@
 -- ==============================================================================
--- SUPABASE SCHEMA FOR TANIE LALWANI PORTFOLIO, CLIENT PORTAL, PACKAGES & CONTRACTS
+-- SUPABASE SCHEMA: CLIENT MANAGEMENT, PACKAGES & LEADS
+-- Run this script in your Supabase SQL Editor (Dashboard -> SQL Editor -> New Query -> Run)
 -- ==============================================================================
 
--- 1. Create profiles table (extends auth.users)
+-- Enable UUID extension
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
+-- 1. Create Profiles Table (Extends auth.users for Clients & Admins)
 CREATE TABLE IF NOT EXISTS public.profiles (
   id UUID REFERENCES auth.users(id) ON DELETE CASCADE PRIMARY KEY,
   email TEXT NOT NULL,
@@ -15,7 +19,7 @@ CREATE TABLE IF NOT EXISTS public.profiles (
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- 2. Create website packages table
+-- 2. Create Website Packages Table
 CREATE TABLE IF NOT EXISTS public.packages (
   id TEXT PRIMARY KEY,
   name TEXT NOT NULL,
@@ -33,7 +37,7 @@ CREATE TABLE IF NOT EXISTS public.packages (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- 3. Create client projects table
+-- 3. Create Client Projects Table
 CREATE TABLE IF NOT EXISTS public.projects (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   client_id UUID REFERENCES public.profiles(id) ON DELETE SET NULL,
@@ -57,7 +61,7 @@ CREATE TABLE IF NOT EXISTS public.projects (
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- 4. Create e-contracts table
+-- 4. Create Digital E-Contracts Table
 CREATE TABLE IF NOT EXISTS public.contracts (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   project_id UUID REFERENCES public.projects(id) ON DELETE CASCADE,
@@ -78,7 +82,7 @@ CREATE TABLE IF NOT EXISTS public.contracts (
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- 5. Create project assets table (client uploads)
+-- 5. Create Project Brand Assets Table
 CREATE TABLE IF NOT EXISTS public.project_assets (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   project_id UUID REFERENCES public.projects(id) ON DELETE CASCADE,
@@ -93,7 +97,7 @@ CREATE TABLE IF NOT EXISTS public.project_assets (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- 6. Create bookings / inquiries table
+-- 6. Create Bookings / Leads / Inquiries Table
 CREATE TABLE IF NOT EXISTS public.bookings (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   client_name TEXT NOT NULL,
@@ -109,6 +113,15 @@ CREATE TABLE IF NOT EXISTS public.bookings (
 );
 
 -- ==============================================================================
+-- INDEXES FOR MAXIMUM QUERY PERFORMANCE
+-- ==============================================================================
+CREATE INDEX IF NOT EXISTS idx_projects_client_email ON public.projects(client_email);
+CREATE INDEX IF NOT EXISTS idx_projects_client_id ON public.projects(client_id);
+CREATE INDEX IF NOT EXISTS idx_contracts_project_id ON public.contracts(project_id);
+CREATE INDEX IF NOT EXISTS idx_project_assets_project_id ON public.project_assets(project_id);
+CREATE INDEX IF NOT EXISTS idx_bookings_created_at ON public.bookings(created_at DESC);
+
+-- ==============================================================================
 -- ROW LEVEL SECURITY (RLS) POLICIES
 -- ==============================================================================
 ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
@@ -122,75 +135,121 @@ ALTER TABLE public.bookings ENABLE ROW LEVEL SECURITY;
 CREATE OR REPLACE FUNCTION public.is_admin()
 RETURNS BOOLEAN AS $$
 BEGIN
-  RETURN EXISTS (
-    SELECT 1 FROM public.profiles
-    WHERE id = auth.uid() AND role = 'admin'
+  RETURN (
+    (SELECT auth.jwt() ->> 'email') IN ('tanielalwani.work@gmail.com', 'admin@tanie.me') OR
+    EXISTS (
+      SELECT 1 FROM public.profiles
+      WHERE id = (SELECT auth.uid()) AND role = 'admin'
+    )
   );
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
--- Profiles: Users can view & update their own profile; Admins can view all
+-- 1. Profiles Policies
 CREATE POLICY "Users can view own profile" ON public.profiles
-  FOR SELECT USING (auth.uid() = id OR public.is_admin());
+  FOR SELECT TO authenticated 
+  USING ((SELECT auth.uid()) = id OR public.is_admin());
 
 CREATE POLICY "Users can update own profile" ON public.profiles
-  FOR UPDATE USING (auth.uid() = id OR public.is_admin());
+  FOR UPDATE TO authenticated 
+  USING ((SELECT auth.uid()) = id OR public.is_admin())
+  WITH CHECK ((SELECT auth.uid()) = id OR public.is_admin());
 
--- Packages: Anyone can view active packages; Admins can insert/update/delete
+-- 2. Packages Policies (Publicly viewable, Admin manageable)
 CREATE POLICY "Anyone can view active packages" ON public.packages
-  FOR SELECT USING (is_active = TRUE OR public.is_admin());
+  FOR SELECT TO anon, authenticated 
+  USING (is_active = TRUE OR public.is_admin());
 
 CREATE POLICY "Admins can manage packages" ON public.packages
-  FOR ALL USING (public.is_admin());
+  FOR ALL TO authenticated 
+  USING (public.is_admin())
+  WITH CHECK (public.is_admin());
 
--- Projects: Clients can view their own projects; Admins can manage all
+-- 3. Projects Policies
 CREATE POLICY "Clients can view own projects" ON public.projects
-  FOR SELECT USING (auth.uid() = client_id OR client_email = auth.jwt()->>'email' OR public.is_admin());
+  FOR SELECT TO authenticated 
+  USING (
+    (SELECT auth.uid()) = client_id OR 
+    (SELECT auth.jwt() ->> 'email') = client_email OR 
+    public.is_admin()
+  );
 
 CREATE POLICY "Admins can manage projects" ON public.projects
-  FOR ALL USING (public.is_admin());
+  FOR ALL TO authenticated 
+  USING (public.is_admin())
+  WITH CHECK (public.is_admin());
 
--- Contracts: Clients can view & sign their own contracts; Admins can manage all
+-- 4. Contracts Policies
 CREATE POLICY "Clients can view own contracts" ON public.contracts
-  FOR SELECT USING (auth.uid() = client_id OR client_email = auth.jwt()->>'email' OR public.is_admin());
+  FOR SELECT TO authenticated 
+  USING (
+    (SELECT auth.uid()) = client_id OR 
+    (SELECT auth.jwt() ->> 'email') = client_email OR 
+    public.is_admin()
+  );
 
 CREATE POLICY "Clients can sign own contracts" ON public.contracts
-  FOR UPDATE USING (auth.uid() = client_id OR client_email = auth.jwt()->>'email' OR public.is_admin())
-  WITH CHECK (auth.uid() = client_id OR client_email = auth.jwt()->>'email' OR public.is_admin());
+  FOR UPDATE TO authenticated 
+  USING (
+    (SELECT auth.uid()) = client_id OR 
+    (SELECT auth.jwt() ->> 'email') = client_email OR 
+    public.is_admin()
+  )
+  WITH CHECK (
+    (SELECT auth.uid()) = client_id OR 
+    (SELECT auth.jwt() ->> 'email') = client_email OR 
+    public.is_admin()
+  );
 
 CREATE POLICY "Admins can manage contracts" ON public.contracts
-  FOR ALL USING (public.is_admin());
+  FOR ALL TO authenticated 
+  USING (public.is_admin())
+  WITH CHECK (public.is_admin());
 
--- Project Assets: Clients can view and upload assets for their projects; Admins manage all
+-- 5. Project Assets Policies
 CREATE POLICY "Clients can view own project assets" ON public.project_assets
-  FOR SELECT USING (
-    auth.uid() = client_id OR 
-    EXISTS (SELECT 1 FROM public.projects WHERE projects.id = project_assets.project_id AND (projects.client_id = auth.uid() OR projects.client_email = auth.jwt()->>'email'))
-    OR public.is_admin()
+  FOR SELECT TO authenticated 
+  USING (
+    (SELECT auth.uid()) = client_id OR 
+    EXISTS (
+      SELECT 1 FROM public.projects 
+      WHERE projects.id = project_assets.project_id 
+      AND (projects.client_id = (SELECT auth.uid()) OR projects.client_email = (SELECT auth.jwt() ->> 'email'))
+    ) OR 
+    public.is_admin()
   );
 
-CREATE POLICY "Clients can insert own project assets" ON public.project_assets
-  FOR INSERT WITH CHECK (
-    auth.uid() = client_id OR 
-    EXISTS (SELECT 1 FROM public.projects WHERE projects.id = project_assets.project_id AND (projects.client_id = auth.uid() OR projects.client_email = auth.jwt()->>'email'))
-    OR public.is_admin()
+CREATE POLICY "Clients can upload project assets" ON public.project_assets
+  FOR INSERT TO authenticated 
+  WITH CHECK (
+    (SELECT auth.uid()) = client_id OR 
+    EXISTS (
+      SELECT 1 FROM public.projects 
+      WHERE projects.id = project_assets.project_id 
+      AND (projects.client_id = (SELECT auth.uid()) OR projects.client_email = (SELECT auth.jwt() ->> 'email'))
+    ) OR 
+    public.is_admin()
   );
 
-CREATE POLICY "Admins can delete project assets" ON public.project_assets
-  FOR DELETE USING (public.is_admin());
+CREATE POLICY "Clients can delete own project assets" ON public.project_assets
+  FOR DELETE TO authenticated 
+  USING (
+    (SELECT auth.uid()) = client_id OR 
+    public.is_admin()
+  );
 
--- Bookings: Anyone can submit a booking; Admins can view/manage
-CREATE POLICY "Anyone can submit a booking" ON public.bookings
-  FOR INSERT WITH CHECK (TRUE);
+-- 6. Bookings / Leads Policies
+CREATE POLICY "Anyone can submit a booking or lead" ON public.bookings
+  FOR INSERT TO anon, authenticated 
+  WITH CHECK (TRUE);
 
-CREATE POLICY "Admins can view bookings" ON public.bookings
-  FOR SELECT USING (public.is_admin());
-
-CREATE POLICY "Admins can update bookings" ON public.bookings
-  FOR UPDATE USING (public.is_admin());
+CREATE POLICY "Admins can view and manage bookings" ON public.bookings
+  FOR ALL TO authenticated 
+  USING (public.is_admin())
+  WITH CHECK (public.is_admin());
 
 -- ==============================================================================
--- STORAGE BUCKETS SETUP
+-- STORAGE BUCKETS SETUP (For Client Brand Media & Contracts)
 -- ==============================================================================
 INSERT INTO storage.buckets (id, name, public) 
 VALUES ('client-assets', 'client-assets', true)
@@ -201,16 +260,16 @@ VALUES ('contracts', 'contracts', true)
 ON CONFLICT (id) DO NOTHING;
 
 -- Storage RLS Policies
-CREATE POLICY "Allow authenticated users to upload client assets"
-  ON storage.objects FOR INSERT
+CREATE POLICY "Allow authenticated users to upload to client-assets"
+  ON storage.objects FOR INSERT TO authenticated
   WITH CHECK (bucket_id IN ('client-assets', 'contracts'));
 
-CREATE POLICY "Allow public read of client assets and contracts"
-  ON storage.objects FOR SELECT
+CREATE POLICY "Allow public read access to client assets"
+  ON storage.objects FOR SELECT TO anon, authenticated
   USING (bucket_id IN ('client-assets', 'contracts'));
 
 -- ==============================================================================
--- SEED DEFAULT WEBSITE PACKAGES
+-- SEED STARTER WEBSITE PACKAGES
 -- ==============================================================================
 INSERT INTO public.packages (id, name, tagline, price_usd, price_inr, turnaround_weeks, badge, popular, description, features, deliverables, addons)
 VALUES 

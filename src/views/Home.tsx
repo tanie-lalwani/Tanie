@@ -13,7 +13,6 @@ import type { TimePhase } from "../experience/timePhase"
 import { useLanguage } from "../context/LanguageContext"
 import { useLoading } from "../context/LoadingContext"
 import SEOHead from "../components/SEOHead"
-import { loadCustomProjects } from "../lib/projectStorage"
 
 const ABOUT_SKILLS = [
   "React",
@@ -321,38 +320,13 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
     }
   }, [heroRoleLead, heroRoleTail, heroTitleLead, heroTitleTail])
 
-  const [dbProjects, setDbProjects] = useState<CarouselProject[]>([])
-
   useEffect(() => {
     document.title = "Tanie Lalwani | Creative and Full Stack Developer"
-    loadCustomProjects().then((loaded) => {
-      setDbProjects(loaded)
-    })
   }, [])
 
   const resolvedProjects = useMemo(() => {
-    if (dbProjects && dbProjects.length > 0) {
-      return dbProjects.map((p) => {
-        const getField = (baseKey: string) => {
-          if (locale === "en") return (p as any)[baseKey]
-          const key = `${baseKey}_${locale}`
-          return (p as any)[key] || (p as any)[baseKey] || ""
-        }
-        const getDetails = () => {
-          if (locale === "en") return p.details || []
-          const key = `details_${locale}`
-          return (p as any)[key] || p.details || []
-        }
-        return {
-          ...p,
-          title: getField("title"),
-          description: getField("description"),
-          details: getDetails()
-        }
-      })
-    }
     return copy.home.projects
-  }, [dbProjects, copy.home.projects, locale])
+  }, [copy.home.projects])
 
   return (
     <main className="relative">
