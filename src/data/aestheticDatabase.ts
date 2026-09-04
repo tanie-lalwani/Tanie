@@ -57,6 +57,8 @@ export interface QuestionOption {
   id: string;
   label: string;
   description?: string;
+  imageUrl?: string;
+  badge?: string;
   iconSvg?: string;
   tags?: string[];
 }
@@ -631,12 +633,48 @@ export const WIZARD_QUESTIONS: WizardQuestion[] = [
     title: "What type of website or digital experience are you building?",
     subtitle: "Select the primary format so we can tailor the layout structure and conversion flow.",
     options: [
-      { id: "landing-launchpad", label: "High-Converting Landing Page & Launchpad", description: "Focused single-page conversion for new products, drops, or campaigns" },
-      { id: "interactive-3d", label: "Interactive 3D / Spatial Experience", description: "Immersive Three.js WebGL canvas, 3D model exploration, tactile depth" },
-      { id: "saas-webapp", label: "Modern Web Application & SaaS Platform", description: "Feature-dense Bento grids, live product simulations, user onboarding" },
-      { id: "portfolio-studio", label: "Bespoke Portfolio & Studio Showcase", description: "Editorial typography, asymmetric grids, case studies, showreels" },
-      { id: "ecommerce-flagship", label: "Flagship E-Commerce & Product Spotlight", description: "Interactive product configurators, rich media galleries, brand storytelling" },
-      { id: "client-portal", label: "Interactive Client Portal & Service Hub", description: "Client dashboard, milestone tracker, digital contracts, and asset vault" }
+      {
+        id: "landing-launchpad",
+        label: "High-Converting Landing Page & Launchpad",
+        description: "Focused single-page conversion for new products, drops, or campaigns",
+        imageUrl: "/aesthetics/landing_launchpad.jpg",
+        badge: "Single Page Launch"
+      },
+      {
+        id: "interactive-3d",
+        label: "Interactive 3D / Spatial Experience",
+        description: "Immersive Three.js WebGL canvas, 3D model exploration, tactile depth",
+        imageUrl: "/aesthetics/spatial_3d.jpg",
+        badge: "WebGL / Three.js"
+      },
+      {
+        id: "saas-webapp",
+        label: "Modern Web Application & SaaS Platform",
+        description: "Feature-dense Bento grids, live product simulations, user onboarding",
+        imageUrl: "/aesthetics/saas_bento.jpg",
+        badge: "SaaS & Dashboard"
+      },
+      {
+        id: "portfolio-studio",
+        label: "Bespoke Portfolio & Studio Showcase",
+        description: "Editorial typography, asymmetric grids, case studies, showreels",
+        imageUrl: "/aesthetics/portfolio_studio.jpg",
+        badge: "Editorial & Agency"
+      },
+      {
+        id: "ecommerce-flagship",
+        label: "Flagship E-Commerce & Product Spotlight",
+        description: "Interactive product configurators, rich media galleries, brand storytelling",
+        imageUrl: "/aesthetics/ecommerce_flagship.jpg",
+        badge: "E-Commerce Flagship"
+      },
+      {
+        id: "client-portal",
+        label: "Interactive Client Portal & Service Hub",
+        description: "Client dashboard, milestone tracker, digital contracts, and asset vault",
+        imageUrl: "/aesthetics/client_portal.jpg",
+        badge: "Portal & Workflows"
+      }
     ]
   },
   {
@@ -644,12 +682,48 @@ export const WIZARD_QUESTIONS: WizardQuestion[] = [
     title: "What visual vibe and aesthetic appeals to you most?",
     subtitle: "Every aesthetic creates a distinct emotional impression and sets you apart from competitors.",
     options: [
-      { id: "glassmorphism", label: "Liquid Glassmorphism & AI Glow", description: "Translucent frosted cards, glowing gradient borders, modern tech feel" },
-      { id: "3d-interactive", label: "Interactive 3D & WebGL Canvas", description: "Hardware-accelerated 3D models, spatial flythroughs, luxury depth" },
-      { id: "swiss-editorial", label: "Minimalist Swiss Editorial", description: "Stark typography, asymmetric grids, black & white mastery" },
-      { id: "neo-brutalist", label: "Neo-Brutalist & High-Energy Pop", description: "Bold black borders, saturated pastel cards, playful viral energy" },
-      { id: "cyberpunk", label: "Cyberpunk Obsidian & Holographic Glow", description: "Pitch-black canvas, neon teal/magenta gridlines, particle fields" },
-      { id: "organic-warm", label: "Organic Pastel & Serene Motion", description: "Earthy terracotta, warm sand, soothing breathing animations" }
+      {
+        id: "glassmorphism",
+        label: "Liquid Glassmorphism & AI Glow",
+        description: "Translucent frosted cards, glowing gradient borders, modern tech feel",
+        imageUrl: "/aesthetics/glassmorphism_vibe.jpg",
+        badge: "Frosted Glass & AI"
+      },
+      {
+        id: "3d-interactive",
+        label: "Interactive 3D & WebGL Canvas",
+        description: "Hardware-accelerated 3D models, spatial flythroughs, luxury depth",
+        imageUrl: "/aesthetics/spatial_3d.jpg",
+        badge: "3D Spatial Canvas"
+      },
+      {
+        id: "swiss-editorial",
+        label: "Minimalist Swiss Editorial",
+        description: "Stark typography, asymmetric grids, black & white mastery",
+        imageUrl: "/aesthetics/portfolio_studio.jpg",
+        badge: "Swiss Typography"
+      },
+      {
+        id: "neo-brutalist",
+        label: "Neo-Brutalist & High-Energy Pop",
+        description: "Bold black borders, saturated pastel cards, playful viral energy",
+        imageUrl: "/aesthetics/neobrutalism_vibe.jpg",
+        badge: "Bold & Viral Pop"
+      },
+      {
+        id: "cyberpunk",
+        label: "Cyberpunk Obsidian & Holographic Glow",
+        description: "Pitch-black canvas, neon teal/magenta gridlines, particle fields",
+        imageUrl: "/aesthetics/cyberpunk_vibe.jpg",
+        badge: "Obsidian & Hologram"
+      },
+      {
+        id: "organic-warm",
+        label: "Organic Pastel & Serene Motion",
+        description: "Earthy terracotta, warm sand, soothing breathing animations",
+        imageUrl: "/aesthetics/organic_warm_vibe.jpg",
+        badge: "Earthy & Serene"
+      }
     ]
   },
   {
@@ -657,10 +731,34 @@ export const WIZARD_QUESTIONS: WizardQuestion[] = [
     title: "What is the primary functional flow for your website?",
     subtitle: "The flow defines how visitors navigate from initial awareness to taking high-value actions.",
     options: [
-      { id: "saas-growth-funnel", label: "SaaS Product & Growth Funnel", description: "Hero product demo -> Bento grid features -> ROI calculator -> Pricing matrix" },
-      { id: "spatial-3d-walkthrough", label: "3D Spatial Walkthrough & Hotspot Explorer", description: "3D canvas model -> Unit/product inspection -> Spatial map -> Private VIP booking" },
-      { id: "editorial-luxury-showcase", label: "Curated Works, Case Studies & Showreels", description: "Fullscreen video reveal -> Project chapters -> Accordion manifesto -> Commission intake" },
-      { id: "client-portal-booking-engine", label: "Client Hub, E-Contracts & File Vault", description: "Package discovery -> Authenticated dashboard -> Sprint milestones -> E-signatures" }
+      {
+        id: "saas-growth-funnel",
+        label: "SaaS Product & Growth Funnel",
+        description: "Hero product demo -> Bento grid features -> ROI calculator -> Pricing matrix",
+        imageUrl: "/aesthetics/saas_bento.jpg",
+        badge: "Growth Engine"
+      },
+      {
+        id: "spatial-3d-walkthrough",
+        label: "3D Spatial Walkthrough & Hotspot Explorer",
+        description: "3D canvas model -> Unit/product inspection -> Spatial map -> Private VIP booking",
+        imageUrl: "/aesthetics/spatial_3d.jpg",
+        badge: "Spatial Journey"
+      },
+      {
+        id: "editorial-luxury-showcase",
+        label: "Curated Works, Case Studies & Showreels",
+        description: "Fullscreen video reveal -> Project chapters -> Accordion manifesto -> Commission intake",
+        imageUrl: "/aesthetics/portfolio_studio.jpg",
+        badge: "Curated Showcase"
+      },
+      {
+        id: "client-portal-booking-engine",
+        label: "Client Hub, E-Contracts & File Vault",
+        description: "Package discovery -> Authenticated dashboard -> Sprint milestones -> E-signatures",
+        imageUrl: "/aesthetics/client_portal.jpg",
+        badge: "Client Hub Engine"
+      }
     ]
   },
   {
@@ -668,9 +766,27 @@ export const WIZARD_QUESTIONS: WizardQuestion[] = [
     title: "What is your target launch timeline & sprint scope?",
     subtitle: "Helps us recommend the best milestone structure and technical deliverables for your build.",
     options: [
-      { id: "mvp-sprint", label: "Fast MVP Sprint (2 - 3 Weeks)", description: "High-impact landing page + key functional flow ready for immediate launch" },
-      { id: "custom-flagship", label: "Custom Flagship Build (4 - 6 Weeks)", description: "Full multi-page architecture, bespoke animations, and integrated client tools" },
-      { id: "enterprise-bespoke", label: "Enterprise Custom Architecture (6 - 8+ Weeks)", description: "Complete custom WebGL 3D, client portal, database integrations, and tailored CMS" }
+      {
+        id: "mvp-sprint",
+        label: "Fast MVP Sprint (2 - 3 Weeks)",
+        description: "High-impact landing page + key functional flow ready for immediate launch",
+        imageUrl: "/aesthetics/landing_launchpad.jpg",
+        badge: "⚡ 2-3 Weeks MVP"
+      },
+      {
+        id: "custom-flagship",
+        label: "Custom Flagship Build (4 - 6 Weeks)",
+        description: "Full multi-page architecture, bespoke animations, and integrated client tools",
+        imageUrl: "/aesthetics/glassmorphism_vibe.jpg",
+        badge: "🚀 4-6 Weeks Flagship"
+      },
+      {
+        id: "enterprise-bespoke",
+        label: "Enterprise Custom Architecture (6 - 8+ Weeks)",
+        description: "Complete custom WebGL 3D, client portal, database integrations, and tailored CMS",
+        imageUrl: "/aesthetics/spatial_3d.jpg",
+        badge: "👑 6-8+ Weeks Bespoke"
+      }
     ]
   }
 ];

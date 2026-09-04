@@ -373,7 +373,7 @@ export default function PackagesView() {
           {/* TAB 1: DESIGN DISCOVERY WIZARD                                */}
           {/* ------------------------------------------------------------- */}
           {activeTab === "wizard" && (
-            <div className="max-w-4xl mx-auto">
+            <div className="max-w-5xl mx-auto">
               <div className="rounded-[2.2rem] border border-black/10 bg-white/85 p-6 shadow-xl backdrop-blur-xl sm:p-10">
                 
                 {/* Question Steps 0 to 3 */}
@@ -389,8 +389,8 @@ export default function PackagesView() {
                       </p>
                     </div>
 
-                    {/* Options Grid */}
-                    <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-2">
+                    {/* Options Grid with Visual Image Previews */}
+                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
                       {WIZARD_QUESTIONS[currentStepIndex].options?.map((option) => {
                         const questionKey = WIZARD_QUESTIONS[currentStepIndex].id as "industry" | "vibe" | "flow" | "scope";
                         const isSelected = answers[questionKey] === option.id;
@@ -400,23 +400,51 @@ export default function PackagesView() {
                             key={option.id}
                             type="button"
                             onClick={() => handleSelectOption(questionKey, option.id)}
-                            className={`flex flex-col text-left rounded-2xl border p-4.5 transition-all duration-200 cursor-pointer ${
+                            className={`group flex flex-col justify-between text-left rounded-2xl border p-3.5 sm:p-4 transition-all duration-200 cursor-pointer overflow-hidden ${
                               isSelected
                                 ? "border-sky-500 bg-sky-50/90 shadow-md ring-2 ring-sky-400/40"
-                                : "border-black/8 bg-white/70 hover:border-black/20 hover:bg-white hover:shadow-xs"
+                                : "border-black/8 bg-white/70 hover:border-black/20 hover:bg-white hover:shadow-md"
                             }`}
                           >
-                            <div className="flex items-center justify-between mb-1.5">
-                              <span className="text-base font-bold" style={{ color: "#090d16" }}>{option.label}</span>
-                              <span className={`h-5 w-5 rounded-full flex items-center justify-center text-xs ${
-                                isSelected ? "bg-sky-600 text-white font-bold" : "border border-slate-300 text-transparent"
-                              }`}>
-                                ✓
-                              </span>
+                            <div>
+                              {/* Option Image Thumbnail */}
+                              {option.imageUrl && (
+                                <div className="relative mb-3 h-32 w-full overflow-hidden rounded-xl border border-black/10 bg-slate-900">
+                                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                                  <img
+                                    src={option.imageUrl}
+                                    alt={option.label}
+                                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                                    loading="lazy"
+                                  />
+                                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
+                                  {option.badge && (
+                                    <span className="absolute bottom-2 left-2 rounded-md bg-black/70 px-2 py-0.5 text-[10px] font-bold text-white backdrop-blur-md border border-white/20">
+                                      {option.badge}
+                                    </span>
+                                  )}
+                                </div>
+                              )}
+
+                              {/* Label & Selection Checkmark */}
+                              <div className="flex items-start justify-between gap-2 mb-1.5">
+                                <span className="text-sm sm:text-base font-bold leading-snug" style={{ color: "#090d16" }}>
+                                  {option.label}
+                                </span>
+                                <span className={`h-5 w-5 shrink-0 rounded-full flex items-center justify-center text-xs transition-all ${
+                                  isSelected ? "bg-sky-600 text-white font-bold scale-110 shadow-xs" : "border border-slate-300 text-transparent"
+                                }`}>
+                                  ✓
+                                </span>
+                              </div>
+
+                              {/* Description */}
+                              {option.description && (
+                                <p className="text-xs leading-relaxed" style={{ color: "#475569" }}>
+                                  {option.description}
+                                </p>
+                              )}
                             </div>
-                            {option.description && (
-                              <p className="text-xs leading-relaxed" style={{ color: "#475569" }}>{option.description}</p>
-                            )}
                           </button>
                         );
                       })}
