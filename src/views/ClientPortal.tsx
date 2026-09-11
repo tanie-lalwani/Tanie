@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
 import {
   getClientProjects,
@@ -26,9 +27,9 @@ import {
   type RazorpayPaymentSuccessResponse,
 } from "@/lib/razorpay";
 import SignaturePad from "@/components/SignaturePad";
-import Navbar from "@/components/Navbar";
 
 export default function ClientPortal() {
+  const pathname = usePathname();
   const {
     user,
     loading: authLoading,
@@ -311,23 +312,6 @@ export default function ClientPortal() {
     }
   };
 
-  const handleFillReviewerCredentials = () => {
-    setAuthEmail(RAZORPAY_TEST_CREDENTIALS.email);
-    setAuthPassword(RAZORPAY_TEST_CREDENTIALS.password);
-    setAuthMode("login");
-  };
-
-  const handleQuickReviewerSignIn = async () => {
-    setIsSubmittingAuth(true);
-    try {
-      await signInWithPassword(RAZORPAY_TEST_CREDENTIALS.email, RAZORPAY_TEST_CREDENTIALS.password);
-    } catch (e) {
-      console.error(e);
-    } finally {
-      setIsSubmittingAuth(false);
-    }
-  };
-
   // Project Stage Order Helper
   const stages = ["Discovery", "Design", "Development", "Review", "Launch", "Completed"];
   const currentStageIndex = selectedProject ? stages.indexOf(selectedProject.status) : 0;
@@ -335,1350 +319,1218 @@ export default function ClientPortal() {
   const isAuthenticatedUser = Boolean(user) || isDemoMode;
 
   return (
-    <div className="min-h-screen bg-[#04111b] text-slate-100 selection:bg-sky-500/30 selection:text-white">
-      <Navbar phase="default" />
+    <main className="min-h-screen bg-[#dff4ff] text-slate-900 font-sans selection:bg-sky-200 selection:text-black">
+      {/* ------------------------------------------------------------- */}
+      {/* 1. LEFT VERTICAL NAVIGATION (DESKTOP)                         */}
+      {/* ------------------------------------------------------------- */}
+      <nav
+        aria-label="Side navigation"
+        className="fixed left-0 top-0 z-40 hidden h-full w-20 flex-col items-center justify-start gap-6 border-r border-black/10 bg-[#dff4ff]/88 py-8 backdrop-blur-xl md:flex"
+      >
+        <div className="flex flex-col items-center gap-5">
+          <Link
+            href="/"
+            className={`flex w-14 flex-col items-center rounded-[1.35rem] px-2 py-3 !no-underline transition-all ${
+              pathname === "/" ? "bg-[#c8ecff] !text-black shadow-xs" : "!text-slate-800 hover:bg-white/60 hover:!text-black"
+            }`}
+            title="Home"
+          >
+            <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.8" className="mb-1">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M3 12l9-8 9 8M4 10v10a1 1 0 001 1h3m10-11v10a1 1 0 01-1 1h-3m-6 0h6" />
+            </svg>
+            <span className="text-[10px] font-semibold">Home</span>
+          </Link>
 
-      <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-        {/* Top Header Banner */}
-        <div className="mb-8 flex flex-wrap items-center justify-between gap-4 rounded-3xl border border-sky-400/20 bg-gradient-to-r from-slate-950/80 via-slate-900/60 to-sky-950/40 p-6 backdrop-blur-2xl shadow-[0_12px_40px_rgba(2,8,23,0.5)]">
-          <div>
-            <div className="inline-flex items-center gap-2 rounded-full border border-sky-400/30 bg-sky-500/10 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-sky-300">
-              <span className="h-2 w-2 animate-ping rounded-full bg-sky-400" />
-              {isAuthenticatedUser ? "Client Workspace & Active Hub" : "Client Portal & Gateway"}
-            </div>
-            <h1 className="mt-2 text-2xl font-bold tracking-tight text-white sm:text-3xl">
-              {isAuthenticatedUser
-                ? `Welcome, ${selectedProject?.client_name || user?.email?.split("@")[0] || "Partner"}`
-                : "Client Management & Workspace"}
-            </h1>
-            <p className="text-sm text-slate-300">
-              {isAuthenticatedUser
-                ? "Track live project milestones, upload brand assets, access staging deliverables, and sign e-contracts securely."
-                : "A centralized private engineering portal for design reviews, sprint tracking, digital agreements, and asset management."}
-            </p>
-          </div>
+          <Link
+            href="/projects"
+            className={`flex w-14 flex-col items-center rounded-[1.35rem] px-2 py-3 !no-underline transition-all ${
+              pathname === "/projects" ? "bg-[#c8ecff] !text-black shadow-xs" : "!text-slate-800 hover:bg-white/60 hover:!text-black"
+            }`}
+            title="Projects"
+          >
+            <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.8" className="mb-1">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+            </svg>
+            <span className="text-[10px] font-semibold">Projects</span>
+          </Link>
 
-          <div className="flex flex-wrap items-center gap-3">
-            <Link
-              href="/packages"
-              className="rounded-full border border-sky-400/30 bg-sky-500/10 px-4 py-2 text-xs font-semibold uppercase tracking-wider text-sky-200 transition hover:bg-sky-500/20"
-            >
-              Browse Packages
-            </Link>
+          <Link
+            href="/packages"
+            className={`flex w-14 flex-col items-center rounded-[1.35rem] px-2 py-3 !no-underline transition-all ${
+              pathname === "/packages" ? "bg-[#c8ecff] !text-black shadow-xs" : "!text-slate-800 hover:bg-white/60 hover:!text-black"
+            }`}
+            title="Marketplace & Aesthetics"
+          >
+            <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.8" className="mb-1">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
+            </svg>
+            <span className="text-[10px] font-semibold">Aesthetics</span>
+          </Link>
 
-            {isAuthenticatedUser ? (
-              <button
-                type="button"
-                onClick={handleSignOut}
-                className="rounded-full border border-white/10 bg-slate-800/80 px-4 py-2 text-xs font-medium text-slate-300 transition hover:bg-rose-500/20 hover:text-rose-300 hover:border-rose-400/30"
-              >
-                Sign Out ({isDemoMode ? "Demo Client" : user?.email})
-              </button>
-            ) : (
-              <button
-                type="button"
-                onClick={() => setIsDemoMode(true)}
-                className="rounded-full bg-gradient-to-r from-sky-400 to-cyan-500 px-5 py-2 text-xs font-bold uppercase tracking-wider text-slate-950 shadow-[0_0_16px_rgba(56,189,248,0.3)] transition hover:brightness-110"
-              >
-                Explore Demo Client Workspace ⚡
-              </button>
-            )}
-          </div>
+          <Link
+            href="/client"
+            className={`flex w-14 flex-col items-center rounded-[1.35rem] px-2 py-3 !no-underline transition-all ${
+              pathname === "/client" ? "bg-white !text-black shadow-md border border-sky-300/80" : "!text-slate-800 hover:bg-white/60 hover:!text-black"
+            }`}
+            title="Client Board"
+          >
+            <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.8" className="mb-1">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+            </svg>
+            <span className="text-[10px] font-bold">Client Hub</span>
+          </Link>
+
+          <Link
+            href="/paywall"
+            className={`flex w-14 flex-col items-center rounded-[1.35rem] px-2 py-3 !no-underline transition-all ${
+              pathname === "/paywall" ? "bg-[#c8ecff] !text-black shadow-xs" : "!text-slate-800 hover:bg-white/60 hover:!text-black"
+            }`}
+            title="Razorpay Paywall & Invoices"
+          >
+            <span className="text-lg mb-1">💳</span>
+            <span className="text-[10px] font-semibold">Paywall</span>
+          </Link>
+
+          <Link
+            href="/qna"
+            className={`flex w-14 flex-col items-center rounded-[1.35rem] px-2 py-3 !no-underline transition-all ${
+              pathname === "/qna" ? "bg-[#c8ecff] !text-black shadow-xs" : "!text-slate-800 hover:bg-white/60 hover:!text-black"
+            }`}
+            title="Q&A"
+          >
+            <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.8" className="mb-1">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span className="text-[10px] font-semibold">Q&A</span>
+          </Link>
+
+          <Link
+            href="/contact"
+            className={`flex w-14 flex-col items-center rounded-[1.35rem] px-2 py-3 !no-underline transition-all ${
+              pathname === "/contact" ? "bg-[#c8ecff] !text-black shadow-xs" : "!text-slate-800 hover:bg-white/60 hover:!text-black"
+            }`}
+            title="Contact"
+          >
+            <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.8" className="mb-1">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M21 10.5V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2h7.5" />
+              <path strokeLinecap="round" strokeLinejoin="round" d="M21 10.5l-9 6.5-9-6.5" />
+            </svg>
+            <span className="text-[10px] font-semibold">Contact</span>
+          </Link>
         </div>
+      </nav>
 
-        {/* ------------------------------------------------------------- */}
-        {/* VIEW 1: UNAUTHENTICATED GUEST / DISCOVERY UI                   */}
-        {/* ------------------------------------------------------------- */}
-        {!isAuthenticatedUser ? (
-          <div className="space-y-12">
-            {/* Feature Showcase Grid for Prospective Clients */}
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
-              <div className="rounded-3xl border border-sky-400/20 bg-slate-950/60 p-6 backdrop-blur-xl transition hover:border-sky-400/40 shadow-lg">
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-sky-500/10 border border-sky-400/30 text-2xl">
-                  📊
-                </div>
-                <h3 className="mt-4 text-base font-bold text-white">Live Sprint Milestones</h3>
-                <p className="mt-2 text-xs text-slate-400 leading-relaxed">
-                  Real-time timeline tracking across Discovery, Figma Design, Development, Staging Review, and Production Launch.
-                </p>
-              </div>
+      {/* ------------------------------------------------------------- */}
+      {/* 2. MOBILE TOP HEADER                                          */}
+      {/* ------------------------------------------------------------- */}
+      <header className="fixed left-0 top-0 z-30 flex h-14 w-full items-center justify-between border-b border-black/10 bg-[#dff4ff]/90 px-4 backdrop-blur-xl md:hidden">
+        <Link href="/" className="flex items-center gap-1.5 !no-underline !text-black font-semibold text-sm">
+          <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+          </svg>
+          <span>Home</span>
+        </Link>
+        <span className="text-xs font-bold uppercase tracking-widest text-slate-800">
+          Client Workspace
+        </span>
+        <Link
+          href="/packages"
+          className="rounded-full bg-slate-950 px-3 py-1 text-[11px] font-bold text-white shadow-xs cursor-pointer !no-underline"
+        >
+          Packages
+        </Link>
+      </header>
 
-              <div className="rounded-3xl border border-sky-400/20 bg-slate-950/60 p-6 backdrop-blur-xl transition hover:border-sky-400/40 shadow-lg">
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-sky-500/10 border border-sky-400/30 text-2xl">
-                  📁
-                </div>
-                <h3 className="mt-4 text-base font-bold text-white">Cloud Asset Dropzone</h3>
-                <p className="mt-2 text-xs text-slate-400 leading-relaxed">
-                  Upload logos, vector graphics, typography files, copy docs, and 3D assets directly to Supabase cloud storage.
-                </p>
+      {/* ------------------------------------------------------------- */}
+      {/* 3. MAIN PAGE CONTAINER                                        */}
+      {/* ------------------------------------------------------------- */}
+      <div className="pl-0 md:pl-20 min-h-screen">
+        <div className="mx-auto max-w-7xl px-4 pt-20 pb-16 sm:px-8 sm:pt-10 sm:pb-24">
+          {/* Top Header Banner */}
+          <div className="mb-8 flex flex-wrap items-center justify-between gap-4 rounded-[2.2rem] border border-sky-300/70 bg-gradient-to-r from-white/95 via-sky-50/80 to-white/95 p-6 sm:p-8 backdrop-blur-xl shadow-lg">
+            <div>
+              <div className="inline-flex items-center gap-2 rounded-full border border-sky-300/80 bg-sky-100/70 px-3.5 py-1 text-xs font-bold uppercase tracking-wider text-sky-900">
+                <span className="h-2 w-2 animate-ping rounded-full bg-sky-500" />
+                {isAuthenticatedUser ? "Active Client Workspace" : "Private Client Hub & Gateway"}
               </div>
-
-              <div className="rounded-3xl border border-sky-400/20 bg-slate-950/60 p-6 backdrop-blur-xl transition hover:border-sky-400/40 shadow-lg">
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-sky-500/10 border border-sky-400/30 text-2xl">
-                  ✍️
-                </div>
-                <h3 className="mt-4 text-base font-bold text-white">Digital E-Contracts</h3>
-                <p className="mt-2 text-xs text-slate-400 leading-relaxed">
-                  Review clear scope summaries, legal warranties, milestone payment schedules, and execute signatures with cryptographic IP stamping.
-                </p>
-              </div>
-
-              <div className="rounded-3xl border border-sky-400/20 bg-slate-950/60 p-6 backdrop-blur-xl transition hover:border-sky-400/40 shadow-lg">
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-sky-500/10 border border-sky-400/30 text-2xl">
-                  💎
-                </div>
-                <h3 className="mt-4 text-base font-bold text-white">Deliverables Vault</h3>
-                <p className="mt-2 text-xs text-slate-400 leading-relaxed">
-                  Direct one-click access to staging deployment previews, Figma design boards, production code repositories, and documentation.
-                </p>
-              </div>
+              <h1 className="mt-2.5 text-2xl font-black tracking-tight text-slate-950 sm:text-4xl">
+                {isAuthenticatedUser
+                  ? `Welcome, ${selectedProject?.client_name || user?.email?.split("@")[0] || "Partner"}`
+                  : "Client Management & Workspace"}
+              </h1>
+              <p className="mt-1 text-sm text-slate-600 max-w-2xl font-medium">
+                {isAuthenticatedUser
+                  ? "Track live project milestones, upload brand assets, access staging deliverables, pay invoices, and sign digital agreements."
+                  : "A dedicated private engineering portal for sprint tracking, digital contract execution, asset delivery, and milestone settlement."}
+              </p>
             </div>
 
-            {/* Authentication Card & Demo CTA Section */}
-            <div className="grid grid-cols-1 gap-8 lg:grid-cols-12 items-start">
-              {/* Left Column: Interactive Auth Card */}
-              <div className="lg:col-span-6 rounded-3xl border border-sky-400/30 bg-slate-950/85 p-8 backdrop-blur-2xl shadow-[0_16px_50px_rgba(2,8,23,0.7)]">
-                <div className="text-center">
-                  <div className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-sky-500/20 border border-sky-400/40 text-sky-300 mb-3">
-                    🔐
+            <div className="flex flex-wrap items-center gap-3">
+              <Link
+                href="/packages"
+                className="rounded-full border border-black/10 bg-white/80 px-4 py-2 text-xs font-bold uppercase tracking-wider text-slate-800 shadow-xs transition hover:bg-white hover:border-black/20 !no-underline"
+              >
+                Browse Packages
+              </Link>
+
+              {isAuthenticatedUser ? (
+                <button
+                  type="button"
+                  onClick={handleSignOut}
+                  className="rounded-full border border-rose-300 bg-rose-50 px-4 py-2 text-xs font-bold text-rose-800 transition hover:bg-rose-100 cursor-pointer"
+                >
+                  Sign Out ({isDemoMode ? "Demo" : user?.email})
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => setIsDemoMode(true)}
+                  className="rounded-full bg-slate-950 px-5 py-2 text-xs font-bold uppercase tracking-wider text-white shadow-md transition hover:bg-slate-800 cursor-pointer"
+                >
+                  Explore Demo Workspace ⚡
+                </button>
+              )}
+            </div>
+          </div>
+
+          {/* ------------------------------------------------------------- */}
+          {/* VIEW 1: UNAUTHENTICATED GUEST / DISCOVERY UI                   */}
+          {/* ------------------------------------------------------------- */}
+          {!isAuthenticatedUser ? (
+            <div className="space-y-10">
+              {/* Feature Showcase Grid for Prospective Clients */}
+              <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-4">
+                <div className="rounded-3xl border border-black/8 bg-white/85 p-6 shadow-sm hover:shadow-md transition">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-sky-100 text-2xl border border-sky-200">
+                    📊
                   </div>
-                  <h2 className="text-xl font-bold text-white">Sign In to Your Client Hub</h2>
-                  <p className="mt-1 text-xs text-slate-400">
-                    Enter your registered email to access your active workspace.
+                  <h3 className="mt-4 text-base font-bold text-slate-950">Live Sprint Milestones</h3>
+                  <p className="mt-2 text-xs text-slate-600 leading-relaxed">
+                    Real-time timeline tracking across Discovery, Figma Design, Development, Staging Review, and Production Launch.
                   </p>
                 </div>
 
-                {/* Razorpay Site Reviewer Test Credentials Quick Helper */}
-                <div className="mt-6 rounded-2xl border border-sky-400/40 bg-gradient-to-r from-sky-950/60 via-slate-900 to-indigo-950/40 p-4 shadow-inner">
-                  <div className="flex items-center justify-between gap-2 mb-2">
-                    <span className="text-[11px] font-black uppercase tracking-wider text-sky-300 flex items-center gap-1.5">
-                      <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
-                      Razorpay Reviewer Quick Access
-                    </span>
-                    <span className="rounded bg-sky-500/20 text-sky-200 border border-sky-400/30 px-2 py-0.5 text-[10px] font-bold">
-                      Site Verification
-                    </span>
+                <div className="rounded-3xl border border-black/8 bg-white/85 p-6 shadow-sm hover:shadow-md transition">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-sky-100 text-2xl border border-sky-200">
+                    📁
                   </div>
-                  <p className="text-[11px] text-slate-300 mb-3">
-                    Reviewing this site for Razorpay merchant verification? Use these pre-configured reviewer credentials:
+                  <h3 className="mt-4 text-base font-bold text-slate-950">Cloud Asset Dropzone</h3>
+                  <p className="mt-2 text-xs text-slate-600 leading-relaxed">
+                    Upload logos, vector graphics, typography files, copy docs, and 3D assets directly to secure cloud storage.
                   </p>
-                  <div className="rounded-xl bg-slate-950/80 p-2.5 font-mono text-xs border border-white/10 space-y-1 text-slate-300">
-                    <div>
-                      <span className="text-slate-500 select-none">Email: </span>
-                      <span className="text-sky-300 font-semibold">{RAZORPAY_TEST_CREDENTIALS.email}</span>
+                </div>
+
+                <div className="rounded-3xl border border-black/8 bg-white/85 p-6 shadow-sm hover:shadow-md transition">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-sky-100 text-2xl border border-sky-200">
+                    ✍️
+                  </div>
+                  <h3 className="mt-4 text-base font-bold text-slate-950">Digital E-Contracts</h3>
+                  <p className="mt-2 text-xs text-slate-600 leading-relaxed">
+                    Review clear scope summaries, legal warranties, milestone payment schedules, and execute signatures with cryptographic IP stamping.
+                  </p>
+                </div>
+
+                <div className="rounded-3xl border border-black/8 bg-white/85 p-6 shadow-sm hover:shadow-md transition">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-sky-100 text-2xl border border-sky-200">
+                    💎
+                  </div>
+                  <h3 className="mt-4 text-base font-bold text-slate-950">Deliverables Vault</h3>
+                  <p className="mt-2 text-xs text-slate-600 leading-relaxed">
+                    Direct one-click access to staging deployment previews, Figma design boards, production code repositories, and documentation.
+                  </p>
+                </div>
+              </div>
+
+              {/* Authentication Card & Demo CTA Section */}
+              <div className="grid grid-cols-1 gap-8 lg:grid-cols-12 items-start">
+                {/* Left Column: Clean Interactive Auth Card */}
+                <div className="lg:col-span-6 rounded-[2rem] border border-sky-300/80 bg-white/95 p-8 backdrop-blur-xl shadow-xl">
+                  <div className="text-center">
+                    <div className="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-sky-100 border border-sky-300 text-xl text-sky-800 mb-3">
+                      🔐
                     </div>
-                    <div>
-                      <span className="text-slate-500 select-none">Password: </span>
-                      <span className="text-sky-300 font-semibold">{RAZORPAY_TEST_CREDENTIALS.password}</span>
-                    </div>
+                    <h2 className="text-2xl font-black text-slate-950">Sign In to Your Client Hub</h2>
+                    <p className="mt-1 text-xs text-slate-600">
+                      Enter your registered client email to access your active workspace.
+                    </p>
                   </div>
 
-                  <div className="mt-3 grid grid-cols-2 gap-2">
+                  {/* Auth Mode Tabs */}
+                  <div className="mt-6 flex rounded-full bg-slate-100 p-1 border border-black/5 text-xs">
                     <button
                       type="button"
-                      onClick={handleFillReviewerCredentials}
-                      className="rounded-lg border border-sky-400/30 bg-sky-500/10 py-1.5 text-xs font-bold text-sky-200 hover:bg-sky-500/20 transition cursor-pointer"
+                      onClick={() => setAuthMode("login")}
+                      className={`flex-1 rounded-full py-2 font-bold transition cursor-pointer ${
+                        authMode === "login"
+                          ? "bg-white text-slate-950 shadow-sm"
+                          : "text-slate-600 hover:text-black"
+                      }`}
                     >
-                      Fill Credentials
+                      Password Login
                     </button>
                     <button
                       type="button"
-                      onClick={handleQuickReviewerSignIn}
-                      disabled={isSubmittingAuth}
-                      className="rounded-lg bg-gradient-to-r from-sky-500 to-indigo-600 py-1.5 text-xs font-bold text-white hover:brightness-110 shadow-sm transition cursor-pointer disabled:opacity-50"
+                      onClick={() => setAuthMode("magic")}
+                      className={`flex-1 rounded-full py-2 font-bold transition cursor-pointer ${
+                        authMode === "magic"
+                          ? "bg-white text-slate-950 shadow-sm"
+                          : "text-slate-600 hover:text-black"
+                      }`}
                     >
-                      ⚡ 1-Click Login
+                      Magic Link
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setAuthMode("signup")}
+                      className={`flex-1 rounded-full py-2 font-bold transition cursor-pointer ${
+                        authMode === "signup"
+                          ? "bg-white text-slate-950 shadow-sm"
+                          : "text-slate-600 hover:text-black"
+                      }`}
+                    >
+                      Create Account
                     </button>
                   </div>
-                </div>
 
-                {/* Auth Mode Tabs */}
-                <div className="mt-6 flex rounded-full bg-slate-900/90 p-1 border border-white/10 text-xs">
-                  <button
-                    type="button"
-                    onClick={() => setAuthMode("login")}
-                    className={`flex-1 rounded-full py-1.5 font-semibold transition ${
-                      authMode === "login"
-                        ? "bg-sky-500/20 text-sky-300 border border-sky-400/40 shadow-sm"
-                        : "text-slate-400 hover:text-white"
-                    }`}
-                  >
-                    Password Login
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setAuthMode("magic")}
-                    className={`flex-1 rounded-full py-1.5 font-semibold transition ${
-                      authMode === "magic"
-                        ? "bg-sky-500/20 text-sky-300 border border-sky-400/40 shadow-sm"
-                        : "text-slate-400 hover:text-white"
-                    }`}
-                  >
-                    Magic Link
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setAuthMode("signup")}
-                    className={`flex-1 rounded-full py-1.5 font-semibold transition ${
-                      authMode === "signup"
-                        ? "bg-sky-500/20 text-sky-300 border border-sky-400/40 shadow-sm"
-                        : "text-slate-400 hover:text-white"
-                    }`}
-                  >
-                    Create Account
-                  </button>
-                </div>
-
-                {authMessage && (
-                  <div
-                    className={`mt-4 rounded-xl p-3 text-xs ${
-                      authMessage.type === "success"
-                        ? "border border-emerald-500/30 bg-emerald-500/10 text-emerald-300"
-                        : "border border-rose-500/30 bg-rose-500/10 text-rose-300"
-                    }`}
-                  >
-                    {authMessage.text}
-                  </div>
-                )}
-
-                <form onSubmit={handleAuthSubmit} className="mt-6 space-y-4">
-                  <div>
-                    <label className="block text-xs font-medium uppercase tracking-wider text-slate-300">
-                      Client Email Address
-                    </label>
-                    <input
-                      type="email"
-                      required
-                      value={authEmail}
-                      onChange={(e) => setAuthEmail(e.target.value)}
-                      placeholder="client@company.com"
-                      className="mt-1.5 w-full rounded-xl border border-white/10 bg-slate-900/80 px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:border-sky-400 focus:outline-none focus:ring-1 focus:ring-sky-400"
-                    />
-                  </div>
-
-                  {authMode !== "magic" && (
-                    <div>
-                      <label className="block text-xs font-medium uppercase tracking-wider text-slate-300">
-                        Password
-                      </label>
-                      <input
-                        type="password"
-                        required
-                        value={authPassword}
-                        onChange={(e) => setAuthPassword(e.target.value)}
-                        placeholder="••••••••"
-                        className="mt-1.5 w-full rounded-xl border border-white/10 bg-slate-900/80 px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:border-sky-400 focus:outline-none focus:ring-1 focus:ring-sky-400"
-                      />
+                  {authMessage && (
+                    <div
+                      className={`mt-4 rounded-2xl p-3.5 text-xs ${
+                        authMessage.type === "success"
+                          ? "border border-emerald-300 bg-emerald-50 text-emerald-800 font-medium"
+                          : "border border-rose-300 bg-rose-50 text-rose-800 font-medium"
+                      }`}
+                    >
+                      {authMessage.text}
                     </div>
                   )}
 
-                  <button
-                    type="submit"
-                    disabled={isSubmittingAuth || authLoading}
-                    className="w-full rounded-xl bg-gradient-to-r from-sky-400 to-cyan-500 py-3 text-sm font-bold text-slate-950 shadow-[0_0_20px_rgba(56,189,248,0.3)] transition hover:brightness-110 disabled:opacity-60"
-                  >
-                    {isSubmittingAuth
-                      ? "Processing..."
-                      : authMode === "login"
-                      ? "Sign In to Client Workspace"
-                      : authMode === "magic"
-                      ? "Send Magic Sign-In Link"
-                      : "Create Client Account"}
-                  </button>
-                </form>
-
-                <div className="mt-6 border-t border-white/10 pt-4 text-center">
-                  <p className="text-xs text-slate-400">Want to test the full client experience right away?</p>
-                  <button
-                    type="button"
-                    onClick={() => setIsDemoMode(true)}
-                    className="mt-2 inline-flex items-center gap-1.5 text-xs font-semibold text-sky-400 underline underline-offset-4 hover:text-sky-300"
-                  >
-                    <span>Launch One-Click Demo Client Workspace</span>
-                    <span>→</span>
-                  </button>
-                </div>
-              </div>
-
-              {/* Right Column: Interactive Demo Experience Highlight */}
-              <div className="lg:col-span-6 space-y-6">
-                <div className="rounded-3xl border border-sky-400/20 bg-gradient-to-br from-slate-950/90 via-slate-900/70 to-sky-950/40 p-8 backdrop-blur-2xl shadow-xl">
-                  <span className="inline-block rounded-md border border-cyan-400/30 bg-cyan-500/10 px-2.5 py-0.5 text-xs font-semibold uppercase tracking-wider text-cyan-300">
-                    Interactive Walkthrough
-                  </span>
-                  <h3 className="mt-3 text-xl font-bold text-white">Test-Drive the Client Hub</h3>
-                  <p className="mt-2 text-xs text-slate-300 leading-relaxed">
-                    Experience what it feels like to collaborate with Tanie Lalwani. With the demo workspace, you can inspect live milestone progression, try the canvas signature pad, and test the cloud asset dropzone.
-                  </p>
-
-                  <div className="mt-6 space-y-3">
-                    <div className="flex items-center gap-3 rounded-2xl border border-white/5 bg-slate-900/60 p-3 text-xs text-slate-300">
-                      <span className="text-emerald-400">✓</span>
-                      <span>No sign-up or credit card required for demo exploration</span>
+                  <form onSubmit={handleAuthSubmit} className="mt-6 space-y-4">
+                    <div>
+                      <label className="block text-xs font-bold uppercase tracking-wider text-slate-700">
+                        Client Email Address
+                      </label>
+                      <input
+                        type="email"
+                        required
+                        value={authEmail}
+                        onChange={(e) => setAuthEmail(e.target.value)}
+                        placeholder="client@company.com"
+                        className="mt-1.5 w-full rounded-xl border border-black/15 bg-white px-4 py-2.5 text-sm text-slate-900 placeholder-slate-400 focus:border-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-200"
+                      />
                     </div>
-                    <div className="flex items-center gap-3 rounded-2xl border border-white/5 bg-slate-900/60 p-3 text-xs text-slate-300">
-                      <span className="text-emerald-400">✓</span>
-                      <span>Simulated real-world e-contract agreement & signature pad</span>
-                    </div>
-                    <div className="flex items-center gap-3 rounded-2xl border border-white/5 bg-slate-900/60 p-3 text-xs text-slate-300">
-                      <span className="text-emerald-400">✓</span>
-                      <span>Active sprint milestone tracker with progress analytics</span>
-                    </div>
-                  </div>
 
-                  <div className="mt-8 flex flex-wrap items-center gap-4">
+                    {authMode !== "magic" && (
+                      <div>
+                        <label className="block text-xs font-bold uppercase tracking-wider text-slate-700">
+                          Password
+                        </label>
+                        <input
+                          type="password"
+                          required
+                          value={authPassword}
+                          onChange={(e) => setAuthPassword(e.target.value)}
+                          placeholder="••••••••"
+                          className="mt-1.5 w-full rounded-xl border border-black/15 bg-white px-4 py-2.5 text-sm text-slate-900 placeholder-slate-400 focus:border-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-200"
+                        />
+                      </div>
+                    )}
+
+                    <button
+                      type="submit"
+                      disabled={isSubmittingAuth || authLoading}
+                      className="w-full rounded-xl bg-slate-950 py-3 text-sm font-bold text-white shadow-md transition hover:bg-slate-800 disabled:opacity-60 cursor-pointer"
+                    >
+                      {isSubmittingAuth
+                        ? "Processing..."
+                        : authMode === "login"
+                        ? "Sign In to Client Workspace"
+                        : authMode === "magic"
+                        ? "Send Magic Sign-In Link"
+                        : "Create Client Account"}
+                    </button>
+                  </form>
+
+                  <div className="mt-6 border-t border-black/8 pt-4 text-center">
+                    <p className="text-xs text-slate-500">Want to test the full client experience right away?</p>
                     <button
                       type="button"
                       onClick={() => setIsDemoMode(true)}
-                      className="rounded-xl bg-gradient-to-r from-sky-400 to-cyan-500 px-6 py-3 text-xs font-bold uppercase tracking-wider text-slate-950 shadow-[0_0_20px_rgba(56,189,248,0.3)] transition hover:brightness-110"
+                      className="mt-2 inline-flex items-center gap-1.5 text-xs font-bold text-sky-700 hover:text-sky-900 underline underline-offset-4 cursor-pointer"
                     >
-                      Open Demo Workspace ⚡
+                      <span>Launch One-Click Demo Client Workspace</span>
+                      <span>→</span>
                     </button>
+                  </div>
+                </div>
+
+                {/* Right Column: Interactive Demo Experience Highlight */}
+                <div className="lg:col-span-6 space-y-6">
+                  <div className="rounded-[2rem] border border-sky-300/70 bg-gradient-to-br from-white/95 via-sky-50/70 to-indigo-50/60 p-8 backdrop-blur-xl shadow-lg">
+                    <span className="inline-block rounded-md border border-sky-300 bg-sky-100 px-2.5 py-0.5 text-xs font-extrabold uppercase tracking-wider text-sky-900">
+                      Interactive Experience
+                    </span>
+                    <h3 className="mt-3 text-2xl font-black text-slate-950">Test-Drive the Client Hub</h3>
+                    <p className="mt-2 text-xs text-slate-600 leading-relaxed font-medium">
+                      Experience what it feels like to collaborate with Tanie Lalwani. With the demo workspace, you can inspect live milestone progression, try the canvas signature pad, and test the cloud asset dropzone.
+                    </p>
+
+                    <div className="mt-6 space-y-3">
+                      <div className="flex items-center gap-3 rounded-2xl border border-black/5 bg-white/80 p-3 text-xs text-slate-700 font-medium">
+                        <span className="text-sky-600 font-bold">✓</span>
+                        <span>No sign-up or credit card required for demo exploration</span>
+                      </div>
+                      <div className="flex items-center gap-3 rounded-2xl border border-black/5 bg-white/80 p-3 text-xs text-slate-700 font-medium">
+                        <span className="text-sky-600 font-bold">✓</span>
+                        <span>Simulated real-world e-contract agreement & signature pad</span>
+                      </div>
+                      <div className="flex items-center gap-3 rounded-2xl border border-black/5 bg-white/80 p-3 text-xs text-slate-700 font-medium">
+                        <span className="text-sky-600 font-bold">✓</span>
+                        <span>Active sprint milestone tracker with progress analytics</span>
+                      </div>
+                    </div>
+
+                    <div className="mt-8 flex flex-wrap items-center gap-4">
+                      <button
+                        type="button"
+                        onClick={() => setIsDemoMode(true)}
+                        className="rounded-xl bg-slate-950 px-6 py-3 text-xs font-bold uppercase tracking-wider text-white shadow-md transition hover:bg-slate-800 cursor-pointer"
+                      >
+                        Open Demo Workspace ⚡
+                      </button>
+                      <Link
+                        href="/contact"
+                        className="rounded-xl border border-black/15 bg-white px-6 py-3 text-xs font-bold uppercase tracking-wider text-slate-800 transition hover:bg-slate-50 !no-underline"
+                      >
+                        Inquire for New Project
+                      </Link>
+                    </div>
+                  </div>
+
+                  {/* Direct Help Callout */}
+                  <div className="rounded-2xl border border-black/8 bg-white/80 p-5 flex items-center justify-between">
+                    <div>
+                      <h4 className="text-sm font-bold text-slate-950">Have questions before starting?</h4>
+                      <p className="text-xs text-slate-500 mt-0.5">Explore package options or get in touch directly.</p>
+                    </div>
                     <Link
-                      href="/contact"
-                      className="rounded-xl border border-white/10 bg-slate-800/80 px-6 py-3 text-xs font-semibold uppercase tracking-wider text-slate-200 transition hover:bg-slate-700/80"
+                      href="/packages"
+                      className="rounded-full bg-slate-950 px-4 py-2 text-xs font-bold text-white shadow-xs hover:bg-slate-800 !no-underline"
                     >
-                      Inquire for New Project
+                      View Packages →
                     </Link>
                   </div>
                 </div>
-
-                {/* Direct Help Callout */}
-                <div className="rounded-2xl border border-white/10 bg-slate-950/60 p-5 flex items-center justify-between">
-                  <div>
-                    <h4 className="text-sm font-semibold text-white">Have questions before starting?</h4>
-                    <p className="text-xs text-slate-400 mt-0.5">Explore package options or get in touch directly.</p>
-                  </div>
-                  <Link
-                    href="/packages"
-                    className="rounded-full bg-sky-500/10 px-4 py-2 text-xs font-bold text-sky-300 border border-sky-400/30 hover:bg-sky-500/20"
+              </div>
+            </div>
+          ) : (
+            /* ------------------------------------------------------------- */
+            /* VIEW 2: AUTHENTICATED CLIENT DASHBOARD / DEMO MODE            */
+            /* ------------------------------------------------------------- */
+            <div>
+              {/* Navigation Tabs */}
+              <div className="mb-6 flex flex-wrap items-center gap-2 border-b border-black/10 pb-4">
+                {[
+                  { id: "overview", label: "Project Overview", icon: "📊" },
+                  { id: "payments", label: "Invoices & Payments", icon: "💳", status: paidReceipt ? "Paid ✓" : "Pending" },
+                  { id: "changes", label: "Changes & Requests", count: changeRequests.length, icon: "💬" },
+                  { id: "assets", label: "Brand Asset Vault", count: assets.length, icon: "📁" },
+                  {
+                    id: "contracts",
+                    label: "E-Contract & Signing",
+                    status: contract?.status === "signed" ? "Signed ✓" : "Pending ✍️",
+                    icon: "📜",
+                  },
+                  { id: "packages", label: "Packages & Add-ons", icon: "💎" },
+                ].map((tab) => (
+                  <button
+                    key={tab.id}
+                    type="button"
+                    onClick={() => setActiveTab(tab.id as any)}
+                    className={`flex items-center gap-2 rounded-2xl px-4 py-2.5 text-xs sm:text-sm font-bold transition cursor-pointer ${
+                      activeTab === tab.id
+                        ? "bg-slate-950 text-white shadow-md"
+                        : "bg-white/80 text-slate-700 hover:bg-white hover:text-black border border-black/8"
+                    }`}
                   >
-                    View Packages →
-                  </Link>
-                </div>
-              </div>
-            </div>
-          </div>
-        ) : (
-          /* ------------------------------------------------------------- */
-          /* VIEW 2: AUTHENTICATED CLIENT DASHBOARD / DEMO MODE            */
-          /* ------------------------------------------------------------- */
-          <div>
-            {/* Navigation Tabs */}
-            <div className="mb-6 flex flex-wrap items-center gap-2 border-b border-white/10 pb-3">
-              {[
-                { id: "overview", label: "Project Overview & Milestones", icon: "📊" },
-                { id: "payments", label: "Invoices & Razorpay Payment", icon: "💳", status: paidReceipt ? "Paid ✓" : "Pending Clearance" },
-                { id: "changes", label: "Changes & Requests", count: changeRequests.length, icon: "💬" },
-                { id: "assets", label: "Asset Dropzone & Media Hub", count: assets.length, icon: "📁" },
-                {
-                  id: "contracts",
-                  label: "E-Contract & Signing",
-                  status: contract?.status === "signed" ? "Signed ✓" : "Pending Signature ✍️",
-                  icon: "📜",
-                },
-                { id: "packages", label: "Packages & Upgrades", icon: "💎" },
-              ].map((tab) => (
-                <button
-                  key={tab.id}
-                  type="button"
-                  onClick={() => setActiveTab(tab.id as any)}
-                  className={`flex items-center gap-2 rounded-2xl px-5 py-2.5 text-sm font-semibold transition ${
-                    activeTab === tab.id
-                      ? "border border-sky-400/40 bg-sky-500/20 text-sky-200 shadow-[0_0_20px_rgba(56,189,248,0.2)]"
-                      : "border border-transparent text-slate-400 hover:bg-slate-900/60 hover:text-white"
-                  }`}
-                >
-                  <span>{tab.icon}</span>
-                  <span>{tab.label}</span>
-                  {tab.count !== undefined && (
-                    <span className="rounded-full bg-slate-800 px-2 py-0.5 text-xs text-sky-300">
-                      {tab.count}
-                    </span>
-                  )}
-                  {tab.status && (
-                    <span
-                      className={`rounded-full px-2.5 py-0.5 text-[11px] font-bold ${
-                        tab.status.includes("Signed")
-                          ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30"
-                          : "bg-amber-500/20 text-amber-300 border border-amber-500/30 animate-pulse"
-                      }`}
-                    >
-                      {tab.status}
-                    </span>
-                  )}
-                </button>
-              ))}
-            </div>
-
-            {/* TAB 1: OVERVIEW */}
-            {activeTab === "overview" && selectedProject && (
-              <div className="space-y-8">
-                {/* Project Header Card */}
-                <div className="rounded-3xl border border-sky-400/20 bg-slate-950/70 p-6 backdrop-blur-xl">
-                  <div className="flex flex-wrap items-start justify-between gap-4">
-                    <div>
-                      <span className="inline-block rounded-md border border-sky-400/30 bg-sky-500/10 px-2.5 py-0.5 text-xs font-semibold uppercase tracking-wider text-sky-300">
-                        {selectedProject.company_name || "Active Engagement"}
+                    <span>{tab.icon}</span>
+                    <span>{tab.label}</span>
+                    {tab.count !== undefined && (
+                      <span className="rounded-full bg-slate-200 px-2 py-0.5 text-[10px] text-slate-900 font-bold">
+                        {tab.count}
                       </span>
-                      <h2 className="mt-2 text-2xl font-bold text-white">{selectedProject.title}</h2>
-                      <p className="mt-1 max-w-2xl text-sm text-slate-300">{selectedProject.description}</p>
-                    </div>
-
-                    <div className="rounded-2xl border border-white/10 bg-slate-900/80 p-4 text-right">
-                      <div className="text-xs uppercase tracking-wider text-slate-400">Target Launch</div>
-                      <div className="text-base font-bold text-sky-300">
-                        {selectedProject.target_launch_date
-                          ? new Date(selectedProject.target_launch_date).toLocaleDateString("en-US", {
-                              month: "short",
-                              day: "numeric",
-                              year: "numeric",
-                            })
-                          : "October 2026"}
-                      </div>
-                      <div className="mt-1 text-xs text-emerald-400">On Track • Active Phase</div>
-                    </div>
-                  </div>
-
-                  {/* Project Aesthetic & Scope Badges */}
-                  <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-3 pt-4 border-t border-white/10">
-                    <div className="rounded-2xl border border-white/5 bg-slate-900/60 p-3">
-                      <div className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">Selected Visual Direction</div>
-                      <div className="mt-1 text-sm font-bold text-sky-300 flex items-center gap-1.5">
-                        <span>✨</span>
-                        <span>{selectedProject.selected_aesthetic || "Midnight Editorial"}</span>
-                      </div>
-                    </div>
-
-                    <div className="rounded-2xl border border-white/5 bg-slate-900/60 p-3">
-                      <div className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">Scope Foundation</div>
-                      <div className="mt-1 text-sm font-bold text-white flex items-center gap-1.5">
-                        <span>📐</span>
-                        <span className="capitalize">{selectedProject.scope_tier ? `${selectedProject.scope_tier} Tier` : "Business (4–7 Pages)"}</span>
-                      </div>
-                    </div>
-
-                    <div className="rounded-2xl border border-white/5 bg-slate-900/60 p-3">
-                      <div className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">Content Status</div>
-                      <div className="mt-1 text-sm font-bold text-teal-300 flex items-center gap-1.5">
-                        <span>📝</span>
-                        <span className="capitalize">{selectedProject.content_status || "Drafts Ready"}</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Must-Haves & Dealbreakers if present */}
-                  {(selectedProject.must_haves || selectedProject.dealbreakers) && (
-                    <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
-                      {selectedProject.must_haves && (
-                        <div className="rounded-2xl border border-emerald-500/20 bg-emerald-950/20 p-3.5">
-                          <div className="text-xs font-bold text-emerald-400 flex items-center gap-1.5">
-                            <span>✓</span> Must-Have Features & Requirements
-                          </div>
-                          <p className="mt-1 text-xs text-slate-300 leading-relaxed">{selectedProject.must_haves}</p>
-                        </div>
-                      )}
-                      {selectedProject.dealbreakers && (
-                        <div className="rounded-2xl border border-rose-500/20 bg-rose-950/20 p-3.5">
-                          <div className="text-xs font-bold text-rose-400 flex items-center gap-1.5">
-                            <span>✕</span> Exclusions & Dealbreakers
-                          </div>
-                          <p className="mt-1 text-xs text-slate-300 leading-relaxed">{selectedProject.dealbreakers}</p>
-                        </div>
-                      )}
-                    </div>
-                  )}
-
-                  {/* Stage Flow Stepper */}
-                  <div className="mt-8 border-t border-white/10 pt-6">
-                    <div className="flex items-center justify-between text-xs font-semibold uppercase tracking-wider text-slate-400 mb-3">
-                      <span>Project Lifecycle Pipeline</span>
-                      <span className="text-sky-300">{selectedProject.progress_percent}% Overall Progress</span>
-                    </div>
-
-                    {/* Progress Bar */}
-                    <div className="h-3 w-full overflow-hidden rounded-full bg-slate-900 border border-white/10">
-                      <div
-                        className="h-full bg-gradient-to-r from-sky-400 via-cyan-400 to-teal-400 transition-all duration-1000 shadow-[0_0_14px_rgba(56,189,248,0.6)]"
-                        style={{ width: `${selectedProject.progress_percent}%` }}
-                      />
-                    </div>
-
-                    {/* Stage Steps */}
-                    <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-6">
-                      {stages.map((stage, idx) => {
-                        const isDone = idx < currentStageIndex;
-                        const isCurrent = idx === currentStageIndex;
-
-                        return (
-                          <div
-                            key={stage}
-                            className={`flex flex-col items-center rounded-xl p-2.5 text-center text-xs transition ${
-                              isCurrent
-                                ? "border border-sky-400/50 bg-sky-500/20 text-sky-200 font-bold shadow-[0_0_12px_rgba(56,189,248,0.2)]"
-                                : isDone
-                                ? "border border-emerald-500/30 bg-emerald-500/10 text-emerald-300 font-medium"
-                                : "border border-white/5 bg-slate-900/40 text-slate-500"
-                            }`}
-                          >
-                            <span className="text-sm">
-                              {isDone ? "✓" : isCurrent ? "⚡" : idx + 1}
-                            </span>
-                            <span className="mt-1">{stage}</span>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-
-                  {/* Quick Action Deliverable Links */}
-                  <div className="mt-6 flex flex-wrap items-center gap-3 pt-4 border-t border-white/8">
-                    {selectedProject.live_preview_url && (
-                      <a
-                        href={selectedProject.live_preview_url}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="inline-flex items-center gap-1.5 rounded-full border border-sky-400/40 bg-sky-500/20 px-4 py-2 text-xs font-semibold text-sky-200 hover:bg-sky-500/30"
-                      >
-                        <span>🌐 Staging Preview Build</span>
-                        <span>↗</span>
-                      </a>
                     )}
-                    {selectedProject.figma_url && (
-                      <a
-                        href={selectedProject.figma_url}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-slate-900 px-4 py-2 text-xs font-medium text-slate-300 hover:text-white"
+                    {tab.status && (
+                      <span
+                        className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${
+                          tab.status.includes("Signed") || tab.status.includes("Paid")
+                            ? "bg-emerald-100 text-emerald-900 border border-emerald-300"
+                            : "bg-amber-100 text-amber-900 border border-amber-300"
+                        }`}
                       >
-                        <span>🎨 Figma Design System</span>
-                        <span>↗</span>
-                      </a>
+                        {tab.status}
+                      </span>
                     )}
-                    {selectedProject.github_repo && (
-                      <a
-                        href={selectedProject.github_repo}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-slate-900 px-4 py-2 text-xs font-medium text-slate-300 hover:text-white"
-                      >
-                        <span>📦 GitHub Repository</span>
-                        <span>↗</span>
-                      </a>
-                    )}
-                  </div>
-                </div>
-
-                {/* Grid: Milestones & Deliverables */}
-                <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-                  {/* Milestones Checklist */}
-                  <div className="rounded-3xl border border-sky-400/20 bg-slate-950/70 p-6 backdrop-blur-xl">
-                    <h3 className="text-lg font-bold text-white flex items-center gap-2">
-                      <span>🎯</span> Key Sprint Milestones
-                    </h3>
-                    <div className="mt-4 space-y-3">
-                      {selectedProject.milestones?.map((milestone) => (
-                        <div
-                          key={milestone.id}
-                          className="flex items-start gap-3 rounded-2xl border border-white/8 bg-slate-900/60 p-4"
-                        >
-                          <span
-                            className={`mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-bold ${
-                              milestone.status === "completed"
-                                ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/40"
-                                : milestone.status === "in-progress"
-                                ? "bg-sky-500/20 text-sky-300 border border-sky-500/40 animate-pulse"
-                                : "bg-slate-800 text-slate-500"
-                            }`}
-                          >
-                            {milestone.status === "completed" ? "✓" : "•"}
-                          </span>
-                          <div className="flex-1">
-                            <div className="flex items-center justify-between">
-                              <h4 className="text-sm font-semibold text-white">{milestone.title}</h4>
-                              <span
-                                className={`rounded-md px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${
-                                  milestone.status === "completed"
-                                    ? "bg-emerald-500/10 text-emerald-400"
-                                    : milestone.status === "in-progress"
-                                    ? "bg-sky-500/10 text-sky-300"
-                                    : "bg-slate-800 text-slate-400"
-                                }`}
-                              >
-                                {milestone.status}
-                              </span>
-                            </div>
-                            <p className="mt-1 text-xs text-slate-300">{milestone.description}</p>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Deliverables Hub */}
-                  <div className="rounded-3xl border border-sky-400/20 bg-slate-950/70 p-6 backdrop-blur-xl">
-                    <h3 className="text-lg font-bold text-white flex items-center gap-2">
-                      <span>💎</span> Handed-Over Deliverables
-                    </h3>
-                    <div className="mt-4 space-y-3">
-                      {selectedProject.deliverables?.length > 0 ? (
-                        selectedProject.deliverables.map((item) => (
-                          <div
-                            key={item.id}
-                            className="flex items-center justify-between rounded-2xl border border-white/8 bg-slate-900/60 p-4 transition hover:border-sky-400/30"
-                          >
-                            <div>
-                              <div className="text-sm font-semibold text-white">{item.title}</div>
-                              <div className="text-xs text-slate-400">Added on {item.added_at}</div>
-                            </div>
-                            <a
-                              href={item.url}
-                              target="_blank"
-                              rel="noreferrer"
-                              className="rounded-full bg-sky-500/10 px-3.5 py-1.5 text-xs font-semibold text-sky-300 border border-sky-400/30 hover:bg-sky-500/20"
-                            >
-                              Access ↗
-                            </a>
-                          </div>
-                        ))
-                      ) : (
-                        <p className="text-xs text-slate-400 py-6 text-center">
-                          Deliverables will be published here as each milestone is completed.
-                        </p>
-                      )}
-                    </div>
-
-                    {/* Direct Contact & Support Callout */}
-                    <div className="mt-6 rounded-2xl border border-sky-400/20 bg-gradient-to-r from-sky-950/40 to-slate-900/60 p-4">
-                      <div className="text-xs font-semibold uppercase tracking-wider text-sky-300">
-                        Need an urgent revision or question?
-                      </div>
-                      <p className="mt-1 text-xs text-slate-300">
-                        Reach out directly via email or scheduled Slack sprint channel.
-                      </p>
-                      <Link
-                        href="/contact"
-                        className="mt-3 inline-block text-xs font-bold text-sky-400 hover:text-sky-300 underline underline-offset-4"
-                      >
-                        Contact Tanie Lalwani →
-                      </Link>
-                    </div>
-                  </div>
-                </div>
+                  </button>
+                ))}
               </div>
-            )}
 
-            {/* TAB: INVOICES & RAZORPAY PAYMENT */}
-            {activeTab === "payments" && selectedProject && (
-              <div className="space-y-8">
-                {/* Success Receipt if paid */}
-                {paidReceipt && (
-                  <div className="rounded-3xl border border-emerald-500/40 bg-gradient-to-r from-emerald-950/40 via-slate-900 to-slate-950 p-6 sm:p-8 backdrop-blur-xl shadow-[0_0_40px_rgba(16,185,129,0.15)]">
-                    <div className="flex items-start gap-4">
-                      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-emerald-500/20 text-emerald-400 text-2xl border border-emerald-500/40">
-                        ✓
-                      </div>
-                      <div className="flex-1">
-                        <span className="inline-block rounded-full bg-emerald-500/20 border border-emerald-500/40 px-3 py-0.5 text-xs font-bold text-emerald-300 uppercase tracking-wider">
-                          Payment Cleared via Razorpay
-                        </span>
-                        <h3 className="mt-1 text-xl font-bold text-white">
-                          Invoice Settlement Complete
-                        </h3>
-                        <p className="text-xs text-slate-300 mt-1">
-                          Payment was recorded. Your project sprint discovery & design tokens are unlocked.
-                        </p>
-
-                        <div className="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-3 rounded-2xl bg-slate-950/80 p-4 border border-white/10 text-xs">
-                          <div>
-                            <span className="text-slate-400 block mb-0.5">Razorpay Payment ID:</span>
-                            <span className="font-mono font-bold text-sky-300 select-all">{paidReceipt.paymentId}</span>
-                          </div>
-                          <div>
-                            <span className="text-slate-400 block mb-0.5">Amount Settled:</span>
-                            <span className="font-bold text-emerald-300 text-sm">₹{paidReceipt.amount.toLocaleString()} INR</span>
-                          </div>
-                          <div>
-                            <span className="text-slate-400 block mb-0.5">Timestamp:</span>
-                            <span className="text-slate-300">{paidReceipt.date}</span>
-                          </div>
-                        </div>
-
-                        <div className="mt-4 flex gap-3">
-                          <button
-                            type="button"
-                            onClick={() => window.print()}
-                            className="rounded-xl border border-white/20 bg-white/5 px-4 py-2 text-xs font-semibold text-white hover:bg-white/10 transition"
-                          >
-                            🖨️ Print Receipt
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-                {/* Main Invoice Card */}
-                <div className="grid grid-cols-1 gap-8 lg:grid-cols-12">
-                  <div className="lg:col-span-8 rounded-3xl border border-sky-400/30 bg-slate-950/80 p-6 sm:p-8 backdrop-blur-2xl shadow-xl">
-                    <div className="flex flex-wrap items-center justify-between gap-4 border-b border-white/10 pb-5">
+              {/* TAB 1: OVERVIEW */}
+              {activeTab === "overview" && selectedProject && (
+                <div className="space-y-8">
+                  {/* Project Header Card */}
+                  <div className="rounded-[2.2rem] border border-sky-300/70 bg-white/95 p-6 sm:p-8 backdrop-blur-xl shadow-lg">
+                    <div className="flex flex-wrap items-start justify-between gap-4">
                       <div>
-                        <span className="inline-block rounded-md border border-sky-400/30 bg-sky-500/10 px-2.5 py-0.5 text-xs font-semibold uppercase tracking-wider text-sky-300">
-                          Active Sprint Invoice
+                        <span className="inline-block rounded-md border border-sky-300 bg-sky-100 px-2.5 py-0.5 text-xs font-bold uppercase tracking-wider text-sky-900">
+                          {selectedProject.company_name || "Active Engagement"}
                         </span>
-                        <h3 className="mt-2 text-xl font-bold text-white">
-                          Milestone Retainer & Engineering Deposit
-                        </h3>
-                        <p className="text-xs text-slate-400 mt-0.5">
-                          Invoice #{selectedProject.id.toUpperCase()} • Issued to {selectedProject.client_name} ({selectedProject.client_email})
-                        </p>
+                        <h2 className="mt-2 text-2xl sm:text-3xl font-black text-slate-950">{selectedProject.title}</h2>
+                        <p className="mt-1 max-w-2xl text-xs sm:text-sm text-slate-600 font-medium">{selectedProject.description}</p>
                       </div>
 
-                      <div className="text-right">
-                        <span className="text-xs uppercase tracking-wider text-slate-400 block">Total Agreed Scope</span>
-                        <span className="text-lg font-bold text-white">${selectedProject.budget_usd?.toLocaleString() || "3,499"} USD</span>
-                      </div>
-                    </div>
-
-                    {/* Breakdown */}
-                    <div className="mt-6 space-y-4 text-xs">
-                      <div className="flex items-center justify-between p-3.5 rounded-2xl bg-slate-900/70 border border-white/5">
-                        <div>
-                          <div className="font-bold text-white text-sm">Sprint Milestone 1: 50% Initial Retainer</div>
-                          <div className="text-slate-400 mt-0.5">Covers Discovery, Figma tokens, WebGL shader prototyping & sprint kickoff</div>
+                      <div className="rounded-2xl border border-black/8 bg-sky-50/70 p-4 text-right">
+                        <div className="text-[11px] font-bold uppercase tracking-wider text-slate-500">Target Launch</div>
+                        <div className="text-base font-extrabold text-slate-950">
+                          {selectedProject.target_launch_date
+                            ? new Date(selectedProject.target_launch_date).toLocaleDateString("en-US", {
+                                month: "short",
+                                day: "numeric",
+                                year: "numeric",
+                              })
+                            : "October 2026"}
                         </div>
-                        <div className="text-right">
-                          <div className="font-bold text-sky-300 text-base">₹1,44,500 INR</div>
-                          <div className="text-slate-400 text-[11px]">($1,749 USD)</div>
-                        </div>
-                      </div>
-
-                      <div className="flex items-center justify-between p-3.5 rounded-2xl bg-slate-900/40 border border-white/5 text-slate-400">
-                        <div>
-                          <div className="font-semibold text-slate-300">Sprint Milestone 2: 50% Launch Clearance</div>
-                          <div className="text-[11px] mt-0.5">Due upon staging review approval & prior to DNS cutover</div>
-                        </div>
-                        <div className="text-right">
-                          <div className="font-semibold text-slate-300">₹1,44,500 INR</div>
-                          <div className="text-[11px]">($1,749 USD)</div>
-                        </div>
+                        <div className="mt-0.5 text-xs font-bold text-emerald-700">On Track • Active Phase</div>
                       </div>
                     </div>
 
-                    {/* Action Buttons */}
-                    <div className="mt-8 pt-6 border-t border-white/10 flex flex-wrap items-center gap-4">
-                      <button
-                        type="button"
-                        onClick={() => handlePayWithRazorpay(144500, "50% Sprint Retainer Deposit - " + selectedProject.title)}
-                        disabled={isPayingWithRazorpay}
-                        className="rounded-2xl bg-gradient-to-r from-sky-500 via-sky-600 to-indigo-600 px-6 py-3.5 text-xs font-bold uppercase tracking-wider text-white shadow-lg shadow-sky-500/25 hover:brightness-110 transition cursor-pointer disabled:opacity-50 flex items-center gap-2"
-                      >
-                        {isPayingWithRazorpay ? (
-                          <>
-                            <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-white border-t-transparent" />
-                            <span>Connecting Razorpay...</span>
-                          </>
-                        ) : (
-                          <>
-                            <span>💳 Pay 50% Retainer (₹1,44,500) via Razorpay</span>
-                          </>
-                        )}
-                      </button>
-
-                      <button
-                        type="button"
-                        onClick={() => handlePayWithRazorpay(1, "Razorpay Site Verification Reviewer Test Transaction - ₹1")}
-                        disabled={isPayingWithRazorpay}
-                        className="rounded-2xl border border-sky-400/40 bg-sky-500/10 px-4 py-3.5 text-xs font-bold text-sky-200 hover:bg-sky-500/20 transition cursor-pointer"
-                      >
-                        ⚡ Reviewer Test Transaction (₹1)
-                      </button>
-
-                      <Link
-                        href="/paywall"
-                        className="text-xs font-semibold text-slate-400 hover:text-white transition underline"
-                      >
-                        Open Full Paywall →
-                      </Link>
-                    </div>
-                  </div>
-
-                  {/* Sidebar Info */}
-                  <div className="lg:col-span-4 space-y-6">
-                    <div className="rounded-3xl border border-white/10 bg-slate-950/60 p-6 backdrop-blur-xl">
-                      <div className="flex items-center gap-2 text-sky-300 font-bold text-xs uppercase tracking-wider">
-                        <span>🔒</span>
-                        <span>Razorpay Payments Gateway</span>
+                    {/* Stage Flow Stepper */}
+                    <div className="mt-8 border-t border-black/8 pt-6">
+                      <div className="flex items-center justify-between text-xs font-bold uppercase tracking-wider text-slate-600 mb-3">
+                        <span>Project Lifecycle Pipeline</span>
+                        <span className="text-sky-800">{selectedProject.progress_percent}% Overall Progress</span>
                       </div>
-                      <p className="mt-2 text-xs text-slate-300 leading-relaxed">
-                        All transactions are processed through Razorpay with 256-bit SSL encryption adhering to RBI security directives and PCI-DSS compliance.
-                      </p>
 
-                      <div className="mt-4 space-y-2 text-[11px] text-slate-400 border-t border-white/10 pt-3">
-                        <div className="flex items-center gap-1.5"><span className="text-emerald-400">✓</span><span>UPI, Credit/Debit Cards, NetBanking</span></div>
-                        <div className="flex items-center gap-1.5"><span className="text-emerald-400">✓</span><span>Instant Automated Invoicing</span></div>
-                        <div className="flex items-center gap-1.5"><span className="text-emerald-400">✓</span><span>Protected Milestone Escrow</span></div>
-                      </div>
-                    </div>
-
-                    <div className="rounded-3xl border border-white/10 bg-slate-900/40 p-5 text-xs text-slate-400 space-y-2">
-                      <div className="font-bold text-slate-200 uppercase tracking-wider text-[10px]">Statutory Compliance</div>
-                      <p className="text-[11px]">
-                        Review our verified policies:
-                      </p>
-                      <div className="flex flex-col gap-1.5 text-sky-400 underline">
-                        <Link href="/terms">Terms & Conditions</Link>
-                        <Link href="/refund-policy">Cancellation & Refund Policy</Link>
-                        <Link href="/privacy">Privacy Policy</Link>
-                        <Link href="/shipping-policy">Delivery Policy</Link>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* TAB: CHANGES & REVISIONS LOG */}
-            {activeTab === "changes" && selectedProject && (
-              <div className="space-y-6">
-                {/* Submission Form */}
-                <div className="rounded-3xl border border-sky-400/20 bg-slate-950/70 p-6 backdrop-blur-xl sm:p-8">
-                  <div className="flex flex-wrap items-start justify-between gap-4 border-b border-white/10 pb-5">
-                    <div>
-                      <h3 className="text-xl font-bold text-white flex items-center gap-2">
-                        <span>💬</span> Submit a Change Request or Feedback
-                      </h3>
-                      <p className="mt-1 text-xs text-slate-300">
-                        Request design adjustments (e.g. typography sizing, color mood), button behaviors, content swaps, or scope inquiries.
-                      </p>
-                    </div>
-                    <div className="rounded-full border border-sky-400/30 bg-sky-500/10 px-3 py-1 text-xs font-semibold text-sky-300">
-                      ⚡ Active Sprint Log
-                    </div>
-                  </div>
-
-                  <form onSubmit={handleChangeSubmit} className="mt-6 space-y-4">
-                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-                      <div className="sm:col-span-2">
-                        <label className="block text-xs font-medium uppercase tracking-wider text-slate-300 mb-1">
-                          Request Summary / Title *
-                        </label>
-                        <input
-                          type="text"
-                          value={newChangeTitle}
-                          onChange={(e) => setNewChangeTitle(e.target.value)}
-                          placeholder="e.g. Can we make the hero section less dark? / Make primary buttons rounded"
-                          required
-                          className="w-full rounded-xl border border-white/10 bg-slate-900 px-4 py-2.5 text-xs text-white placeholder-slate-500 focus:border-sky-400 focus:outline-none"
+                      {/* Progress Bar */}
+                      <div className="h-3 w-full overflow-hidden rounded-full bg-slate-200 border border-black/5">
+                        <div
+                          className="h-full bg-gradient-to-r from-sky-500 to-indigo-600 transition-all duration-1000 shadow-sm"
+                          style={{ width: `${selectedProject.progress_percent}%` }}
                         />
                       </div>
 
-                      <div>
-                        <label className="block text-xs font-medium uppercase tracking-wider text-slate-300 mb-1">
-                          Category
-                        </label>
-                        <select
-                          value={newChangeCategory}
-                          onChange={(e) => setNewChangeCategory(e.target.value as any)}
-                          className="w-full rounded-xl border border-white/10 bg-slate-900 px-4 py-2.5 text-xs text-white focus:border-sky-400 focus:outline-none"
+                      {/* Stage Steps */}
+                      <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-6">
+                        {stages.map((stage, idx) => {
+                          const isDone = idx < currentStageIndex;
+                          const isCurrent = idx === currentStageIndex;
+
+                          return (
+                            <div
+                              key={stage}
+                              className={`flex flex-col items-center rounded-xl p-2.5 text-center text-xs transition ${
+                                isCurrent
+                                  ? "border border-sky-400 bg-sky-100 text-sky-950 font-bold shadow-xs"
+                                  : isDone
+                                  ? "border border-emerald-300 bg-emerald-50 text-emerald-900 font-semibold"
+                                  : "border border-black/5 bg-white/60 text-slate-400"
+                              }`}
+                            >
+                              <span className="text-sm">
+                                {isDone ? "✓" : isCurrent ? "⚡" : idx + 1}
+                              </span>
+                              <span className="mt-1">{stage}</span>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+
+                    {/* Quick Action Deliverable Links */}
+                    <div className="mt-6 flex flex-wrap items-center gap-3 pt-4 border-t border-black/8">
+                      {selectedProject.live_preview_url && (
+                        <a
+                          href={selectedProject.live_preview_url}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="inline-flex items-center gap-1.5 rounded-full border border-sky-300 bg-sky-100 px-4 py-2 text-xs font-bold text-sky-900 hover:bg-sky-200 !no-underline"
                         >
-                          <option value="Design">Design & Visual Aesthetic</option>
-                          <option value="Content">Content & Copy Swap</option>
-                          <option value="Feature">Interactive Feature</option>
-                          <option value="Bug / Fix">Fix / Visual Bug</option>
-                          <option value="Other">Scope / Addon / Other</option>
-                        </select>
-                      </div>
-                    </div>
-
-                    <div>
-                      <label className="block text-xs font-medium uppercase tracking-wider text-slate-300 mb-1">
-                        Detailed Description & Instructions *
-                      </label>
-                      <textarea
-                        rows={3}
-                        value={newChangeDesc}
-                        onChange={(e) => setNewChangeDesc(e.target.value)}
-                        placeholder="Describe the exact change you'd like made, which page or component it affects, and any reference URLs or assets uploaded."
-                        required
-                        className="w-full rounded-xl border border-white/10 bg-slate-900 px-4 py-2.5 text-xs text-white placeholder-slate-500 focus:border-sky-400 focus:outline-none resize-none"
-                      />
-                    </div>
-
-                    <div className="flex flex-wrap items-center justify-between gap-4 pt-2">
-                      <div className="text-[11px] text-slate-400 flex items-center gap-1.5">
-                        <span>💡</span>
-                        <span>Tip: Upload reference files or screenshots to the Asset Dropzone for faster implementation.</span>
-                      </div>
-
-                      <button
-                        type="submit"
-                        disabled={isSubmittingChange}
-                        className="rounded-xl bg-gradient-to-r from-sky-400 to-cyan-500 px-6 py-2.5 text-xs font-bold uppercase tracking-wider text-slate-950 shadow-[0_0_16px_rgba(56,189,248,0.3)] transition hover:brightness-110 disabled:opacity-50"
-                      >
-                        {isSubmittingChange ? "Submitting Request..." : "Submit Change Request →"}
-                      </button>
-                    </div>
-
-                    {changeSubmitSuccess && (
-                      <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-3 text-xs font-bold text-emerald-300 text-center animate-fadeIn">
-                        ✓ Change request logged to developer sprint queue! Status will update shortly.
-                      </div>
-                    )}
-                  </form>
-                </div>
-
-                {/* Change Requests History */}
-                <div className="rounded-3xl border border-sky-400/20 bg-slate-950/70 p-6 backdrop-blur-xl sm:p-8">
-                  <div className="flex items-center justify-between border-b border-white/10 pb-4">
-                    <div>
-                      <h3 className="text-lg font-bold text-white">Project Change Log & Requests ({changeRequests.length})</h3>
-                      <p className="text-xs text-slate-400">Track real-time status and developer feedback on your submitted requests</p>
+                          <span>🌐 Staging Preview Build</span>
+                          <span>↗</span>
+                        </a>
+                      )}
+                      {selectedProject.figma_url && (
+                        <a
+                          href={selectedProject.figma_url}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="inline-flex items-center gap-1.5 rounded-full border border-black/10 bg-white px-4 py-2 text-xs font-bold text-slate-800 hover:bg-slate-50 !no-underline"
+                        >
+                          <span>🎨 Figma Design System</span>
+                          <span>↗</span>
+                        </a>
+                      )}
+                      {selectedProject.github_repo && (
+                        <a
+                          href={selectedProject.github_repo}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="inline-flex items-center gap-1.5 rounded-full border border-black/10 bg-white px-4 py-2 text-xs font-bold text-slate-800 hover:bg-slate-50 !no-underline"
+                        >
+                          <span>📦 GitHub Repository</span>
+                          <span>↗</span>
+                        </a>
+                      )}
                     </div>
                   </div>
 
-                  <div className="mt-6 space-y-4">
-                    {changeRequests.length > 0 ? (
-                      changeRequests.map((req) => {
-                        const statusStyles: Record<string, { bg: string; text: string; label: string; border: string }> = {
-                          pending: {
-                            bg: "bg-amber-500/15",
-                            text: "text-amber-300",
-                            border: "border-amber-500/30",
-                            label: "Pending Review",
-                          },
-                          "in-review": {
-                            bg: "bg-sky-500/15",
-                            text: "text-sky-300",
-                            border: "border-sky-500/30",
-                            label: "In Review",
-                          },
-                          in_review: {
-                            bg: "bg-sky-500/15",
-                            text: "text-sky-300",
-                            border: "border-sky-500/30",
-                            label: "In Review",
-                          },
-                          in_progress: {
-                            bg: "bg-indigo-500/15",
-                            text: "text-indigo-300",
-                            border: "border-indigo-500/30",
-                            label: "In Progress ⚡",
-                          },
-                          implemented: {
-                            bg: "bg-emerald-500/15",
-                            text: "text-emerald-300",
-                            border: "border-emerald-500/30",
-                            label: "Implemented ✓",
-                          },
-                          rejected: {
-                            bg: "bg-rose-500/15",
-                            text: "text-rose-300",
-                            border: "border-rose-500/30",
-                            label: "Declined",
-                          },
-                        };
+                  {/* Milestones and Deliverables Grid */}
+                  <div className="grid grid-cols-1 gap-8 lg:grid-cols-12">
+                    {/* Left 7 Cols: Detailed Milestone Tracker */}
+                    <div className="lg:col-span-7 rounded-[2rem] border border-black/8 bg-white/90 p-6 sm:p-8 backdrop-blur-xl shadow-md">
+                      <div className="flex items-center justify-between border-b border-black/8 pb-4">
+                        <h3 className="text-lg font-bold text-slate-950 flex items-center gap-2">
+                          <span>📋</span> Sprint Milestones & Tasks
+                        </h3>
+                        <span className="text-xs font-bold text-sky-800 bg-sky-100 px-2.5 py-1 rounded-md border border-sky-200">
+                          {selectedProject.milestones?.filter((m) => m.status === "completed").length || 0} / {selectedProject.milestones?.length || 5} Completed
+                        </span>
+                      </div>
 
-                        const currentStyle = statusStyles[req.status] || statusStyles.pending;
+                      <div className="mt-6 space-y-4">
+                        {selectedProject.milestones?.map((milestone, idx) => {
+                          const isCompleted = milestone.status === "completed";
+                          const isInProgress = milestone.status === "in-progress";
 
-                        return (
-                          <div
-                            key={req.id}
-                            className="rounded-2xl border border-white/8 bg-slate-900/60 p-5 transition hover:border-sky-400/30 shadow-md"
-                          >
-                            <div className="flex flex-wrap items-start justify-between gap-2">
-                              <div className="space-y-1">
-                                <div className="flex items-center gap-2">
-                                  <span className="rounded-md bg-white/5 border border-white/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-slate-300">
-                                    {(req.category || "Design").replace("_", " ")}
-                                  </span>
-                                  <span className="text-[11px] text-slate-400">
-                                    {new Date(req.created_at).toLocaleDateString("en-US", {
-                                      month: "short",
-                                      day: "numeric",
-                                      year: "numeric",
-                                    })}
-                                  </span>
-                                </div>
-                                <h4 className="text-sm font-bold text-white">{req.title}</h4>
-                              </div>
-
-                              <span
-                                className={`rounded-full border px-3 py-1 text-xs font-bold ${currentStyle.bg} ${currentStyle.text} ${currentStyle.border}`}
+                          return (
+                            <div
+                              key={milestone.id || idx}
+                              className={`flex items-start gap-4 rounded-2xl border p-4 transition ${
+                                isInProgress
+                                  ? "border-sky-400 bg-sky-50/70 shadow-xs"
+                                  : isCompleted
+                                  ? "border-emerald-200 bg-emerald-50/50"
+                                  : "border-black/5 bg-slate-50"
+                              }`}
+                            >
+                              <div
+                                className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-xl text-xs font-bold ${
+                                  isCompleted
+                                    ? "bg-emerald-600 text-white"
+                                    : isInProgress
+                                    ? "bg-sky-600 text-white animate-pulse"
+                                    : "bg-slate-200 text-slate-600"
+                                }`}
                               >
-                                {currentStyle.label}
-                              </span>
-                            </div>
-
-                            <p className="mt-3 text-xs text-slate-300 leading-relaxed whitespace-pre-line">
-                              {req.description}
-                            </p>
-
-                            {req.admin_reply && (
-                              <div className="mt-4 rounded-xl border border-sky-400/20 bg-sky-950/30 p-3.5 text-xs">
-                                <div className="font-semibold text-sky-300 flex items-center gap-1.5 mb-1">
-                                  <span>👨‍💻</span> Developer Response / Sprint Update:
-                                </div>
-                                <p className="text-slate-300 leading-relaxed">{req.admin_reply}</p>
+                                {isCompleted ? "✓" : isInProgress ? "⚡" : idx + 1}
                               </div>
-                            )}
-                          </div>
-                        );
-                      })
-                    ) : (
-                      <div className="py-12 text-center text-xs text-slate-400">
-                        <span className="text-3xl block mb-2">✨</span>
-                        No change requests logged yet. Use the form above if you have any tweaks, styling refinements, or copy updates!
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-            )}
 
-            {/* TAB 2: ASSET DROPZONE & MEDIA HUB */}
-            {activeTab === "assets" && selectedProject && (
-              <div className="space-y-6">
-                {/* Upload Panel */}
-                <div className="rounded-3xl border border-sky-400/20 bg-slate-950/70 p-6 backdrop-blur-xl">
-                  <h3 className="text-xl font-bold text-white flex items-center gap-2">
-                    <span>📤</span> Upload Project Assets & Media
-                  </h3>
-                  <p className="text-xs text-slate-300 mt-1">
-                    Upload logos (SVG/PNG), brand guidelines (PDF), typography, images, copy documents, or 3D models.
-                    Stored securely with Supabase Storage.
-                  </p>
-
-                  <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
-                    <div>
-                      <label className="block text-xs font-medium uppercase tracking-wider text-slate-300 mb-1">
-                        Asset Category
-                      </label>
-                      <select
-                        value={uploadCategory}
-                        onChange={(e) => setUploadCategory(e.target.value as any)}
-                        className="w-full rounded-xl border border-white/10 bg-slate-900 px-4 py-2.5 text-xs text-white focus:border-sky-400 focus:outline-none"
-                      >
-                        <option value="brand_assets">Brand Assets & Guidelines</option>
-                        <option value="logo">Vector Logos & Icons</option>
-                        <option value="content_copy">Content & Copywriting Docs</option>
-                        <option value="images_media">High-Res Images & Video Media</option>
-                        <option value="design_reference">Design References & Moodboards</option>
-                        <option value="contract">Executed Contract Documents</option>
-                        <option value="general">General Asset</option>
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="block text-xs font-medium uppercase tracking-wider text-slate-300 mb-1">
-                        Note / Description (Optional)
-                      </label>
-                      <input
-                        type="text"
-                        value={uploadDescription}
-                        onChange={(e) => setUploadDescription(e.target.value)}
-                        placeholder="e.g. Primary transparent hero logo (dark mode)"
-                        className="w-full rounded-xl border border-white/10 bg-slate-900 px-4 py-2.5 text-xs text-white placeholder-slate-500 focus:border-sky-400 focus:outline-none"
-                      />
-                    </div>
-                  </div>
-
-                  {/* Drag-and-drop Dropzone */}
-                  <div className="mt-4 relative flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-sky-400/30 bg-slate-900/40 p-8 text-center transition hover:border-sky-400/60 hover:bg-slate-900/60">
-                    <input
-                      type="file"
-                      multiple
-                      disabled={isUploading}
-                      onChange={handleFileUpload}
-                      className="absolute inset-0 cursor-pointer opacity-0"
-                    />
-                    <span className="text-3xl">📁</span>
-                    <span className="mt-2 text-sm font-semibold text-white">
-                      {isUploading ? "Uploading to Cloud Storage..." : "Click or drag files here to upload"}
-                    </span>
-                    <span className="mt-1 text-xs text-slate-400">
-                      Supports SVG, PNG, JPG, WebP, PDF, DOCX, GLB/GLTF, ZIP up to 50MB
-                    </span>
-                    {uploadProgress && (
-                      <div className="mt-3 rounded-full bg-sky-500/20 px-4 py-1 text-xs font-medium text-sky-300 border border-sky-400/30">
-                        {uploadProgress}
-                      </div>
-                    )}
-                  </div>
-                </div>
-
-                {/* Uploaded Assets List */}
-                <div className="rounded-3xl border border-sky-400/20 bg-slate-950/70 p-6 backdrop-blur-xl">
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-lg font-bold text-white">Uploaded Project Assets ({assets.length})</h3>
-                    <span className="text-xs text-slate-400">Directly accessible to developer</span>
-                  </div>
-
-                  <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                    {assets.length > 0 ? (
-                      assets.map((asset) => (
-                        <div
-                          key={asset.id}
-                          className="flex flex-col justify-between rounded-2xl border border-white/8 bg-slate-900/60 p-4 transition hover:border-sky-400/30 shadow-lg"
-                        >
-                          <div>
-                            <div className="flex items-center justify-between">
-                              <span className="rounded-md bg-sky-500/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-sky-300">
-                                {asset.category.replace("_", " ")}
-                              </span>
-                              <span className="text-[11px] text-slate-400">
-                                {(asset.file_size_bytes / 1024).toFixed(0)} KB
-                              </span>
+                              <div className="flex-1">
+                                <div className="flex items-center justify-between gap-2">
+                                  <h4 className="text-sm font-bold text-slate-950">{milestone.title}</h4>
+                                  <span
+                                    className={`rounded-md px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${
+                                      isCompleted
+                                        ? "bg-emerald-100 text-emerald-900 border border-emerald-300"
+                                        : isInProgress
+                                        ? "bg-sky-100 text-sky-900 border border-sky-300"
+                                        : "bg-slate-100 text-slate-600"
+                                    }`}
+                                  >
+                                    {milestone.status}
+                                  </span>
+                                </div>
+                                <p className="mt-1 text-xs text-slate-600 leading-relaxed">{milestone.description}</p>
+                              </div>
                             </div>
-                            <h4 className="mt-2 truncate text-sm font-semibold text-white" title={asset.file_name}>
-                              {asset.file_name}
-                            </h4>
-                            {asset.description && (
-                              <p className="mt-1 text-xs text-slate-400 line-clamp-2">{asset.description}</p>
-                            )}
+                          );
+                        })}
+                      </div>
+                    </div>
+
+                    {/* Right 5 Cols: Deliverables Vault */}
+                    <div className="lg:col-span-5 space-y-6">
+                      <div className="rounded-[2rem] border border-black/8 bg-white/90 p-6 sm:p-8 backdrop-blur-xl shadow-md">
+                        <div className="flex items-center justify-between border-b border-black/8 pb-4">
+                          <h3 className="text-lg font-bold text-slate-950 flex items-center gap-2">
+                            <span>📦</span> Staging & Handover Vault
+                          </h3>
+                        </div>
+
+                        <div className="mt-6 space-y-3">
+                          {selectedProject.deliverables && selectedProject.deliverables.length > 0 ? (
+                            selectedProject.deliverables.map((item) => (
+                              <div
+                                key={item.id}
+                                className="flex items-center justify-between rounded-2xl border border-black/5 bg-slate-50 p-3.5 hover:border-black/15 transition"
+                              >
+                                <div>
+                                  <div className="text-xs font-bold text-slate-950">{item.title}</div>
+                                  <div className="text-[10px] text-slate-500">{item.added_at}</div>
+                                </div>
+                                <a
+                                  href={item.url}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                  className="rounded-lg bg-slate-950 px-3 py-1.5 text-xs font-bold text-white hover:bg-slate-800 !no-underline"
+                                >
+                                  Access ↗
+                                </a>
+                              </div>
+                            ))
+                          ) : (
+                            <p className="text-xs text-slate-500 py-6 text-center">
+                              Deliverables will be published here as each milestone completes.
+                            </p>
+                          )}
+                        </div>
+
+                        <div className="mt-6 rounded-2xl border border-sky-200 bg-sky-50 p-4">
+                          <div className="text-xs font-bold uppercase tracking-wider text-sky-900">
+                            Need an urgent revision?
+                          </div>
+                          <p className="mt-1 text-xs text-slate-600">
+                            Submit a change request in the tab above or reach out directly.
+                          </p>
+                          <Link
+                            href="/contact"
+                            className="mt-2 inline-block text-xs font-bold text-sky-800 hover:text-sky-950 underline !no-underline"
+                          >
+                            Contact Tanie Lalwani →
+                          </Link>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* TAB 2: INVOICES & PAYMENTS */}
+              {activeTab === "payments" && selectedProject && (
+                <div className="space-y-8">
+                  {/* Success Receipt if paid */}
+                  {paidReceipt && (
+                    <div className="rounded-[2rem] border border-emerald-300 bg-gradient-to-r from-emerald-50 via-white to-emerald-50 p-6 sm:p-8 backdrop-blur-xl shadow-lg">
+                      <div className="flex items-start gap-4">
+                        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-emerald-600 text-white text-2xl font-bold">
+                          ✓
+                        </div>
+                        <div className="flex-1">
+                          <span className="inline-block rounded-full bg-emerald-100 border border-emerald-300 px-3 py-0.5 text-xs font-bold text-emerald-900 uppercase tracking-wider">
+                            Payment Settled via Razorpay
+                          </span>
+                          <h3 className="mt-1 text-xl font-bold text-slate-950">
+                            Invoice Settlement Complete
+                          </h3>
+                          <p className="text-xs text-slate-600 mt-1">
+                            Your transaction has been processed. Design tokens and sprint discovery are unlocked.
+                          </p>
+
+                          <div className="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-3 rounded-2xl bg-white p-4 border border-black/8 text-xs">
+                            <div>
+                              <span className="text-slate-500 block mb-0.5">Razorpay Payment ID:</span>
+                              <span className="font-mono font-bold text-slate-900 select-all">{paidReceipt.paymentId}</span>
+                            </div>
+                            <div>
+                              <span className="text-slate-500 block mb-0.5">Amount Settled:</span>
+                              <span className="font-bold text-emerald-700 text-sm">₹{paidReceipt.amount.toLocaleString()} INR</span>
+                            </div>
+                            <div>
+                              <span className="text-slate-500 block mb-0.5">Timestamp:</span>
+                              <span className="text-slate-700">{paidReceipt.date}</span>
+                            </div>
                           </div>
 
-                          <div className="mt-4 flex items-center justify-between border-t border-white/8 pt-3">
-                            <span className="text-[10px] text-slate-500">
-                              {new Date(asset.created_at).toLocaleDateString()}
-                            </span>
+                          <div className="mt-4 flex gap-3">
+                            <button
+                              type="button"
+                              onClick={() => window.print()}
+                              className="rounded-xl border border-black/15 bg-white px-4 py-2 text-xs font-bold text-slate-800 hover:bg-slate-50 transition cursor-pointer"
+                            >
+                              🖨️ Print Receipt
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Main Invoice Card */}
+                  <div className="grid grid-cols-1 gap-8 lg:grid-cols-12">
+                    <div className="lg:col-span-8 rounded-[2rem] border border-sky-300/80 bg-white/95 p-6 sm:p-8 backdrop-blur-xl shadow-lg">
+                      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-black/8 pb-5">
+                        <div>
+                          <span className="inline-block rounded-md border border-sky-300 bg-sky-100 px-2.5 py-0.5 text-xs font-bold uppercase tracking-wider text-sky-900">
+                            Active Sprint Invoice
+                          </span>
+                          <h3 className="mt-2 text-xl font-black text-slate-950">
+                            Milestone Retainer & Engineering Deposit
+                          </h3>
+                          <p className="text-xs text-slate-500 mt-0.5">
+                            Invoice #{selectedProject.id.toUpperCase()} • Issued to {selectedProject.client_name}
+                          </p>
+                        </div>
+
+                        <div className="text-right">
+                          <span className="text-xs uppercase tracking-wider text-slate-500 font-bold block">Total Agreed Scope</span>
+                          <span className="text-xl font-black text-slate-950">${selectedProject.budget_usd?.toLocaleString() || "3,499"} USD</span>
+                        </div>
+                      </div>
+
+                      {/* Breakdown */}
+                      <div className="mt-6 space-y-3 text-xs">
+                        <div className="flex items-center justify-between p-4 rounded-2xl bg-sky-50/70 border border-sky-200">
+                          <div>
+                            <div className="font-bold text-slate-950 text-sm">Sprint Milestone 1: 50% Initial Retainer</div>
+                            <div className="text-slate-600 mt-0.5">Covers Discovery, Figma tokens, WebGL shader prototyping & sprint kickoff</div>
+                          </div>
+                          <div className="text-right">
+                            <div className="font-bold text-sky-900 text-base">₹1,44,500 INR</div>
+                            <div className="text-slate-500 text-[11px]">($1,749 USD)</div>
+                          </div>
+                        </div>
+
+                        <div className="flex items-center justify-between p-4 rounded-2xl bg-slate-50 border border-black/5 text-slate-500">
+                          <div>
+                            <div className="font-semibold text-slate-800">Sprint Milestone 2: 50% Launch Clearance</div>
+                            <div className="text-[11px] mt-0.5">Due upon staging review approval & prior to DNS cutover</div>
+                          </div>
+                          <div className="text-right">
+                            <div className="font-semibold text-slate-800">₹1,44,500 INR</div>
+                            <div className="text-[11px]">($1,749 USD)</div>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Action Buttons */}
+                      <div className="mt-8 pt-6 border-t border-black/8 flex flex-wrap items-center gap-4">
+                        <button
+                          type="button"
+                          onClick={() => handlePayWithRazorpay(144500, "50% Sprint Retainer Deposit - " + selectedProject.title)}
+                          disabled={isPayingWithRazorpay}
+                          className="rounded-2xl bg-slate-950 px-6 py-3.5 text-xs font-bold uppercase tracking-wider text-white shadow-md hover:bg-slate-800 transition cursor-pointer disabled:opacity-50 flex items-center gap-2"
+                        >
+                          {isPayingWithRazorpay ? (
+                            <>
+                              <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                              <span>Connecting Razorpay...</span>
+                            </>
+                          ) : (
+                            <>
+                              <span>💳 Pay Retainer (₹1,44,500) via Razorpay</span>
+                            </>
+                          )}
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={() => handlePayWithRazorpay(1, "Razorpay Site Verification Test Transaction - ₹1")}
+                          disabled={isPayingWithRazorpay}
+                          className="rounded-2xl border border-sky-300 bg-sky-50 px-4 py-3.5 text-xs font-bold text-sky-900 hover:bg-sky-100 transition cursor-pointer"
+                        >
+                          ⚡ Test Transaction (₹1)
+                        </button>
+
+                        <Link
+                          href="/paywall"
+                          className="text-xs font-bold text-sky-800 hover:text-sky-950 underline !no-underline"
+                        >
+                          Open Paywall Page →
+                        </Link>
+                      </div>
+                    </div>
+
+                    {/* Sidebar Info */}
+                    <div className="lg:col-span-4 space-y-6">
+                      <div className="rounded-[2rem] border border-black/8 bg-white/90 p-6 backdrop-blur-xl shadow-sm">
+                        <div className="flex items-center gap-2 text-sky-900 font-bold text-xs uppercase tracking-wider">
+                          <span>🔒</span>
+                          <span>Razorpay Payments Gateway</span>
+                        </div>
+                        <p className="mt-2 text-xs text-slate-600 leading-relaxed font-medium">
+                          All transactions are processed through Razorpay with 256-bit SSL encryption adhering to RBI security directives and PCI-DSS compliance.
+                        </p>
+
+                        <div className="mt-4 space-y-2 text-[11px] text-slate-700 border-t border-black/8 pt-3 font-medium">
+                          <div className="flex items-center gap-1.5"><span className="text-sky-600 font-bold">✓</span><span>UPI, Credit/Debit Cards, NetBanking</span></div>
+                          <div className="flex items-center gap-1.5"><span className="text-sky-600 font-bold">✓</span><span>Instant Automated Invoicing</span></div>
+                          <div className="flex items-center gap-1.5"><span className="text-sky-600 font-bold">✓</span><span>Protected Milestone Escrow</span></div>
+                        </div>
+                      </div>
+
+                      <div className="rounded-2xl border border-black/8 bg-white/80 p-5 text-xs text-slate-600 space-y-2">
+                        <div className="font-bold text-slate-900 uppercase tracking-wider text-[10px]">Statutory Policies</div>
+                        <div className="flex flex-col gap-1.5 text-sky-800 font-medium">
+                          <Link href="/terms" className="hover:underline">Terms & Conditions</Link>
+                          <Link href="/refund-policy" className="hover:underline">Cancellation & Refund Policy</Link>
+                          <Link href="/privacy" className="hover:underline">Privacy Policy</Link>
+                          <Link href="/shipping-policy" className="hover:underline">Delivery Policy</Link>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* TAB 3: CHANGES & REQUESTS */}
+              {activeTab === "changes" && selectedProject && (
+                <div className="space-y-6">
+                  <div className="rounded-[2rem] border border-black/8 bg-white/95 p-6 sm:p-8 backdrop-blur-xl shadow-md">
+                    <div className="flex flex-wrap items-start justify-between gap-4 border-b border-black/8 pb-5">
+                      <div>
+                        <h3 className="text-xl font-bold text-slate-950 flex items-center gap-2">
+                          <span>💬</span> Submit a Change Request or Feedback
+                        </h3>
+                        <p className="mt-1 text-xs text-slate-600">
+                          Request design adjustments, button behaviors, content swaps, or scope inquiries.
+                        </p>
+                      </div>
+                    </div>
+
+                    <form onSubmit={handleChangeSubmit} className="mt-6 space-y-4">
+                      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+                        <div className="sm:col-span-2">
+                          <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
+                            Request Summary / Title *
+                          </label>
+                          <input
+                            type="text"
+                            value={newChangeTitle}
+                            onChange={(e) => setNewChangeTitle(e.target.value)}
+                            placeholder="e.g. Can we adjust the hero typography? / Add social sharing buttons"
+                            required
+                            className="w-full rounded-xl border border-black/15 bg-white px-4 py-2.5 text-xs text-slate-900 placeholder-slate-400 focus:border-sky-500 focus:outline-none"
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
+                            Category
+                          </label>
+                          <select
+                            value={newChangeCategory}
+                            onChange={(e) => setNewChangeCategory(e.target.value as any)}
+                            className="w-full rounded-xl border border-black/15 bg-white px-4 py-2.5 text-xs text-slate-900 focus:border-sky-500 focus:outline-none"
+                          >
+                            <option value="Design">Design & Visual Aesthetic</option>
+                            <option value="Content">Content & Copy Swap</option>
+                            <option value="Feature">Interactive Feature</option>
+                            <option value="Bug / Fix">Fix / Visual Bug</option>
+                            <option value="Other">Scope / Addon / Other</option>
+                          </select>
+                        </div>
+                      </div>
+
+                      <div>
+                        <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
+                          Detailed Description & Instructions *
+                        </label>
+                        <textarea
+                          rows={3}
+                          value={newChangeDesc}
+                          onChange={(e) => setNewChangeDesc(e.target.value)}
+                          placeholder="Describe the change you'd like made, which section it affects, and any reference URLs."
+                          required
+                          className="w-full rounded-xl border border-black/15 bg-white px-4 py-2.5 text-xs text-slate-900 placeholder-slate-400 focus:border-sky-500 focus:outline-none resize-none"
+                        />
+                      </div>
+
+                      <div className="flex flex-wrap items-center justify-between gap-4 pt-2">
+                        <div className="text-[11px] text-slate-500 flex items-center gap-1.5">
+                          <span>💡</span>
+                          <span>Upload reference files to the Brand Asset Vault for faster implementation.</span>
+                        </div>
+
+                        <button
+                          type="submit"
+                          disabled={isSubmittingChange}
+                          className="rounded-xl bg-slate-950 px-6 py-2.5 text-xs font-bold uppercase tracking-wider text-white shadow-md hover:bg-slate-800 transition disabled:opacity-50 cursor-pointer"
+                        >
+                          {isSubmittingChange ? "Submitting Request..." : "Submit Change Request →"}
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              )}
+
+              {/* TAB 4: ASSETS DROPZONE */}
+              {activeTab === "assets" && selectedProject && (
+                <div className="space-y-6">
+                  <div className="rounded-[2rem] border border-black/8 bg-white/95 p-6 sm:p-8 backdrop-blur-xl shadow-md">
+                    <div className="flex flex-wrap items-start justify-between gap-4 border-b border-black/8 pb-5">
+                      <div>
+                        <h3 className="text-xl font-bold text-slate-950 flex items-center gap-2">
+                          <span>📁</span> Cloud Asset Dropzone & Media Kit
+                        </h3>
+                        <p className="mt-1 text-xs text-slate-600">
+                          Upload vector logos, brand typography, 3D GLB assets, and copy documents directly to secure cloud storage.
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Upload Box */}
+                    <div className="mt-6 rounded-2xl border-2 border-dashed border-sky-300 bg-sky-50/50 p-8 text-center">
+                      <div className="text-3xl mb-2">☁️</div>
+                      <div className="text-sm font-bold text-slate-900">Upload Project Brand Assets</div>
+                      <p className="text-xs text-slate-500 mt-1 max-w-sm mx-auto">
+                        Supports SVG, PNG, WebP, PDF, TTF/WOFF2, and 3D GLB/GLTF files.
+                      </p>
+
+                      <div className="mt-4 flex items-center justify-center gap-4">
+                        <label className="rounded-xl bg-slate-950 px-5 py-2.5 text-xs font-bold text-white shadow-md hover:bg-slate-800 transition cursor-pointer">
+                          {isUploading ? "Uploading..." : "Select Files to Upload"}
+                          <input
+                            type="file"
+                            multiple
+                            onChange={handleFileUpload}
+                            disabled={isUploading}
+                            className="hidden"
+                          />
+                        </label>
+                      </div>
+
+                      {uploadProgress && (
+                        <div className="mt-3 text-xs font-bold text-sky-800 animate-pulse">
+                          {uploadProgress}
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Asset List */}
+                    <div className="mt-8">
+                      <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-4">
+                        Project Media Kit ({assets.length} items)
+                      </h4>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                        {assets.map((asset) => (
+                          <div
+                            key={asset.id}
+                            className="flex items-center justify-between rounded-2xl border border-black/8 bg-slate-50 p-4 shadow-xs"
+                          >
+                            <div className="truncate mr-3">
+                              <div className="text-xs font-bold text-slate-900 truncate">{asset.file_name}</div>
+                              <div className="text-[10px] text-slate-500">{asset.category}</div>
+                            </div>
                             <div className="flex items-center gap-2">
                               <a
                                 href={asset.public_url}
                                 target="_blank"
                                 rel="noreferrer"
-                                download={asset.file_name}
-                                className="rounded-lg bg-sky-500/10 px-2.5 py-1 text-xs font-medium text-sky-300 hover:bg-sky-500/20"
+                                className="rounded-lg bg-sky-100 px-2.5 py-1 text-xs font-bold text-sky-900 hover:bg-sky-200 !no-underline"
                               >
-                                Download ↓
+                                View
                               </a>
                               <button
                                 type="button"
                                 onClick={() => handleDeleteAsset(asset.id, asset.storage_path)}
-                                className="rounded-lg bg-rose-500/10 px-2 py-1 text-xs text-rose-400 hover:bg-rose-500/20"
-                                title="Delete asset"
+                                className="rounded-lg border border-rose-200 bg-rose-50 px-2 py-1 text-xs font-bold text-rose-700 hover:bg-rose-100 cursor-pointer"
                               >
                                 ✕
                               </button>
                             </div>
                           </div>
-                        </div>
-                      ))
-                    ) : (
-                      <div className="col-span-full py-10 text-center text-xs text-slate-400">
-                        No assets uploaded yet. Drop your brand assets above to get started.
+                        ))}
                       </div>
-                    )}
+                    </div>
                   </div>
                 </div>
-              </div>
-            )}
+              )}
 
-            {/* TAB 3: E-CONTRACT & SIGNING */}
-            {activeTab === "contracts" && (
-              <div className="space-y-6">
-                {contract ? (
-                  <div className="rounded-3xl border border-sky-400/20 bg-slate-950/80 p-6 backdrop-blur-2xl shadow-2xl sm:p-8">
-                    {/* Contract Header */}
-                    <div className="flex flex-wrap items-center justify-between gap-4 border-b border-white/10 pb-6">
-                      <div>
-                        <div className="flex items-center gap-2">
-                          <span className="text-xl">📜</span>
-                          <span className="text-xs font-bold uppercase tracking-wider text-sky-300">
-                            Digital Engineering Agreement
-                          </span>
+              {/* TAB 5: CONTRACTS & SIGNING */}
+              {activeTab === "contracts" && selectedProject && (
+                <div className="space-y-6">
+                  {contract ? (
+                    <div className="rounded-[2rem] border border-sky-300/80 bg-white/95 p-6 sm:p-8 backdrop-blur-xl shadow-lg">
+                      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-black/8 pb-5">
+                        <div>
+                          <div className="inline-flex items-center gap-1.5 rounded-md border border-sky-300 bg-sky-100 px-2.5 py-0.5 text-xs font-bold text-sky-900 uppercase tracking-wider">
+                            <span>📜</span>
+                            <span>Digital Engineering Agreement</span>
+                          </div>
+                          <h2 className="mt-2 text-2xl font-black text-slate-950">{contract.package_name}</h2>
+                          <p className="text-xs text-slate-500 mt-0.5">
+                            Client: {contract.client_name} ({contract.client_email})
+                          </p>
                         </div>
-                        <h2 className="mt-1 text-2xl font-bold text-white">{contract.package_name}</h2>
-                        <p className="text-xs text-slate-400">
-                          Client: {contract.client_name} ({contract.client_email})
-                        </p>
-                      </div>
 
-                      <div className="flex items-center gap-3">
                         <span
-                          className={`rounded-full px-3 py-1 text-xs font-bold ${
+                          className={`rounded-full px-3.5 py-1 text-xs font-bold ${
                             contract.status === "signed"
-                              ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/40"
-                              : "bg-amber-500/20 text-amber-300 border border-amber-500/40 animate-pulse"
+                              ? "bg-emerald-100 text-emerald-900 border border-emerald-300"
+                              : "bg-amber-100 text-amber-900 border border-amber-300 animate-pulse"
                           }`}
                         >
                           {contract.status === "signed" ? "Executed & Signed ✓" : "Pending Signature ✍️"}
                         </span>
                       </div>
-                    </div>
 
-                    {/* Contract Details */}
-                    <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
-                      <div className="rounded-2xl border border-white/8 bg-slate-900/60 p-5">
-                        <h4 className="text-xs font-bold uppercase tracking-wider text-sky-300 mb-2">
-                          1. Project Scope & Deliverables
-                        </h4>
-                        <p className="text-xs text-slate-300 leading-relaxed whitespace-pre-line">
-                          {contract.scope_summary}
-                        </p>
-                      </div>
-
-                      <div className="rounded-2xl border border-white/8 bg-slate-900/60 p-5">
-                        <h4 className="text-xs font-bold uppercase tracking-wider text-sky-300 mb-2">
-                          2. Total Fee & Payment Schedule
-                        </h4>
-                        <div className="text-xl font-bold text-white mb-2">
-                          ${contract.total_amount_usd?.toLocaleString() || "3,200"} USD
+                      {/* Contract Scope Grid */}
+                      <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
+                        <div className="rounded-2xl border border-black/8 bg-slate-50 p-5">
+                          <h4 className="text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
+                            1. Project Scope & Deliverables
+                          </h4>
+                          <p className="text-xs text-slate-700 leading-relaxed whitespace-pre-line">
+                            {contract.scope_summary}
+                          </p>
                         </div>
-                        <p className="text-xs text-slate-300 leading-relaxed whitespace-pre-line">
-                          {contract.payment_terms}
-                        </p>
+
+                        <div className="rounded-2xl border border-black/8 bg-slate-50 p-5">
+                          <h4 className="text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
+                            2. Total Fee & Payment Schedule
+                          </h4>
+                          <div className="text-xl font-bold text-slate-950 mb-2">
+                            ${contract.total_amount_usd?.toLocaleString() || "3,200"} USD
+                          </div>
+                          <p className="text-xs text-slate-700 leading-relaxed whitespace-pre-line">
+                            {contract.payment_terms}
+                          </p>
+                        </div>
+
+                        <div className="col-span-full rounded-2xl border border-black/8 bg-slate-50 p-5">
+                          <h4 className="text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
+                            3. Legal Terms & Warranties
+                          </h4>
+                          <p className="text-xs text-slate-700 leading-relaxed whitespace-pre-line">
+                            {contract.legal_terms}
+                          </p>
+                        </div>
                       </div>
 
-                      <div className="col-span-full rounded-2xl border border-white/8 bg-slate-900/60 p-5">
-                        <h4 className="text-xs font-bold uppercase tracking-wider text-sky-300 mb-2">
-                          3. Legal Terms & Warranties
-                        </h4>
-                        <p className="text-xs text-slate-300 leading-relaxed whitespace-pre-line">
-                          {contract.legal_terms}
-                        </p>
-                      </div>
-                    </div>
+                      {/* Signature Pad Section */}
+                      <div className="mt-8 border-t border-black/8 pt-6">
+                        {contract.status === "signed" ? (
+                          <div className="rounded-2xl border border-emerald-300 bg-emerald-50 p-6">
+                            <div className="flex flex-wrap items-center justify-between gap-4">
+                              <div>
+                                <div className="text-xs font-bold uppercase tracking-wider text-emerald-900">
+                                  Legally Executed Signature
+                                </div>
+                                <div className="text-lg font-bold text-slate-950 mt-1">
+                                  {contract.signature_name || contract.client_name}
+                                </div>
+                                <div className="text-xs text-slate-600 mt-1">
+                                  Signed on: {new Date(contract.signed_at || "").toLocaleString()}
+                                </div>
+                              </div>
 
-                    {/* Signature Section */}
-                    <div className="mt-8 border-t border-white/10 pt-6">
-                      {contract.status === "signed" ? (
-                        <div className="rounded-2xl border border-emerald-500/30 bg-emerald-500/10 p-6">
-                          <div className="flex flex-wrap items-center justify-between gap-4">
-                            <div>
-                              <div className="text-xs font-bold uppercase tracking-wider text-emerald-400">
-                                Legally Executed Signature
-                              </div>
-                              <div className="text-lg font-bold text-white mt-1">
-                                {contract.signature_name || contract.client_name}
-                              </div>
-                              <div className="text-xs text-slate-400 mt-1">
-                                Signed on: {new Date(contract.signed_at || "").toLocaleString()}
-                              </div>
-                              {contract.signed_ip && (
-                                <div className="text-[10px] text-slate-500">Cryptographic IP: {contract.signed_ip}</div>
+                              {contract.signature_url && (
+                                <div className="rounded-xl border border-black/10 bg-white p-3">
+                                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                                  <img
+                                    src={contract.signature_url}
+                                    alt="Client Signature"
+                                    className="h-16 max-w-[200px] object-contain"
+                                  />
+                                </div>
                               )}
                             </div>
+                          </div>
+                        ) : (
+                          <div className="space-y-4">
+                            <div className="flex items-start gap-3">
+                              <input
+                                type="checkbox"
+                                id="agreeTerms"
+                                checked={legalAgreed}
+                                onChange={(e) => setLegalAgreed(e.target.checked)}
+                                className="mt-1 h-4 w-4 rounded border-black/20 text-sky-600 focus:ring-sky-400"
+                              />
+                              <label htmlFor="agreeTerms" className="text-xs text-slate-700 font-medium cursor-pointer">
+                                I confirm that I have authority to execute this agreement on behalf of my organization,
+                                and agree to the scope, warranty, and milestone terms set forth above.
+                              </label>
+                            </div>
 
-                            {contract.signature_url && (
-                              <div className="rounded-xl border border-white/10 bg-slate-900/80 p-3">
-                                {/* eslint-disable-next-line @next/next/no-img-element */}
-                                <img
-                                  src={contract.signature_url}
-                                  alt="Client Signature"
-                                  className="h-16 max-w-[200px] object-contain"
-                                />
+                            <div className="rounded-2xl border border-black/15 bg-slate-50 p-4">
+                              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-700 mb-3">
+                                Draw or Type Your Signature Below
+                              </h4>
+                              <SignaturePad
+                                onSave={handleSaveSignature}
+                                defaultName={contract.client_name}
+                                isSaving={isSigning}
+                              />
+                            </div>
+
+                            {contractSignedSuccess && (
+                              <div className="rounded-xl border border-emerald-300 bg-emerald-50 p-4 text-center text-xs font-bold text-emerald-900">
+                                🎉 Agreement successfully signed and recorded!
                               </div>
                             )}
                           </div>
-                        </div>
-                      ) : (
-                        <div className="space-y-4">
-                          <div className="flex items-start gap-3">
-                            <input
-                              type="checkbox"
-                              id="agreeTerms"
-                              checked={legalAgreed}
-                              onChange={(e) => setLegalAgreed(e.target.checked)}
-                              className="mt-1 h-4 w-4 rounded border-white/20 bg-slate-900 text-sky-500 focus:ring-sky-400"
-                            />
-                            <label htmlFor="agreeTerms" className="text-xs text-slate-300 cursor-pointer">
-                              I confirm that I have authority to execute this agreement on behalf of my organization,
-                              and agree to the terms, scope, and milestone payment schedules set forth above.
-                            </label>
-                          </div>
+                        )}
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="rounded-[2rem] border border-black/8 bg-white/95 p-12 text-center backdrop-blur-xl">
+                      <span className="text-4xl">📜</span>
+                      <h3 className="mt-3 text-lg font-bold text-slate-950">No Pending Contracts</h3>
+                      <p className="mt-1 text-xs text-slate-500 max-w-md mx-auto">
+                        All agreements for this sprint are up to date. Once a new milestone contract is created, it will appear here for signature.
+                      </p>
+                    </div>
+                  )}
+                </div>
+              )}
 
-                          <div className="rounded-2xl border border-sky-400/20 bg-slate-900/70 p-4">
-                            <h4 className="text-xs font-bold uppercase tracking-wider text-sky-300 mb-3">
-                              Draw or Type Your Signature Below
-                            </h4>
-                            <SignaturePad
-                              onSave={handleSaveSignature}
-                              defaultName={contract.client_name}
-                              isSaving={isSigning}
-                            />
-                          </div>
+              {/* TAB 6: PACKAGES & SPRINT EXPANSIONS */}
+              {activeTab === "packages" && (
+                <div className="space-y-6">
+                  <div className="rounded-[2rem] border border-black/8 bg-white/95 p-6 sm:p-8 backdrop-blur-xl shadow-md">
+                    <h3 className="text-xl font-bold text-slate-950">Available Packages & Sprint Expansions</h3>
+                    <p className="text-xs text-slate-500 mt-1">
+                      Expand your project with dedicated sprint modules, AI integrations, or speed optimization packages.
+                    </p>
 
-                          {contractSignedSuccess && (
-                            <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-4 text-center text-xs font-bold text-emerald-300">
-                              🎉 Agreement successfully signed and recorded!
+                    <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-3">
+                      {packages.map((pkg) => (
+                        <div
+                          key={pkg.id}
+                          className="flex flex-col justify-between rounded-3xl border border-black/8 bg-slate-50 p-6 transition hover:shadow-md"
+                        >
+                          <div>
+                            {pkg.badge && (
+                              <span className="inline-block rounded-md bg-sky-100 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-sky-900 border border-sky-300">
+                                {pkg.badge}
+                              </span>
+                            )}
+                            <h4 className="mt-2 text-lg font-bold text-slate-950">{pkg.name}</h4>
+                            <p className="mt-1 text-xs text-slate-500">{pkg.tagline}</p>
+                            <div className="mt-4 flex items-baseline gap-2">
+                              <span className="text-2xl font-black text-slate-950">${pkg.price_usd}</span>
+                              <span className="text-xs text-slate-500">USD / sprint</span>
                             </div>
-                          )}
+
+                            <ul className="mt-5 space-y-2 text-xs text-slate-700">
+                              {pkg.features.slice(0, 5).map((feat, i) => (
+                                <li key={i} className="flex items-center gap-2">
+                                  <span className="text-sky-600 font-bold">✓</span>
+                                  <span>{feat}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+
+                          <div className="mt-6 border-t border-black/8 pt-4">
+                            <Link
+                              href="/contact"
+                              className="block w-full rounded-xl bg-slate-950 py-2.5 text-center text-xs font-bold text-white transition hover:bg-slate-800 !no-underline"
+                            >
+                              Request Add-On Sprint →
+                            </Link>
+                          </div>
                         </div>
-                      )}
+                      ))}
                     </div>
                   </div>
-                ) : (
-                  <div className="rounded-3xl border border-sky-400/20 bg-slate-950/70 p-12 text-center backdrop-blur-xl">
-                    <span className="text-4xl">📜</span>
-                    <h3 className="mt-3 text-lg font-bold text-white">No Pending Contracts</h3>
-                    <p className="mt-1 text-xs text-slate-400 max-w-md mx-auto">
-                      All agreements for this active sprint are up to date. Once a new milestone contract is created, it will appear here for one-click signature.
-                    </p>
-                  </div>
-                )}
-              </div>
-            )}
-
-            {/* TAB 4: PACKAGES & SPRINT ADDONS */}
-            {activeTab === "packages" && (
-              <div className="space-y-6">
-                <div className="rounded-3xl border border-sky-400/20 bg-slate-950/70 p-6 backdrop-blur-xl">
-                  <h3 className="text-xl font-bold text-white">Available Packages & Sprint Expansions</h3>
-                  <p className="text-xs text-slate-400 mt-1">
-                    Expand your project with dedicated sprint modules, AI integrations, or speed optimization packages.
-                  </p>
-
-                  <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-3">
-                    {packages.map((pkg) => (
-                      <div
-                        key={pkg.id}
-                        className={`flex flex-col justify-between rounded-3xl border p-6 transition backdrop-blur-xl ${
-                          pkg.popular
-                            ? "border-sky-400/50 bg-gradient-to-b from-sky-950/40 to-slate-900/80 shadow-[0_0_30px_rgba(56,189,248,0.15)]"
-                            : "border-white/10 bg-slate-900/50 hover:border-sky-400/30"
-                        }`}
-                      >
-                        <div>
-                          {pkg.badge && (
-                            <span className="inline-block rounded-md bg-sky-500/20 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-sky-300 border border-sky-400/30">
-                              {pkg.badge}
-                            </span>
-                          )}
-                          <h4 className="mt-2 text-lg font-bold text-white">{pkg.name}</h4>
-                          <p className="mt-1 text-xs text-slate-400">{pkg.tagline}</p>
-                          <div className="mt-4 flex items-baseline gap-2">
-                            <span className="text-2xl font-extrabold text-white">${pkg.price_usd}</span>
-                            <span className="text-xs text-slate-400">USD / sprint</span>
-                          </div>
-
-                          <ul className="mt-5 space-y-2 text-xs text-slate-300">
-                            {pkg.features.slice(0, 5).map((feat, i) => (
-                              <li key={i} className="flex items-center gap-2">
-                                <span className="text-emerald-400">✓</span>
-                                <span>{feat}</span>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-
-                        <div className="mt-6 border-t border-white/10 pt-4">
-                          <Link
-                            href="/contact"
-                            className="block w-full rounded-xl bg-sky-500/20 py-2.5 text-center text-xs font-bold text-sky-200 border border-sky-400/30 transition hover:bg-sky-500/30"
-                          >
-                            Request Add-On Sprint →
-                          </Link>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
                 </div>
-              </div>
-            )}
-          </div>
-        )}
-      </main>
-    </div>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
+    </main>
   );
 }
