@@ -1313,7 +1313,12 @@ Features: ${featuresList.join(", ")}
       {/* 4. AESTHETIC PREVIEW MODAL                                    */}
       {/* ------------------------------------------------------------- */}
       {previewStyleModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 backdrop-blur-md">
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 backdrop-blur-md"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setPreviewStyleModal(null);
+          }}
+        >
           <div className="relative w-full max-w-2xl rounded-[2.4rem] border border-black/10 bg-white p-6 sm:p-8 shadow-2xl max-h-[85vh] overflow-y-auto">
             <button
               type="button"
@@ -1398,7 +1403,12 @@ Features: ${featuresList.join(", ")}
       {/* 5. "REQUEST THIS WEBSITE" PROJECT INTAKE & ONBOARDING DRAWER  */}
       {/* ------------------------------------------------------------- */}
       {showIntakeModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 backdrop-blur-md">
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 backdrop-blur-md"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setShowIntakeModal(false);
+          }}
+        >
           <div className="relative w-full max-w-xl rounded-[2.4rem] border border-black/10 bg-white p-6 sm:p-8 shadow-2xl max-h-[90vh] overflow-y-auto">
             <button
               type="button"
