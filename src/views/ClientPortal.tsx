@@ -11,12 +11,20 @@ import {
   deleteProjectAsset,
   signContract,
   getWebsitePackages,
+  getProjectChangeRequests,
+  submitChangeRequest,
   type ClientProject,
   type EContract,
   type ProjectAsset,
   type WebsitePackage,
+  type ChangeRequest,
   DEMO_CLIENT_PROJECT,
 } from "@/lib/portalServices";
+import {
+  openRazorpayCheckout,
+  RAZORPAY_TEST_CREDENTIALS,
+  type RazorpayPaymentSuccessResponse,
+} from "@/lib/razorpay";
 import SignaturePad from "@/components/SignaturePad";
 import Navbar from "@/components/Navbar";
 
@@ -38,12 +46,15 @@ export default function ClientPortal() {
   const [isDemoMode, setIsDemoMode] = useState(false);
 
   // Portal State
-  const [activeTab, setActiveTab] = useState<"overview" | "assets" | "contracts" | "packages">("overview");
+  const [activeTab, setActiveTab] = useState<"overview" | "payments" | "assets" | "contracts" | "changes" | "packages">("overview");
+  const [isPayingWithRazorpay, setIsPayingWithRazorpay] = useState(false);
+  const [paidReceipt, setPaidReceipt] = useState<{ paymentId: string; amount: number; date: string } | null>(null);
   const [projects, setProjects] = useState<ClientProject[]>([]);
   const [selectedProject, setSelectedProject] = useState<ClientProject | null>(null);
   const [contract, setContract] = useState<EContract | null>(null);
   const [assets, setAssets] = useState<ProjectAsset[]>([]);
   const [packages, setPackages] = useState<WebsitePackage[]>([]);
+  const [changeRequests, setChangeRequests] = useState<ChangeRequest[]>([]);
   const [loadingData, setLoadingData] = useState(true);
 
   // Asset Upload State
@@ -52,12 +63,19 @@ export default function ClientPortal() {
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState<string | null>(null);
 
+  // Change Request Submission State
+  const [newChangeTitle, setNewChangeTitle] = useState("");
+  const [newChangeDesc, setNewChangeDesc] = useState("");
+  const [newChangeCategory, setNewChangeCategory] = useState<ChangeRequest["category"]>("Design");
+  const [isSubmittingChange, setIsSubmittingChange] = useState(false);
+  const [changeSubmitSuccess, setChangeSubmitSuccess] = useState(false);
+
   // Contract Signature State
   const [isSigning, setIsSigning] = useState(false);
   const [contractSignedSuccess, setContractSignedSuccess] = useState(false);
   const [legalAgreed, setLegalAgreed] = useState(false);
 
-  // Load project, contract, assets, and packages when user or demo mode changes
+  // Load project, contract, assets, packages, and change requests when user or demo mode changes
   useEffect(() => {
     let isMounted = true;
     async function loadPortalData() {
@@ -78,13 +96,15 @@ export default function ClientPortal() {
         setSelectedProject(currentProj);
 
         if (currentProj) {
-          const [ctr, asts] = await Promise.all([
+          const [ctr, asts, chgReqs] = await Promise.all([
             getContractForProject(currentProj.id),
             getProjectAssets(currentProj.id),
+            getProjectChangeRequests(currentProj.id),
           ]);
           if (!isMounted) return;
           setContract(ctr);
           setAssets(asts);
+          setChangeRequests(chgReqs);
         }
       } catch (err) {
         console.error("Portal data loading error:", err);
@@ -214,6 +234,100 @@ export default function ClientPortal() {
     }
   };
 
+  // Change Request Submission Handler
+  const handleChangeSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!selectedProject || !newChangeTitle.trim() || !newChangeDesc.trim()) {
+      alert("Please fill in both the title and details for your change request.");
+      return;
+    }
+
+    setIsSubmittingChange(true);
+    try {
+      const created = await submitChangeRequest({
+        project_id: selectedProject.id,
+        client_email: user?.email || selectedProject.client_email || "client@demo.com",
+        title: newChangeTitle.trim(),
+        description: newChangeDesc.trim(),
+        category: newChangeCategory,
+      });
+      setChangeRequests((prev) => [created, ...prev]);
+      setNewChangeTitle("");
+      setNewChangeDesc("");
+      setChangeSubmitSuccess(true);
+      setTimeout(() => setChangeSubmitSuccess(false), 4000);
+    } catch (err) {
+      console.error("Change request submission error:", err);
+      alert("Failed to record change request. Please try again.");
+    } finally {
+      setIsSubmittingChange(false);
+    }
+  };
+
+  // Razorpay Checkout for Client Invoices / Retainers
+  const handlePayWithRazorpay = async (amount: number, description: string) => {
+    setIsPayingWithRazorpay(true);
+    try {
+      await openRazorpayCheckout({
+        amount: Math.round(amount * 100), // convert to paise
+        currency: "INR",
+        name: "Tanie Lalwani Studio",
+        description,
+        prefill: {
+          name: selectedProject?.client_name || RAZORPAY_TEST_CREDENTIALS.name,
+          email: user?.email || selectedProject?.client_email || RAZORPAY_TEST_CREDENTIALS.email,
+          contact: RAZORPAY_TEST_CREDENTIALS.phone,
+        },
+        notes: {
+          project_id: selectedProject?.id || "demo-project",
+          client_email: user?.email || "client@portal.com",
+        },
+        onSuccess: (res: RazorpayPaymentSuccessResponse) => {
+          setIsPayingWithRazorpay(false);
+          setPaidReceipt({
+            paymentId: res.razorpay_payment_id,
+            amount,
+            date: new Date().toLocaleDateString("en-IN", {
+              month: "short",
+              day: "numeric",
+              year: "numeric",
+              hour: "2-digit",
+              minute: "2-digit",
+            }),
+          });
+        },
+        onFailure: (err) => {
+          setIsPayingWithRazorpay(false);
+          const msg = "message" in err ? err.message : err.description || "Payment cancelled or failed.";
+          alert(msg);
+        },
+        onDismiss: () => {
+          setIsPayingWithRazorpay(false);
+        },
+      });
+    } catch (err: unknown) {
+      setIsPayingWithRazorpay(false);
+      alert((err as Error)?.message || "Failed to trigger Razorpay checkout.");
+    }
+  };
+
+  const handleFillReviewerCredentials = () => {
+    setAuthEmail(RAZORPAY_TEST_CREDENTIALS.email);
+    setAuthPassword(RAZORPAY_TEST_CREDENTIALS.password);
+    setAuthMode("login");
+  };
+
+  const handleQuickReviewerSignIn = async () => {
+    setIsSubmittingAuth(true);
+    try {
+      await signInWithPassword(RAZORPAY_TEST_CREDENTIALS.email, RAZORPAY_TEST_CREDENTIALS.password);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setIsSubmittingAuth(false);
+    }
+  };
+
   // Project Stage Order Helper
   const stages = ["Discovery", "Design", "Development", "Review", "Launch", "Completed"];
   const currentStageIndex = selectedProject ? stages.indexOf(selectedProject.status) : 0;
@@ -332,6 +446,50 @@ export default function ClientPortal() {
                   <p className="mt-1 text-xs text-slate-400">
                     Enter your registered email to access your active workspace.
                   </p>
+                </div>
+
+                {/* Razorpay Site Reviewer Test Credentials Quick Helper */}
+                <div className="mt-6 rounded-2xl border border-sky-400/40 bg-gradient-to-r from-sky-950/60 via-slate-900 to-indigo-950/40 p-4 shadow-inner">
+                  <div className="flex items-center justify-between gap-2 mb-2">
+                    <span className="text-[11px] font-black uppercase tracking-wider text-sky-300 flex items-center gap-1.5">
+                      <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+                      Razorpay Reviewer Quick Access
+                    </span>
+                    <span className="rounded bg-sky-500/20 text-sky-200 border border-sky-400/30 px-2 py-0.5 text-[10px] font-bold">
+                      Site Verification
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-slate-300 mb-3">
+                    Reviewing this site for Razorpay merchant verification? Use these pre-configured reviewer credentials:
+                  </p>
+                  <div className="rounded-xl bg-slate-950/80 p-2.5 font-mono text-xs border border-white/10 space-y-1 text-slate-300">
+                    <div>
+                      <span className="text-slate-500 select-none">Email: </span>
+                      <span className="text-sky-300 font-semibold">{RAZORPAY_TEST_CREDENTIALS.email}</span>
+                    </div>
+                    <div>
+                      <span className="text-slate-500 select-none">Password: </span>
+                      <span className="text-sky-300 font-semibold">{RAZORPAY_TEST_CREDENTIALS.password}</span>
+                    </div>
+                  </div>
+
+                  <div className="mt-3 grid grid-cols-2 gap-2">
+                    <button
+                      type="button"
+                      onClick={handleFillReviewerCredentials}
+                      className="rounded-lg border border-sky-400/30 bg-sky-500/10 py-1.5 text-xs font-bold text-sky-200 hover:bg-sky-500/20 transition cursor-pointer"
+                    >
+                      Fill Credentials
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleQuickReviewerSignIn}
+                      disabled={isSubmittingAuth}
+                      className="rounded-lg bg-gradient-to-r from-sky-500 to-indigo-600 py-1.5 text-xs font-bold text-white hover:brightness-110 shadow-sm transition cursor-pointer disabled:opacity-50"
+                    >
+                      ⚡ 1-Click Login
+                    </button>
+                  </div>
                 </div>
 
                 {/* Auth Mode Tabs */}
@@ -510,6 +668,8 @@ export default function ClientPortal() {
             <div className="mb-6 flex flex-wrap items-center gap-2 border-b border-white/10 pb-3">
               {[
                 { id: "overview", label: "Project Overview & Milestones", icon: "📊" },
+                { id: "payments", label: "Invoices & Razorpay Payment", icon: "💳", status: paidReceipt ? "Paid ✓" : "Pending Clearance" },
+                { id: "changes", label: "Changes & Requests", count: changeRequests.length, icon: "💬" },
                 { id: "assets", label: "Asset Dropzone & Media Hub", count: assets.length, icon: "📁" },
                 {
                   id: "contracts",
@@ -579,6 +739,55 @@ export default function ClientPortal() {
                       <div className="mt-1 text-xs text-emerald-400">On Track • Active Phase</div>
                     </div>
                   </div>
+
+                  {/* Project Aesthetic & Scope Badges */}
+                  <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-3 pt-4 border-t border-white/10">
+                    <div className="rounded-2xl border border-white/5 bg-slate-900/60 p-3">
+                      <div className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">Selected Visual Direction</div>
+                      <div className="mt-1 text-sm font-bold text-sky-300 flex items-center gap-1.5">
+                        <span>✨</span>
+                        <span>{selectedProject.selected_aesthetic || "Midnight Editorial"}</span>
+                      </div>
+                    </div>
+
+                    <div className="rounded-2xl border border-white/5 bg-slate-900/60 p-3">
+                      <div className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">Scope Foundation</div>
+                      <div className="mt-1 text-sm font-bold text-white flex items-center gap-1.5">
+                        <span>📐</span>
+                        <span className="capitalize">{selectedProject.scope_tier ? `${selectedProject.scope_tier} Tier` : "Business (4–7 Pages)"}</span>
+                      </div>
+                    </div>
+
+                    <div className="rounded-2xl border border-white/5 bg-slate-900/60 p-3">
+                      <div className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">Content Status</div>
+                      <div className="mt-1 text-sm font-bold text-teal-300 flex items-center gap-1.5">
+                        <span>📝</span>
+                        <span className="capitalize">{selectedProject.content_status || "Drafts Ready"}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Must-Haves & Dealbreakers if present */}
+                  {(selectedProject.must_haves || selectedProject.dealbreakers) && (
+                    <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
+                      {selectedProject.must_haves && (
+                        <div className="rounded-2xl border border-emerald-500/20 bg-emerald-950/20 p-3.5">
+                          <div className="text-xs font-bold text-emerald-400 flex items-center gap-1.5">
+                            <span>✓</span> Must-Have Features & Requirements
+                          </div>
+                          <p className="mt-1 text-xs text-slate-300 leading-relaxed">{selectedProject.must_haves}</p>
+                        </div>
+                      )}
+                      {selectedProject.dealbreakers && (
+                        <div className="rounded-2xl border border-rose-500/20 bg-rose-950/20 p-3.5">
+                          <div className="text-xs font-bold text-rose-400 flex items-center gap-1.5">
+                            <span>✕</span> Exclusions & Dealbreakers
+                          </div>
+                          <p className="mt-1 text-xs text-slate-300 leading-relaxed">{selectedProject.dealbreakers}</p>
+                        </div>
+                      )}
+                    </div>
+                  )}
 
                   {/* Stage Flow Stepper */}
                   <div className="mt-8 border-t border-white/10 pt-6">
@@ -754,6 +963,374 @@ export default function ClientPortal() {
                         Contact Tanie Lalwani →
                       </Link>
                     </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* TAB: INVOICES & RAZORPAY PAYMENT */}
+            {activeTab === "payments" && selectedProject && (
+              <div className="space-y-8">
+                {/* Success Receipt if paid */}
+                {paidReceipt && (
+                  <div className="rounded-3xl border border-emerald-500/40 bg-gradient-to-r from-emerald-950/40 via-slate-900 to-slate-950 p-6 sm:p-8 backdrop-blur-xl shadow-[0_0_40px_rgba(16,185,129,0.15)]">
+                    <div className="flex items-start gap-4">
+                      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-emerald-500/20 text-emerald-400 text-2xl border border-emerald-500/40">
+                        ✓
+                      </div>
+                      <div className="flex-1">
+                        <span className="inline-block rounded-full bg-emerald-500/20 border border-emerald-500/40 px-3 py-0.5 text-xs font-bold text-emerald-300 uppercase tracking-wider">
+                          Payment Cleared via Razorpay
+                        </span>
+                        <h3 className="mt-1 text-xl font-bold text-white">
+                          Invoice Settlement Complete
+                        </h3>
+                        <p className="text-xs text-slate-300 mt-1">
+                          Payment was recorded. Your project sprint discovery & design tokens are unlocked.
+                        </p>
+
+                        <div className="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-3 rounded-2xl bg-slate-950/80 p-4 border border-white/10 text-xs">
+                          <div>
+                            <span className="text-slate-400 block mb-0.5">Razorpay Payment ID:</span>
+                            <span className="font-mono font-bold text-sky-300 select-all">{paidReceipt.paymentId}</span>
+                          </div>
+                          <div>
+                            <span className="text-slate-400 block mb-0.5">Amount Settled:</span>
+                            <span className="font-bold text-emerald-300 text-sm">₹{paidReceipt.amount.toLocaleString()} INR</span>
+                          </div>
+                          <div>
+                            <span className="text-slate-400 block mb-0.5">Timestamp:</span>
+                            <span className="text-slate-300">{paidReceipt.date}</span>
+                          </div>
+                        </div>
+
+                        <div className="mt-4 flex gap-3">
+                          <button
+                            type="button"
+                            onClick={() => window.print()}
+                            className="rounded-xl border border-white/20 bg-white/5 px-4 py-2 text-xs font-semibold text-white hover:bg-white/10 transition"
+                          >
+                            🖨️ Print Receipt
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Main Invoice Card */}
+                <div className="grid grid-cols-1 gap-8 lg:grid-cols-12">
+                  <div className="lg:col-span-8 rounded-3xl border border-sky-400/30 bg-slate-950/80 p-6 sm:p-8 backdrop-blur-2xl shadow-xl">
+                    <div className="flex flex-wrap items-center justify-between gap-4 border-b border-white/10 pb-5">
+                      <div>
+                        <span className="inline-block rounded-md border border-sky-400/30 bg-sky-500/10 px-2.5 py-0.5 text-xs font-semibold uppercase tracking-wider text-sky-300">
+                          Active Sprint Invoice
+                        </span>
+                        <h3 className="mt-2 text-xl font-bold text-white">
+                          Milestone Retainer & Engineering Deposit
+                        </h3>
+                        <p className="text-xs text-slate-400 mt-0.5">
+                          Invoice #{selectedProject.id.toUpperCase()} • Issued to {selectedProject.client_name} ({selectedProject.client_email})
+                        </p>
+                      </div>
+
+                      <div className="text-right">
+                        <span className="text-xs uppercase tracking-wider text-slate-400 block">Total Agreed Scope</span>
+                        <span className="text-lg font-bold text-white">${selectedProject.budget_usd?.toLocaleString() || "3,499"} USD</span>
+                      </div>
+                    </div>
+
+                    {/* Breakdown */}
+                    <div className="mt-6 space-y-4 text-xs">
+                      <div className="flex items-center justify-between p-3.5 rounded-2xl bg-slate-900/70 border border-white/5">
+                        <div>
+                          <div className="font-bold text-white text-sm">Sprint Milestone 1: 50% Initial Retainer</div>
+                          <div className="text-slate-400 mt-0.5">Covers Discovery, Figma tokens, WebGL shader prototyping & sprint kickoff</div>
+                        </div>
+                        <div className="text-right">
+                          <div className="font-bold text-sky-300 text-base">₹1,44,500 INR</div>
+                          <div className="text-slate-400 text-[11px]">($1,749 USD)</div>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center justify-between p-3.5 rounded-2xl bg-slate-900/40 border border-white/5 text-slate-400">
+                        <div>
+                          <div className="font-semibold text-slate-300">Sprint Milestone 2: 50% Launch Clearance</div>
+                          <div className="text-[11px] mt-0.5">Due upon staging review approval & prior to DNS cutover</div>
+                        </div>
+                        <div className="text-right">
+                          <div className="font-semibold text-slate-300">₹1,44,500 INR</div>
+                          <div className="text-[11px]">($1,749 USD)</div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Action Buttons */}
+                    <div className="mt-8 pt-6 border-t border-white/10 flex flex-wrap items-center gap-4">
+                      <button
+                        type="button"
+                        onClick={() => handlePayWithRazorpay(144500, "50% Sprint Retainer Deposit - " + selectedProject.title)}
+                        disabled={isPayingWithRazorpay}
+                        className="rounded-2xl bg-gradient-to-r from-sky-500 via-sky-600 to-indigo-600 px-6 py-3.5 text-xs font-bold uppercase tracking-wider text-white shadow-lg shadow-sky-500/25 hover:brightness-110 transition cursor-pointer disabled:opacity-50 flex items-center gap-2"
+                      >
+                        {isPayingWithRazorpay ? (
+                          <>
+                            <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                            <span>Connecting Razorpay...</span>
+                          </>
+                        ) : (
+                          <>
+                            <span>💳 Pay 50% Retainer (₹1,44,500) via Razorpay</span>
+                          </>
+                        )}
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => handlePayWithRazorpay(1, "Razorpay Site Verification Reviewer Test Transaction - ₹1")}
+                        disabled={isPayingWithRazorpay}
+                        className="rounded-2xl border border-sky-400/40 bg-sky-500/10 px-4 py-3.5 text-xs font-bold text-sky-200 hover:bg-sky-500/20 transition cursor-pointer"
+                      >
+                        ⚡ Reviewer Test Transaction (₹1)
+                      </button>
+
+                      <Link
+                        href="/paywall"
+                        className="text-xs font-semibold text-slate-400 hover:text-white transition underline"
+                      >
+                        Open Full Paywall →
+                      </Link>
+                    </div>
+                  </div>
+
+                  {/* Sidebar Info */}
+                  <div className="lg:col-span-4 space-y-6">
+                    <div className="rounded-3xl border border-white/10 bg-slate-950/60 p-6 backdrop-blur-xl">
+                      <div className="flex items-center gap-2 text-sky-300 font-bold text-xs uppercase tracking-wider">
+                        <span>🔒</span>
+                        <span>Razorpay Payments Gateway</span>
+                      </div>
+                      <p className="mt-2 text-xs text-slate-300 leading-relaxed">
+                        All transactions are processed through Razorpay with 256-bit SSL encryption adhering to RBI security directives and PCI-DSS compliance.
+                      </p>
+
+                      <div className="mt-4 space-y-2 text-[11px] text-slate-400 border-t border-white/10 pt-3">
+                        <div className="flex items-center gap-1.5"><span className="text-emerald-400">✓</span><span>UPI, Credit/Debit Cards, NetBanking</span></div>
+                        <div className="flex items-center gap-1.5"><span className="text-emerald-400">✓</span><span>Instant Automated Invoicing</span></div>
+                        <div className="flex items-center gap-1.5"><span className="text-emerald-400">✓</span><span>Protected Milestone Escrow</span></div>
+                      </div>
+                    </div>
+
+                    <div className="rounded-3xl border border-white/10 bg-slate-900/40 p-5 text-xs text-slate-400 space-y-2">
+                      <div className="font-bold text-slate-200 uppercase tracking-wider text-[10px]">Statutory Compliance</div>
+                      <p className="text-[11px]">
+                        Review our verified policies:
+                      </p>
+                      <div className="flex flex-col gap-1.5 text-sky-400 underline">
+                        <Link href="/terms">Terms & Conditions</Link>
+                        <Link href="/refund-policy">Cancellation & Refund Policy</Link>
+                        <Link href="/privacy">Privacy Policy</Link>
+                        <Link href="/shipping-policy">Delivery Policy</Link>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* TAB: CHANGES & REVISIONS LOG */}
+            {activeTab === "changes" && selectedProject && (
+              <div className="space-y-6">
+                {/* Submission Form */}
+                <div className="rounded-3xl border border-sky-400/20 bg-slate-950/70 p-6 backdrop-blur-xl sm:p-8">
+                  <div className="flex flex-wrap items-start justify-between gap-4 border-b border-white/10 pb-5">
+                    <div>
+                      <h3 className="text-xl font-bold text-white flex items-center gap-2">
+                        <span>💬</span> Submit a Change Request or Feedback
+                      </h3>
+                      <p className="mt-1 text-xs text-slate-300">
+                        Request design adjustments (e.g. typography sizing, color mood), button behaviors, content swaps, or scope inquiries.
+                      </p>
+                    </div>
+                    <div className="rounded-full border border-sky-400/30 bg-sky-500/10 px-3 py-1 text-xs font-semibold text-sky-300">
+                      ⚡ Active Sprint Log
+                    </div>
+                  </div>
+
+                  <form onSubmit={handleChangeSubmit} className="mt-6 space-y-4">
+                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+                      <div className="sm:col-span-2">
+                        <label className="block text-xs font-medium uppercase tracking-wider text-slate-300 mb-1">
+                          Request Summary / Title *
+                        </label>
+                        <input
+                          type="text"
+                          value={newChangeTitle}
+                          onChange={(e) => setNewChangeTitle(e.target.value)}
+                          placeholder="e.g. Can we make the hero section less dark? / Make primary buttons rounded"
+                          required
+                          className="w-full rounded-xl border border-white/10 bg-slate-900 px-4 py-2.5 text-xs text-white placeholder-slate-500 focus:border-sky-400 focus:outline-none"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-xs font-medium uppercase tracking-wider text-slate-300 mb-1">
+                          Category
+                        </label>
+                        <select
+                          value={newChangeCategory}
+                          onChange={(e) => setNewChangeCategory(e.target.value as any)}
+                          className="w-full rounded-xl border border-white/10 bg-slate-900 px-4 py-2.5 text-xs text-white focus:border-sky-400 focus:outline-none"
+                        >
+                          <option value="Design">Design & Visual Aesthetic</option>
+                          <option value="Content">Content & Copy Swap</option>
+                          <option value="Feature">Interactive Feature</option>
+                          <option value="Bug / Fix">Fix / Visual Bug</option>
+                          <option value="Other">Scope / Addon / Other</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-medium uppercase tracking-wider text-slate-300 mb-1">
+                        Detailed Description & Instructions *
+                      </label>
+                      <textarea
+                        rows={3}
+                        value={newChangeDesc}
+                        onChange={(e) => setNewChangeDesc(e.target.value)}
+                        placeholder="Describe the exact change you'd like made, which page or component it affects, and any reference URLs or assets uploaded."
+                        required
+                        className="w-full rounded-xl border border-white/10 bg-slate-900 px-4 py-2.5 text-xs text-white placeholder-slate-500 focus:border-sky-400 focus:outline-none resize-none"
+                      />
+                    </div>
+
+                    <div className="flex flex-wrap items-center justify-between gap-4 pt-2">
+                      <div className="text-[11px] text-slate-400 flex items-center gap-1.5">
+                        <span>💡</span>
+                        <span>Tip: Upload reference files or screenshots to the Asset Dropzone for faster implementation.</span>
+                      </div>
+
+                      <button
+                        type="submit"
+                        disabled={isSubmittingChange}
+                        className="rounded-xl bg-gradient-to-r from-sky-400 to-cyan-500 px-6 py-2.5 text-xs font-bold uppercase tracking-wider text-slate-950 shadow-[0_0_16px_rgba(56,189,248,0.3)] transition hover:brightness-110 disabled:opacity-50"
+                      >
+                        {isSubmittingChange ? "Submitting Request..." : "Submit Change Request →"}
+                      </button>
+                    </div>
+
+                    {changeSubmitSuccess && (
+                      <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-3 text-xs font-bold text-emerald-300 text-center animate-fadeIn">
+                        ✓ Change request logged to developer sprint queue! Status will update shortly.
+                      </div>
+                    )}
+                  </form>
+                </div>
+
+                {/* Change Requests History */}
+                <div className="rounded-3xl border border-sky-400/20 bg-slate-950/70 p-6 backdrop-blur-xl sm:p-8">
+                  <div className="flex items-center justify-between border-b border-white/10 pb-4">
+                    <div>
+                      <h3 className="text-lg font-bold text-white">Project Change Log & Requests ({changeRequests.length})</h3>
+                      <p className="text-xs text-slate-400">Track real-time status and developer feedback on your submitted requests</p>
+                    </div>
+                  </div>
+
+                  <div className="mt-6 space-y-4">
+                    {changeRequests.length > 0 ? (
+                      changeRequests.map((req) => {
+                        const statusStyles: Record<string, { bg: string; text: string; label: string; border: string }> = {
+                          pending: {
+                            bg: "bg-amber-500/15",
+                            text: "text-amber-300",
+                            border: "border-amber-500/30",
+                            label: "Pending Review",
+                          },
+                          "in-review": {
+                            bg: "bg-sky-500/15",
+                            text: "text-sky-300",
+                            border: "border-sky-500/30",
+                            label: "In Review",
+                          },
+                          in_review: {
+                            bg: "bg-sky-500/15",
+                            text: "text-sky-300",
+                            border: "border-sky-500/30",
+                            label: "In Review",
+                          },
+                          in_progress: {
+                            bg: "bg-indigo-500/15",
+                            text: "text-indigo-300",
+                            border: "border-indigo-500/30",
+                            label: "In Progress ⚡",
+                          },
+                          implemented: {
+                            bg: "bg-emerald-500/15",
+                            text: "text-emerald-300",
+                            border: "border-emerald-500/30",
+                            label: "Implemented ✓",
+                          },
+                          rejected: {
+                            bg: "bg-rose-500/15",
+                            text: "text-rose-300",
+                            border: "border-rose-500/30",
+                            label: "Declined",
+                          },
+                        };
+
+                        const currentStyle = statusStyles[req.status] || statusStyles.pending;
+
+                        return (
+                          <div
+                            key={req.id}
+                            className="rounded-2xl border border-white/8 bg-slate-900/60 p-5 transition hover:border-sky-400/30 shadow-md"
+                          >
+                            <div className="flex flex-wrap items-start justify-between gap-2">
+                              <div className="space-y-1">
+                                <div className="flex items-center gap-2">
+                                  <span className="rounded-md bg-white/5 border border-white/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-slate-300">
+                                    {(req.category || "Design").replace("_", " ")}
+                                  </span>
+                                  <span className="text-[11px] text-slate-400">
+                                    {new Date(req.created_at).toLocaleDateString("en-US", {
+                                      month: "short",
+                                      day: "numeric",
+                                      year: "numeric",
+                                    })}
+                                  </span>
+                                </div>
+                                <h4 className="text-sm font-bold text-white">{req.title}</h4>
+                              </div>
+
+                              <span
+                                className={`rounded-full border px-3 py-1 text-xs font-bold ${currentStyle.bg} ${currentStyle.text} ${currentStyle.border}`}
+                              >
+                                {currentStyle.label}
+                              </span>
+                            </div>
+
+                            <p className="mt-3 text-xs text-slate-300 leading-relaxed whitespace-pre-line">
+                              {req.description}
+                            </p>
+
+                            {req.admin_reply && (
+                              <div className="mt-4 rounded-xl border border-sky-400/20 bg-sky-950/30 p-3.5 text-xs">
+                                <div className="font-semibold text-sky-300 flex items-center gap-1.5 mb-1">
+                                  <span>👨‍💻</span> Developer Response / Sprint Update:
+                                </div>
+                                <p className="text-slate-300 leading-relaxed">{req.admin_reply}</p>
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })
+                    ) : (
+                      <div className="py-12 text-center text-xs text-slate-400">
+                        <span className="text-3xl block mb-2">✨</span>
+                        No change requests logged yet. Use the form above if you have any tweaks, styling refinements, or copy updates!
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>

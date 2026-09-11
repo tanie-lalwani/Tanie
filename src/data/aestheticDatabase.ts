@@ -54,6 +54,8 @@ export interface AestheticStyle {
     textColor: string;
     badgeText: string;
   };
+  vibeSummary?: string;
+  vibeKeywords?: string[];
 }
 
 export interface QuestionOption {
@@ -1137,58 +1139,120 @@ export interface WizardAnswers {
   company_name?: string;
 }
 
+export interface CuratedAestheticMatch {
+  style: AestheticStyle;
+  matchScore: number;
+  matchReason: string;
+}
+
+export function calculateMultipleAestheticRecommendations(answers: Partial<WizardAnswers>): {
+  matches: CuratedAestheticMatch[];
+  matchedFlow: FunctionalFlow;
+} {
+  const rankedMatches: CuratedAestheticMatch[] = AESTHETIC_STYLES.map((style) => {
+    let score = 82; // baseline
+
+    // Vibe matching
+    if (answers.vibe) {
+      const v = answers.vibe.toLowerCase();
+      if (
+        (v.includes("luxury") || v.includes("dark")) &&
+        (style.id === "dark-mode-luxury" || style.id === "minimalist-swiss-editorial" || style.id === "3d-spatial-architecture")
+      ) {
+        score += 15;
+      } else if (
+        (v.includes("glass") || v.includes("minimal") || v.includes("elegant")) &&
+        (style.id === "liquid-glassmorphism" || style.id === "minimalist-swiss-editorial" || style.id === "ethereal-ambient-mist")
+      ) {
+        score += 14;
+      } else if (
+        (v.includes("bold") || v.includes("playful")) &&
+        (style.id === "neo-brutalist-pop" || style.id === "claymorphism-soft-3d" || style.id === "y2k-retro-chromecore")
+      ) {
+        score += 15;
+      } else if (
+        (v.includes("cyber") || v.includes("futuristic") || v.includes("tech")) &&
+        (style.id === "cyberpunk-obsidian-glow" || style.id === "3d-spatial-architecture" || style.id === "bento-grid-modern-ui")
+      ) {
+        score += 15;
+      } else if (
+        (v.includes("organic") || v.includes("warm")) &&
+        (style.id === "organic-pastel-serene" || style.id === "minimalist-swiss-editorial")
+      ) {
+        score += 15;
+      } else if (
+        v.includes("editorial") &&
+        (style.id === "minimalist-swiss-editorial" || style.id === "kinetic-typography-story" || style.id === "dark-mode-luxury")
+      ) {
+        score += 16;
+      }
+    }
+
+    // Industry / Purpose matching
+    if (answers.industry) {
+      const ind = answers.industry.toLowerCase();
+      if (
+        (ind.includes("saas") || ind.includes("agency") || ind.includes("business")) &&
+        (style.id === "bento-grid-modern-ui" || style.id === "liquid-glassmorphism")
+      ) {
+        score += 8;
+      } else if (
+        (ind.includes("portfolio") || ind.includes("personal") || ind.includes("restaurant")) &&
+        (style.id === "minimalist-swiss-editorial" || style.id === "dark-mode-luxury" || style.id === "organic-pastel-serene")
+      ) {
+        score += 8;
+      } else if (
+        (ind.includes("3d") || ind.includes("hardware") || ind.includes("architecture")) &&
+        style.id === "3d-spatial-architecture"
+      ) {
+        score += 10;
+      }
+    }
+
+    // Visitor feeling bonus
+    if (answers.scope) {
+      score += 2;
+    }
+
+    // Cap at 99%
+    const finalScore = Math.min(99, Math.max(78, score));
+    const reason = `Tailored for ${answers.vibe || "modern"} vibe & ${answers.industry || "brand"} architecture`;
+
+    return {
+      style,
+      matchScore: finalScore,
+      matchReason: reason
+    };
+  });
+
+  // Sort by highest score first
+  rankedMatches.sort((a, b) => b.matchScore - a.matchScore);
+
+  const topMatches = rankedMatches.slice(0, 6);
+  const primary = topMatches[0]?.style || AESTHETIC_STYLES[0];
+  const matchedFlow = FUNCTIONAL_FLOWS.find((f) => f.id === (answers.flow || primary.recommendedFlowId)) || FUNCTIONAL_FLOWS[0];
+
+  return {
+    matches: topMatches,
+    matchedFlow
+  };
+}
+
 export function calculateAestheticRecommendation(answers: Partial<WizardAnswers>): {
   primaryStyle: AestheticStyle;
   matchedFlow: FunctionalFlow;
   alternativeStyles: AestheticStyle[];
   matchScore: number;
 } {
-  // Determine Primary Style
-  let primaryStyle = AESTHETIC_STYLES[0]; // fallback
-  if (answers.vibe === "3d-interactive" || answers.industry === "interactive-3d") {
-    primaryStyle = AESTHETIC_STYLES.find((s) => s.id === "3d-spatial-architecture") || AESTHETIC_STYLES[0];
-  } else if (answers.vibe === "glassmorphism" || answers.industry === "saas-webapp") {
-    primaryStyle = AESTHETIC_STYLES.find((s) => s.id === "liquid-glassmorphism") || AESTHETIC_STYLES[1];
-  } else if (answers.vibe === "swiss-editorial" || answers.industry === "portfolio-studio") {
-    primaryStyle = AESTHETIC_STYLES.find((s) => s.id === "minimalist-swiss-editorial") || AESTHETIC_STYLES[2];
-  } else if (answers.vibe === "bento-grid") {
-    primaryStyle = AESTHETIC_STYLES.find((s) => s.id === "bento-grid-modern-ui") || AESTHETIC_STYLES[3];
-  } else if (answers.vibe === "neo-brutalist" || answers.industry === "landing-launchpad") {
-    primaryStyle = AESTHETIC_STYLES.find((s) => s.id === "neo-brutalist-pop") || AESTHETIC_STYLES[4];
-  } else if (answers.vibe === "cyberpunk") {
-    primaryStyle = AESTHETIC_STYLES.find((s) => s.id === "cyberpunk-obsidian-glow") || AESTHETIC_STYLES[5];
-  } else if (answers.vibe === "dark-mode-luxury") {
-    primaryStyle = AESTHETIC_STYLES.find((s) => s.id === "dark-mode-luxury") || AESTHETIC_STYLES[6];
-  } else if (answers.vibe === "organic-warm" || answers.industry === "ecommerce-flagship") {
-    primaryStyle = AESTHETIC_STYLES.find((s) => s.id === "organic-pastel-serene") || AESTHETIC_STYLES[7];
-  } else if (answers.vibe === "y2k-retro") {
-    primaryStyle = AESTHETIC_STYLES.find((s) => s.id === "y2k-retro-chromecore") || AESTHETIC_STYLES[8];
-  } else if (answers.vibe === "kinetic-typography" || answers.industry === "scroll-narrative") {
-    primaryStyle = AESTHETIC_STYLES.find((s) => s.id === "kinetic-typography-story") || AESTHETIC_STYLES[9];
-  } else if (answers.vibe === "ethereal") {
-    primaryStyle = AESTHETIC_STYLES.find((s) => s.id === "ethereal-ambient-mist") || AESTHETIC_STYLES[10];
-  } else if (answers.vibe === "claymorphism") {
-    primaryStyle = AESTHETIC_STYLES.find((s) => s.id === "claymorphism-soft-3d") || AESTHETIC_STYLES[11];
-  } else if (answers.industry === "client-portal") {
-    primaryStyle = AESTHETIC_STYLES.find((s) => s.id === "bento-grid-modern-ui") || AESTHETIC_STYLES[3];
-  }
-
-  // Determine Matched Flow
-  const targetFlowId = answers.flow || primaryStyle.recommendedFlowId;
-  const matchedFlow = FUNCTIONAL_FLOWS.find((f) => f.id === targetFlowId) || FUNCTIONAL_FLOWS[0];
-
-  // Alternative Styles
-  const alternativeStyles = AESTHETIC_STYLES.filter((s) => s.id !== primaryStyle.id).slice(0, 3);
-
-  // Match score calculation
-  let score = 94;
-  if (answers.industry && answers.vibe && answers.flow) score = 99;
-  else if (answers.industry && answers.vibe) score = 96;
+  const { matches, matchedFlow } = calculateMultipleAestheticRecommendations(answers);
+  const primaryStyle = matches[0]?.style || AESTHETIC_STYLES[0];
+  const alternativeStyles = matches.slice(1, 4).map((m) => m.style);
 
   return {
     primaryStyle,
     matchedFlow,
     alternativeStyles,
-    matchScore: score
+    matchScore: matches[0]?.matchScore || 96
   };
 }
+

@@ -47,6 +47,14 @@ export interface ClientProject {
   title: string;
   description?: string;
   package_id?: string;
+  selected_aesthetic?: string;
+  scope_tier?: string;
+  pages_count?: string;
+  features_requested?: string[];
+  content_status?: string;
+  references?: string;
+  must_haves?: string;
+  dealbreakers?: string;
   status: "Discovery" | "Design" | "Development" | "Review" | "Launch" | "Completed" | "On Hold";
   progress_percent: number;
   budget_usd?: number;
@@ -59,6 +67,19 @@ export interface ClientProject {
   deliverables: ProjectDeliverable[];
   created_at: string;
   updated_at?: string;
+}
+
+export interface ChangeRequest {
+  id: string;
+  project_id: string;
+  client_email?: string;
+  title: string;
+  description: string;
+  category?: "Design" | "Content" | "Feature" | "Bug / Fix" | "Other";
+  status: "pending" | "in-review" | "implemented" | "rejected";
+  created_at: string;
+  resolved_at?: string;
+  admin_reply?: string;
 }
 
 export interface EContract {
@@ -299,9 +320,54 @@ export const DEMO_ASSETS: ProjectAsset[] = [
   }
 ];
 
-// --------------------------------------------------------------------------------
-// SERVICE FUNCTIONS (SUPABASE + RESILIENT FALLBACK)
-// --------------------------------------------------------------------------------
+export const REVIEWER_CLIENT_PROJECT: ClientProject = {
+  id: "reviewer-project-001",
+  client_email: "wordsofvoice2210@gmail.com",
+  client_name: "Words of Voice (Razorpay Verification)",
+  company_name: "Razorpay Compliance & Audit",
+  title: "Aesthetic Brand Engineering & Retainer Checkout",
+  description: "Verified client engineering workspace for review of milestones, digital agreements, and Razorpay live payment gateway integration.",
+  package_id: "interactive-3d-experience",
+  status: "Development",
+  progress_percent: 75,
+  budget_usd: 3499,
+  budget_inr: 289000,
+  target_launch_date: "2026-10-15",
+  live_preview_url: "https://tanie.me/paywall",
+  figma_url: "https://figma.com",
+  github_repo: "https://github.com/tanie-lalwani",
+  milestones: [
+    { id: "rm1", title: "Site Architecture & Discovery", description: "Design tokens, color swatches & interactive WebGL physics specifications.", status: "completed" },
+    { id: "rm2", title: "Frontend Layout & Animations", description: "Next.js App Router components, Tailwind styles & Framer Motion transitions.", status: "completed" },
+    { id: "rm3", title: "Razorpay Gateway & Security Paywall", description: "Payment order creation, HMAC signature validation & reviewer test credentials.", status: "in-progress" },
+    { id: "rm4", title: "Client Review & QA Signoff", description: "Lighthouse 98+ score audit, cross-browser responsiveness & contract execution.", status: "pending" },
+    { id: "rm5", title: "Final Launch & Handover", description: "Custom domain DNS mapping, Vercel edge deployment & IP transfer.", status: "pending" }
+  ],
+  deliverables: [
+    { id: "rd1", title: "Production Staging Link", url: "https://tanie.me", type: "preview", added_at: "2026-09-01" },
+    { id: "rd2", title: "Figma UI Kit & Design Matrix", url: "https://figma.com", type: "figma", added_at: "2026-09-02" },
+    { id: "rd3", title: "Source Code Repository", url: "https://github.com/tanie-lalwani", type: "github", added_at: "2026-09-05" }
+  ],
+  created_at: "2026-09-01T09:00:00Z"
+};
+
+export const REVIEWER_CONTRACT: EContract = {
+  id: "reviewer-contract-001",
+  project_id: "reviewer-project-001",
+  client_email: "wordsofvoice2210@gmail.com",
+  client_name: "Words of Voice (Razorpay Verification)",
+  package_name: "3D Interactive & Brand Experience Sprint",
+  scope_summary: "Bespoke high-performance Next.js creative portfolio with WebGL canvas, Razorpay live payment checkout, e-contract signing pad, and client portal.",
+  total_amount_usd: 3499,
+  payment_terms: "50% upfront sprint retainer via Razorpay, 50% upon final production launch approval.",
+  legal_terms: `1. ENGAGEMENT & SCOPE: Tanie Lalwani ("Developer") agrees to engineer bespoke web solutions as outlined in the active sprint agreement.
+2. PAYMENT VIA RAZORPAY: All payments and retainers are processed securely through Razorpay gateway in accordance with RBI compliance standards.
+3. INTELLECTUAL PROPERTY: Full source code and asset rights transfer to Client upon milestone fee clearance.
+4. WARRANTY & SUPPORT: Developer provides a 30-day post-launch hypercare warranty.`,
+  status: "sent",
+  created_at: "2026-09-01T10:00:00Z"
+};
+
 
 /**
  * Fetch all active website packages
@@ -345,6 +411,11 @@ export async function saveWebsitePackage(pkg: WebsitePackage): Promise<void> {
  * Fetch projects for a specific client email
  */
 export async function getClientProjects(email: string): Promise<ClientProject[]> {
+  const cleanEmail = (email || "").trim().toLowerCase();
+  if (cleanEmail === "wordsofvoice2210@gmail.com") {
+    return [REVIEWER_CLIENT_PROJECT];
+  }
+
   try {
     if (!isSupabaseConfigured() || !email) {
       return [DEMO_CLIENT_PROJECT];
@@ -352,7 +423,7 @@ export async function getClientProjects(email: string): Promise<ClientProject[]>
     const { data, error } = await supabase
       .from("projects")
       .select("*")
-      .eq("client_email", email.trim().toLowerCase())
+      .eq("client_email", cleanEmail)
       .order("created_at", { ascending: false });
 
     if (error || !data || data.length === 0) {
@@ -442,6 +513,10 @@ export async function updateProject(projectId: string, updates: Partial<ClientPr
  * Fetch contract for a project
  */
 export async function getContractForProject(projectId: string): Promise<EContract | null> {
+  if (projectId === "reviewer-project-001") {
+    return REVIEWER_CONTRACT;
+  }
+
   try {
     if (!isSupabaseConfigured()) {
       return DEMO_CONTRACT;
@@ -867,4 +942,112 @@ export async function submitBooking(booking: BookingSubmission): Promise<{ succe
     return { success: true };
   }
 }
+
+// --------------------------------------------------------------------------------
+// CHANGE REQUESTS & PROJECT REVISION LOG
+// --------------------------------------------------------------------------------
+
+export const DEMO_CHANGE_REQUESTS: ChangeRequest[] = [
+  {
+    id: "cr-001",
+    project_id: "demo-project-001",
+    client_email: "client@demo.com",
+    title: "Can we make the hero 3D particle speed slightly more reactive?",
+    description: "The current drift is great, but we'd love the interactive mouse repelling effect to be slightly more responsive on desktop screens.",
+    category: "Design",
+    status: "in-review",
+    created_at: "2026-08-25T11:20:00Z",
+    admin_reply: "Looking into the particle damping coefficient now. Will deploy an updated staging preview shortly!"
+  },
+  {
+    id: "cr-002",
+    project_id: "demo-project-001",
+    client_email: "client@demo.com",
+    title: "Update founder bio copy in about section",
+    description: "Please replace the second paragraph with the updated copy doc uploaded to the asset dropzone.",
+    category: "Content",
+    status: "implemented",
+    created_at: "2026-08-22T09:15:00Z",
+    resolved_at: "2026-08-23T14:00:00Z",
+    admin_reply: "Updated with the new copy from Aetheria_Brand_Copy_v2.docx."
+  }
+];
+
+export async function getProjectChangeRequests(projectId?: string): Promise<ChangeRequest[]> {
+  if (isSupabaseConfigured() && projectId) {
+    try {
+      const { data, error } = await supabase
+        .from("change_requests")
+        .select("*")
+        .eq("project_id", projectId)
+        .order("created_at", { ascending: false });
+
+      if (!error && data && data.length > 0) {
+        return data as ChangeRequest[];
+      }
+    } catch (e) {
+      console.warn("Using fallback change requests:", e);
+    }
+  }
+  return DEMO_CHANGE_REQUESTS;
+}
+
+export async function submitChangeRequest(
+  req: Omit<ChangeRequest, "id" | "created_at" | "status">
+): Promise<ChangeRequest> {
+  const newReq: ChangeRequest = {
+    ...req,
+    id: `cr-${Date.now()}`,
+    status: "pending",
+    created_at: new Date().toISOString()
+  };
+
+  if (isSupabaseConfigured()) {
+    try {
+      const { data, error } = await supabase
+        .from("change_requests")
+        .insert([newReq])
+        .select()
+        .single();
+
+      if (!error && data) {
+        return data as ChangeRequest;
+      }
+    } catch (err) {
+      console.error("Supabase change request error:", err);
+    }
+  }
+
+  DEMO_CHANGE_REQUESTS.unshift(newReq);
+  return newReq;
+}
+
+export async function updateChangeRequestStatus(
+  id: string,
+  status: ChangeRequest["status"],
+  admin_reply?: string
+): Promise<void> {
+  if (isSupabaseConfigured()) {
+    try {
+      await supabase
+        .from("change_requests")
+        .update({
+          status,
+          admin_reply,
+          resolved_at: status === "implemented" ? new Date().toISOString() : undefined
+        })
+        .eq("id", id);
+    } catch (err) {
+      console.error("Update change request error:", err);
+    }
+  }
+
+  const item = DEMO_CHANGE_REQUESTS.find((r) => r.id === id);
+  if (item) {
+    item.status = status;
+    if (admin_reply) item.admin_reply = admin_reply;
+    if (status === "implemented") item.resolved_at = new Date().toISOString();
+  }
+}
+
 
