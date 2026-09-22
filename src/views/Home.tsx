@@ -359,36 +359,36 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
         >
-          <header className="relative max-w-[40rem]">
+          <header className="relative max-w-[48rem]">
             <motion.h1
               id="home-title"
-              className="hero-title-lockup relative mt-1 inline-flex w-fit items-start gap-x-[0.5rem] text-4xl font-bold tracking-normal text-[#F4F1EE] sm:mt-0 sm:gap-x-[0.65rem] sm:text-5xl md:gap-x-[0.8rem] md:text-6xl lg:gap-x-[0.95rem] lg:text-7xl"
+              className="hero-title-lockup relative mt-1 inline-flex w-fit items-start gap-x-[0.6rem] text-5xl font-bold tracking-normal text-[#F4F1EE] sm:mt-0 sm:gap-x-[0.8rem] sm:text-6xl md:gap-x-[1rem] md:text-7xl lg:gap-x-[1.2rem] lg:text-8xl xl:text-[6.25rem]"
               style={{ fontFamily: "var(--font-display)", lineHeight: 1 }}
               aria-label={`${copy.home.heroTitle} ${copy.home.heroRole}`}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
             >
-              <span className="relative inline-block pb-[0.055em] sm:pb-[0.04em] md:pb-[0.03em] lg:pb-[0.02em]" aria-hidden="true">
+              <span className="relative inline-block pb-[0.06em] sm:pb-[0.045em] md:pb-[0.035em] lg:pb-[0.025em]" aria-hidden="true">
                 <span ref={heroLeadTitleRef} className="inline-block">{heroTitleLead}</span>
                 {heroRoleLead ? (
                   <span
                     ref={heroLeadRoleRef}
-                    className="hero-title-role hero-title-role--lead absolute bottom-0 inline-block text-[0.48rem] font-medium leading-none sm:text-[0.58rem] md:text-[0.64rem] lg:text-[0.7rem]"
-                    style={createHeroRoleStyle(heroRoleLayout.lead)}
+                    className="hero-title-role hero-title-role--lead absolute bottom-0 inline-block text-[0.52rem] font-bold leading-none sm:text-[0.64rem] md:text-[0.74rem] lg:text-[0.84rem] !text-[#0a192f]"
+                    style={{ ...createHeroRoleStyle(heroRoleLayout.lead), color: '#0a192f', opacity: 1 }}
                   >
                     {heroRoleLead}
                   </span>
                 ) : null}
               </span>
               {heroTitleTail ? (
-                <span className="relative inline-block pb-[0.055em] sm:pb-[0.04em] md:pb-[0.03em] lg:pb-[0.02em]" aria-hidden="true">
+                <span className="relative inline-block pb-[0.06em] sm:pb-[0.045em] md:pb-[0.035em] lg:pb-[0.025em]" aria-hidden="true">
                   <span ref={heroTailTitleRef} className="inline-block">{heroTitleTail}</span>
                   {heroRoleTail ? (
                     <span
                       ref={heroTailRoleRef}
-                      className="hero-title-role hero-title-role--tail absolute bottom-0 inline-block text-[0.48rem] font-medium leading-none sm:text-[0.58rem] md:text-[0.64rem] lg:text-[0.7rem]"
-                      style={createHeroRoleStyle(heroRoleLayout.tail)}
+                      className="hero-title-role hero-title-role--tail absolute bottom-0 inline-block text-[0.52rem] font-bold leading-none sm:text-[0.64rem] md:text-[0.74rem] lg:text-[0.84rem] !text-[#0a192f]"
+                      style={{ ...createHeroRoleStyle(heroRoleLayout.tail), color: '#0a192f', opacity: 1 }}
                     >
                       {heroRoleTail}
                     </span>
@@ -398,14 +398,14 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
             </motion.h1>
 
             <motion.div
-              className="mt-[2.25rem] max-w-[35.5rem] translate-x-[4px] text-[1.12rem] sm:text-[1.25rem] font-semibold leading-[1.3] tracking-normal text-[#0a192f]"
+              className="mt-[2.25rem] max-w-[40rem] translate-x-[4px] text-[1.25rem] sm:text-[1.45rem] font-bold leading-[1.3] tracking-normal text-[#0a192f]"
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.45, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
             >
               <p className="block">{heroLead || "Let’s make your website your best salesperson."}</p>
               {heroSubline ? (
-                <p className="mt-1 block w-full text-[0.94em] leading-[1.2] tracking-[0.02em] text-[#0a192f]/80">
+                <p className="mt-1 block w-full text-[0.92em] leading-[1.2] tracking-[0.02em] text-[#0a192f]/85">
                   {heroSubline}
                 </p>
               ) : null}
@@ -414,18 +414,20 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
               <div className="mt-6 flex flex-wrap items-center gap-3">
                 <Link
                   href="/projects"
-                  className="px-7 py-3 rounded-full bg-[#0a192f] hover:bg-slate-800 text-white font-bold text-xs uppercase tracking-wider transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer no-underline"
+                  className="px-8 py-3.5 rounded-full !bg-[#0a192f] hover:!bg-slate-800 !text-white font-bold text-xs uppercase tracking-wider transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer !no-underline select-none"
+                  style={{ color: "#ffffff", textDecoration: "none" }}
                 >
-                  <span>Work</span>
-                  <span>→</span>
+                  <span className="!text-white !no-underline font-bold tracking-wider" style={{ color: "#ffffff", textDecoration: "none" }}>Work</span>
+                  <span className="!text-white font-bold" style={{ color: "#ffffff", textDecoration: "none" }}>→</span>
                 </Link>
 
                 <Link
                   href="/pricing"
-                  className="px-7 py-3 rounded-full bg-[#c8ecff]/50 hover:bg-[#c8ecff]/80 text-[#0a192f] border border-sky-300 font-bold text-xs uppercase tracking-wider transition-all shadow-xs flex items-center justify-center gap-2 cursor-pointer no-underline"
+                  className="px-8 py-3.5 rounded-full !bg-[#c8ecff]/60 hover:!bg-[#c8ecff]/90 !text-[#0a192f] border border-sky-400 font-bold text-xs uppercase tracking-wider transition-all shadow-xs flex items-center justify-center gap-2 cursor-pointer !no-underline select-none"
+                  style={{ color: "#0a192f", textDecoration: "none" }}
                 >
-                  <span>Pricing</span>
-                  <span>→</span>
+                  <span className="!text-[#0a192f] !no-underline font-bold tracking-wider" style={{ color: "#0a192f", textDecoration: "none" }}>Pricing</span>
+                  <span className="!text-[#0a192f] font-bold" style={{ color: "#0a192f", textDecoration: "none" }}>→</span>
                 </Link>
               </div>
             </motion.div>
