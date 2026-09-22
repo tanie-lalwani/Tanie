@@ -102,9 +102,8 @@ export default function Navbar({ phase }: NavbarProps) {
 
   const NAV_PAGES = [
     { href: '/', label: copy.nav.homeLabel || 'Home', icon: '🏠' },
-    { href: '/packages', label: 'Packages & Aesthetics', icon: '📦' },
+    { href: '/pricing', label: 'Pricing', icon: '💎' },
     { href: '/client', label: 'Client Workspace', icon: '💼' },
-    { href: '/paywall', label: 'Razorpay Paywall & Invoices', icon: '💳' },
     { href: '/projects', label: 'Projects & Works', icon: '🛠️' },
     { href: '/qna', label: copy.nav.qna || 'Q&A Bot', icon: '❓' },
     { href: '/contact', label: copy.nav.contactLabel || 'Contact', icon: '📬' },

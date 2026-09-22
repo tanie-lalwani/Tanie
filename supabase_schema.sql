@@ -384,3 +384,147 @@ ON CONFLICT (id) DO UPDATE SET
   deliverables = EXCLUDED.deliverables,
   addons = EXCLUDED.addons,
   is_active = EXCLUDED.is_active;
+
+-- ==============================================================================
+-- 7. UNIVERSAL FEATURE CATALOG & PRICING DATABASE
+-- ==============================================================================
+
+-- 7.1 Feature Categories (18 Categories)
+CREATE TABLE IF NOT EXISTS public.feature_categories (
+  id TEXT PRIMARY KEY,
+  name TEXT NOT NULL,
+  short_name TEXT NOT NULL,
+  icon TEXT NOT NULL,
+  display_order INT NOT NULL DEFAULT 1,
+  description TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- 7.2 Atomic Catalog Features (300+ Items with INR pricing)
+CREATE TABLE IF NOT EXISTS public.catalog_features (
+  id TEXT PRIMARY KEY,
+  category_id TEXT REFERENCES public.feature_categories(id) ON DELETE CASCADE,
+  name TEXT NOT NULL,
+  price_inr NUMERIC NOT NULL,
+  price_usd NUMERIC NOT NULL DEFAULT 0,
+  price_type TEXT NOT NULL DEFAULT 'flat' CHECK (price_type IN ('flat', 'per_form', 'per_location', 'per_brand', 'per_page', 'per_product', 'per_service', 'per_post', 'per_image', 'per_account', 'per_hour', 'per_month', 'starting_at')),
+  unit_label TEXT,
+  default_qty INT DEFAULT 1,
+  min_qty INT DEFAULT 1,
+  max_qty INT DEFAULT 100,
+  description TEXT,
+  badge TEXT,
+  is_popular BOOLEAN DEFAULT FALSE,
+  display_order INT DEFAULT 1,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- 7.3 Client Custom Quotes (Saved by Logged-in Clients & Admins)
+CREATE TABLE IF NOT EXISTS public.client_custom_quotes (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  client_id UUID REFERENCES public.profiles(id) ON DELETE SET NULL,
+  client_email TEXT NOT NULL,
+  client_name TEXT,
+  company_name TEXT,
+  project_name TEXT NOT NULL DEFAULT 'Custom Web Project',
+  industry_template TEXT DEFAULT 'custom',
+  selected_features JSONB NOT NULL DEFAULT '{}'::jsonb, -- { "feature_id": quantity }
+  base_price_inr NUMERIC NOT NULL DEFAULT 5000,
+  base_price_usd NUMERIC NOT NULL DEFAULT 75,
+  itemized_total_inr NUMERIC NOT NULL DEFAULT 0,
+  itemized_total_usd NUMERIC NOT NULL DEFAULT 0,
+  discount_percent NUMERIC NOT NULL DEFAULT 0,
+  discount_amount_inr NUMERIC NOT NULL DEFAULT 0,
+  discount_amount_usd NUMERIC NOT NULL DEFAULT 0,
+  final_total_inr NUMERIC NOT NULL DEFAULT 0,
+  final_total_usd NUMERIC NOT NULL DEFAULT 0,
+  currency TEXT NOT NULL DEFAULT 'INR',
+  notes TEXT,
+  status TEXT DEFAULT 'draft' CHECK (status IN ('draft', 'submitted', 'in_review', 'approved', 'converted_to_project', 'archived')),
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Indexes
+CREATE INDEX IF NOT EXISTS idx_catalog_features_cat ON public.catalog_features(category_id);
+CREATE INDEX IF NOT EXISTS idx_client_quotes_email ON public.client_custom_quotes(client_email);
+CREATE INDEX IF NOT EXISTS idx_client_quotes_client_id ON public.client_custom_quotes(client_id);
+
+-- RLS Policies
+ALTER TABLE public.feature_categories ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.catalog_features ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.client_custom_quotes ENABLE ROW LEVEL SECURITY;
+
+-- Categories: Public read, Admin write
+DROP POLICY IF EXISTS "Public can view feature categories" ON public.feature_categories;
+CREATE POLICY "Public can view feature categories" ON public.feature_categories FOR SELECT USING (true);
+DROP POLICY IF EXISTS "Admins manage feature categories" ON public.feature_categories;
+CREATE POLICY "Admins manage feature categories" ON public.feature_categories FOR ALL TO authenticated USING (
+  EXISTS (SELECT 1 FROM public.profiles WHERE profiles.id = auth.uid() AND profiles.role = 'admin')
+);
+
+-- Catalog Features: Public read, Admin write
+DROP POLICY IF EXISTS "Public can view catalog features" ON public.catalog_features;
+CREATE POLICY "Public can view catalog features" ON public.catalog_features FOR SELECT USING (true);
+DROP POLICY IF EXISTS "Admins manage catalog features" ON public.catalog_features;
+CREATE POLICY "Admins manage catalog features" ON public.catalog_features FOR ALL TO authenticated USING (
+  EXISTS (SELECT 1 FROM public.profiles WHERE profiles.id = auth.uid() AND profiles.role = 'admin')
+);
+
+-- Client Custom Quotes: User read/write own, Admin full access
+DROP POLICY IF EXISTS "Clients can view own custom quotes" ON public.client_custom_quotes;
+CREATE POLICY "Clients can view own custom quotes" ON public.client_custom_quotes FOR SELECT USING (
+  auth.uid() = client_id OR
+  client_email = (SELECT email FROM auth.users WHERE id = auth.uid()) OR
+  EXISTS (SELECT 1 FROM public.profiles WHERE profiles.id = auth.uid() AND profiles.role = 'admin')
+);
+
+DROP POLICY IF EXISTS "Clients can insert own custom quotes" ON public.client_custom_quotes;
+CREATE POLICY "Clients can insert own custom quotes" ON public.client_custom_quotes FOR INSERT WITH CHECK (
+  auth.uid() = client_id OR
+  client_email = (SELECT email FROM auth.users WHERE id = auth.uid()) OR
+  auth.uid() IS NULL
+);
+
+DROP POLICY IF EXISTS "Clients can update own custom quotes" ON public.client_custom_quotes;
+CREATE POLICY "Clients can update own custom quotes" ON public.client_custom_quotes FOR UPDATE USING (
+  auth.uid() = client_id OR
+  client_email = (SELECT email FROM auth.users WHERE id = auth.uid()) OR
+  EXISTS (SELECT 1 FROM public.profiles WHERE profiles.id = auth.uid() AND profiles.role = 'admin')
+);
+
+DROP POLICY IF EXISTS "Clients can delete own custom quotes" ON public.client_custom_quotes;
+CREATE POLICY "Clients can delete own custom quotes" ON public.client_custom_quotes FOR DELETE USING (
+  auth.uid() = client_id OR
+  EXISTS (SELECT 1 FROM public.profiles WHERE profiles.id = auth.uid() AND profiles.role = 'admin')
+);
+
+-- ==============================================================================
+-- 8. SEED DATA: 18 MASTER CATEGORIES
+-- ==============================================================================
+INSERT INTO public.feature_categories (id, name, short_name, icon, display_order, description) VALUES
+('customer_website', '1. Customer & Website Features', 'Website Essentials', '🌐', 1, 'Core website architecture, customer navigation, accounts, and discovery elements.'),
+('booking_appointment', '2. Booking & Appointment', 'Booking Systems', '📅', 2, 'Calendars, appointments, staff scheduling, deposits, and automated reminders.'),
+('ecommerce_ordering', '3. E-commerce & Ordering', 'E-Commerce & Orders', '🛍️', 3, 'Cart, checkout, payments, shipping calculation, inventory, and order management.'),
+('lead_generation', '4. Lead Generation', 'Lead Gen & CRM', '🎯', 4, 'Capture high-intent inquiries, CRM pipeline, lead scoring, and instant WhatsApp alerts.'),
+('marketing_conversion', '5. Marketing & Conversion', 'Marketing & Growth', '📈', 5, 'SEO setup, Meta/Google tracking pixels, A/B testing, and conversion funnels.'),
+('admin_management', '6. Admin & Business Management', 'Admin Dashboard', '⚙️', 6, 'Executive portal to manage products, services, bookings, customers, and analytics.'),
+('employee_staff', '7. Employee / Staff Systems', 'Staff Systems', '👥', 7, 'Employee portals, shift scheduling, commissions, tasks, and attendance tracking.'),
+('customer_retention', '8. Customer Retention', 'Retention & Loyalty', '🎁', 8, 'Loyalty points, referral programs, VIP subscriptions, and automated rebooking reminders.'),
+('communication', '9. Communication', 'Communication', '💬', 9, 'Live chat, WhatsApp chatbots, SMS alerts, automated email sequences, and push alerts.'),
+('ai_features', '10. AI Features', 'AI Copilots & GenAI', '🧠', 10, 'Gemini & OpenAI intelligent copilots, automated proposals, search, and document AI.'),
+('interactive_features', '11. Advanced Interactive Features', 'Interactive & 3D', '✨', 11, 'Interactive calculators, 3D WebGL viewers, custom configurators, and customer portals.'),
+('multi_location', '12. Multi-business / Multi-location', 'Multi-Location & Brands', '🏢', 12, 'Multi-branch setups, separate brand catalogs, centralized backend, and location pages.'),
+('integrations', '13. Integrations', 'API Integrations', '🔌', 13, 'Payment gateways, CRMs, ERPs, accounting software, social APIs, and webhooks.'),
+('security_infrastructure', '14. Security & Infrastructure', 'Security & Hosting', '🛡️', 14, 'Hosting setup, SSL, automated backups, speed tuning, 2FA, and performance optimization.'),
+('seo', '15. SEO (Search Engine Optimization)', 'Advanced SEO', '🔍', 15, 'Granular on-page, local, technical, schema, and Core Web Vitals optimization.'),
+('design_ux', '16. Design & UX Add-ons', 'Design & UX Polish', '🎨', 16, 'Custom UI design systems, GSAP scroll choreographies, Three.js 3D scenes, and dark mode.'),
+('content_management', '17. Content Management', 'CMS & Publishing', '📝', 17, 'Headless CMS, visual page editors, media libraries, draft/publish, and revision history.'),
+('hidden_essentials', '18. Things people forget to charge for', 'Migration, DevOps & Care', '📦', 18, 'Migrations, data entry, domain/DNS, production setup, hourly development, and monthly retainers.')
+ON CONFLICT (id) DO UPDATE SET
+  name = EXCLUDED.name,
+  short_name = EXCLUDED.short_name,
+  icon = EXCLUDED.icon,
+  display_order = EXCLUDED.display_order,
+  description = EXCLUDED.description;
+

@@ -283,16 +283,16 @@ export default function Projects() {
           </Link>
 
           <Link
-            href="/packages"
+            href="/pricing"
             className={`flex w-14 flex-col items-center rounded-[1.35rem] px-2 py-3 !no-underline transition-all ${
-              pathname === "/packages" ? "bg-[#c8ecff] !text-black shadow-xs" : "!text-black hover:bg-white/55 hover:!text-black"
+              pathname === "/pricing" || pathname === "/packages" ? "bg-[#c8ecff] !text-black shadow-xs" : "!text-black hover:bg-white/55 hover:!text-black"
             }`}
-            title="Aesthetics"
+            title="Pricing"
           >
             <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.8" className="mb-1">
               <path strokeLinecap="round" strokeLinejoin="round" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
             </svg>
-            <span className="text-[10px] font-semibold">Aesthetic</span>
+            <span className="text-[10px] font-semibold">Pricing</span>
           </Link>
 
           <Link
@@ -308,18 +308,7 @@ export default function Projects() {
             <span className="text-[10px] font-semibold">Client</span>
           </Link>
 
-          <Link
-            href="/paywall"
-            className={`flex w-14 flex-col items-center rounded-[1.35rem] px-2 py-3 !no-underline transition-all ${
-              pathname === "/paywall" ? "bg-[#c8ecff] !text-black shadow-xs" : "!text-black hover:bg-white/55 hover:!text-black"
-            }`}
-            title="Razorpay Paywall & Invoices"
-          >
-            <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.8" className="mb-1">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
-            </svg>
-            <span className="text-[10px] font-semibold">Paywall</span>
-          </Link>
+
 
           <Link
             href="/qna"

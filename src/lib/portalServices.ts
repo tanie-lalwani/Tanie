@@ -333,13 +333,13 @@ export const REVIEWER_CLIENT_PROJECT: ClientProject = {
   budget_usd: 3499,
   budget_inr: 289000,
   target_launch_date: "2026-10-15",
-  live_preview_url: "https://tanie.me/paywall",
+  live_preview_url: "https://tanie.me/client-portal",
   figma_url: "https://figma.com",
   github_repo: "https://github.com/tanie-lalwani",
   milestones: [
     { id: "rm1", title: "Site Architecture & Discovery", description: "Design tokens, color swatches & interactive WebGL physics specifications.", status: "completed" },
     { id: "rm2", title: "Frontend Layout & Animations", description: "Next.js App Router components, Tailwind styles & Framer Motion transitions.", status: "completed" },
-    { id: "rm3", title: "Razorpay Gateway & Security Paywall", description: "Payment order creation, HMAC signature validation & reviewer test credentials.", status: "in-progress" },
+    { id: "rm3", title: "Razorpay Gateway & Checkout API", description: "Payment order creation, HMAC signature validation & reviewer test credentials.", status: "in-progress" },
     { id: "rm4", title: "Client Review & QA Signoff", description: "Lighthouse 98+ score audit, cross-browser responsiveness & contract execution.", status: "pending" },
     { id: "rm5", title: "Final Launch & Handover", description: "Custom domain DNS mapping, Vercel edge deployment & IP transfer.", status: "pending" }
   ],
@@ -1049,5 +1049,187 @@ export async function updateChangeRequestStatus(
     if (status === "implemented") item.resolved_at = new Date().toISOString();
   }
 }
+
+// =============================================================================
+// CLIENT CUSTOM QUOTES & SCOPE ESTIMATOR SERVICES
+// =============================================================================
+
+export interface ClientCustomQuote {
+  id: string;
+  client_id?: string;
+  client_email: string;
+  client_name?: string;
+  company_name?: string;
+  project_name: string;
+  industry_template: string;
+  selected_features: Record<string, number>;
+  base_price_inr: number;
+  base_price_usd: number;
+  itemized_total_inr: number;
+  itemized_total_usd: number;
+  discount_percent: number;
+  discount_amount_inr: number;
+  discount_amount_usd: number;
+  final_total_inr: number;
+  final_total_usd: number;
+  currency: "INR" | "USD";
+  notes?: string;
+  status: "draft" | "submitted" | "in_review" | "approved" | "converted_to_project" | "archived";
+  created_at: string;
+  updated_at?: string;
+}
+
+const LOCAL_QUOTES_KEY = "tanie_custom_quotes_drafts";
+
+function getLocalStoredQuotes(): ClientCustomQuote[] {
+  if (typeof window === "undefined") return [];
+  try {
+    const raw = localStorage.getItem(LOCAL_QUOTES_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch {
+    return [];
+  }
+}
+
+function saveLocalStoredQuotes(quotes: ClientCustomQuote[]): void {
+  if (typeof window === "undefined") return;
+  try {
+    localStorage.setItem(LOCAL_QUOTES_KEY, JSON.stringify(quotes));
+  } catch (e) {
+    console.error("Failed to persist local quotes:", e);
+  }
+}
+
+export async function saveClientCustomQuote(
+  quote: Partial<ClientCustomQuote> & {
+    client_email: string;
+    project_name: string;
+    selected_features: Record<string, number>;
+    final_total_inr: number;
+  }
+): Promise<ClientCustomQuote> {
+  const quoteId = quote.id || `quote-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`;
+  const now = new Date().toISOString();
+
+  const completeQuote: ClientCustomQuote = {
+    id: quoteId,
+    client_id: quote.client_id,
+    client_email: quote.client_email,
+    client_name: quote.client_name || "Client",
+    company_name: quote.company_name,
+    project_name: quote.project_name || "Custom Web Project",
+    industry_template: quote.industry_template || "custom",
+    selected_features: quote.selected_features || {},
+    base_price_inr: quote.base_price_inr ?? 5000,
+    base_price_usd: quote.base_price_usd ?? 75,
+    itemized_total_inr: quote.itemized_total_inr ?? 0,
+    itemized_total_usd: quote.itemized_total_usd ?? 0,
+    discount_percent: quote.discount_percent ?? 0,
+    discount_amount_inr: quote.discount_amount_inr ?? 0,
+    discount_amount_usd: quote.discount_amount_usd ?? 0,
+    final_total_inr: quote.final_total_inr ?? 0,
+    final_total_usd: quote.final_total_usd ?? 0,
+    currency: quote.currency || "INR",
+    notes: quote.notes,
+    status: quote.status || "draft",
+    created_at: quote.created_at || now,
+    updated_at: now
+  };
+
+  // 1. Try Supabase
+  if (isSupabaseConfigured()) {
+    try {
+      const { data, error } = await supabase
+        .from("client_custom_quotes")
+        .upsert([completeQuote])
+        .select()
+        .single();
+
+      if (!error && data) {
+        // Also sync local cache
+        const local = getLocalStoredQuotes().filter((q) => q.id !== completeQuote.id);
+        saveLocalStoredQuotes([data as ClientCustomQuote, ...local]);
+        return data as ClientCustomQuote;
+      }
+    } catch (err) {
+      console.warn("Supabase custom quote save warning:", err);
+    }
+  }
+
+  // 2. Fallback to LocalStorage
+  const local = getLocalStoredQuotes().filter((q) => q.id !== completeQuote.id);
+  saveLocalStoredQuotes([completeQuote, ...local]);
+  return completeQuote;
+}
+
+export async function getClientCustomQuotes(clientEmail: string): Promise<ClientCustomQuote[]> {
+  if (isSupabaseConfigured() && clientEmail) {
+    try {
+      const { data, error } = await supabase
+        .from("client_custom_quotes")
+        .select("*")
+        .eq("client_email", clientEmail)
+        .order("created_at", { ascending: false });
+
+      if (!error && data && data.length > 0) {
+        return data as ClientCustomQuote[];
+      }
+    } catch (err) {
+      console.warn("Supabase load client custom quotes error:", err);
+    }
+  }
+
+  // Fallback to local storage
+  const local = getLocalStoredQuotes();
+  if (clientEmail) {
+    return local.filter((q) => q.client_email.toLowerCase() === clientEmail.toLowerCase());
+  }
+  return local;
+}
+
+export async function getClientCustomQuoteById(quoteId: string): Promise<ClientCustomQuote | null> {
+  if (isSupabaseConfigured()) {
+    try {
+      const { data, error } = await supabase
+        .from("client_custom_quotes")
+        .select("*")
+        .eq("id", quoteId)
+        .single();
+
+      if (!error && data) {
+        return data as ClientCustomQuote;
+      }
+    } catch (err) {
+      console.warn("Supabase load quote by ID error:", err);
+    }
+  }
+
+  const local = getLocalStoredQuotes();
+  return local.find((q) => q.id === quoteId) || null;
+}
+
+export async function deleteClientCustomQuote(quoteId: string): Promise<boolean> {
+  if (isSupabaseConfigured()) {
+    try {
+      const { error } = await supabase
+        .from("client_custom_quotes")
+        .delete()
+        .eq("id", quoteId);
+
+      if (!error) {
+        const local = getLocalStoredQuotes().filter((q) => q.id !== quoteId);
+        saveLocalStoredQuotes(local);
+        return true;
+      }
+    } catch (err) {
+      console.warn("Supabase delete custom quote error:", err);
+    }
+  }
+
+  const local = getLocalStoredQuotes().filter((q) => q.id !== quoteId);
+  saveLocalStoredQuotes(local);
+  return true;
+}
+
 
 

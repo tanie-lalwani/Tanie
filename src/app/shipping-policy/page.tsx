@@ -76,7 +76,6 @@ export default function ShippingPolicyPage() {
             </section>
           </div>
 
-          <div className="mt-10 pt-6 border-t border-sky-100 flex flex-wrap gap-4 text-xs font-bold text-sky-800">
             <Link href="/terms" className="hover:underline">
               Terms & Conditions →
             </Link>
@@ -86,10 +85,9 @@ export default function ShippingPolicyPage() {
             <Link href="/privacy" className="hover:underline">
               Privacy Policy →
             </Link>
-            <Link href="/paywall" className="hover:underline">
-              Paywall & Invoices →
+            <Link href="/pricing" className="hover:underline">
+              Cost Calculator & Pricing →
             </Link>
-          </div>
         </div>
       </main>
 

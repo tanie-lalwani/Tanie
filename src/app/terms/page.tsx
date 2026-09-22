@@ -89,8 +89,8 @@ export default function TermsPage() {
             <Link href="/shipping-policy" className="hover:underline">
               Service Delivery Policy →
             </Link>
-            <Link href="/paywall" className="hover:underline">
-              Paywall & Invoices →
+            <Link href="/pricing" className="hover:underline">
+              Cost Calculator & Pricing →
             </Link>
           </div>
         </div>

@@ -355,16 +355,16 @@ export default function ClientPortal() {
           </Link>
 
           <Link
-            href="/packages"
+            href="/pricing"
             className={`flex w-14 flex-col items-center rounded-[1.35rem] px-2 py-3 !no-underline transition-all ${
-              pathname === "/packages" ? "bg-[#c8ecff] !text-black shadow-xs" : "!text-slate-800 hover:bg-white/60 hover:!text-black"
+              pathname === "/pricing" || pathname === "/packages" ? "bg-[#c8ecff] !text-black shadow-xs" : "!text-slate-800 hover:bg-white/60 hover:!text-black"
             }`}
-            title="Marketplace & Aesthetics"
+            title="Pricing"
           >
             <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.8" className="mb-1">
               <path strokeLinecap="round" strokeLinejoin="round" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
             </svg>
-            <span className="text-[10px] font-semibold">Aesthetics</span>
+            <span className="text-[10px] font-semibold">Pricing</span>
           </Link>
 
           <Link
@@ -380,16 +380,7 @@ export default function ClientPortal() {
             <span className="text-[10px] font-bold">Client Hub</span>
           </Link>
 
-          <Link
-            href="/paywall"
-            className={`flex w-14 flex-col items-center rounded-[1.35rem] px-2 py-3 !no-underline transition-all ${
-              pathname === "/paywall" ? "bg-[#c8ecff] !text-black shadow-xs" : "!text-slate-800 hover:bg-white/60 hover:!text-black"
-            }`}
-            title="Razorpay Paywall & Invoices"
-          >
-            <span className="text-lg mb-1">💳</span>
-            <span className="text-[10px] font-semibold">Paywall</span>
-          </Link>
+
 
           <Link
             href="/qna"
@@ -434,10 +425,10 @@ export default function ClientPortal() {
           Client Workspace
         </span>
         <Link
-          href="/packages"
+          href="/pricing"
           className="rounded-full bg-slate-950 px-3 py-1 text-[11px] font-bold text-white shadow-xs cursor-pointer !no-underline"
         >
-          Packages
+          Pricing
         </Link>
       </header>
 
@@ -467,10 +458,10 @@ export default function ClientPortal() {
 
             <div className="flex flex-wrap items-center gap-3">
               <Link
-                href="/packages"
+                href="/pricing"
                 className="rounded-full border border-black/10 bg-white/80 px-4 py-2 text-xs font-bold uppercase tracking-wider text-slate-800 shadow-xs transition hover:bg-white hover:border-black/20 !no-underline"
               >
-                Browse Packages
+                Pricing & Calculator
               </Link>
 
               {isAuthenticatedUser ? (
@@ -713,10 +704,10 @@ export default function ClientPortal() {
                       <p className="text-xs text-slate-500 mt-0.5">Explore package options or get in touch directly.</p>
                     </div>
                     <Link
-                      href="/packages"
+                      href="/pricing"
                       className="rounded-full bg-slate-950 px-4 py-2 text-xs font-bold text-white shadow-xs hover:bg-slate-800 !no-underline"
                     >
-                      View Packages →
+                      View Pricing →
                     </Link>
                   </div>
                 </div>
@@ -1130,12 +1121,7 @@ export default function ClientPortal() {
                           ⚡ Test Transaction (₹1)
                         </button>
 
-                        <Link
-                          href="/paywall"
-                          className="text-xs font-bold text-sky-800 hover:text-sky-950 underline !no-underline"
-                        >
-                          Open Paywall Page →
-                        </Link>
+
                       </div>
                     </div>
 

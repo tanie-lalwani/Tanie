@@ -92,12 +92,8 @@ export default function SiteFooter({ className = "" }: SiteFooterProps) {
           </div>
         </div>
         <div className="mt-5 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs text-slate-400">
-          <a href="/packages" className="transition hover:text-sky-300">
-            Website Packages
-          </a>
-          <span>•</span>
-          <a href="/paywall" className="transition text-sky-400 font-semibold hover:text-sky-300">
-            💳 Razorpay Paywall
+          <a href="/pricing" className="transition hover:text-sky-300">
+            Pricing
           </a>
           <span>•</span>
           <a href="/client" className="transition hover:text-sky-300">

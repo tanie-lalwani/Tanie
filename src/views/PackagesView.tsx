@@ -17,14 +17,16 @@ import {
   type AestheticStyle,
   type WizardAnswers
 } from "@/data/aestheticDatabase";
+import CustomScopeCalculator from "@/components/CustomScopeCalculator";
+import WebsiteCostCalculatorFunnel from "@/components/packages/WebsiteCostCalculatorFunnel";
 
 export default function PackagesView() {
   const router = useRouter();
   const pathname = usePathname();
   const { user, isAuthenticated, signInWithPassword, signUp } = useAuth();
 
-  // Active View Tab: "home" (Overview & Scope), "gallery" (Browse Aesthetics), "wizard" (Make Your Website Questionnaire), "results" (Curated Suggestions)
-  const [activeTab, setActiveTab] = useState<"home" | "gallery" | "wizard" | "results">("home");
+  // Active View Tab: "home" (Overview & Scope), "calculator" (Interactive Estimator), "gallery" (Browse Aesthetics), "wizard" (Make Your Website Questionnaire), "results" (Curated Suggestions)
+  const [activeTab, setActiveTab] = useState<"home" | "calculator" | "gallery" | "wizard" | "results">("home");
 
   // Currency toggle: USD or INR
   const [currency, setCurrency] = useState<"USD" | "INR">("USD");
@@ -32,11 +34,13 @@ export default function PackagesView() {
   // Packages state (loaded from portalServices)
   const [packagesList, setPackagesList] = useState<WebsitePackage[]>(DEFAULT_PACKAGES);
 
+
   // Gallery Filter Category
   const [activeCategory, setActiveCategory] = useState<string>("All");
   const [previewStyleModal, setPreviewStyleModal] = useState<AestheticStyle | null>(null);
 
   // Questionnaire State (5 Steps)
+  const [funnelStep, setFunnelStep] = useState(0);
   const [wizardStep, setWizardStep] = useState(1);
   const [wizardAnswers, setWizardAnswers] = useState<Partial<WizardAnswers> & {
     buildingType?: string;
@@ -151,6 +155,55 @@ export default function PackagesView() {
     setAuthStepRequired(false);
   };
 
+  // Handle opening calculator
+  const handleOpenCalculator = () => {
+    setActiveTab("calculator");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  // Handle custom scope proceeding from calculator
+  const handleProceedWithScope = (quoteData: {
+    projectName: string;
+    industry: string;
+    selectedFeatureNames: string[];
+    selectedItems: Record<string, number>;
+    finalTotalInr: number;
+    finalTotalUsd: number;
+    currency: "INR" | "USD";
+  }) => {
+    setProjectName(quoteData.projectName);
+    setFeaturesList(quoteData.selectedFeatureNames);
+    setWebsitePurpose(
+      `Custom ${quoteData.industry} scope configuration with ${quoteData.selectedFeatureNames.length} selected features. Total Estimated Investment: ${
+        quoteData.currency === "INR"
+          ? `₹${quoteData.finalTotalInr.toLocaleString()}`
+          : `$${quoteData.finalTotalUsd.toLocaleString()}`
+      }`
+    );
+    setSelectedScopeTier(`${quoteData.industry} Custom Scope`);
+    setShowIntakeModal(true);
+    setAuthStepRequired(false);
+  };
+
+  // Handle custom quote submission from WebsiteCostCalculatorFunnel
+  const handleProceedWithCostCalculatorFunnel = (quoteData: any) => {
+    setProjectName(quoteData.businessName || "Custom Web Project");
+    setCompanyName(quoteData.businessName || "");
+    setFeaturesList(quoteData.bundles ? quoteData.bundles.map((b: any) => b.name) : []);
+    setWebsitePurpose(
+      `Custom Website Plan | Industry: ${quoteData.industry || "General"} | Foundation: ${quoteData.websiteType || "Business"} | Calculated Total: ${
+        quoteData.currency === "INR"
+          ? `₹${quoteData.totalPriceInr?.toLocaleString()}`
+          : `$${quoteData.totalPriceUsd?.toLocaleString()}`
+      }`
+    );
+    setSelectedScopeTier(quoteData.suggestedPackage?.title || "Custom Bespoke Build");
+    setTargetDeadline(quoteData.timeline || "3–4 Weeks");
+    setShowIntakeModal(true);
+    setAuthStepRequired(false);
+  };
+
+
   // Handle Intake Form Submission
   const handleIntakeSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -262,574 +315,166 @@ Features: ${featuresList.join(", ")}
   };
 
   return (
-    <main className="min-h-screen bg-[#dff4ff] text-black font-sans selection:bg-sky-200 selection:text-black">
+    <main
+      style={{
+        "--color-text-heading": "#0a192f",
+        "--color-text-main": "#0a192f",
+        color: "#0a192f"
+      } as React.CSSProperties}
+      className="min-h-screen bg-[#dff4ff] text-[#0a192f] font-sans selection:bg-sky-200 selection:text-black theme-ocean-light pricing-page-theme"
+    >
       
       {/* ------------------------------------------------------------- */}
-      {/* 1. LEFT VERTICAL NAVIGATION (DESKTOP)                         */}
+      {/* 1. LEFT VERTICAL NAVIGATION (DESKTOP - HIDDEN IN FLOW)        */}
       {/* ------------------------------------------------------------- */}
-      <nav
-        aria-label="Side navigation"
-        className="fixed left-0 top-0 z-40 hidden h-full w-20 flex-col items-center justify-start gap-6 border-r border-black/10 bg-[#dff4ff]/88 py-8 backdrop-blur-xl md:flex"
-      >
-        <div className="flex flex-col items-center gap-6">
-          <Link
-            href="/"
-            className={`flex w-14 flex-col items-center rounded-[1.35rem] px-2 py-3 !no-underline transition-all ${
-              pathname === "/" ? "bg-[#c8ecff] !text-black shadow-xs" : "!text-black hover:bg-white/55 hover:!text-black"
-            }`}
-            title="Home"
-          >
-            <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.8" className="mb-1">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M3 12l9-8 9 8M4 10v10a1 1 0 001 1h3m10-11v10a1 1 0 01-1 1h-3m-6 0h6" />
-            </svg>
-            <span className="text-[10px] font-semibold">Home</span>
-          </Link>
-
-          <Link
-            href="/projects"
-            className={`flex w-14 flex-col items-center rounded-[1.35rem] px-2 py-3 !no-underline transition-all ${
-              pathname === "/projects" ? "bg-[#c8ecff] !text-black shadow-xs" : "!text-black hover:bg-white/55 hover:!text-black"
-            }`}
-            title="Projects"
-          >
-            <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.8" className="mb-1">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
-            </svg>
-            <span className="text-[10px] font-semibold">Projects</span>
-          </Link>
-
-          <Link
-            href="/packages"
-            className={`flex w-14 flex-col items-center rounded-[1.35rem] px-2 py-3 !no-underline transition-all ${
-              pathname === "/packages" ? "bg-[#c8ecff] !text-black shadow-xs" : "!text-black hover:bg-white/55 hover:!text-black"
-            }`}
-            title="Marketplace & Aesthetics"
-          >
-            <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.8" className="mb-1">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
-            </svg>
-            <span className="text-[10px] font-semibold">Aesthetics</span>
-          </Link>
-
-          <Link
-            href="/client"
-            className={`flex w-14 flex-col items-center rounded-[1.35rem] px-2 py-3 !no-underline transition-all ${
-              pathname === "/client" ? "bg-[#c8ecff] !text-black shadow-xs" : "!text-black hover:bg-white/55 hover:!text-black"
-            }`}
-            title="Client Board"
-          >
-            <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.8" className="mb-1">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-            </svg>
-            <span className="text-[10px] font-semibold">Client Hub</span>
-          </Link>
-
-          <Link
-            href="/paywall"
-            className={`flex w-14 flex-col items-center rounded-[1.35rem] px-2 py-3 !no-underline transition-all ${
-              pathname === "/paywall" ? "bg-[#c8ecff] !text-black shadow-xs" : "!text-black hover:bg-white/55 hover:!text-black"
-            }`}
-            title="Razorpay Paywall & Invoices"
-          >
-            <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.8" className="mb-1">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
-            </svg>
-            <span className="text-[10px] font-semibold">Paywall</span>
-          </Link>
-
-          <Link
-            href="/qna"
-            className={`flex w-14 flex-col items-center rounded-[1.35rem] px-2 py-3 !no-underline transition-all ${
-              pathname === "/qna" ? "bg-[#c8ecff] !text-black shadow-xs" : "!text-black hover:bg-white/55 hover:!text-black"
-            }`}
-            title="Q&A"
-          >
-            <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.8" className="mb-1">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            <span className="text-[10px] font-semibold">Q&A</span>
-          </Link>
-
-          <Link
-            href="/contact"
-            className={`flex w-14 flex-col items-center rounded-[1.35rem] px-2 py-3 !no-underline transition-all ${
-              pathname === "/contact" ? "bg-[#c8ecff] !text-black shadow-xs" : "!text-black hover:bg-white/55 hover:!text-black"
-            }`}
-            title="Contact"
-          >
-            <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.8" className="mb-1">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M21 10.5V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2h7.5" />
-              <path strokeLinecap="round" strokeLinejoin="round" d="M21 10.5l-9 6.5-9-6.5" />
-            </svg>
-            <span className="text-[10px] font-semibold">Contact</span>
-          </Link>
-        </div>
-      </nav>
-
-      {/* ------------------------------------------------------------- */}
-      {/* 2. MOBILE TOP HEADER                                          */}
-      {/* ------------------------------------------------------------- */}
-      <header className="fixed left-0 top-0 z-30 flex h-14 w-full items-center justify-between border-b border-black/10 bg-[#dff4ff]/90 px-4 backdrop-blur-xl md:hidden">
-        <Link href="/" className="flex items-center gap-1.5 !no-underline !text-black font-semibold text-sm">
-          <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-          </svg>
-          <span>Home</span>
-        </Link>
-        <span className="text-xs font-bold uppercase tracking-widest text-slate-800">
-          Website Marketplace
-        </span>
-        <button
-          type="button"
-          onClick={handleStartQuestionnaire}
-          className="rounded-full bg-slate-950 px-3 py-1 text-[11px] font-bold text-white shadow-xs cursor-pointer"
+      {funnelStep === 0 && (
+        <nav
+          aria-label="Side navigation"
+          className="fixed left-0 top-0 z-40 hidden h-full w-20 flex-col items-center justify-start gap-6 border-r border-black/10 bg-[#dff4ff]/88 py-8 backdrop-blur-xl md:flex"
         >
-          ✨ Build
-        </button>
-      </header>
+          <div className="flex flex-col items-center gap-6">
+            <Link
+              href="/"
+              className={`flex w-14 flex-col items-center rounded-[1.35rem] px-2 py-3 !no-underline transition-all ${
+                pathname === "/" ? "bg-[#c8ecff] !text-black shadow-xs" : "!text-black hover:bg-white/55 hover:!text-black"
+              }`}
+              title="Home"
+            >
+              <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.8" className="mb-1">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M3 12l9-8 9 8M4 10v10a1 1 0 001 1h3m10-11v10a1 1 0 01-1 1h-3m-6 0h6" />
+              </svg>
+              <span className="text-[10px] font-semibold">Home</span>
+            </Link>
+
+            <Link
+              href="/projects"
+              className={`flex w-14 flex-col items-center rounded-[1.35rem] px-2 py-3 !no-underline transition-all ${
+                pathname === "/projects" ? "bg-[#c8ecff] !text-black shadow-xs" : "!text-black hover:bg-white/55 hover:!text-black"
+              }`}
+              title="Projects"
+            >
+              <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.8" className="mb-1">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+              </svg>
+              <span className="text-[10px] font-semibold">Projects</span>
+            </Link>
+
+            <Link
+              href="/pricing"
+              className={`flex w-14 flex-col items-center rounded-[1.35rem] px-2 py-3 !no-underline transition-all ${
+                pathname === "/pricing" || pathname === "/packages" ? "bg-[#c8ecff] !text-black shadow-xs" : "!text-black hover:bg-white/55 hover:!text-black"
+              }`}
+              title="Pricing"
+            >
+              <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.8" className="mb-1">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
+              </svg>
+              <span className="text-[10px] font-semibold">Pricing</span>
+            </Link>
+
+            <Link
+              href="/client"
+              className={`flex w-14 flex-col items-center rounded-[1.35rem] px-2 py-3 !no-underline transition-all ${
+                pathname === "/client" ? "bg-[#c8ecff] !text-black shadow-xs" : "!text-black hover:bg-white/55 hover:!text-black"
+              }`}
+              title="Client Board"
+            >
+              <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.8" className="mb-1">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+              </svg>
+              <span className="text-[10px] font-semibold">Client Hub</span>
+            </Link>
+
+            <Link
+              href="/qna"
+              className={`flex w-14 flex-col items-center rounded-[1.35rem] px-2 py-3 !no-underline transition-all ${
+                pathname === "/qna" ? "bg-[#c8ecff] !text-black shadow-xs" : "!text-black hover:bg-white/55 hover:!text-black"
+              }`}
+              title="Q&A"
+            >
+              <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.8" className="mb-1">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <span className="text-[10px] font-semibold">Q&A</span>
+            </Link>
+
+            <Link
+              href="/contact"
+              className={`flex w-14 flex-col items-center rounded-[1.35rem] px-2 py-3 !no-underline transition-all ${
+                pathname === "/contact" ? "bg-[#c8ecff] !text-black shadow-xs" : "!text-black hover:bg-white/55 hover:!text-black"
+              }`}
+              title="Contact"
+            >
+              <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.8" className="mb-1">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M21 10.5V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2h7.5" />
+                <path strokeLinecap="round" strokeLinejoin="round" d="M21 10.5l-9 6.5-9-6.5" />
+              </svg>
+              <span className="text-[10px] font-semibold">Contact</span>
+            </Link>
+          </div>
+        </nav>
+      )}
+
+      {/* ------------------------------------------------------------- */}
+      {/* 2. MOBILE TOP HEADER (HIDDEN IN FLOW)                         */}
+      {/* ------------------------------------------------------------- */}
+      {funnelStep === 0 && (
+        <header className="fixed left-0 top-0 z-30 flex h-14 w-full items-center justify-between border-b border-black/10 bg-[#dff4ff]/90 px-4 backdrop-blur-xl md:hidden">
+          <Link href="/" className="flex items-center gap-1.5 !no-underline !text-black font-semibold text-sm">
+            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+            </svg>
+            <span>Home</span>
+          </Link>
+          <span className="text-xs font-bold uppercase tracking-widest text-slate-800">
+            Website Marketplace
+          </span>
+          <button
+            type="button"
+            onClick={handleStartQuestionnaire}
+            className="rounded-full bg-slate-950 px-3 py-1 text-[11px] font-bold text-white shadow-xs cursor-pointer"
+          >
+            ✨ Build
+          </button>
+        </header>
+      )}
 
       {/* ------------------------------------------------------------- */}
       {/* 3. MAIN PAGE CONTAINER                                        */}
       {/* ------------------------------------------------------------- */}
-      <div className="pl-0 md:pl-20 min-h-screen">
-        <div className="mx-auto max-w-7xl px-4 pt-20 pb-16 sm:px-8 sm:pt-14 sm:pb-24">
+      <div className={`${funnelStep === 0 ? "pl-0 md:pl-20" : "pl-0 flex items-center justify-center"} min-h-screen`}>
+        <div className={`mx-auto max-w-7xl px-4 ${funnelStep === 0 ? "pt-20 pb-16 sm:px-8 sm:pt-14 sm:pb-24" : "py-8 sm:py-16 w-full"}`}>
           
           {/* ------------------------------------------------------------- */}
-          {/* SECTION 1: HERO WITH DUAL PRIMARY PATHS                       */}
+          {/* SECTION 1: HERO & 4-QUESTION COST CALCULATOR FUNNEL          */}
           {/* ------------------------------------------------------------- */}
-          <div className="text-center max-w-4xl mx-auto mb-12 sm:mb-16">
-            <div className="inline-flex items-center gap-2 rounded-full border border-sky-300/60 bg-white/70 px-4 py-1.5 text-xs font-bold uppercase tracking-wider shadow-xs mb-4" style={{ color: "#0f172a" }}>
-              <span className="h-2 w-2 rounded-full bg-sky-500 animate-pulse" />
-              Website Design Marketplace & Onboarding
-            </div>
-            
-            <h1 className="text-3xl font-extrabold tracking-tight sm:text-6xl mb-4" style={{ color: "#090d16" }}>
-              Make your website. Your way.
-            </h1>
-            <p className="text-base sm:text-xl max-w-2xl mx-auto leading-relaxed text-slate-700 font-medium">
-              Pick a package, explore aesthetics, or tell us what you&apos;re imagining and we&apos;ll find the right direction.
-            </p>
-
-            {/* DUAL PRIMARY ACTION CARDS */}
-            <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4 max-w-3xl mx-auto text-left">
-              {/* Path 1: Build My Website (Questionnaire) */}
-              <button
-                type="button"
-                onClick={handleStartQuestionnaire}
-                className="group relative flex flex-col justify-between rounded-3xl border border-sky-400/50 bg-gradient-to-br from-white via-sky-50/70 to-indigo-50/60 p-6 sm:p-7 shadow-lg backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:border-sky-500 cursor-pointer text-left"
-              >
-                <div>
-                  <div className="flex items-center justify-between mb-4">
-                    <span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-tr from-sky-600 to-indigo-600 text-white text-2xl shadow-md">
-                      ✨
-                    </span>
-                    <span className="rounded-full bg-sky-100 border border-sky-300 px-3 py-1 text-[10px] font-extrabold uppercase tracking-wider text-sky-900">
-                      60 Sec Matcher
-                    </span>
-                  </div>
-                  <h2 className="text-xl sm:text-2xl font-black text-slate-950 mb-1.5 group-hover:text-sky-700 transition">
-                    Build My Website
-                  </h2>
-                  <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                    Tell us about your business & desired vibe → get instant tailored aesthetic recommendations → choose one → request your build.
-                  </p>
-                </div>
-                <div className="mt-6 flex items-center gap-2 text-xs font-extrabold uppercase tracking-widest text-sky-700">
-                  <span>Start Questionnaire</span>
-                  <span className="transition-transform duration-200 group-hover:translate-x-1">→</span>
-                </div>
-              </button>
-
-              {/* Path 2: Browse Aesthetics (Gallery) */}
-              <button
-                type="button"
-                onClick={handleBrowseAesthetics}
-                className="group relative flex flex-col justify-between rounded-3xl border border-black/10 bg-white/80 p-6 sm:p-7 shadow-md backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:border-black/25 cursor-pointer text-left"
-              >
-                <div>
-                  <div className="flex items-center justify-between mb-4">
-                    <span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-slate-900 text-white text-2xl shadow-md">
-                      🎨
-                    </span>
-                    <span className="rounded-full bg-slate-100 border border-black/8 px-3 py-1 text-[10px] font-extrabold uppercase tracking-wider text-slate-800">
-                      12 Archetypes
-                    </span>
-                  </div>
-                  <h2 className="text-xl sm:text-2xl font-black text-slate-950 mb-1.5 group-hover:text-slate-800 transition">
-                    Browse Aesthetics
-                  </h2>
-                  <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                    Explore ready-made visual directions from Editorial and Luxury Minimal to Dark Mode & Y2K → pick one → customize your request.
-                  </p>
-                </div>
-                <div className="mt-6 flex items-center gap-2 text-xs font-extrabold uppercase tracking-widest text-slate-900">
-                  <span>Explore Design Matrix</span>
-                  <span className="transition-transform duration-200 group-hover:translate-x-1">→</span>
-                </div>
-              </button>
-            </div>
-
-            {/* Quick Segmented Mode Switcher */}
-            <div className="mt-8 inline-flex flex-wrap items-center justify-center gap-1 rounded-full border border-black/10 bg-white/75 p-1.5 shadow-sm backdrop-blur-md">
-              <button
-                type="button"
-                onClick={() => setActiveTab("home")}
-                className={`flex items-center gap-2 rounded-full px-5 py-2 text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
-                  activeTab === "home"
-                    ? "bg-slate-950 text-white shadow-md"
-                    : "text-slate-700 hover:text-black hover:bg-black/5"
-                }`}
-              >
-                <span>📦</span>
-                <span>Scope Foundations</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setActiveTab("gallery")}
-                className={`flex items-center gap-2 rounded-full px-5 py-2 text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
-                  activeTab === "gallery"
-                    ? "bg-slate-950 text-white shadow-md"
-                    : "text-slate-700 hover:text-black hover:bg-black/5"
-                }`}
-              >
-                <span>🎨</span>
-                <span>Browse All Aesthetics ({AESTHETIC_STYLES.length})</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setActiveTab("wizard")}
-                className={`flex items-center gap-2 rounded-full px-5 py-2 text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
-                  activeTab === "wizard" || activeTab === "results"
-                    ? "bg-sky-600 text-white shadow-md"
-                    : "text-slate-700 hover:text-black hover:bg-black/5"
-                }`}
-              >
-                <span>✨</span>
-                <span>Make Your Website (Quiz)</span>
-              </button>
-            </div>
+          <div className={funnelStep === 0 ? "mb-16" : "w-full"}>
+            <WebsiteCostCalculatorFunnel
+              onStepChange={setFunnelStep}
+              onProceedWithCustomQuote={handleProceedWithCostCalculatorFunnel}
+            />
           </div>
 
           {/* ------------------------------------------------------------- */}
-          {/* VIEW A: SCOPE FOUNDATIONS & EXPLANATION (HOME TAB)            */}
+          {/* SECTION 2: DIRECT AESTHETICS LISTING & FILTER BAR (Step 0)    */}
           {/* ------------------------------------------------------------- */}
-          {activeTab === "home" && (
-            <div className="space-y-16">
-              
-              {/* Studio Scope Philosophy Banner */}
-              <div className="rounded-[2.4rem] border border-sky-300/60 bg-gradient-to-br from-white/95 via-sky-50/70 to-indigo-50/60 p-6 sm:p-10 shadow-xl backdrop-blur-xl">
-                <div className="max-w-3xl">
-                  <span className="text-xs font-extrabold uppercase tracking-widest text-sky-700">
-                    Aesthetic + Scope Framework
-                  </span>
-                  <h2 className="text-2xl sm:text-4xl font-extrabold mt-1.5 mb-3 text-slate-950">
-                    You choose the visual soul. Scope sets the foundation.
-                  </h2>
-                  <p className="text-sm sm:text-base text-slate-600 leading-relaxed">
-                    Instead of generic cookie-cutter pricing tiers, every build is crafted around an **aesthetic archetype** you love, applied across the exact **page & technical scope** your business requires.
-                  </p>
-                </div>
-
-                {/* 3 Scope Foundations Cards */}
-                <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
-                  {/* Starter Tier */}
-                  <div className="flex flex-col justify-between rounded-3xl border border-black/8 bg-white/80 p-6 shadow-sm hover:shadow-md transition">
-                    <div>
-                      <div className="flex items-center justify-between mb-3">
-                        <span className="rounded-full bg-slate-100 px-3 py-1 text-[10px] font-extrabold uppercase tracking-wider text-slate-800">
-                          1–3 Pages
-                        </span>
-                        <span className="text-xs font-bold text-sky-700 bg-sky-50 px-2.5 py-0.5 rounded-md border border-sky-200">
-                          1–2 Weeks
-                        </span>
-                      </div>
-                      <h3 className="text-xl font-bold text-slate-950 mb-1">Starter</h3>
-                      <p className="text-xs text-slate-500 mb-4">
-                        High-converting landing page, personal portfolio, or single-product launchpad.
-                      </p>
-                      <div className="rounded-2xl bg-slate-50 p-3 mb-4 text-xs space-y-1.5 text-slate-700">
-                        <div className="flex items-center gap-2"><span className="text-sky-600 font-bold">✓</span><span>Bespoke chosen aesthetic</span></div>
-                        <div className="flex items-center gap-2"><span className="text-sky-600 font-bold">✓</span><span>Framer Motion animations</span></div>
-                        <div className="flex items-center gap-2"><span className="text-sky-600 font-bold">✓</span><span>Lead capture & SEO 95+</span></div>
-                      </div>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => handleChooseAesthetic(AESTHETIC_STYLES[1], "Starter")}
-                      className="w-full rounded-full bg-slate-950 py-2.5 text-xs font-bold uppercase tracking-widest text-white hover:bg-slate-800 transition cursor-pointer"
-                    >
-                      Request Starter Scope →
-                    </button>
-                  </div>
-
-                  {/* Business Tier */}
-                  <div className="flex flex-col justify-between rounded-3xl border-2 border-sky-400 bg-gradient-to-b from-white via-sky-50/50 to-white p-6 shadow-lg hover:shadow-xl transition relative">
-                    <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-sky-600 px-3 py-0.5 text-[9px] font-extrabold uppercase tracking-widest text-white shadow-xs">
-                      Most Common
-                    </span>
-                    <div>
-                      <div className="flex items-center justify-between mb-3 mt-1">
-                        <span className="rounded-full bg-sky-100 px-3 py-1 text-[10px] font-extrabold uppercase tracking-wider text-sky-900">
-                          4–7 Pages
-                        </span>
-                        <span className="text-xs font-bold text-sky-700 bg-sky-50 px-2.5 py-0.5 rounded-md border border-sky-200">
-                          3–5 Weeks
-                        </span>
-                      </div>
-                      <h3 className="text-xl font-bold text-slate-950 mb-1">Business</h3>
-                      <p className="text-xs text-slate-500 mb-4">
-                        Full multi-page company website, agency showcase, or SaaS growth platform.
-                      </p>
-                      <div className="rounded-2xl bg-sky-50/70 p-3 mb-4 text-xs space-y-1.5 text-slate-700">
-                        <div className="flex items-center gap-2"><span className="text-sky-600 font-bold">✓</span><span>Complete multi-page flow</span></div>
-                        <div className="flex items-center gap-2"><span className="text-sky-600 font-bold">✓</span><span>Subtle 3D or bento micro-interactions</span></div>
-                        <div className="flex items-center gap-2"><span className="text-sky-600 font-bold">✓</span><span>Client hub & e-contract portal</span></div>
-                      </div>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => handleChooseAesthetic(AESTHETIC_STYLES[3], "Business")}
-                      className="w-full rounded-full bg-gradient-to-r from-sky-600 to-indigo-600 py-2.5 text-xs font-bold uppercase tracking-widest text-white shadow-md hover:brightness-110 transition cursor-pointer"
-                    >
-                      Request Business Scope →
-                    </button>
-                  </div>
-
-                  {/* Custom Flagship Tier */}
-                  <div className="flex flex-col justify-between rounded-3xl border border-black/8 bg-slate-950 text-white p-6 shadow-md hover:shadow-xl transition">
-                    <div>
-                      <div className="flex items-center justify-between mb-3">
-                        <span className="rounded-full bg-white/10 px-3 py-1 text-[10px] font-extrabold uppercase tracking-wider text-sky-300">
-                          8+ Pages / WebGL
-                        </span>
-                        <span className="text-xs font-bold text-emerald-400 bg-emerald-500/10 px-2.5 py-0.5 rounded-md border border-emerald-500/20">
-                          6–8+ Weeks
-                        </span>
-                      </div>
-                      <h3 className="text-xl font-bold text-white mb-1">Custom Flagship</h3>
-                      <p className="text-xs text-slate-400 mb-4">
-                        Complex WebGL 3D spatial experiences, database auth, custom configurators.
-                      </p>
-                      <div className="rounded-2xl bg-white/5 p-3 mb-4 text-xs space-y-1.5 text-slate-300">
-                        <div className="flex items-center gap-2"><span className="text-sky-400 font-bold">✓</span><span>Custom Three.js 3D canvas</span></div>
-                        <div className="flex items-center gap-2"><span className="text-sky-400 font-bold">✓</span><span>Full-Stack Supabase DB + Auth</span></div>
-                        <div className="flex items-center gap-2"><span className="text-sky-400 font-bold">✓</span><span>Dedicated 60-day hypercare warranty</span></div>
-                      </div>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => handleChooseAesthetic(AESTHETIC_STYLES[0], "Custom Flagship")}
-                      className="w-full rounded-full bg-white text-slate-950 py-2.5 text-xs font-bold uppercase tracking-widest hover:bg-slate-100 transition cursor-pointer"
-                    >
-                      Request Custom Scope →
-                    </button>
-                  </div>
-                </div>
-
-                {/* Razorpay Retainer & Instant Checkout Callout */}
-                <div className="mt-8 rounded-3xl border border-sky-400/40 bg-gradient-to-r from-slate-950 via-sky-950/40 to-slate-900 p-6 text-white shadow-xl flex flex-col md:flex-row items-center justify-between gap-6">
-                  <div className="flex items-center gap-4">
-                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-sky-500/20 text-sky-400 text-2xl border border-sky-400/30">
-                      💳
-                    </div>
-                    <div>
-                      <div className="inline-flex items-center gap-2 rounded-full bg-sky-500/20 px-3 py-0.5 text-[10px] font-bold uppercase tracking-wider text-sky-300 border border-sky-400/30 mb-1">
-                        Razorpay Live Gateway
-                      </div>
-                      <h4 className="text-lg font-bold text-white">
-                        Lock In Your Sprint Queue via Retainer Deposit
-                      </h4>
-                      <p className="text-xs text-slate-300">
-                        Secure instant queue priority, unlock private client workspace, and execute e-contracts via Razorpay.
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="flex flex-wrap gap-3 shrink-0">
-                    <Link
-                      href="/paywall"
-                      className="rounded-xl bg-gradient-to-r from-sky-400 to-cyan-500 px-5 py-2.5 text-xs font-bold uppercase tracking-wider text-slate-950 shadow-md hover:brightness-110 transition"
-                    >
-                      Open Razorpay Paywall →
-                    </Link>
-                    <Link
-                      href="/client"
-                      className="rounded-xl border border-white/20 bg-white/5 px-4 py-2.5 text-xs font-semibold text-slate-200 hover:bg-white/10 transition"
-                    >
-                      Reviewer Access
-                    </Link>
-                  </div>
-                </div>
-              </div>
-
-              {/* Browse Aesthetics Carousel / Grid Preview */}
-              <div>
-                <div className="flex items-center justify-between mb-6">
-                  <div>
-                    <span className="text-xs font-extrabold uppercase tracking-widest text-sky-600">
-                      Visual Archetypes Gallery
-                    </span>
-                    <h3 className="text-2xl font-bold text-slate-950 mt-0.5">
-                      Explore Ready-Made Aesthetics
-                    </h3>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={handleBrowseAesthetics}
-                    className="rounded-full bg-white border border-black/10 px-4 py-2 text-xs font-bold text-slate-800 hover:bg-slate-50 transition cursor-pointer"
-                  >
-                    View All {AESTHETIC_STYLES.length} Aesthetics →
-                  </button>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {AESTHETIC_STYLES.slice(0, 6).map((style) => (
-                    <div
-                      key={style.id}
-                      className="group flex flex-col justify-between rounded-3xl border border-black/10 bg-white/80 p-5 shadow-sm hover:shadow-xl transition-all duration-300 backdrop-blur-md"
-                    >
-                      <div>
-                        {/* Mini wireframe */}
-                        <div
-                          className="rounded-2xl p-4 mb-4 border border-black/8 overflow-hidden cursor-pointer"
-                          style={{ backgroundColor: style.mockWireframe.bgColor, color: style.mockWireframe.textColor }}
-                          onClick={() => setPreviewStyleModal(style)}
-                        >
-                          <div className="flex items-center justify-between mb-2">
-                            <span className="h-2 w-10 rounded-full" style={{ backgroundColor: style.mockWireframe.accentColor }} />
-                            <span className="text-[9px] font-mono opacity-60">{style.mockWireframe.badgeText}</span>
-                          </div>
-                          <h4 className="text-xs font-bold line-clamp-1 mb-1">{style.mockWireframe.heroHeading}</h4>
-                          <p className="text-[10px] opacity-70 line-clamp-2 leading-relaxed">{style.mockWireframe.heroSubheading}</p>
-                        </div>
-
-                        <div className="flex items-center justify-between mb-1">
-                          <span className="text-[10px] font-extrabold uppercase tracking-wider text-sky-700 bg-sky-50 px-2 py-0.5 rounded">
-                            {style.category}
-                          </span>
-                          <span className="text-[10px] font-bold text-slate-400">{style.badge}</span>
-                        </div>
-
-                        <h4 className="text-lg font-bold text-slate-950 mt-1 mb-1">{style.name}</h4>
-                        <p className="text-xs text-slate-500 line-clamp-2 mb-3 leading-relaxed">{style.tagline}</p>
-                      </div>
-
-                      <div className="flex items-center gap-2 pt-3 border-t border-black/6">
-                        <button
-                          type="button"
-                          onClick={() => setPreviewStyleModal(style)}
-                          className="flex-1 rounded-xl border border-black/10 bg-slate-50 py-2 text-xs font-bold text-slate-800 hover:bg-slate-100 transition cursor-pointer"
-                        >
-                          Preview
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => handleChooseAesthetic(style, "Business")}
-                          className="flex-1 rounded-xl bg-slate-950 py-2 text-xs font-bold text-white hover:bg-slate-800 transition cursor-pointer"
-                        >
-                          Choose Style →
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Currency & Addon Modules */}
-              <div className="rounded-[2.4rem] border border-black/10 bg-white/80 p-6 sm:p-10 shadow-lg backdrop-blur-xl">
-                <div className="flex items-center justify-between mb-6">
-                  <div>
-                    <span className="text-xs font-extrabold uppercase tracking-widest text-sky-600">Modular Add-ons</span>
-                    <h3 className="text-2xl font-bold text-slate-950 mt-0.5">Sprint Enhancements</h3>
-                  </div>
-                  <div className="flex items-center gap-1 rounded-full border border-black/10 bg-white p-1">
-                    <button
-                      type="button"
-                      onClick={() => setCurrency("USD")}
-                      className={`rounded-full px-3 py-1 text-xs font-bold transition cursor-pointer ${currency === "USD" ? "bg-slate-950 text-white" : "text-slate-600"}`}
-                    >
-                      $ USD
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setCurrency("INR")}
-                      className={`rounded-full px-3 py-1 text-xs font-bold transition cursor-pointer ${currency === "INR" ? "bg-slate-950 text-white" : "text-slate-600"}`}
-                    >
-                      ₹ INR
-                    </button>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
-                  {[
-                    { name: "Headless CMS (Sanity / Contentful)", usd: 499, inr: 41000, desc: "Visual self-serve content & blog manager." },
-                    { name: "Gemini / OpenAI AI Copilot", usd: 599, inr: 49000, desc: "Custom-trained domain assistant & lead capture." },
-                    { name: "Original Soundscape & Micro Audio", usd: 299, inr: 24000, desc: "Reactive sound design and ambient audio toggle." }
-                  ].map((a, i) => (
-                    <div key={i} className="rounded-2xl border border-black/6 bg-slate-50/70 p-4">
-                      <div className="flex items-center justify-between font-bold text-slate-900 mb-1">
-                        <span>{a.name}</span>
-                        <span className="text-sky-700">{currency === "USD" ? `+$${a.usd}` : `+₹${a.inr.toLocaleString()}`}</span>
-                      </div>
-                      <p className="text-slate-500 text-[11px]">{a.desc}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* FAQ Accordion */}
-              <div className="rounded-[2.4rem] border border-black/10 bg-white/80 p-6 sm:p-10 shadow-lg backdrop-blur-xl">
-                <div className="mb-6">
-                  <span className="text-xs font-extrabold uppercase tracking-widest text-sky-600">Client FAQ</span>
-                  <h3 className="text-2xl font-bold text-slate-950 mt-0.5">How Working Together Works</h3>
-                </div>
-                <div className="space-y-3">
-                  {[
-                    { q: "How does the aesthetic + scope model work?", a: "You select any aesthetic visual archetype you like from our gallery (or discover one via our questionnaire). Then, depending on whether you need a 1-3 page landing page, a 4-7 page business site, or a full 3D custom web app, we scope the project milestones transparently." },
-                    { q: "What happens after I request a website?", a: "Your project is instantly created on your dedicated Client Board (/client). You can review the milestone scope, upload assets to the dropzone, request modifications, and execute the digital agreement." },
-                    { q: "Can I request changes during development?", a: "Yes! Your Client Board includes an interactive Changes & Requests log where you can submit revision requests (e.g. 'make hero less dark', 'round buttons') and track them in real time." }
-                  ].map((faq, idx) => (
-                    <div key={idx} className="rounded-2xl border border-black/8 bg-slate-50/80 overflow-hidden">
-                      <button
-                        type="button"
-                        onClick={() => setOpenFaqIndex(openFaqIndex === idx ? null : idx)}
-                        className="w-full text-left px-5 py-4 flex items-center justify-between font-bold text-sm text-slate-900 cursor-pointer"
-                      >
-                        <span>{faq.q}</span>
-                        <span className="text-slate-400">{openFaqIndex === idx ? "−" : "+"}</span>
-                      </button>
-                      {openFaqIndex === idx && (
-                        <div className="px-5 pb-4 text-xs text-slate-600 leading-relaxed border-t border-black/4 pt-3">
-                          {faq.a}
-                        </div>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-            </div>
-          )}
-
-          {/* ------------------------------------------------------------- */}
-          {/* VIEW B: BROWSE AESTHETICS (VISUAL GALLERY OF CARDS)           */}
-          {/* ------------------------------------------------------------- */}
-          {activeTab === "gallery" && (
-            <div className="space-y-8">
-              
-              {/* Category Filter Badges */}
-              <div className="flex flex-wrap items-center justify-center gap-2 mb-8">
+          {funnelStep === 0 && (
+            <div className="space-y-12">
+            {/* Category Filter Pills & Detailed Matrix Toggle */}
+            <div className="flex flex-wrap items-center justify-between gap-4">
+              <div className="flex flex-wrap items-center gap-2">
                 {categories.map((cat) => (
                   <button
                     key={cat}
                     type="button"
-                    onClick={() => setActiveCategory(cat)}
+                    onClick={() => {
+                      setActiveCategory(cat);
+                      if (activeTab === "calculator") setActiveTab("home");
+                    }}
                     className={`rounded-full px-4 py-2 text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
-                      activeCategory === cat
-                        ? "bg-slate-900 text-white shadow-sm"
-                        : "bg-white/70 text-slate-700 hover:bg-white border border-black/8"
+                      activeCategory === cat && activeTab !== "calculator"
+                        ? "bg-[#0a192f] text-white shadow-sm"
+                        : "bg-[#c8ecff]/30 text-sky-950 hover:bg-[#c8ecff]/50 border border-sky-300/80"
                     }`}
                   >
                     {cat}
@@ -837,20 +482,48 @@ Features: ${featuresList.join(", ")}
                 ))}
               </div>
 
-              {/* Aesthetic Cards Matrix */}
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => setActiveTab(activeTab === "calculator" ? "home" : "calculator")}
+                  className={`rounded-full px-4 py-2 text-xs font-bold uppercase tracking-wider transition-all cursor-pointer border ${
+                    activeTab === "calculator"
+                      ? "bg-sky-600 text-white border-sky-500 font-bold shadow-md"
+                      : "bg-[#c8ecff]/30 text-sky-950 hover:bg-[#c8ecff]/50 border border-sky-300/80"
+                  }`}
+                >
+                  <span>⚡</span>
+                  <span className="ml-1.5">{activeTab === "calculator" ? "Show Aesthetics Catalog" : "18-Category Detailed Scope Matrix"}</span>
+                </button>
+              </div>
+            </div>
+
+            {/* VIEW: INTERACTIVE SCOPE & PRICE ESTIMATOR (CALCULATOR TAB) */}
+            {activeTab === "calculator" && (
+              <div className="space-y-8">
+                <CustomScopeCalculator
+                  currency={currency}
+                  onCurrencyChange={setCurrency}
+                  onProceedWithScope={handleProceedWithScope}
+                />
+              </div>
+            )}
+
+            {/* DIRECT AESTHETICS CARDS GRID */}
+            {activeTab === "home" && (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {filteredStyles.map((style) => (
                   <div
                     key={style.id}
-                    className="flex flex-col justify-between rounded-[2.2rem] border border-black/10 bg-white/85 p-6 shadow-md backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl"
+                    className="flex flex-col justify-between rounded-[2.2rem] border border-sky-300/80 bg-[#c8ecff]/30 hover:bg-[#c8ecff]/50 p-6 shadow-md backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl"
                   >
                     <div>
                       {/* Badge & Category */}
                       <div className="flex items-center justify-between mb-3">
-                        <span className="rounded-full bg-sky-100 px-3 py-1 text-[10px] font-extrabold uppercase tracking-wider text-sky-800">
+                        <span className="rounded-full bg-sky-100 border border-sky-200 px-3 py-1 text-[10px] font-extrabold uppercase tracking-wider text-sky-950">
                           {style.category}
                         </span>
-                        <span className="text-[11px] font-bold text-slate-400">
+                        <span className="text-[11px] font-bold text-sky-800/80">
                           {style.badge}
                         </span>
                       </div>
@@ -882,16 +555,16 @@ Features: ${featuresList.join(", ")}
                       </div>
 
                       {/* Title & Tagline */}
-                      <h3 className="text-xl font-bold mb-1 text-slate-950">
+                      <h3 className="text-xl font-bold mb-1 text-[#0a192f]">
                         {style.name}
                       </h3>
-                      <p className="text-xs mb-4 leading-relaxed text-slate-600 line-clamp-2">
+                      <p className="text-xs mb-4 leading-relaxed text-sky-950/80 line-clamp-2">
                         {style.tagline}
                       </p>
 
                       {/* Color Palette Swatches */}
                       <div className="mb-4">
-                        <span className="block text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1.5">
+                        <span className="block text-[10px] font-bold uppercase tracking-wider text-sky-800 mb-1.5">
                           Signature Color DNA
                         </span>
                         <div className="flex items-center gap-2">
@@ -911,7 +584,7 @@ Features: ${featuresList.join(", ")}
                         {style.techStack.slice(0, 3).map((tech) => (
                           <span
                             key={tech}
-                            className="rounded-md border border-black/8 bg-slate-100 px-2 py-0.5 text-[10px] font-semibold text-slate-700"
+                            className="rounded-md border border-sky-200/60 bg-sky-100/70 px-2 py-0.5 text-[10px] font-semibold text-sky-900"
                           >
                             {tech}
                           </span>
@@ -920,27 +593,99 @@ Features: ${featuresList.join(", ")}
                     </div>
 
                     {/* Action Buttons */}
-                    <div className="flex items-center gap-2 pt-4 border-t border-black/8">
+                    <div className="flex items-center gap-2 pt-4 border-t border-sky-200/80">
                       <button
                         type="button"
                         onClick={() => setPreviewStyleModal(style)}
-                        className="flex-1 rounded-xl border border-black/12 bg-white py-2 text-xs font-bold text-slate-800 hover:bg-slate-50 transition cursor-pointer"
+                        className="flex-1 rounded-xl border border-sky-300/80 bg-white/70 py-2 text-xs font-bold text-[#0a192f] hover:bg-white transition cursor-pointer"
                       >
                         Inspect Preview
                       </button>
                       <button
                         type="button"
                         onClick={() => handleChooseAesthetic(style, "Business")}
-                        className="flex-1 rounded-xl bg-slate-950 py-2 text-xs font-bold text-white hover:bg-slate-800 transition cursor-pointer"
+                        className="flex-1 rounded-xl bg-[#0a192f] py-2 text-xs font-bold text-white hover:bg-slate-800 transition cursor-pointer"
                       >
-                        Choose Aesthetic →
+                        Choose Style →
                       </button>
                     </div>
                   </div>
                 ))}
               </div>
+            )}
+
+            {/* Currency & Addon Modules */}
+            <div className="rounded-[2.4rem] border border-sky-300/80 bg-[#c8ecff]/30 p-6 sm:p-10 shadow-md backdrop-blur-xl">
+              <div className="flex items-center justify-between mb-6">
+                <div>
+                  <span className="text-xs font-extrabold uppercase tracking-widest text-sky-700">Modular Add-ons</span>
+                  <h3 className="text-2xl font-bold text-[#0a192f] mt-0.5">Sprint Enhancements</h3>
+                </div>
+                <div className="flex items-center gap-1 rounded-full border border-sky-300/80 bg-white/70 p-1">
+                  <button
+                    type="button"
+                    onClick={() => setCurrency("USD")}
+                    className={`rounded-full px-3 py-1 text-xs font-bold transition cursor-pointer ${currency === "USD" ? "bg-[#0a192f] text-white" : "text-sky-950 hover:text-sky-700"}`}
+                  >
+                    $ USD
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setCurrency("INR")}
+                    className={`rounded-full px-3 py-1 text-xs font-bold transition cursor-pointer ${currency === "INR" ? "bg-[#0a192f] text-white" : "text-sky-950 hover:text-sky-700"}`}
+                  >
+                    ₹ INR
+                  </button>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
+                {[
+                  { name: "Headless CMS (Sanity / Contentful)", usd: 499, inr: 41000, desc: "Visual self-serve content & blog manager." },
+                  { name: "Gemini / OpenAI AI Copilot", usd: 599, inr: 49000, desc: "Custom-trained domain assistant & lead capture." },
+                  { name: "Original Soundscape & Micro Audio", usd: 299, inr: 24000, desc: "Reactive sound design and ambient audio toggle." }
+                ].map((a, i) => (
+                  <div key={i} className="rounded-2xl border border-sky-200/80 bg-white/50 p-4">
+                    <div className="flex items-center justify-between font-bold text-[#0a192f] mb-1">
+                      <span>{a.name}</span>
+                      <span className="text-sky-700">{currency === "USD" ? `+$${a.usd}` : `+₹${a.inr.toLocaleString()}`}</span>
+                    </div>
+                    <p className="text-sky-900/70 text-[11px]">{a.desc}</p>
+                  </div>
+                ))}
+              </div>
             </div>
-          )}
+
+            {/* FAQ Accordion */}
+            <div className="rounded-[2.4rem] border border-sky-300/80 bg-[#c8ecff]/30 p-6 sm:p-10 shadow-md backdrop-blur-xl">
+              <div className="mb-6">
+                <span className="text-xs font-extrabold uppercase tracking-widest text-sky-700">Client FAQ</span>
+                <h3 className="text-2xl font-bold text-[#0a192f] mt-0.5">How Working Together Works</h3>
+              </div>
+              <div className="space-y-3">
+                {[
+                  { q: "How does the aesthetic + scope model work?", a: "You select any aesthetic visual archetype you like from our gallery (or discover one via our questionnaire). Then, depending on whether you need a 1-3 page landing page, a 4-7 page business site, or a full 3D custom web app, we scope the project milestones transparently." },
+                  { q: "What happens after I request a website?", a: "Your project is instantly created on your dedicated Client Board (/client). You can review the milestone scope, upload assets to the dropzone, request modifications, and execute the digital agreement." },
+                  { q: "Can I request changes during development?", a: "Yes! Your Client Board includes an interactive Changes & Requests log where you can submit revision requests (e.g. 'make hero less dark', 'round buttons') and track them in real time." }
+                ].map((faq, idx) => (
+                  <div key={idx} className="rounded-2xl border border-sky-200/80 bg-white/50 overflow-hidden">
+                    <button
+                      type="button"
+                      onClick={() => setOpenFaqIndex(openFaqIndex === idx ? null : idx)}
+                      className="w-full text-left px-5 py-4 flex items-center justify-between font-bold text-sm text-[#0a192f] cursor-pointer"
+                    >
+                      <span>{faq.q}</span>
+                      <span className="text-sky-700">{openFaqIndex === idx ? "−" : "+"}</span>
+                    </button>
+                    {openFaqIndex === idx && (
+                      <div className="px-5 pb-4 text-xs text-sky-950/80 leading-relaxed border-t border-sky-200/60 pt-3">
+                        {faq.a}
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
 
           {/* ------------------------------------------------------------- */}
           {/* VIEW C: "MAKE YOUR WEBSITE" 5-QUESTION FLOW                   */}
@@ -1198,14 +943,14 @@ Features: ${featuresList.join(", ")}
               
               {/* Results Top Header */}
               <div className="text-center max-w-2xl mx-auto">
-                <div className="inline-flex items-center gap-2 rounded-full bg-emerald-100 px-3.5 py-1 text-xs font-bold text-emerald-800 mb-2">
+                <div className="inline-flex items-center gap-2 rounded-full bg-sky-100 border border-sky-200 px-3.5 py-1 text-xs font-bold text-sky-950 mb-2">
                   <span>✓</span>
                   <span>Recommendation Generated</span>
                 </div>
-                <h2 className="text-3xl sm:text-4xl font-black text-slate-950 mb-2">
+                <h2 className="text-3xl sm:text-4xl font-black text-[#0a192f] mb-2">
                   We found {recommendationData.matches.length} aesthetics for your vision.
                 </h2>
-                <p className="text-xs sm:text-sm text-slate-600">
+                <p className="text-xs sm:text-sm text-sky-900/80">
                   Based on your {wizardAnswers.buildingType} project and desired {wizardAnswers.vibe} aesthetic, here are the top curated visual archetypes. Click any direction to request your build.
                 </p>
               </div>
@@ -1217,17 +962,17 @@ Features: ${featuresList.join(", ")}
                     key={style.id}
                     className={`flex flex-col justify-between rounded-[2.2rem] border p-6 transition-all duration-300 backdrop-blur-xl ${
                       idx === 0
-                        ? "border-sky-400 bg-gradient-to-b from-white via-sky-50/70 to-white shadow-xl ring-2 ring-sky-300/40"
-                        : "border-black/10 bg-white/85 shadow-md hover:-translate-y-1 hover:shadow-xl"
+                        ? "border-sky-400 bg-gradient-to-b from-[#c8ecff]/40 via-sky-50/70 to-[#c8ecff]/40 shadow-xl ring-2 ring-sky-300/40"
+                        : "border-sky-300/80 bg-[#c8ecff]/30 shadow-md hover:-translate-y-1 hover:shadow-xl hover:bg-[#c8ecff]/50"
                     }`}
                   >
                     <div>
                       {/* Top Match Score Badge */}
                       <div className="flex items-center justify-between mb-3">
-                        <span className="rounded-full bg-emerald-100 px-2.5 py-0.5 text-[10px] font-extrabold text-emerald-800">
+                        <span className="rounded-full bg-sky-100 border border-sky-200 px-2.5 py-0.5 text-[10px] font-extrabold text-sky-950">
                           {matchScore}% Match
                         </span>
-                        <span className="text-[11px] font-bold text-slate-400">{style.category}</span>
+                        <span className="text-[11px] font-bold text-sky-800/80">{style.category}</span>
                       </div>
 
                       {/* Mini Wireframe Mockup */}
@@ -1244,16 +989,16 @@ Features: ${featuresList.join(", ")}
                         <p className="text-[10px] opacity-70 line-clamp-2 leading-relaxed">{style.mockWireframe.heroSubheading}</p>
                       </div>
 
-                      <h3 className="text-xl font-bold text-slate-950 mb-1">{style.name}</h3>
-                      <p className="text-xs text-slate-600 line-clamp-2 mb-3 leading-relaxed">{style.tagline}</p>
+                      <h3 className="text-xl font-bold text-[#0a192f] mb-1">{style.name}</h3>
+                      <p className="text-xs text-sky-900/80 line-clamp-2 mb-3 leading-relaxed">{style.tagline}</p>
 
-                      <div className="rounded-xl bg-slate-50 border border-black/6 p-2.5 mb-4 text-[11px] text-slate-600">
+                      <div className="rounded-xl bg-white/60 border border-sky-200/80 p-2.5 mb-4 text-[11px] text-sky-950">
                         💡 {matchReason}
                       </div>
 
                       {/* Color Palette */}
                       <div className="mb-4">
-                        <span className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">
+                        <span className="block text-[10px] font-bold uppercase tracking-wider text-sky-800 mb-1">
                           Signature Colors
                         </span>
                         <div className="flex items-center gap-2">
@@ -1269,18 +1014,18 @@ Features: ${featuresList.join(", ")}
                     </div>
 
                     {/* Action */}
-                    <div className="pt-3 border-t border-black/8 flex items-center gap-2">
+                    <div className="pt-3 border-t border-sky-200/80 flex items-center gap-2">
                       <button
                         type="button"
                         onClick={() => setPreviewStyleModal(style)}
-                        className="flex-1 rounded-xl border border-black/10 bg-white py-2 text-xs font-bold text-slate-800 hover:bg-slate-50 transition cursor-pointer"
+                        className="flex-1 rounded-xl border border-sky-300/80 bg-white/70 py-2 text-xs font-bold text-[#0a192f] hover:bg-white transition cursor-pointer"
                       >
                         Preview DNA
                       </button>
                       <button
                         type="button"
                         onClick={() => handleChooseAesthetic(style, wizardAnswers.scopeSize || "Business")}
-                        className="flex-1 rounded-xl bg-slate-950 py-2 text-xs font-bold text-white hover:bg-slate-800 transition cursor-pointer"
+                        className="flex-1 rounded-xl bg-[#0a192f] py-2 text-xs font-bold text-white hover:bg-slate-800 transition cursor-pointer"
                       >
                         Choose This →
                       </button>
@@ -1305,7 +1050,8 @@ Features: ${featuresList.join(", ")}
 
             </div>
           )}
-
+            </div>
+          )}
         </div>
       </div>
 
@@ -1409,36 +1155,36 @@ Features: ${featuresList.join(", ")}
             if (e.target === e.currentTarget) setShowIntakeModal(false);
           }}
         >
-          <div className="relative w-full max-w-xl rounded-[2.4rem] border border-black/10 bg-white p-6 sm:p-8 shadow-2xl max-h-[90vh] overflow-y-auto">
+          <div className="relative w-full max-w-xl rounded-[2.4rem] border border-sky-300/80 bg-[#dff4ff]/95 p-6 sm:p-8 shadow-2xl max-h-[90vh] overflow-y-auto backdrop-blur-xl">
             <button
               type="button"
               onClick={() => setShowIntakeModal(false)}
-              className="absolute right-5 top-5 h-8 w-8 rounded-full border border-black/10 text-lg flex items-center justify-center text-slate-500 hover:bg-slate-100 cursor-pointer"
+              className="absolute right-5 top-5 h-8 w-8 rounded-full border border-sky-300/80 text-lg flex items-center justify-center text-sky-900 hover:bg-sky-100 cursor-pointer"
             >
               ×
             </button>
 
             {intakeSuccess ? (
               <div className="text-center py-8">
-                <div className="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-emerald-100 text-3xl mb-4">
+                <div className="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-sky-100 border border-sky-200 text-[#0a192f] text-3xl mb-4">
                   🎉
                 </div>
-                <h3 className="text-2xl font-black text-slate-950 mb-2">Project Registered!</h3>
-                <p className="text-xs text-slate-600 max-w-md mx-auto mb-4">
+                <h3 className="text-2xl font-black text-[#0a192f] mb-2">Project Registered!</h3>
+                <p className="text-xs text-sky-900/80 max-w-md mx-auto mb-4">
                   Your project brief with selected aesthetic <strong>{selectedAestheticForRequest?.name}</strong> has been created. Redirecting to your dedicated Client Board...
                 </p>
                 <div className="animate-spin h-5 w-5 border-2 border-sky-600 border-t-transparent rounded-full mx-auto" />
               </div>
             ) : !authStepRequired ? (
               <div>
-                <span className="text-[10px] font-extrabold uppercase tracking-widest text-sky-600">
+                <span className="text-[10px] font-extrabold uppercase tracking-widest text-sky-700">
                   Project Request Brief
                 </span>
-                <h3 className="text-2xl font-black text-slate-950 mt-1 mb-1">
+                <h3 className="text-2xl font-black text-[#0a192f] mt-1 mb-1">
                   Request This Website
                 </h3>
-                <p className="text-xs text-slate-500 mb-6">
-                  Selected Aesthetic: <span className="font-bold text-slate-900">{selectedAestheticForRequest?.name}</span>
+                <p className="text-xs text-sky-800/80 mb-6">
+                  Selected Aesthetic: <span className="font-bold text-[#0a192f]">{selectedAestheticForRequest?.name}</span>
                 </p>
 
                 <form onSubmit={handleIntakeSubmit} className="space-y-4">

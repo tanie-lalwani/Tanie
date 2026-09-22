@@ -32,108 +32,86 @@ main[data-prerendered="true"] {
 	--color-text-heading: #ffffff;
 }
 
-html {
-	font-family: var(--font-body);
-	text-rendering: optimizeLegibility;
-	-webkit-font-smoothing: antialiased;
-	-moz-osx-font-smoothing: grayscale;
-	color: var(--color-text-main);
-	cursor: url("/water-cursor.svg") 16 5, auto;
+@layer base {
+	html {
+		font-family: var(--font-body);
+		text-rendering: optimizeLegibility;
+		-webkit-font-smoothing: antialiased;
+		-moz-osx-font-smoothing: grayscale;
+		color: var(--color-text-main);
+		cursor: url("/water-cursor.svg") 16 5, auto;
+	}
+
+	body {
+		font-family: var(--font-body);
+		font-size: var(--type-body);
+		line-height: 1.6;
+		color: var(--color-text-main);
+		background-color: #04111b;
+	}
+
+	h1,
+	h2,
+	h3,
+	h4,
+	h5,
+	h6 {
+		font-family: var(--font-display);
+		font-weight: 500;
+		line-height: 1.05;
+		letter-spacing: 0;
+		text-wrap: balance;
+		color: var(--color-text-heading, inherit);
+	}
+
+	/* global form semantics */
+	button,
+	input,
+	textarea,
+	select {
+		font-size: var(--type-ui);
+		font-weight: 400;
+		letter-spacing: 0.03em;
+		font: inherit;
+	}
+
+	/* links */
+	a,
+	.text-link {
+		color: var(--color-text-link);
+		text-decoration: underline;
+		text-underline-offset: 2px;
+		transition: color 0.2s;
+	}
+
+	a:hover,
+	.text-link:hover {
+		color: #fff;
+	}
+
+	a,
+	button,
+	input,
+	textarea,
+	select,
+	label {
+		cursor: url("/water-cursor.svg") 16 5, pointer;
+	}
 }
 
-body {
-	font-family: var(--font-body);
-	font-size: var(--type-body);
-	line-height: 1.6;
-	color: var(--color-text-main);
-	background-color: #04111b;
+.theme-ocean-light {
+	--color-text-heading: #0a192f;
+	--color-text-main: #0a192f;
+	color: #0a192f !important;
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-	font-family: var(--font-display);
-	font-weight: 500;
-	line-height: 1.05;
-	letter-spacing: 0;
-	text-wrap: balance;
-	color: var(--color-text-heading);
-}
-
-/* global form semantics */
-button,
-input,
-textarea,
-select {
-	font-size: var(--type-ui);
-	font-weight: 400;
-	letter-spacing: 0.03em;
-	font: inherit;
-}
-
-/* links */
-a,
-.text-link {
-	color: var(--color-text-link);
-	text-decoration: underline;
-	text-underline-offset: 2px;
-	transition: color 0.2s;
-}
-
-a:hover,
-.text-link:hover {
-	color: #fff;
-}
-
-html {
-	font-family: var(--font-body);
-	text-rendering: optimizeLegibility;
-	-webkit-font-smoothing: antialiased;
-	-moz-osx-font-smoothing: grayscale;
-	color: var(--color-text-main);
-	cursor: url("/water-cursor.svg") 16 5, auto;
-}
-
-body {
-	font-family: var(--font-body);
-	font-size: var(--type-body);
-	line-height: 1.6;
-	color: var(--color-text-main);
-	background-color: #04111b;
-}
-
-a,
-button,
-input,
-textarea,
-select,
-label {
-	cursor: url("/water-cursor.svg") 16 5, pointer;
-}
-
-#root {
-	min-height: 100vh;
-}
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-	font-family: var(--font-display);
-	letter-spacing: 0;
-	color: var(--color-text-heading);
-}
-
-button,
-input,
-textarea,
-select {
-	font: inherit;
+.theme-ocean-light h1,
+.theme-ocean-light h2,
+.theme-ocean-light h3,
+.theme-ocean-light h4,
+.theme-ocean-light h5,
+.theme-ocean-light h6 {
+	color: #0a192f !important;
 }
 
 main,
@@ -372,6 +350,29 @@ a:hover, .text-link:hover {
 		min-height: 48px;
 		transform: translate(-50%, -50%);
 		z-index: 1;
+	}
+
+	.theme-ocean-light,
+	[data-theme="light"],
+	.pricing-page-theme {
+		--color-text-main: #0a192f;
+		--color-text-heading: #0a192f;
+		color: #0a192f;
+	}
+
+	.theme-ocean-light h1,
+	.theme-ocean-light h2,
+	.theme-ocean-light h3,
+	.theme-ocean-light h4,
+	.theme-ocean-light h5,
+	.theme-ocean-light h6,
+	.pricing-page-theme h1,
+	.pricing-page-theme h2,
+	.pricing-page-theme h3,
+	.pricing-page-theme h4,
+	.pricing-page-theme h5,
+	.pricing-page-theme h6 {
+		color: #0a192f;
 	}
 }
 

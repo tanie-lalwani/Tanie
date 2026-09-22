@@ -76,7 +76,7 @@ export function getRazorpayKeyId(): string {
   return (
     process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID ||
     process.env.RAZORPAY_KEY_ID ||
-    "rzp_live_TTLrONzmq64SMo"
+    "rzp_test_Tf9cErSV3SS3UT"
   );
 }
 
