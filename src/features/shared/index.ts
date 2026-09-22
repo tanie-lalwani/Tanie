@@ -1,9 +1,9 @@
 // Shared Layout, Navigation & SEO Feature Module
-export { Navbar } from "@/components/Navbar";
-export { SiteFooter } from "@/components/SiteFooter";
-export { PageHeader } from "@/components/PageHeader";
-export { AppShell } from "@/components/AppShell";
-export { AppProviders } from "@/components/AppProviders";
-export { ErrorBoundary } from "@/components/ErrorBoundary";
-export { AppLoadingVeil } from "@/components/AppLoadingVeil";
-export { SEOHead } from "@/components/SEOHead";
+export { default as Navbar } from "@/components/Navbar";
+export { default as SiteFooter } from "@/components/SiteFooter";
+export { default as PageHeader } from "@/components/PageHeader";
+export { default as AppShell } from "@/components/AppShell";
+export { default as AppProviders } from "@/components/AppProviders";
+export { default as ErrorBoundary } from "@/components/ErrorBoundary";
+export { default as AppLoadingVeil } from "@/components/AppLoadingVeil";
+export { default as SEOHead } from "@/components/SEOHead";

@@ -135,7 +135,7 @@ const translations: Record<Locale, SiteCopy> = {
       heroTitle: "I'm Tanie!",
       heroRole: "Creative Developer",
       heroDescription:
-        "I create websites that move, react, and stand out.\nScroll deeper! The fun stuff’s below.",
+        "Let’s make your website your best salesperson.",
       aboutTitle: "A bit about me:",
       aboutParagraphs: [
         "Hi, I’m Tanie Lalwani, a creative and full stack developer based in India. I’m a data science graduate, and I first got into tech at 16. Over time, I found myself interested in almost everything like data, blockchain, ML, dev-rel, and most of the usual tech buzzwords, but the thing that stuck with me the longest was web design.",
@@ -294,7 +294,7 @@ const translations: Record<Locale, SiteCopy> = {
       heroTitle: "Soy Tanie!",
       heroRole: "Desarrolladora creativa",
       heroDescription:
-        "Creo sitios web que se mueven, reaccionan y destacan.\nBaja un poco más; lo mejor está abajo.",
+        "Hagamos de tu sitio web tu mejor vendedor.",
       aboutTitle: "Un poco sobre mí:",
       aboutParagraphs: [
         "Hola, soy Tanie Lalwani, desarrolladora creativa y full-stack de India. Soy graduada en ciencia de datos y empecé en tecnología a los 16 años. Con el tiempo me interesé por casi todo: datos, blockchain, ML, dev-rel y muchos temas de tecnología, pero lo que más se quedó conmigo fue el diseño web.",
@@ -453,7 +453,7 @@ const translations: Record<Locale, SiteCopy> = {
       heroTitle: "Moi, Tanie !",
       heroRole: "Développeuse créative",
       heroDescription:
-        "Je crée des sites web qui bougent, réagissent et se démarquent.\nDescendez plus bas : le plus intéressant est dessous.",
+        "Faisons de votre site web votre meilleur vendeur.",
       aboutTitle: "Un peu sur moi :",
       aboutParagraphs: [
         "Bonjour, je suis Tanie Lalwani, développeuse créative et full-stack basée en Inde. Je suis diplômée en science des données et j’ai commencé la tech à 16 ans. Avec le temps, je me suis intéressée à presque tout : data, blockchain, ML, dev-rel et beaucoup de sujets tech, mais ce qui m’a le plus suivie, c’est le design web.",
@@ -771,7 +771,7 @@ const translations: Record<Locale, SiteCopy> = {
       heroTitle: "Tanie です!",
       heroRole: "クリエイティブ 開発者",
       heroDescription:
-        "動き、反応し、印象に残るウェブサイトを作っています。\nもう少し下へ。楽しい部分はこの先にあります。",
+        "あなたのウェブサイトを最高の営業担当者にしましょう。",
       aboutTitle: "私について：",
       aboutParagraphs: [
         "こんにちは、Tanie Lalwani です。インドを拠点にするクリエイティブな full-stack developer です。データサイエンスを学び、16歳でテックの世界に入りました。data、blockchain、ML、dev-rel などいろいろな分野に興味を持ってきましたが、いちばん長く残ったのは web design でした。",
@@ -1009,8 +1009,8 @@ const translations: Record<Locale, SiteCopy> = {
         title: "Innomedia",
         description:
           "ایک lightweight 360 degree marketing company website جو basic HTML اور CSS سے بنی، پھر motion، animated sections، اور flexible layouts سے بہتر کی گئی۔",
-        techStack: ["HTML", "CSS", "Flex", "Animation"],
-        details: [
+          techStack: ["HTML", "CSS", "Flex", "Animation"],
+          details: [
           "Innomedia ایک generic 360 degree marketing company site ہے جو simple service storytelling، clear page flow، اور quick visual trust کے around بنائی گئی۔ Base intentionally lean تھا: HTML، CSS، flexible sections، اور direct content structure۔",
           "Basic stack کے باوجود build میں animated reveals، soft transitions، اور layout rhythm کے ذریعے motion شامل کیا گیا تاکہ site static brochure سے زیادہ alive محسوس ہو۔ یہ overengineering کے بغیر چھوٹے frontend decisions کو polished محسوس کرانے کی practical مثال ہے۔",
         ],
@@ -1089,7 +1089,7 @@ const translations: Record<Locale, SiteCopy> = {
       heroTitle: "我是 Tanie!",
       heroRole: "创意 开发者",
       heroDescription:
-        "我制作会移动、会回应、也足够醒目的网站。\n继续往下滚动，精彩内容就在下面。",
+        "让您的网站成为您最好的销售员。",
       aboutTitle: "关于我：",
       aboutParagraphs: [
         "你好，我是 Tanie Lalwani，一名来自印度的创意 full-stack developer。我是数据科学毕业生，16 岁开始接触技术。后来我对 data、blockchain、ML、dev-rel 和许多 tech topics 都产生过兴趣，但最让我长期坚持下来的还是 web design。",

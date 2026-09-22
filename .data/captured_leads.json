@@ -3,23 +3,21 @@
     "id": "lead-1790103955244-vtpm3",
     "company_name": "Aurora Wellness Clinic",
     "business_type": "business",
-    "industry": "Doctor, Dental & Healthcare",
+    "industry": "Salon, Spa & Aesthetics",
     "selected_bundles": [
       "essential_core",
       "booking_appointments",
-      "lead_crm",
-      "growth_seo",
-      "ecommerce_ordering"
+      "growth_seo"
     ],
     "budget_tier": "₹25,000 – ₹50,000 (Growth Suite)",
     "timeline": "3–4 Weeks (Standard Launch)",
     "source": "hero_cost_calculator",
-    "current_step": "Step 5",
-    "status": "unlocked",
+    "current_step": "Hero Search Input",
+    "status": "typing",
     "ip_address": "::1",
     "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36",
     "created_at": "2026-09-22T19:05:55.244Z",
-    "updated_at": "2026-09-22T19:48:20.602Z"
+    "updated_at": "2026-09-22T19:52:01.987Z"
   },
   {
     "id": "lead-1790103954220-cb7mq",

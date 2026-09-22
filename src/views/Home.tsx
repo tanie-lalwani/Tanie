@@ -398,17 +398,36 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
             </motion.h1>
 
             <motion.div
-              className="mt-[2.625rem] max-w-[35.5rem] translate-x-[4px] text-[1.06rem] font-normal leading-[1.12] tracking-normal text-[#2D466F] sm:mt-[2.875rem] sm:text-[1.12rem]"
+              className="mt-[2.25rem] max-w-[35.5rem] translate-x-[4px] text-[1.12rem] sm:text-[1.25rem] font-semibold leading-[1.3] tracking-normal text-[#0a192f]"
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.45, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
             >
-              <p className="block">{heroLead}</p>
+              <p className="block">{heroLead || "Let’s make your website your best salesperson."}</p>
               {heroSubline ? (
-                <p className="mt-0 block w-full text-[0.94em] leading-[1.12] tracking-[0.05em] text-[#2D466FCC]">
+                <p className="mt-1 block w-full text-[0.94em] leading-[1.2] tracking-[0.02em] text-[#0a192f]/80">
                   {heroSubline}
                 </p>
               ) : null}
+
+              {/* HERO CTA BUTTONS */}
+              <div className="mt-6 flex flex-wrap items-center gap-3">
+                <Link
+                  href="/projects"
+                  className="px-7 py-3 rounded-full bg-[#0a192f] hover:bg-slate-800 text-white font-bold text-xs uppercase tracking-wider transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer no-underline"
+                >
+                  <span>Work</span>
+                  <span>→</span>
+                </Link>
+
+                <Link
+                  href="/pricing"
+                  className="px-7 py-3 rounded-full bg-[#c8ecff]/50 hover:bg-[#c8ecff]/80 text-[#0a192f] border border-sky-300 font-bold text-xs uppercase tracking-wider transition-all shadow-xs flex items-center justify-center gap-2 cursor-pointer no-underline"
+                >
+                  <span>Pricing</span>
+                  <span>→</span>
+                </Link>
+              </div>
             </motion.div>
           </header>
         </motion.div>
