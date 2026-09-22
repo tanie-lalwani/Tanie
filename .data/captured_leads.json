@@ -1,14 +1,15 @@
 [
   {
     "id": "lead-1790103955244-vtpm3",
-    "company_name": "Velvet & Silk Apparel",
+    "company_name": "Aurora Wellness Clinic",
     "business_type": "business",
-    "industry": "Fashion & E-Commerce D2C",
+    "industry": "Doctor, Dental & Healthcare",
     "selected_bundles": [
       "essential_core",
-      "ecommerce_ordering",
+      "booking_appointments",
+      "lead_crm",
       "growth_seo",
-      "ai_assistant"
+      "ecommerce_ordering"
     ],
     "budget_tier": "₹25,000 – ₹50,000 (Growth Suite)",
     "timeline": "3–4 Weeks (Standard Launch)",
@@ -18,7 +19,7 @@
     "ip_address": "::1",
     "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36",
     "created_at": "2026-09-22T19:05:55.244Z",
-    "updated_at": "2026-09-22T19:38:19.709Z"
+    "updated_at": "2026-09-22T19:48:20.602Z"
   },
   {
     "id": "lead-1790103954220-cb7mq",

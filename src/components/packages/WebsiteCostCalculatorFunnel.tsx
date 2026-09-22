@@ -1,8 +1,8 @@
 "use client";
-
 import { useState, useMemo, useEffect, useRef } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { saveClientCustomQuote } from "@/lib/portalServices";
+import { getSavedLeadProfile, saveLeadProfile } from "@/features/lead-capture/lib/cookieHelper";
 
 interface FeatureBundle {
   id: string;
@@ -279,12 +279,7 @@ export default function WebsiteCostCalculatorFunnel({
   const { user, isAuthenticated, signInWithPassword, signUp } = useAuth();
 
   // Lead ID for deduplication across steps
-  const [leadId, setLeadId] = useState<string>(() => {
-    if (typeof window !== "undefined") {
-      return localStorage.getItem("tanie_calc_lead_id") || "";
-    }
-    return "";
-  });
+  const [leadId, setLeadId] = useState<string>("");
 
   // Current Funnel Step: "hero" (0) -> "step1" (Foundation) -> "step2" (Industry) -> "step3" (Bundles) -> "step4" (Budget & Timeline) -> "result" (Estimated Breakdown)
   const [currentStep, setCurrentStep] = useState<number>(0);
@@ -310,6 +305,23 @@ export default function WebsiteCostCalculatorFunnel({
 
   const funnelContainerRef = useRef<HTMLDivElement>(null);
 
+  // Prepopulate from cookies/localStorage on mount
+  useEffect(() => {
+    const saved = getSavedLeadProfile();
+    if (saved.businessName && !businessName) {
+      setBusinessName(saved.businessName);
+    }
+    if (saved.name && !authName) {
+      setAuthName(saved.name);
+    }
+    if (saved.email && !authEmail) {
+      setAuthEmail(saved.email);
+    }
+    if (saved.leadId && !leadId) {
+      setLeadId(saved.leadId);
+    }
+  }, []);
+
   // Background lead capture dispatcher
   const dispatchLeadCapture = async (data: Record<string, any>) => {
     try {
@@ -334,9 +346,7 @@ export default function WebsiteCostCalculatorFunnel({
       const json = await res.json();
       if (json.success && json.leadId) {
         setLeadId(json.leadId);
-        if (typeof window !== "undefined") {
-          localStorage.setItem("tanie_calc_lead_id", json.leadId);
-        }
+        saveLeadProfile({ leadId: json.leadId });
       }
     } catch (e) {
       console.warn("Background lead capture error:", e);
@@ -588,9 +598,15 @@ Let's discuss getting started!`;
               <div className="flex items-center gap-3 w-full pl-4">
                 <span className="text-sky-500 text-lg">🔍</span>
                 <input
+                  id="calc_hero_business_name"
+                  name="organization"
+                  autoComplete="organization"
                   type="text"
                   value={businessName}
-                  onChange={(e) => setBusinessName(e.target.value)}
+                  onChange={(e) => {
+                    setBusinessName(e.target.value);
+                    saveLeadProfile({ businessName: e.target.value });
+                  }}
                   placeholder="Enter your business or project name (e.g. Lumina Hair Lounge)..."
                   className="w-full bg-transparent text-sm sm:text-base !text-[#0a192f] placeholder-sky-900/40 focus:outline-none py-2 font-semibold"
                 />
@@ -784,11 +800,11 @@ Let's discuss getting started!`;
           {currentStep === 3 && (
             <div className="space-y-6">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs text-sky-950 bg-[#c8ecff]/30 border border-sky-300/80 rounded-xl p-3.5">
-                <span className="font-medium">
-                  💡 Select the feature modules you want. Bundles include frontend UI, database schemas & API integrations.
+                <span className="font-medium" style={{ color: '#0a192f' }}>
+                  💡 Select the feature modules you need for your website. We will calculate the total development investment at the end.
                 </span>
-                <span className="font-black !text-[#0a192f] shrink-0">
-                  {selectedBundles.length} Selected ({calculation.discountPercent}% Bundle Discount)
+                <span className="font-black !text-[#0a192f] shrink-0" style={{ color: '#0a192f' }}>
+                  {selectedBundles.length} Modules Selected
                 </span>
               </div>
 
@@ -815,14 +831,14 @@ Let's discuss getting started!`;
                             </span>
                             <div>
                               <div className="flex items-center gap-2">
-                                <h3 className="text-sm font-black !text-[#0a192f]">{bundle.name}</h3>
+                                <h3 className="text-sm font-black !text-[#0a192f]" style={{ color: '#0a192f' }}>{bundle.name}</h3>
                                 {bundle.badge && (
                                   <span className="px-2 py-0.5 rounded text-[9px] font-bold bg-sky-100 text-sky-950 border border-sky-200">
                                     {bundle.badge}
                                   </span>
                                 )}
                               </div>
-                              <p className="text-[11px] text-sky-900/80 mt-0.5 font-medium">{bundle.tagline}</p>
+                              <p className="text-[11px] text-sky-900/80 mt-0.5 font-medium" style={{ color: '#0c4a6e' }}>{bundle.tagline}</p>
                             </div>
                           </div>
 
@@ -843,22 +859,18 @@ Let's discuss getting started!`;
                           {bundle.includedFeatures.map((feat, i) => (
                             <div key={i} className="text-[11px] text-sky-950 flex items-center gap-1.5 font-medium">
                               <span className="text-sky-600 font-bold">✓</span>
-                              <span className="!text-[#0a192f]">{feat}</span>
+                              <span className="!text-[#0a192f]" style={{ color: '#0a192f' }}>{feat}</span>
                             </div>
                           ))}
                         </div>
                       </div>
 
                       <div className="mt-4 pt-2.5 border-t border-sky-200/60 flex items-center justify-between text-xs font-semibold">
-                        <span className="text-sky-900 font-black">
-                          {isEssential ? (
-                            "Included in Base"
-                          ) : (
-                            <>+{currency === "INR" ? `₹${bundle.priceInr.toLocaleString()}` : `$${bundle.priceUsd.toLocaleString()}`}</>
-                          )}
+                        <span className="text-sky-900 font-bold" style={{ color: '#0a192f' }}>
+                          {isEssential ? "Core Foundation Architecture" : "Interactive Module"}
                         </span>
-                        <span className="text-[11px] text-sky-800 font-medium">
-                          {isSelected ? "Included" : "+ Add"}
+                        <span className={`text-[11px] font-bold ${isSelected ? "text-sky-800" : "text-sky-600"}`}>
+                          {isSelected ? "✓ Included" : "+ Select Module"}
                         </span>
                       </div>
                     </div>
@@ -944,7 +956,7 @@ Let's discuss getting started!`;
                   onClick={() => goToStep(5)}
                   className="px-8 py-3.5 rounded-full bg-[#0a192f] hover:bg-slate-800 text-white font-bold text-xs uppercase tracking-wider shadow-lg transition-all cursor-pointer"
                 >
-                  SEE MY CALCULATED ESTIMATE →
+                  UNLOCK ESTIMATE & TIMELINE →
                 </button>
               </div>
             </div>
@@ -963,10 +975,10 @@ Let's discuss getting started!`;
                   </div>
 
                   <h3 className="text-2xl font-black !text-[#0a192f]">
-                    Your Custom Quote is Ready for {businessName}!
+                    Unlock Your Custom Quotation & Roadmap
                   </h3>
                   <p className="text-xs text-sky-950/80 max-w-md mx-auto mt-2 mb-6 leading-relaxed font-medium">
-                    We&apos;ve calculated the exact itemized pricing for {selectedBundles.length} modules with {calculation.discountPercent}% bundle savings. Sign in or create a free account to view your unlocked quotation.
+                    Your website architecture for <span className="font-bold text-[#0a192f]">{businessName || "your project"}</span> with {selectedBundles.length} selected modules is ready. Sign in or create a free account to calculate your itemized pricing, timeline deliverables, and lock in your development sprint.
                   </p>
 
                   {authError && (
@@ -975,15 +987,21 @@ Let's discuss getting started!`;
                     </div>
                   )}
 
-                  <form onSubmit={handleUnlockSubmit} className="max-w-md mx-auto space-y-3.5 text-left">
+                  <form onSubmit={handleUnlockSubmit} className="max-w-md mx-auto space-y-3.5 text-left" autoComplete="on">
                     {authMode === "signup" && (
                       <div>
-                        <label className="block text-xs font-bold !text-[#0a192f] mb-1">Your Full Name</label>
+                        <label htmlFor="calc_auth_name" className="block text-xs font-bold !text-[#0a192f] mb-1">Your Full Name</label>
                         <input
+                          id="calc_auth_name"
+                          name="name"
                           type="text"
+                          autoComplete="name"
                           required
                           value={authName}
-                          onChange={(e) => setAuthName(e.target.value)}
+                          onChange={(e) => {
+                            setAuthName(e.target.value);
+                            saveLeadProfile({ name: e.target.value });
+                          }}
                           placeholder="e.g. Rahul Sharma"
                           className="w-full bg-white/80 border border-sky-300 rounded-xl px-3.5 py-2.5 text-sm !text-[#0a192f] focus:outline-none focus:border-sky-600 focus:ring-2 focus:ring-sky-500/20 font-medium"
                         />
@@ -991,21 +1009,30 @@ Let's discuss getting started!`;
                     )}
 
                     <div>
-                      <label className="block text-xs font-bold !text-[#0a192f] mb-1">Email Address</label>
+                      <label htmlFor="calc_auth_email" className="block text-xs font-bold !text-[#0a192f] mb-1">Email Address</label>
                       <input
+                        id="calc_auth_email"
+                        name="email"
                         type="email"
+                        autoComplete="email"
                         required
                         value={authEmail}
-                        onChange={(e) => setAuthEmail(e.target.value)}
+                        onChange={(e) => {
+                          setAuthEmail(e.target.value);
+                          saveLeadProfile({ email: e.target.value });
+                        }}
                         placeholder="name@company.com"
                         className="w-full bg-white/80 border border-sky-300 rounded-xl px-3.5 py-2.5 text-sm !text-[#0a192f] focus:outline-none focus:border-sky-600 focus:ring-2 focus:ring-sky-500/20 font-medium"
                       />
                     </div>
 
                     <div>
-                      <label className="block text-xs font-bold !text-[#0a192f] mb-1">Password</label>
+                      <label htmlFor="calc_auth_password" className="block text-xs font-bold !text-[#0a192f] mb-1">Password</label>
                       <input
+                        id="calc_auth_password"
+                        name="password"
                         type="password"
+                        autoComplete={authMode === "signup" ? "new-password" : "current-password"}
                         required
                         value={authPassword}
                         onChange={(e) => setAuthPassword(e.target.value)}
@@ -1020,9 +1047,9 @@ Let's discuss getting started!`;
                       className="w-full py-3.5 rounded-full bg-[#0a192f] hover:bg-slate-800 text-white font-bold text-xs uppercase tracking-wider shadow-md transition-all cursor-pointer"
                     >
                       {isAuthSubmitting
-                        ? "Unlocking..."
+                        ? "Calculating & Unlocking..."
                         : authMode === "signup"
-                        ? "UNLOCK MY CUSTOM QUOTE →"
+                        ? "CALCULATE & UNLOCK CUSTOM QUOTE →"
                         : "SIGN IN & UNLOCK QUOTE →"}
                     </button>
                   </form>

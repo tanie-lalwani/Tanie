@@ -45,13 +45,40 @@ export async function POST(req: NextRequest) {
       lead: savedLead
     });
 
-    // Set cookie for session persistence (30 days)
+    // Set cookies for session persistence (30 days)
     res.cookies.set("tanie_calc_lead_id", savedLead.id, {
       path: "/",
       maxAge: 30 * 24 * 60 * 60,
-      httpOnly: false, // Accessible from client-side script for synchronization
+      httpOnly: false,
       sameSite: "lax"
     });
+
+    if (body.clientName || body.name) {
+      res.cookies.set("tanie_lead_name", body.clientName || body.name, {
+        path: "/",
+        maxAge: 60 * 24 * 60 * 60,
+        httpOnly: false,
+        sameSite: "lax"
+      });
+    }
+
+    if (body.clientEmail || body.email) {
+      res.cookies.set("tanie_lead_email", body.clientEmail || body.email, {
+        path: "/",
+        maxAge: 60 * 24 * 60 * 60,
+        httpOnly: false,
+        sameSite: "lax"
+      });
+    }
+
+    if (body.businessName || body.companyName) {
+      res.cookies.set("tanie_lead_business", body.businessName || body.companyName, {
+        path: "/",
+        maxAge: 60 * 24 * 60 * 60,
+        httpOnly: false,
+        sameSite: "lax"
+      });
+    }
 
     return res;
   } catch (error: any) {
