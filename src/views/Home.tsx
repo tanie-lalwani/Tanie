@@ -359,36 +359,36 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
         >
-          <header className="relative max-w-[48rem]">
+          <header className="relative flex w-fit flex-col">
             <motion.h1
               id="home-title"
-              className="hero-title-lockup relative mt-1 inline-flex w-fit items-start gap-x-[0.6rem] text-5xl font-bold tracking-normal text-[#F4F1EE] sm:mt-0 sm:gap-x-[0.8rem] sm:text-6xl md:gap-x-[1rem] md:text-7xl lg:gap-x-[1.2rem] lg:text-8xl xl:text-[6.25rem]"
+              className="hero-title-lockup relative mt-1 inline-flex w-fit items-start gap-x-[0.5rem] text-5xl tracking-normal text-[#F4F1EE] sm:mt-0 sm:gap-x-[0.65rem] sm:text-6xl md:gap-x-[0.8rem] md:text-7xl lg:gap-x-[0.95rem] lg:text-8xl"
               style={{ fontFamily: "var(--font-display)", lineHeight: 1 }}
               aria-label={`${copy.home.heroTitle} ${copy.home.heroRole}`}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
             >
-              <span className="relative inline-block pb-[0.06em] sm:pb-[0.045em] md:pb-[0.035em] lg:pb-[0.025em]" aria-hidden="true">
+              <span className="relative inline-block pb-[0.03em] sm:pb-[0.022em] md:pb-[0.016em] lg:pb-[0.01em]" aria-hidden="true">
                 <span ref={heroLeadTitleRef} className="inline-block">{heroTitleLead}</span>
                 {heroRoleLead ? (
                   <span
                     ref={heroLeadRoleRef}
-                    className="hero-title-role hero-title-role--lead absolute bottom-0 inline-block text-[0.52rem] font-bold leading-none sm:text-[0.64rem] md:text-[0.74rem] lg:text-[0.84rem] !text-[#0a192f]"
-                    style={{ ...createHeroRoleStyle(heroRoleLayout.lead), color: '#0a192f', opacity: 1 }}
+                    className="hero-title-role hero-title-role--lead absolute bottom-0 inline-block text-[0.48rem] font-medium leading-none sm:text-[0.58rem] md:text-[0.64rem] lg:text-[0.7rem]"
+                    style={{ ...createHeroRoleStyle(heroRoleLayout.lead) }}
                   >
                     {heroRoleLead}
                   </span>
                 ) : null}
               </span>
               {heroTitleTail ? (
-                <span className="relative inline-block pb-[0.06em] sm:pb-[0.045em] md:pb-[0.035em] lg:pb-[0.025em]" aria-hidden="true">
+                <span className="relative inline-block pb-[0.03em] sm:pb-[0.022em] md:pb-[0.016em] lg:pb-[0.01em]" aria-hidden="true">
                   <span ref={heroTailTitleRef} className="inline-block">{heroTitleTail}</span>
                   {heroRoleTail ? (
                     <span
                       ref={heroTailRoleRef}
-                      className="hero-title-role hero-title-role--tail absolute bottom-0 inline-block text-[0.52rem] font-bold leading-none sm:text-[0.64rem] md:text-[0.74rem] lg:text-[0.84rem] !text-[#0a192f]"
-                      style={{ ...createHeroRoleStyle(heroRoleLayout.tail), color: '#0a192f', opacity: 1 }}
+                      className="hero-title-role hero-title-role--tail absolute bottom-0 inline-block text-[0.48rem] font-medium leading-none sm:text-[0.58rem] md:text-[0.64rem] lg:text-[0.7rem]"
+                      style={{ ...createHeroRoleStyle(heroRoleLayout.tail) }}
                     >
                       {heroRoleTail}
                     </span>
@@ -398,37 +398,45 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
             </motion.h1>
 
             <motion.div
-              className="mt-[2.25rem] max-w-[40rem] translate-x-[4px] text-[1.25rem] sm:text-[1.45rem] font-bold leading-[1.3] tracking-normal text-[#0a192f]"
+              className="mt-[1.75rem] min-w-0 w-full text-[1.06rem] sm:text-[1.12rem] font-normal leading-[1.4] tracking-normal text-[#2D466F]"
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.45, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
             >
-              <p className="block">{heroLead || "Let’s make your website your best salesperson."}</p>
+              <p className="block">{heroLead || "Let's make your website your best salesperson."}</p>
               {heroSubline ? (
-                <p className="mt-1 block w-full text-[0.92em] leading-[1.2] tracking-[0.02em] text-[#0a192f]/85">
+                <p className="mt-1 block w-full text-[0.92em] leading-[1.2] tracking-[0.02em] text-slate-200/60">
                   {heroSubline}
                 </p>
               ) : null}
 
-              {/* HERO CTA BUTTONS */}
-              <div className="mt-6 flex flex-wrap items-center gap-3">
-                <Link
-                  href="/projects"
-                  className="px-8 py-3.5 rounded-full !bg-[#0a192f] hover:!bg-slate-800 !text-white font-bold text-xs uppercase tracking-wider transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer !no-underline select-none"
-                  style={{ color: "#ffffff", textDecoration: "none" }}
-                >
-                  <span className="!text-white !no-underline font-bold tracking-wider" style={{ color: "#ffffff", textDecoration: "none" }}>Work</span>
-                  <span className="!text-white font-bold" style={{ color: "#ffffff", textDecoration: "none" }}>→</span>
-                </Link>
-
-                <Link
-                  href="/pricing"
-                  className="px-8 py-3.5 rounded-full !bg-[#c8ecff]/60 hover:!bg-[#c8ecff]/90 !text-[#0a192f] border border-sky-400 font-bold text-xs uppercase tracking-wider transition-all shadow-xs flex items-center justify-center gap-2 cursor-pointer !no-underline select-none"
-                  style={{ color: "#0a192f", textDecoration: "none" }}
-                >
-                  <span className="!text-[#0a192f] !no-underline font-bold tracking-wider" style={{ color: "#0a192f", textDecoration: "none" }}>Pricing</span>
-                  <span className="!text-[#0a192f] font-bold" style={{ color: "#0a192f", textDecoration: "none" }}>→</span>
-                </Link>
+              {/* HERO CTA — sand/ocean gradient pill */}
+              <div
+                className="mt-6 w-full overflow-hidden rounded-full backdrop-blur-md"
+                style={{
+                  background: "linear-gradient(to right, rgba(6,16,34,0.68) 0%, rgba(8,22,44,0.68) 40%, rgba(110,170,200,0.26) 58%, rgba(192,222,238,0.26) 100%)",
+                  border: "1px solid rgba(180,210,235,0.13)",
+                  boxShadow: "inset 0 1px 0 rgba(255,255,255,0.07), 0 3px 18px rgba(0,0,0,0.2)",
+                }}
+              >
+                <div className="flex w-full">
+                  <Link
+                    href="/projects"
+                    className="group flex flex-1 items-center justify-center gap-1.5 py-3 px-5 text-[0.68rem] uppercase tracking-[0.18em] font-medium no-underline transition-all hover:brightness-110"
+                    style={{ color: "rgba(232,242,250,0.85)", textDecoration: "none" }}
+                  >
+                    <span>Work</span>
+                    <span style={{ opacity: 0.55 }}>→</span>
+                  </Link>
+                  <Link
+                    href="/pricing"
+                    className="group flex flex-1 items-center justify-center gap-1.5 py-3 px-5 text-[0.68rem] uppercase tracking-[0.18em] font-medium no-underline transition-all hover:brightness-95"
+                    style={{ color: "rgba(12,32,62,0.78)", textDecoration: "none" }}
+                  >
+                    <span>Pricing</span>
+                    <span style={{ opacity: 0.55 }}>→</span>
+                  </Link>
+                </div>
               </div>
             </motion.div>
           </header>
