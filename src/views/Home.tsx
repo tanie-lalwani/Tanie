@@ -411,7 +411,7 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
               ) : null}
 
               {/* HERO CTA — plain text links */}
-              <div className="mt-6 flex items-center gap-6">
+              <div className="mt-3 flex items-center gap-6">
                 <Link
                   href="/projects"
                   className="group inline-flex items-center gap-1.5 text-[0.88rem] font-medium no-underline transition-opacity hover:opacity-70"
@@ -422,7 +422,7 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
                 <Link
                   href="/pricing"
                   className="group inline-flex items-center gap-1.5 text-[0.88rem] font-medium no-underline transition-opacity hover:opacity-70"
-                  style={{ color: "rgba(45,70,111,0.55)", textDecoration: "none" }}
+                  style={{ color: "rgba(45,70,111,0.55)", textDecoration: "none", textShadow: "0 0 10px rgba(255,255,255,0.7), 0 1px 4px rgba(255,255,255,0.45)" }}
                 >
                   Pricing →
                 </Link>
