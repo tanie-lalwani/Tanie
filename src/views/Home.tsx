@@ -422,7 +422,7 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
                 <Link
                   href="/pricing"
                   className="group inline-flex items-center gap-1.5 text-[0.88rem] font-medium no-underline transition-opacity hover:opacity-70"
-                  style={{ color: "rgba(45,70,111,0.8)", textDecoration: "none" }}
+                  style={{ color: "rgba(45,70,111,0.7)", textDecoration: "none" }}
                 >
                   Pricing →
                 </Link>
