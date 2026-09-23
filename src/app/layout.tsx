@@ -7,21 +7,19 @@ const manrope = Manrope({
   subsets: ["latin"],
   variable: "--font-body",
   display: "swap",
-  weight: ["400", "500", "600", "700"],
 });
 
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-ui",
   display: "swap",
-  weight: ["400", "500", "600", "700"],
 });
 
 const bodoniModa = Bodoni_Moda({
   subsets: ["latin"],
   variable: "--font-display",
   display: "swap",
-  weight: ["500", "600", "700", "800"],
+  style: ["normal", "italic"],
 });
 
 export const viewport: Viewport = {

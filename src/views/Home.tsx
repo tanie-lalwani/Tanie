@@ -410,33 +410,22 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
                 </p>
               ) : null}
 
-              {/* HERO CTA — sand/ocean gradient pill */}
-              <div
-                className="mt-6 w-full overflow-hidden rounded-full backdrop-blur-md"
-                style={{
-                  background: "linear-gradient(to right, rgba(6,16,34,0.68) 0%, rgba(8,22,44,0.68) 40%, rgba(110,170,200,0.26) 58%, rgba(192,222,238,0.26) 100%)",
-                  border: "1px solid rgba(180,210,235,0.13)",
-                  boxShadow: "inset 0 1px 0 rgba(255,255,255,0.07), 0 3px 18px rgba(0,0,0,0.2)",
-                }}
-              >
-                <div className="flex w-full">
-                  <Link
-                    href="/projects"
-                    className="group flex flex-1 items-center justify-center gap-1.5 py-3 px-5 text-[0.68rem] uppercase tracking-[0.18em] font-medium no-underline transition-all hover:brightness-110"
-                    style={{ color: "rgba(232,242,250,0.85)", textDecoration: "none" }}
-                  >
-                    <span>Work</span>
-                    <span style={{ opacity: 0.55 }}>→</span>
-                  </Link>
-                  <Link
-                    href="/pricing"
-                    className="group flex flex-1 items-center justify-center gap-1.5 py-3 px-5 text-[0.68rem] uppercase tracking-[0.18em] font-medium no-underline transition-all hover:brightness-95"
-                    style={{ color: "rgba(12,32,62,0.78)", textDecoration: "none" }}
-                  >
-                    <span>Pricing</span>
-                    <span style={{ opacity: 0.55 }}>→</span>
-                  </Link>
-                </div>
+              {/* HERO CTA — plain text links */}
+              <div className="mt-6 flex items-center gap-6">
+                <Link
+                  href="/projects"
+                  className="group inline-flex items-center gap-1.5 text-[0.88rem] font-medium no-underline transition-opacity hover:opacity-70"
+                  style={{ color: "#2D466F", textDecoration: "none" }}
+                >
+                  Work →
+                </Link>
+                <Link
+                  href="/pricing"
+                  className="group inline-flex items-center gap-1.5 text-[0.88rem] font-medium no-underline transition-opacity hover:opacity-70"
+                  style={{ color: "rgba(45,70,111,0.55)", textDecoration: "none" }}
+                >
+                  Pricing →
+                </Link>
               </div>
             </motion.div>
           </header>
