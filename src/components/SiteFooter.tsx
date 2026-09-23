@@ -91,40 +91,7 @@ export default function SiteFooter({ className = "" }: SiteFooterProps) {
             ))}
           </div>
         </div>
-        <div className="mt-5 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs text-slate-400">
-          <a href="/pricing" className="transition hover:text-sky-300">
-            Pricing
-          </a>
-          <span>•</span>
-          <a href="/client" className="transition hover:text-sky-300">
-            Client Workspace
-          </a>
-          <span>•</span>
-          <a href="/admin" className="transition hover:text-sky-300">
-            Studio Admin
-          </a>
-          <span>•</span>
-          <a href="/contact" className="transition hover:text-sky-300">
-            Contact
-          </a>
-        </div>
-        <div className="mt-3 flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-[11px] text-slate-500">
-          <a href="/terms" className="hover:text-slate-300 transition">
-            Terms & Conditions
-          </a>
-          <span>•</span>
-          <a href="/refund-policy" className="hover:text-slate-300 transition">
-            Cancellation & Refund Policy
-          </a>
-          <span>•</span>
-          <a href="/privacy" className="hover:text-slate-300 transition">
-            Privacy Policy
-          </a>
-          <span>•</span>
-          <a href="/shipping-policy" className="hover:text-slate-300 transition">
-            Service Delivery Policy
-          </a>
-        </div>
+
         <div className="mt-5 h-px w-full bg-linear-to-r from-transparent via-white/8 to-transparent" />
         <p className="mt-3 text-center text-[11.5px] text-sky-100/82">
           {copy.footer.copyright}{" "}
