@@ -274,14 +274,83 @@ CREATE POLICY "Allow public read access to client assets"
 INSERT INTO public.packages (id, name, tagline, price_usd, price_inr, turnaround_weeks, badge, popular, description, features, deliverables, addons)
 VALUES 
 (
+  'luxury-landing-sprint',
+  'High-Converting Luxury Landing Page',
+  'Precision-crafted marketing landing page engineered to captivate and convert.',
+  499,
+  14999,
+  '1-2 weeks',
+  'Fast Sprint',
+  false,
+  'Ideal for boutique agencies, product launches, founders, and creators seeking a razor-sharp, ultra-fast landing page with bespoke animations and high-converting copy lockups.',
+  '[
+    "Bespoke layout tailored to your brand identity",
+    "Framer Motion smooth scroll and micro-interactions",
+    "Interactive pricing calculator / feature matrix",
+    "Lead capture & Formspree / CRM webhook integration",
+    "Lighthouse 95+ performance & accessibility score",
+    "Comprehensive meta tags & Open Graph visuals",
+    "Domain setup & CDN deployment on Vercel"
+  ]'::jsonb,
+  '[
+    "Single-Page or Multi-Section Landing Experience",
+    "Configured Lead Capture & Notification flows",
+    "Complete design assets & typography license links",
+    "14-day post-launch support"
+  ]'::jsonb,
+  '[
+    {"id": "copywriting", "name": "Conversion Copywriting & Messaging", "price_usd": 120},
+    {"id": "subpages", "name": "2 Additional Content Subpages (Legal / About)", "price_usd": 75},
+    {"id": "newsletter", "name": "Newsletter / Waitlist Automation Sync", "price_usd": 75}
+  ]'::jsonb
+),
+(
+  'growth-marketing-campaigns',
+  'BOFU Website Marketing & Sources Management Package',
+  'High-converting on-site BOFU pages, 1-click checkouts, urgency mechanics & multi-channel UTM attribution.',
+  899,
+  29999,
+  '2-3 weeks',
+  'High Conversion',
+  true,
+  'The definitive on-website conversion architecture. Designed to receive traffic from your ad campaigns and social media, transforming cold visitors into revenue. Includes all 9 core BOFU on-site deliverables backed by full-spectrum UTM multi-source tracking and conversion pixel telemetry.',
+  '[
+    "1-Click Express Checkout: Apple Pay, Google Pay, Razorpay, UPI & credit card frictionless flow",
+    "Urgency Countdown Clocks: Dynamic drop timers and flash sale headers driving immediate orders",
+    "Offer-First Banners: Sticky top announcement bars with coupon codes and free gift thresholds",
+    "Product Gallery & 360 Viewer: Ultra-crisp 4K multi-angle viewer with zoom and variant switchers",
+    "Studio Shoots Layout: Web-optimized presentation of studio photography and 3D exploded views",
+    "UGC Testimonials Wall: Embedded vertical TikTok/Reel customer review player with star ratings",
+    "Price Comparison Matrix: Interactive side-by-side value-anchoring table against alternatives",
+    "FOMO & Scarcity Notifiers: Real-time purchase popup toasts and remaining inventory stock meters",
+    "Freebies & Lead Magnets: On-site email/WhatsApp opt-in capture forms with instant asset delivery",
+    "Multi-Channel UTM Tracking: On-site ingestion capturing source, medium & campaign with every order/lead",
+    "Pixel Telemetry: Meta Pixel & CAPI, Google Tag Manager, GA4 e-commerce events & TikTok Pixel",
+    "Adaptive Website Scope: Configured for E-Commerce Stores, Single Product Drops, or Personal Brand Sites"
+  ]'::jsonb,
+  '[
+    "All 9 BOFU On-Website Pages & Interactive Modules",
+    "1-Click Frictionless Checkout & Payment Gateway Integration",
+    "Centralized Multi-Channel UTM Campaign Generator & Link Builder",
+    "Automated On-Site Source Attribution Logging to Supabase Database",
+    "Meta CAPI, GA4 & GTM Conversion Pixel Integration",
+    "30-Day Post-Launch Conversion Rate Hypercare & Support"
+  ]'::jsonb,
+  '[
+    {"id": "ab-testing", "name": "Dynamic A/B Testing & Split Landing Page Routing", "price_usd": 120},
+    {"id": "retention-flows", "name": "Automated Post-Purchase Email/SMS Sequence", "price_usd": 90},
+    {"id": "influencer-portal", "name": "Affiliate & Influencer Referral Source Tracking Portal", "price_usd": 150}
+  ]'::jsonb
+),
+(
   'interactive-3d-experience',
   '3D Interactive & Brand Experience',
   'Bespoke WebGL, Three.js & immersive storytelling that leaves lasting impressions.',
-  3499,
-  3499,
+  1299,
+  49999,
   '3-5 weeks',
   'Signature',
-  true,
+  false,
   'Designed for visionary brands, high-profile portfolios, and innovative tech products requiring top-tier creative engineering, custom Three.js shaders, and buttery-smooth micro-interactions.',
   '[
     "Custom Three.js / WebGL 3D interactive canvas",
@@ -301,18 +370,18 @@ VALUES
     "30-day post-launch hypercare & bug fix warranty"
   ]'::jsonb,
   '[
-    {"id": "cms", "name": "Headless CMS (Sanity / Contentful)", "price_usd": 499},
-    {"id": "multi-lang", "name": "Multi-language Localization (i18n)", "price_usd": 399},
-    {"id": "custom-audio", "name": "Original Sound Effects & Audio Composition", "price_usd": 299},
-    {"id": "priority", "name": "Priority Express Delivery (2 weeks)", "price_usd": 799}
+    {"id": "cms", "name": "Headless CMS (Sanity / Contentful)", "price_usd": 120},
+    {"id": "multi-lang", "name": "Multi-language Localization (i18n)", "price_usd": 90},
+    {"id": "custom-audio", "name": "Original Sound Effects & Audio Composition", "price_usd": 90},
+    {"id": "priority", "name": "Priority Express Delivery (2 weeks)", "price_usd": 250}
   ]'::jsonb
 ),
 (
   'fullstack-web-app',
   'Full-Stack Web App / SaaS MVP',
   'Robust, scalable web applications with Supabase DB, Auth, Payments & Admin portals.',
-  4299,
-  4299,
+  1899,
+  79999,
   '4-6 weeks',
   'Full-Stack',
   false,
@@ -335,40 +404,9 @@ VALUES
     "45-day post-launch hypercare support"
   ]'::jsonb,
   '[
-    {"id": "ai-copilot", "name": "Gemini / OpenAI AI Assistant Integration", "price_usd": 599},
-    {"id": "analytics-suite", "name": "Advanced Analytics & Event Tracking", "price_usd": 349},
-    {"id": "sms-email", "name": "Transactional Email & SMS (Resend/Twilio)", "price_usd": 299}
-  ]'::jsonb
-),
-(
-  'luxury-landing-sprint',
-  'High-Converting Luxury Landing Page',
-  'Precision-crafted marketing landing page engineered to captivate and convert.',
-  1999,
-  1999,
-  '1-2 weeks',
-  'Fast Sprint',
-  false,
-  'Ideal for boutique agencies, product launches, founders, and creators seeking a razor-sharp, ultra-fast landing page with bespoke animations and high-converting copy lockups.',
-  '[
-    "Bespoke layout tailored to your brand identity",
-    "Framer Motion smooth scroll and micro-interactions",
-    "Interactive pricing calculator / feature matrix",
-    "Lead capture & Formspree / CRM webhook integration",
-    "Lighthouse 95+ performance & accessibility score",
-    "Comprehensive meta tags & Open Graph visuals",
-    "Domain setup & CDN deployment on Vercel"
-  ]'::jsonb,
-  '[
-    "Single-Page or Multi-Section Landing Experience",
-    "Configured Lead Capture & Notification flows",
-    "Complete design assets & typography license links",
-    "14-day post-launch support"
-  ]'::jsonb,
-  '[
-    {"id": "copywriting", "name": "Conversion Copywriting & Messaging", "price_usd": 399},
-    {"id": "subpages", "name": "2 Additional Content Subpages (Legal / About)", "price_usd": 349},
-    {"id": "newsletter", "name": "Newsletter / Waitlist Automation Sync", "price_usd": 199}
+    {"id": "ai-copilot", "name": "Gemini / OpenAI AI Assistant Integration", "price_usd": 175},
+    {"id": "analytics-suite", "name": "Advanced Analytics & Event Tracking", "price_usd": 95},
+    {"id": "sms-email", "name": "Transactional Email & SMS (Resend/Twilio)", "price_usd": 75}
   ]'::jsonb
 )
 ON CONFLICT (id) DO UPDATE SET

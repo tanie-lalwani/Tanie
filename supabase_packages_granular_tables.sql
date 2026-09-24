@@ -3,15 +3,15 @@
 -- Linked to Master Table: public.packages
 -- ==============================================================================
 
--- 1. Ensure Master Packages Exist with Current Pricing (Unchanged)
+-- 1. Ensure Master Packages Exist with Calibrated Fast Acquisition Pricing
 INSERT INTO public.packages (id, name, tagline, price_usd, price_inr, turnaround_weeks, badge, popular, description, is_active)
 VALUES 
 (
   'luxury-landing-sprint',
   'High-Converting Luxury Landing Page',
   'Precision-crafted marketing landing page engineered to captivate and convert.',
-  1999,
-  1999,
+  499,
+  14999,
   '1-2 weeks',
   'Fast Sprint',
   false,
@@ -22,8 +22,8 @@ VALUES
   'growth-marketing-campaigns',
   'BOFU Website Marketing & Sources Management Package',
   'High-converting on-site BOFU pages, 1-click checkouts, urgency mechanics & multi-channel UTM attribution.',
-  2899,
-  2899,
+  899,
+  29999,
   '2-3 weeks',
   'High Conversion',
   true,
@@ -34,8 +34,8 @@ VALUES
   'interactive-3d-experience',
   '3D Interactive & Brand Experience',
   'Bespoke WebGL, Three.js & immersive storytelling that leaves lasting impressions.',
-  3499,
-  3499,
+  1299,
+  49999,
   '3-5 weeks',
   'Signature',
   false,
@@ -46,8 +46,8 @@ VALUES
   'fullstack-web-app',
   'Full-Stack Web App / SaaS MVP',
   'Robust, scalable web applications with Supabase DB, Auth, Payments & Admin portals.',
-  4299,
-  4299,
+  1899,
+  79999,
   '4-6 weeks',
   'Full-Stack',
   false,

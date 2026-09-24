@@ -176,8 +176,8 @@ export const DEFAULT_PACKAGES: WebsitePackage[] = [
     id: "interactive-3d-experience",
     name: "3D Interactive & Brand Experience",
     tagline: "Bespoke WebGL, Three.js & immersive storytelling that leaves lasting impressions.",
-    price_usd: 3499,
-    price_inr: 3499,
+    price_usd: 1299,
+    price_inr: 49999,
     turnaround_weeks: "3-5 weeks",
     badge: "Signature",
     popular: true,
@@ -200,10 +200,10 @@ export const DEFAULT_PACKAGES: WebsitePackage[] = [
       "30-day post-launch hypercare & bug fix warranty"
     ],
     addons: [
-      { id: "cms", name: "Headless CMS (Sanity / Contentful)", price_usd: 499 },
-      { id: "multi-lang", name: "Multi-language Localization (i18n)", price_usd: 399 },
-      { id: "custom-audio", name: "Original Sound Effects & Audio Composition", price_usd: 299 },
-      { id: "priority", name: "Priority Express Delivery (2 weeks)", price_usd: 799 }
+      { id: "cms", name: "Headless CMS (Sanity / Contentful)", price_usd: 120 },
+      { id: "multi-lang", name: "Multi-language Localization (i18n)", price_usd: 90 },
+      { id: "custom-audio", name: "Original Sound Effects & Audio Composition", price_usd: 90 },
+      { id: "priority", name: "Priority Express Delivery (2 weeks)", price_usd: 250 }
     ],
     is_active: true
   },
@@ -211,8 +211,8 @@ export const DEFAULT_PACKAGES: WebsitePackage[] = [
     id: "growth-marketing-campaigns",
     name: "BOFU Website Marketing & Sources Management Package",
     tagline: "High-converting on-site BOFU pages, 1-click checkouts, urgency mechanics & multi-channel UTM attribution.",
-    price_usd: 2899,
-    price_inr: 2899,
+    price_usd: 899,
+    price_inr: 29999,
     turnaround_weeks: "2-3 weeks",
     badge: "High Conversion",
     popular: true,
@@ -240,9 +240,9 @@ export const DEFAULT_PACKAGES: WebsitePackage[] = [
       "30-Day Post-Launch Conversion Rate Hypercare & Support"
     ],
     addons: [
-      { id: "ab-testing", name: "Dynamic A/B Testing & Split Landing Page Routing", price_usd: 449 },
-      { id: "retention-flows", name: "Automated Post-Purchase Email/SMS Sequence (Klaviyo/Resend)", price_usd: 349 },
-      { id: "influencer-portal", name: "Affiliate & Influencer Referral Source Tracking Portal", price_usd: 499 }
+      { id: "ab-testing", name: "Dynamic A/B Testing & Split Landing Page Routing", price_usd: 120 },
+      { id: "retention-flows", name: "Automated Post-Purchase Email/SMS Sequence (Klaviyo/Resend)", price_usd: 90 },
+      { id: "influencer-portal", name: "Affiliate & Influencer Referral Source Tracking Portal", price_usd: 150 }
     ],
     is_active: true
   },
@@ -250,8 +250,8 @@ export const DEFAULT_PACKAGES: WebsitePackage[] = [
     id: "fullstack-web-app",
     name: "Full-Stack Web App / SaaS MVP",
     tagline: "Robust, scalable web applications with Supabase DB, Auth, Payments & Admin portals.",
-    price_usd: 4299,
-    price_inr: 4299,
+    price_usd: 1899,
+    price_inr: 79999,
     turnaround_weeks: "4-6 weeks",
     badge: "Full-Stack",
     popular: false,
@@ -274,9 +274,9 @@ export const DEFAULT_PACKAGES: WebsitePackage[] = [
       "45-day post-launch hypercare support"
     ],
     addons: [
-      { id: "ai-copilot", name: "Gemini / OpenAI AI Assistant Integration", price_usd: 599 },
-      { id: "analytics-suite", name: "Advanced Analytics & Event Tracking", price_usd: 349 },
-      { id: "sms-email", name: "Transactional Email & SMS (Resend/Twilio)", price_usd: 299 }
+      { id: "ai-copilot", name: "Gemini / OpenAI AI Assistant Integration", price_usd: 175 },
+      { id: "analytics-suite", name: "Advanced Analytics & Event Tracking", price_usd: 95 },
+      { id: "sms-email", name: "Transactional Email & SMS (Resend/Twilio)", price_usd: 75 }
     ],
     is_active: true
   },
@@ -284,8 +284,8 @@ export const DEFAULT_PACKAGES: WebsitePackage[] = [
     id: "luxury-landing-sprint",
     name: "High-Converting Luxury Landing Page",
     tagline: "Precision-crafted marketing landing page engineered to captivate and convert.",
-    price_usd: 1999,
-    price_inr: 1999,
+    price_usd: 499,
+    price_inr: 14999,
     turnaround_weeks: "1-2 weeks",
     badge: "Fast Sprint",
     popular: false,
@@ -306,9 +306,9 @@ export const DEFAULT_PACKAGES: WebsitePackage[] = [
       "14-day post-launch support"
     ],
     addons: [
-      { id: "copywriting", name: "Conversion Copywriting & Messaging", price_usd: 399 },
-      { id: "subpages", name: "2 Additional Content Subpages (Legal / About)", price_usd: 349 },
-      { id: "newsletter", name: "Newsletter / Waitlist Automation Sync", price_usd: 199 }
+      { id: "copywriting", name: "Conversion Copywriting & Messaging", price_usd: 120 },
+      { id: "subpages", name: "2 Additional Content Subpages (Legal / About)", price_usd: 75 },
+      { id: "newsletter", name: "Newsletter / Waitlist Automation Sync", price_usd: 75 }
     ],
     is_active: true
   }

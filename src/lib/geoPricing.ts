@@ -22,7 +22,7 @@ export interface MarketPricingTier {
 }
 
 export const MARKET_TIERS: Record<string, MarketPricingTier> = {
-  // 🇮🇳 INDIA (Domestic Market Pricing)
+  // 🇮🇳 INDIA (Domestic Market Pricing - Fast Acquisition Tier)
   IN: {
     countryCode: "IN",
     countryName: "India",
@@ -30,35 +30,38 @@ export const MARKET_TIERS: Record<string, MarketPricingTier> = {
     currencyCode: "INR",
     currencySymbol: "₹",
     packages: {
-      "luxury-landing-sprint": 1999,
-      "growth-marketing-campaigns": 2899,
-      "interactive-3d-experience": 3499,
-      "fullstack-web-app": 4299
+      "luxury-landing-sprint": 14999,
+      "growth-marketing-campaigns": 29999,
+      "interactive-3d-experience": 49999,
+      "fullstack-web-app": 79999
     },
     bundles: {
-      essential_core: 500,
-      ecommerce_ordering: 950,
-      booking_appointments: 850,
-      lead_crm: 650,
-      ai_assistant: 800,
-      design_3d_gsap: 750,
-      multi_location: 600,
-      growth_seo: 500,
-      custom_integrations: 850,
-      devops_care: 400
+      essential_core: 4999,
+      ecommerce_ordering: 8999,
+      booking_appointments: 6999,
+      lead_crm: 5499,
+      ai_assistant: 6999,
+      design_3d_gsap: 11999,
+      staff_portal: 6999,
+      multi_location: 5999,
+      growth_seo: 4499,
+      marketing_funnel_suite: 29999,
+      source_attribution_hub: 5499,
+      custom_integrations: 7999,
+      devops_care: 3499
     },
     addons: {
-      cms: 499,
-      ai: 599,
-      audio: 299,
-      copywriting: 399,
-      subpages: 349,
-      newsletter: 199,
-      priority: 799
+      cms: 3499,
+      ai: 4999,
+      audio: 2499,
+      copywriting: 3499,
+      subpages: 1999,
+      newsletter: 1999,
+      priority: 6999
     }
   },
 
-  // 🇺🇸 UNITED STATES & GLOBAL TIER 1 (International Market Pricing)
+  // 🇺🇸 UNITED STATES & GLOBAL TIER 1 (International Market Pricing - Fast Acquisition Tier)
   US: {
     countryCode: "US",
     countryName: "United States (Global)",
@@ -66,31 +69,34 @@ export const MARKET_TIERS: Record<string, MarketPricingTier> = {
     currencyCode: "USD",
     currencySymbol: "$",
     packages: {
-      "luxury-landing-sprint": 1999,
-      "growth-marketing-campaigns": 2899,
-      "interactive-3d-experience": 3499,
-      "fullstack-web-app": 4299
+      "luxury-landing-sprint": 499,
+      "growth-marketing-campaigns": 899,
+      "interactive-3d-experience": 1299,
+      "fullstack-web-app": 1899
     },
     bundles: {
-      essential_core: 75,
-      ecommerce_ordering: 135,
-      booking_appointments: 120,
-      lead_crm: 95,
-      ai_assistant: 115,
-      design_3d_gsap: 110,
-      multi_location: 85,
-      growth_seo: 70,
-      custom_integrations: 125,
-      devops_care: 60
+      essential_core: 175,
+      ecommerce_ordering: 295,
+      booking_appointments: 235,
+      lead_crm: 185,
+      ai_assistant: 235,
+      design_3d_gsap: 395,
+      staff_portal: 235,
+      multi_location: 195,
+      growth_seo: 150,
+      marketing_funnel_suite: 899,
+      source_attribution_hub: 185,
+      custom_integrations: 265,
+      devops_care: 120
     },
     addons: {
-      cms: 499,
-      ai: 599,
-      audio: 299,
-      copywriting: 399,
-      subpages: 349,
-      newsletter: 199,
-      priority: 799
+      cms: 120,
+      ai: 175,
+      audio: 90,
+      copywriting: 120,
+      subpages: 75,
+      newsletter: 75,
+      priority: 250
     }
   },
 
@@ -102,31 +108,34 @@ export const MARKET_TIERS: Record<string, MarketPricingTier> = {
     currencyCode: "GBP",
     currencySymbol: "£",
     packages: {
-      "luxury-landing-sprint": 1699,
-      "growth-marketing-campaigns": 2499,
-      "interactive-3d-experience": 2999,
-      "fullstack-web-app": 3699
+      "luxury-landing-sprint": 399,
+      "growth-marketing-campaigns": 720,
+      "interactive-3d-experience": 1050,
+      "fullstack-web-app": 1520
     },
     bundles: {
-      essential_core: 65,
-      ecommerce_ordering: 115,
-      booking_appointments: 100,
-      lead_crm: 80,
-      ai_assistant: 95,
-      design_3d_gsap: 90,
-      multi_location: 70,
-      growth_seo: 60,
-      custom_integrations: 105,
-      devops_care: 50
+      essential_core: 140,
+      ecommerce_ordering: 235,
+      booking_appointments: 190,
+      lead_crm: 150,
+      ai_assistant: 190,
+      design_3d_gsap: 315,
+      staff_portal: 190,
+      multi_location: 155,
+      growth_seo: 120,
+      marketing_funnel_suite: 720,
+      source_attribution_hub: 150,
+      custom_integrations: 210,
+      devops_care: 95
     },
     addons: {
-      cms: 420,
-      ai: 499,
-      audio: 250,
-      copywriting: 340,
-      subpages: 299,
-      newsletter: 170,
-      priority: 680
+      cms: 95,
+      ai: 140,
+      audio: 70,
+      copywriting: 95,
+      subpages: 60,
+      newsletter: 60,
+      priority: 200
     }
   },
 
@@ -138,31 +147,34 @@ export const MARKET_TIERS: Record<string, MarketPricingTier> = {
     currencyCode: "EUR",
     currencySymbol: "€",
     packages: {
-      "luxury-landing-sprint": 1899,
-      "growth-marketing-campaigns": 2749,
-      "interactive-3d-experience": 3299,
-      "fullstack-web-app": 4099
+      "luxury-landing-sprint": 460,
+      "growth-marketing-campaigns": 830,
+      "interactive-3d-experience": 1190,
+      "fullstack-web-app": 1750
     },
     bundles: {
-      essential_core: 70,
-      ecommerce_ordering: 125,
-      booking_appointments: 110,
-      lead_crm: 90,
-      ai_assistant: 105,
-      design_3d_gsap: 100,
-      multi_location: 80,
-      growth_seo: 65,
-      custom_integrations: 115,
-      devops_care: 55
+      essential_core: 160,
+      ecommerce_ordering: 270,
+      booking_appointments: 215,
+      lead_crm: 170,
+      ai_assistant: 215,
+      design_3d_gsap: 360,
+      staff_portal: 215,
+      multi_location: 180,
+      growth_seo: 140,
+      marketing_funnel_suite: 830,
+      source_attribution_hub: 170,
+      custom_integrations: 245,
+      devops_care: 110
     },
     addons: {
-      cms: 460,
-      ai: 550,
-      audio: 275,
-      copywriting: 370,
-      subpages: 320,
-      newsletter: 185,
-      priority: 740
+      cms: 110,
+      ai: 160,
+      audio: 85,
+      copywriting: 110,
+      subpages: 70,
+      newsletter: 70,
+      priority: 230
     }
   },
 
@@ -174,31 +186,34 @@ export const MARKET_TIERS: Record<string, MarketPricingTier> = {
     currencyCode: "AED",
     currencySymbol: "AED ",
     packages: {
-      "luxury-landing-sprint": 7350,
-      "growth-marketing-campaigns": 10650,
-      "interactive-3d-experience": 12850,
-      "fullstack-web-app": 15790
+      "luxury-landing-sprint": 1850,
+      "growth-marketing-campaigns": 3300,
+      "interactive-3d-experience": 4750,
+      "fullstack-web-app": 6950
     },
     bundles: {
-      essential_core: 275,
-      ecommerce_ordering: 495,
-      booking_appointments: 440,
-      lead_crm: 350,
-      ai_assistant: 420,
-      design_3d_gsap: 400,
-      multi_location: 310,
-      growth_seo: 260,
-      custom_integrations: 460,
-      devops_care: 220
+      essential_core: 650,
+      ecommerce_ordering: 1090,
+      booking_appointments: 860,
+      lead_crm: 680,
+      ai_assistant: 860,
+      design_3d_gsap: 1450,
+      staff_portal: 860,
+      multi_location: 720,
+      growth_seo: 550,
+      marketing_funnel_suite: 3300,
+      source_attribution_hub: 680,
+      custom_integrations: 970,
+      devops_care: 440
     },
     addons: {
-      cms: 1830,
-      ai: 2200,
-      audio: 1100,
-      copywriting: 1460,
-      subpages: 1280,
-      newsletter: 730,
-      priority: 2930
+      cms: 440,
+      ai: 640,
+      audio: 330,
+      copywriting: 440,
+      subpages: 275,
+      newsletter: 275,
+      priority: 920
     }
   },
 
@@ -210,31 +225,34 @@ export const MARKET_TIERS: Record<string, MarketPricingTier> = {
     currencyCode: "CAD",
     currencySymbol: "C$",
     packages: {
-      "luxury-landing-sprint": 2699,
-      "growth-marketing-campaigns": 3899,
-      "interactive-3d-experience": 4699,
-      "fullstack-web-app": 5799
+      "luxury-landing-sprint": 675,
+      "growth-marketing-campaigns": 1220,
+      "interactive-3d-experience": 1760,
+      "fullstack-web-app": 2580
     },
     bundles: {
-      essential_core: 100,
-      ecommerce_ordering: 180,
-      booking_appointments: 160,
-      lead_crm: 130,
-      ai_assistant: 155,
-      design_3d_gsap: 150,
-      multi_location: 115,
-      growth_seo: 95,
-      custom_integrations: 170,
-      devops_care: 80
+      essential_core: 240,
+      ecommerce_ordering: 400,
+      booking_appointments: 320,
+      lead_crm: 250,
+      ai_assistant: 320,
+      design_3d_gsap: 530,
+      staff_portal: 320,
+      multi_location: 265,
+      growth_seo: 205,
+      marketing_funnel_suite: 1220,
+      source_attribution_hub: 250,
+      custom_integrations: 360,
+      devops_care: 160
     },
     addons: {
-      cms: 670,
-      ai: 800,
-      audio: 400,
-      copywriting: 540,
-      subpages: 470,
-      newsletter: 270,
-      priority: 1080
+      cms: 160,
+      ai: 240,
+      audio: 120,
+      copywriting: 160,
+      subpages: 100,
+      newsletter: 100,
+      priority: 340
     }
   },
 
@@ -246,31 +264,34 @@ export const MARKET_TIERS: Record<string, MarketPricingTier> = {
     currencyCode: "AUD",
     currencySymbol: "A$",
     packages: {
-      "luxury-landing-sprint": 2999,
-      "growth-marketing-campaigns": 4399,
-      "interactive-3d-experience": 5299,
-      "fullstack-web-app": 6499
+      "luxury-landing-sprint": 750,
+      "growth-marketing-campaigns": 1360,
+      "interactive-3d-experience": 1960,
+      "fullstack-web-app": 2870
     },
     bundles: {
-      essential_core: 115,
-      ecommerce_ordering: 205,
-      booking_appointments: 185,
-      lead_crm: 145,
-      ai_assistant: 175,
-      design_3d_gsap: 170,
-      multi_location: 130,
-      growth_seo: 110,
-      custom_integrations: 190,
-      devops_care: 90
+      essential_core: 265,
+      ecommerce_ordering: 445,
+      booking_appointments: 355,
+      lead_crm: 280,
+      ai_assistant: 355,
+      design_3d_gsap: 595,
+      staff_portal: 355,
+      multi_location: 295,
+      growth_seo: 225,
+      marketing_funnel_suite: 1360,
+      source_attribution_hub: 280,
+      custom_integrations: 400,
+      devops_care: 180
     },
     addons: {
-      cms: 760,
-      ai: 910,
-      audio: 450,
-      copywriting: 610,
-      subpages: 530,
-      newsletter: 300,
-      priority: 1220
+      cms: 180,
+      ai: 265,
+      audio: 135,
+      copywriting: 180,
+      subpages: 115,
+      newsletter: 115,
+      priority: 380
     }
   },
 
@@ -282,31 +303,34 @@ export const MARKET_TIERS: Record<string, MarketPricingTier> = {
     currencyCode: "SGD",
     currencySymbol: "S$",
     packages: {
-      "luxury-landing-sprint": 2699,
-      "growth-marketing-campaigns": 3899,
-      "interactive-3d-experience": 4699,
-      "fullstack-web-app": 5799
+      "luxury-landing-sprint": 665,
+      "growth-marketing-campaigns": 1190,
+      "interactive-3d-experience": 1720,
+      "fullstack-web-app": 2520
     },
     bundles: {
-      essential_core: 100,
-      ecommerce_ordering: 180,
-      booking_appointments: 160,
-      lead_crm: 130,
-      ai_assistant: 155,
-      design_3d_gsap: 150,
-      multi_location: 115,
-      growth_seo: 95,
-      custom_integrations: 170,
-      devops_care: 80
+      essential_core: 235,
+      ecommerce_ordering: 395,
+      booking_appointments: 315,
+      lead_crm: 245,
+      ai_assistant: 315,
+      design_3d_gsap: 525,
+      staff_portal: 315,
+      multi_location: 260,
+      growth_seo: 200,
+      marketing_funnel_suite: 1190,
+      source_attribution_hub: 245,
+      custom_integrations: 355,
+      devops_care: 160
     },
     addons: {
-      cms: 670,
-      ai: 800,
-      audio: 400,
-      copywriting: 540,
-      subpages: 470,
-      newsletter: 270,
-      priority: 1080
+      cms: 160,
+      ai: 235,
+      audio: 120,
+      copywriting: 160,
+      subpages: 100,
+      newsletter: 100,
+      priority: 335
     }
   }
 };
