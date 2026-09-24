@@ -3,6 +3,11 @@
 ## 1. Continuous Documentation Updates
 - **Always Keep Docs in Sync**: Whenever code, database schema, authentication flow, UI routes, or integrations change, immediately update relevant documentation files (e.g., `CLIENT_MANAGEMENT_DOCS.md`, `README.md`).
 - **Log Architecture Decisions**: Detail any new API patterns, RLS security policies, storage bucket configurations, and mock/offline fallback mechanics in the documentation.
+- **Document Non-Trivial Bug Fixes in `FIXES.md`**: Whenever diagnosing and resolving non-trivial bugs, race conditions, routing loops, rendering flickers, or animation conflicts, create or update a structured post-mortem in `FIXES.md` covering:
+  - **Symptoms & Report**: Observable issues and user triggers.
+  - **Root Cause Analysis**: The underlying engine, library, or state mechanism causing the failure.
+  - **Resolution & Architectural Safeguards**: Concrete code modifications and defensive patterns applied.
+  - **Prevention Guidelines**: Clear rules to prevent regressions.
 
 ## 2. Supabase Best Practices & Security Standards
 Before writing or modifying any Supabase queries, TypeScript clients, or SQL schemas, strictly enforce these guidelines:

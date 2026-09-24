@@ -65,3 +65,10 @@ This project is built using these incredible open-source assets and libraries:
   * *Bodoni Moda* (Elegant serif for display headings)
   * *Manrope* (Clean geometric sans-serif for body content)
   * *Inter* (Sleek sans-serif for interface UI)
+
+---
+
+## 📚 Technical Documentation & Fixes
+* **[FIXES.md](file:///c:/Users/words/Desktop/Websites/Completed/Portfolio/FIXES.md)**: Architectural post-mortems and resolutions for routing loops, animation flickering, and layout issues.
+* **[CLIENT_MANAGEMENT_DOCS.md](file:///c:/Users/words/Desktop/Websites/Completed/Portfolio/CLIENT_MANAGEMENT_DOCS.md)**: Architecture guide for client portals, Supabase integration, authentication, and payments.
+

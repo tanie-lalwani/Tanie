@@ -16,3 +16,8 @@ export default function HomePage() {
   return <HomeView />;
 }
 ```
+
+## Routing & In-Page Navigation Architecture
+- **No `replaceState` on Scroll**: Do not use `window.history.replaceState` or `pushState` inside scroll or `IntersectionObserver` listeners. Next.js App Router hooks into browser history changes, which will alter `usePathname()` and trigger page container remounts.
+- **Shared `/` and `/contact` View**: The `/contact` route renders `HomeView` with an initial scroll into the `#contact` section. The top-level layout container (`AppShell`) uses a unified page key (`isHome ? "home" : pathname`) to prevent unmounting and opacity flicker during transitions between `/` and `/contact`.
+
