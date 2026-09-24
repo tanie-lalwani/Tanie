@@ -184,7 +184,19 @@ export default function Navbar({ phase }: NavbarProps) {
               role="dialog"
               aria-modal="false"
               aria-label="Site Navigation"
-              className={`absolute top-[calc(100%+0.5rem)] z-50 w-72 sm:w-80 max-w-[calc(100vw-1.5rem)] max-h-[80svh] overflow-y-auto rounded-2xl border border-sky-300/30 bg-slate-950/96 p-3 sm:p-4 shadow-[0_20px_50px_rgba(2,8,23,0.7)] backdrop-blur-2xl text-slate-100 ${
+              data-lenis-prevent="true"
+              data-lenis-prevent-wheel="true"
+              data-lenis-prevent-touch="true"
+              onWheel={(e) => e.stopPropagation()}
+              onTouchMove={(e) => e.stopPropagation()}
+              style={{
+                overscrollBehavior: 'contain',
+                WebkitOverflowScrolling: 'touch',
+                touchAction: 'pan-y',
+                scrollbarWidth: 'thin',
+                scrollbarColor: 'rgba(255, 255, 255, 0.25) transparent',
+              }}
+              className={`absolute top-[calc(100%+0.5rem)] z-50 w-72 sm:w-80 max-w-[calc(100vw-1.5rem)] max-h-[80svh] overflow-y-auto overscroll-contain rounded-2xl border border-sky-300/30 bg-slate-950/96 p-3 sm:p-4 shadow-[0_20px_50px_rgba(2,8,23,0.7)] backdrop-blur-2xl text-slate-100 ${
                 isRtl ? 'left-0' : 'right-0'
               }`}
             >
