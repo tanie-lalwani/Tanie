@@ -188,19 +188,19 @@ export const FEATURE_BUNDLES: FeatureBundle[] = [
   },
   {
     id: "marketing_funnel_suite",
-    name: "Full-Funnel Campaign Engine (TOFU • MOFU • BOFU)",
+    name: "BOFU Website Marketing & Conversion Suite",
     icon: "🚀",
     priceInr: 12000,
     priceUsd: 165,
     badge: "High ROI",
-    tagline: "BOFU checkout flow, FOMO countdowns, MOFU proof collage & TOFU viral hooks.",
-    description: "End-to-end multi-funnel marketing package: TOFU awareness reels & before/afters, MOFU case study collages & trust badges, and BOFU 1-click checkouts, price matrix & countdown timers.",
+    tagline: "1-click checkouts, urgency countdowns, offer banners & on-site conversion mechanics.",
+    description: "Turn traffic from your ads and socials into paying customers directly on your website with all 9 core BOFU modules: 1-click express checkouts, countdown timers, offer banners, 4K galleries, UGC reviews wall, price comparison matrix, and FOMO popups.",
     includedFeatures: [
-      "BOFU: 1-Click Fast Checkout, Countdown Urgency & Price Comparison Matrix",
-      "BOFU: Offer-First Banners, Studio Shoots & UGC Video Reviews",
-      "MOFU: Case Studies, Certification Badges & Educational Carousels",
-      "MOFU: Community Comment Responses & Social Proof Collage",
-      "TOFU: Before & After Sliders, Behind the Scenes & PR News Mockups"
+      "1-Click Frictionless Express Checkout Flow (Apple Pay, Stripe, Razorpay)",
+      "Urgency Countdown Timers & Flash Drop Announcement Banners",
+      "4K Multi-Angle Product Gallery & 3D Interactive Presentation",
+      "UGC Customer Video Testimonial Wall with Star Rating Schema",
+      "Price Comparison Matrix, FOMO Live Popups & Freebie Opt-Ins"
     ]
   },
   {

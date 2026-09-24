@@ -2,7 +2,7 @@
 
 import React, { useState, useMemo, useEffect } from "react";
 
-export type BusinessModel = "ecommerce" | "single_product" | "personal_brand";
+export type WebsiteMarketingScope = "ecommerce" | "single_product" | "personal_brand";
 
 export interface MarketingFunnelSuiteProps {
   currency: "USD" | "INR";
@@ -17,410 +17,137 @@ export interface MarketingFunnelSuiteProps {
   }) => void;
 }
 
-interface FunnelItem {
+export interface BofuPageModule {
   id: string;
   title: string;
-  tag: string;
-  stage: "TOFU" | "MOFU" | "BOFU";
-  color: string;
+  badge: string;
+  icon: string;
   shortDesc: string;
-  contexts: {
+  websiteScope: {
     ecommerce: string;
     single_product: string;
     personal_brand: string;
   };
-  mockupType: string;
+  conversionMetric: string;
 }
 
-export const FUNNEL_ITEMS: FunnelItem[] = [
-  // -------------------------------------------------------------
-  // BOFU (Bottom of Funnel - Green)
-  // -------------------------------------------------------------
+export const BOFU_PAGE_MODULES: BofuPageModule[] = [
   {
-    id: "checkout_mockup",
-    title: "Check Out Mockup",
-    tag: "High Conversion",
-    stage: "BOFU",
-    color: "#22c55e",
-    shortDesc: "1-Click frictionless checkout flow eliminating cart drop-offs.",
-    contexts: {
-      ecommerce: "Slide-over express cart with Apple Pay, UPI, Razorpay & instant checkout.",
-      single_product: "Dedicated single-SKU one-page checkout with express order bump.",
-      personal_brand: "High-ticket deposit checkout or calendar application billing."
+    id: "checkout_flow",
+    title: "Check Out Mockup & Flow",
+    badge: "Revenue Engine",
+    icon: "💳",
+    shortDesc: "Frictionless 1-page checkout flow with express mobile wallets and zero distraction.",
+    websiteScope: {
+      ecommerce: "Slide-over cart with 1-click Apple Pay, Google Pay, Razorpay, UPI & credit card support.",
+      single_product: "One-page high-converting checkout landing page with 1-click order bump upsell.",
+      personal_brand: "Secure consultation deposit checkout, contract billing, or stripe subscription invoice."
     },
-    mockupType: "checkout"
+    conversionMetric: "Cuts cart abandonment by up to 35%"
   },
   {
-    id: "countdown",
-    title: "Countdown",
-    tag: "Urgency Driver",
-    stage: "BOFU",
-    color: "#22c55e",
-    shortDesc: "Real-time urgency countdown clocks driving immediate purchase action.",
-    contexts: {
-      ecommerce: "Flash sale countdown timer synced with limited batch drops.",
-      single_product: "Launch phase timer: 'Early Bird pricing expires in 04h : 18m'.",
-      personal_brand: "Cohort enrollment closing clock: 'Doors close at midnight'."
+    id: "countdown_timers",
+    title: "Countdown Urgency Clocks",
+    badge: "Urgency Driver",
+    icon: "⏳",
+    shortDesc: "Real-time urgency countdown tickers on landing pages driving immediate purchase commitment.",
+    websiteScope: {
+      ecommerce: "Flash sale countdown timer embedded on collection headers and product pages.",
+      single_product: "Launch phase timer: 'Early Bird batch pricing locks in 04h : 18m'.",
+      personal_brand: "Enrollment closing timer: 'Doors close Sunday at midnight — 3 spots remain'."
     },
-    mockupType: "countdown"
+    conversionMetric: "Boosts immediate checkout rate by 28%"
   },
   {
-    id: "offer_banners",
-    title: "Offer first banners",
-    tag: "Hook & Incentive",
-    stage: "BOFU",
-    color: "#22c55e",
-    shortDesc: "Sticky, animated announcement bars showcasing irresistible upfront deals.",
-    contexts: {
-      ecommerce: "Top ticker: '20% OFF FIRST ORDER + Free Worldwide Shipping with code DROP20'.",
-      single_product: "Sticky floating bar: 'Get the Founder Bundle + $150 in Free Gear'.",
-      personal_brand: "Announcement bar: 'Complimentary 30-Min Diagnostic Session (3 spots left)'."
+    id: "offer_first_banners",
+    title: "Offer First Banners",
+    badge: "Attention Hook",
+    icon: "🏷️",
+    shortDesc: "Sticky, dismissible announcement bars spotlighting coupons, free shipping, and bundles.",
+    websiteScope: {
+      ecommerce: "Top announcement ticker: '20% OFF FIRST ORDER + Free Express Shipping with code DROP20'.",
+      single_product: "Sticky floating bar: 'Get the Founder Launch Kit + $120 in Free Bonus Accessories'.",
+      personal_brand: "Top bar: 'Complimentary 30-Min Diagnostic Audit (Only 4 available this week)'."
     },
-    mockupType: "offer_banner"
+    conversionMetric: "Increases coupon redemption and average order value"
   },
   {
-    id: "product_images",
-    title: "Product images",
-    tag: "Visual Clarity",
-    stage: "BOFU",
-    color: "#22c55e",
-    shortDesc: "Ultra-crisp 4K multi-angle gallery with dynamic zoom & color switcher.",
-    contexts: {
-      ecommerce: "Multi-variant gallery with pinch-to-zoom and colorway toggle.",
-      single_product: "360-degree interactive rotatable hero product shot.",
-      personal_brand: "High-res editorial portraiture & signature program asset kit."
+    id: "product_images_gallery",
+    title: "Product Images & 4K Viewer",
+    badge: "Visual Anchor",
+    icon: "🔍",
+    shortDesc: "High-resolution multi-angle image gallery with responsive pinch-to-zoom and variant switchers.",
+    websiteScope: {
+      ecommerce: "Multi-variant photo grid with real-time colorway switcher and zoom loupe.",
+      single_product: "360-degree interactive rotatable hero product visual on the landing page.",
+      personal_brand: "Editorial high-res portraits, program curriculum previews, and digital book mockups."
     },
-    mockupType: "product_images"
+    conversionMetric: "Reduces buyer hesitation and return rates"
   },
   {
-    id: "studio_shoots",
-    title: "Studio shoots",
-    tag: "Editorial Polish",
-    stage: "BOFU",
-    color: "#22c55e",
-    shortDesc: "Professional studio-lit product renders and 3D exploded views.",
-    contexts: {
-      ecommerce: "Clean white-seamless & lifestyle contextual in-use studio photography.",
-      single_product: "3D CAD exploded product breakdown highlighting internal engineering.",
-      personal_brand: "Behind-the-mic studio session photography and keynote stage shots."
+    id: "studio_shoots_presentation",
+    title: "Studio Shoots Presentation",
+    badge: "Editorial Polish",
+    icon: "📸",
+    shortDesc: "Web-optimized presentation layouts for studio photography, 3D CAD renders, and exploded views.",
+    websiteScope: {
+      ecommerce: "Seamless white-studio product photography and contextual lifestyle showcase blocks.",
+      single_product: "Interactive 3D exploded view section highlighting internal engineering and materials.",
+      personal_brand: "Behind-the-mic studio photo grids, keynote stage shots, and executive press kits."
     },
-    mockupType: "studio_shoots"
+    conversionMetric: "Elevates perceived brand value & supports luxury pricing"
   },
   {
-    id: "ugc_testimonials",
-    title: "UGC testimonials",
-    tag: "Peer Proof",
-    stage: "BOFU",
-    color: "#22c55e",
-    shortDesc: "Authentic vertical short-form user reviews with star ratings.",
-    contexts: {
-      ecommerce: "Unboxing TikTok/Reel clips with 'Verified Buyer' purchase badge.",
-      single_product: "Beta-tester video reviews showing real-world durability and results.",
-      personal_brand: "Client video interviews breaking down 10x ROI and business growth."
+    id: "ugc_testimonials_wall",
+    title: "UGC Testimonials & Video Wall",
+    badge: "Social Validation",
+    icon: "⭐",
+    shortDesc: "On-site video review carousel and verified buyer testimonial wall with rich star snippet schema.",
+    websiteScope: {
+      ecommerce: "Vertical TikTok/Reel style customer video review carousel with 'Verified Buyer' tags.",
+      single_product: "Customer unboxing video reel and beta-tester feedback cards embedded on-page.",
+      personal_brand: "Video interview endorsements from high-profile clients breaking down concrete ROI."
     },
-    mockupType: "ugc"
+    conversionMetric: "Increases cold traffic trust by 84%"
   },
   {
-    id: "price_comparison",
-    title: "Price comparision",
-    tag: "Value Anchoring",
-    stage: "BOFU",
-    color: "#22c55e",
-    shortDesc: "Direct value-anchoring matrix proving superior ROI against alternatives.",
-    contexts: {
-      ecommerce: "'Our Premium Formulation' vs 'Standard Store Brands' feature breakdown.",
-      single_product: "'Single Drop All-In' vs 'Buying Individual Pieces Separately' ($450 savings).",
-      personal_brand: "'Private Advisory with Founder' vs 'Hiring Full-Time Agency' (1/5th cost)."
+    id: "price_comparison_matrix",
+    title: "Price Comparison Matrix",
+    badge: "Value Anchoring",
+    icon: "📊",
+    shortDesc: "Interactive feature-by-feature comparison table proving overwhelming value against alternatives.",
+    websiteScope: {
+      ecommerce: "'Our Premium Formula' vs 'Standard Drugstore Brands' feature & ingredient breakdown.",
+      single_product: "'Founder Drop All-In' vs 'Buying Individual Parts Separately' ($340 savings breakdown).",
+      personal_brand: "'Private Advisory' vs 'Hiring an Expensive In-House Director' (Save 70% + faster results)."
     },
-    mockupType: "price_matrix"
+    conversionMetric: "Anchors premium pricing and speeds up purchase decision"
   },
   {
-    id: "fomo_offer",
-    title: "FOMO offer",
-    tag: "Scarcity",
-    stage: "BOFU",
-    color: "#22c55e",
-    shortDesc: "Live stock indicators & real-time verified order notification popups.",
-    contexts: {
-      ecommerce: "Real-time toast: 'Sarah in New York just purchased Obsidian Jacket (Only 4 left)'.",
-      single_product: "Inventory progress bar: '88% of batch 1 claimed — Next batch ships in 60 days'.",
-      personal_brand: "Strict cohort capacity: 'Limited to 12 executives. 9 seats already locked'."
+    id: "fomo_scarcity_notifiers",
+    title: "FOMO Offer Mechanics",
+    badge: "Scarcity Engine",
+    icon: "🔥",
+    shortDesc: "Non-intrusive live order popup toasts and dynamic remaining inventory stock meters.",
+    websiteScope: {
+      ecommerce: "Live toast: 'Alex from Austin just purchased Slate Jacket (Only 3 left in Size M)'.",
+      single_product: "Inventory scarcity progress bar: '88% of First Production Batch Claimed'.",
+      personal_brand: "Strict capacity indicator: 'Limited to 10 executives per quarter — 8 spots locked'."
     },
-    mockupType: "fomo"
+    conversionMetric: "Creates urgent fear of missing out without deceptive dark patterns"
   },
   {
-    id: "freebies",
-    title: "Freebies",
-    tag: "Lead Magnet",
-    stage: "BOFU",
-    color: "#22c55e",
-    shortDesc: "Zero-risk lead magnets, bonus gifts, and instant digital downloads.",
-    contexts: {
-      ecommerce: "Free gift automatically added to cart when order exceeds $100.",
-      single_product: "Bonus hard-cover guidebook + lifetime firmware upgrades included.",
-      personal_brand: "Free proprietary 40-page growth blueprint PDF upon email entry."
+    id: "freebie_lead_magnets",
+    title: "Freebies & Lead Magnets",
+    badge: "Lead Capture",
+    icon: "🎁",
+    shortDesc: "On-site email & WhatsApp opt-in capture forms delivering instant free bonuses or trial perks.",
+    websiteScope: {
+      ecommerce: "Free gift automatically added to cart when order reaches threshold (e.g. $75+).",
+      single_product: "Free digital companion handbook + firmware lifetime access with pre-order.",
+      personal_brand: "Free proprietary 35-page growth playbook PDF sent automatically upon email entry."
     },
-    mockupType: "freebies"
-  },
-
-  // -------------------------------------------------------------
-  // MOFU (Middle of Funnel - Yellow)
-  // -------------------------------------------------------------
-  {
-    id: "comment_response",
-    title: "Comment Response",
-    tag: "Community Trust",
-    stage: "MOFU",
-    color: "#eab308",
-    shortDesc: "Highlighting public community interactions and transparent founder replies.",
-    contexts: {
-      ecommerce: "Social comments addressing ingredient quality or sizing questions.",
-      single_product: "Reddit/Twitter AMA replies addressing technical durability.",
-      personal_brand: "YouTube / LinkedIn viral comment replies explaining methodology."
-    },
-    mockupType: "comment_response"
-  },
-  {
-    id: "case_studies",
-    title: "Case studies",
-    tag: "Evidence & ROI",
-    stage: "MOFU",
-    color: "#eab308",
-    shortDesc: "In-depth transformation stories with concrete data points and metrics.",
-    contexts: {
-      ecommerce: "Customer journey: How switching products solved a long-term pain point.",
-      single_product: "Engineering tear-down and stress-test data report.",
-      personal_brand: "Full client breakdown: How a client scaled from $20k to $180k/mo."
-    },
-    mockupType: "case_studies"
-  },
-  {
-    id: "certification_badges",
-    title: "Certification Badges",
-    tag: "Authority Seals",
-    stage: "MOFU",
-    color: "#eab308",
-    shortDesc: "Recognized third-party certifications, lab audits & compliance seals.",
-    contexts: {
-      ecommerce: "Dermatologist Tested, Organic Certified, FDA Facility Registered seals.",
-      single_product: "FCC Certified, IP68 Waterproof, Patented Engineering badges.",
-      personal_brand: "Forbes Council, Ivy League Alum, ISO 9001 Certified Coach badges."
-    },
-    mockupType: "badges"
-  },
-  {
-    id: "educational",
-    title: "Educational",
-    tag: "Nurturing",
-    stage: "MOFU",
-    color: "#eab308",
-    shortDesc: "Interactive carousels that teach the customer the science behind your solution.",
-    contexts: {
-      ecommerce: "Interactive guide: 'How to pick your perfect shade/fit in 3 steps'.",
-      single_product: "Diagram showing how our proprietary mechanism outlasts competitors.",
-      personal_brand: "Free mini-masterclass breaking down our 4-pillar proprietary framework."
-    },
-    mockupType: "educational"
-  },
-  {
-    id: "expert_explainer",
-    title: "Expert explainer",
-    tag: "Scientific Backing",
-    stage: "MOFU",
-    color: "#eab308",
-    shortDesc: "Doctor, engineer, or specialist video breakdown breaking down the mechanics.",
-    contexts: {
-      ecommerce: "Chief Chemist video explaining zero-filler botanical formulation.",
-      single_product: "Lead Architect walking through precision CNC aluminum machining.",
-      personal_brand: "Founder keynote explaining macroeconomic trends and market timing."
-    },
-    mockupType: "expert"
-  },
-  {
-    id: "faqs",
-    title: "FAQs",
-    tag: "Friction Buster",
-    stage: "MOFU",
-    color: "#eab308",
-    shortDesc: "Comprehensive expandable accordion resolving every buyer hesitation.",
-    contexts: {
-      ecommerce: "Shipping times, hassle-free 30-day returns, and international duties.",
-      single_product: "Battery life, warranty coverage, and backwards compatibility.",
-      personal_brand: "Time commitment required, NDA confidentiality, and guarantee terms."
-    },
-    mockupType: "faqs"
-  },
-  {
-    id: "how_to_podcast",
-    title: "How to podcast",
-    tag: "Audio Immersion",
-    stage: "MOFU",
-    color: "#eab308",
-    shortDesc: "Embedded podcast player with key timestamps and voice insights.",
-    contexts: {
-      ecommerce: "Brand podcast exploring craftsmanship, sourcing, and lifestyle ethics.",
-      single_product: "Founder episode on high-tech manufacturing challenges and breakthroughs.",
-      personal_brand: "Top-charting podcast episodes discussing industry secrets & tactics."
-    },
-    mockupType: "podcast"
-  },
-  {
-    id: "social_proof_collage",
-    title: "Social proof collage",
-    tag: "Social Validation",
-    stage: "MOFU",
-    color: "#eab308",
-    shortDesc: "High-density masonry wall of tweets, DMs, customer photos and shoutouts.",
-    contexts: {
-      ecommerce: "Instagram tagged customer selfies and enthusiastic unboxing photos.",
-      single_product: "Discord and Reddit community screenshots praising product build.",
-      personal_brand: "WhatsApp praise DMs and LinkedIn recommendation screenshots."
-    },
-    mockupType: "collage"
-  },
-  {
-    id: "text_heavy_statics",
-    title: "Text heavy Statics",
-    tag: "Brand Manifesto",
-    stage: "MOFU",
-    color: "#eab308",
-    shortDesc: "Editorial manifesto cards with uncompromising brand philosophy.",
-    contexts: {
-      ecommerce: "Open letter against fast fashion and cheap disposable consumerism.",
-      single_product: "Our Design Principles: Why we spent 2 years obsessing over 1 millimeter.",
-      personal_brand: "The Unfiltered Truth: Why 90% of traditional advice fails today."
-    },
-    mockupType: "manifesto"
-  },
-
-  // -------------------------------------------------------------
-  // TOFU (Top of Funnel - Red)
-  // -------------------------------------------------------------
-  {
-    id: "before_and_after",
-    title: "Befor & After",
-    tag: "Visual Hook",
-    stage: "TOFU",
-    color: "#ef4444",
-    shortDesc: "High-contrast visual comparison slider proving instant transformation.",
-    contexts: {
-      ecommerce: "Side-by-side skin transformation or messy vs organized wardrobe.",
-      single_product: "Desk setup before our all-in-one dock vs cleanly cable-free after.",
-      personal_brand: "Client pipeline before working with us ($0/mo) vs after ($50k/mo)."
-    },
-    mockupType: "before_after"
-  },
-  {
-    id: "behind_the_scene",
-    title: "Behind the scene",
-    tag: "Authenticity",
-    stage: "TOFU",
-    color: "#ef4444",
-    shortDesc: "Raw, candid workshop, factory, or office reels humanizing the brand.",
-    contexts: {
-      ecommerce: "Artisans hand-stitching leather or packing orders in the warehouse.",
-      single_product: "Prototype testing lab failures on the way to perfection.",
-      personal_brand: "Preparation room before stepping out in front of 5,000 attendees."
-    },
-    mockupType: "bts"
-  },
-  {
-    id: "memes",
-    title: "Memes",
-    tag: "Viral Relatability",
-    stage: "TOFU",
-    color: "#ef4444",
-    shortDesc: "Culturally resonant meme marketing tapping into trending creator humor.",
-    contexts: {
-      ecommerce: "Funny relatable memes about package tracking addiction or laundry dread.",
-      single_product: "Memes poking fun at frustrating tangled wires and fragile competitors.",
-      personal_brand: "Sharp industry satire on corporate buzzwords and bad agency pitch decks."
-    },
-    mockupType: "meme"
-  },
-  {
-    id: "celebrity",
-    title: "Celebrity",
-    tag: "Halo Effect",
-    stage: "TOFU",
-    color: "#ef4444",
-    shortDesc: "High-profile creator, athlete, or industry celebrity endorsements.",
-    contexts: {
-      ecommerce: "Celebrity stylist endorsement and paparazzi organic street spotting.",
-      single_product: "Tier-1 tech influencer unboxing video featured on homepage.",
-      personal_brand: "Fireside chat photograph with industry titans and global authors."
-    },
-    mockupType: "celebrity"
-  },
-  {
-    id: "billboard",
-    title: "Billboard",
-    tag: "Massive Scale",
-    stage: "TOFU",
-    color: "#ef4444",
-    shortDesc: "Bold out-of-home (OOH) 3D digital billboard mockup and skyline takeover.",
-    contexts: {
-      ecommerce: "Times Square 3D digital anamorphic billboard launch campaign.",
-      single_product: "Iconic minimalist billboard on Silicon Valley highway: 'Hardware is Back'.",
-      personal_brand: "Financial District massive banner promoting the bestselling book drop."
-    },
-    mockupType: "billboard"
-  },
-  {
-    id: "event_announcement",
-    title: "Event annoucement",
-    tag: "Hype Builder",
-    stage: "TOFU",
-    color: "#ef4444",
-    shortDesc: "Cinematic keynote drop, VIP launch party, or global live stream teaser.",
-    contexts: {
-      ecommerce: "Paris Fashion Week pop-up activation with limited physical invites.",
-      single_product: "Live Apple-style keynote broadcast RSVP with calendar sync.",
-      personal_brand: "Exclusive invite-only mastermind summit at Lake Como."
-    },
-    mockupType: "event"
-  },
-  {
-    id: "founder_led",
-    title: "Founder led",
-    tag: "Founder Story",
-    stage: "TOFU",
-    color: "#ef4444",
-    shortDesc: "Direct-to-camera founder story explaining the 'Why' behind the company.",
-    contexts: {
-      ecommerce: "Founder sharing why they risked their life savings to fix a broken industry.",
-      single_product: "Inventor demonstrating how this singular tool took 4 years to engineer.",
-      personal_brand: "Founder manifesto on personal journey, failures, and hard-earned lessons."
-    },
-    mockupType: "founder"
-  },
-  {
-    id: "phone_call_mockup",
-    title: "Phone call mockup",
-    tag: "Curiosity Pique",
-    stage: "TOFU",
-    color: "#ef4444",
-    shortDesc: "Interactive iPhone call or iMessage chat mockup creating instant curiosity.",
-    contexts: {
-      ecommerce: "Incoming Call: 'Warehouse Manager: We're almost out of stock!'",
-      single_product: "iMessage thread: 'Dude, where did you get that device?! Everyone is asking'.",
-      personal_brand: "WhatsApp notification: 'Client just signed $120k retainer from the advice'."
-    },
-    mockupType: "phone_call"
-  },
-  {
-    id: "news_mockup",
-    title: "News mockup",
-    tag: "Earned Media",
-    stage: "TOFU",
-    color: "#ef4444",
-    shortDesc: "Editorial PR press clippings from Bloomberg, TechCrunch & Forbes.",
-    contexts: {
-      ecommerce: "Vogue & GQ: 'The Disruptor Brand Taking Over Milan This Season'.",
-      single_product: "TechCrunch: 'How This Stealth Hardware Startup Sold Out in 42 Minutes'.",
-      personal_brand: "Forbes 30 Under 30 & Wall Street Journal feature interview."
-    },
-    mockupType: "news"
+    conversionMetric: "Captures 15–25% of visitors who aren't ready to buy today"
   }
 ];
 
@@ -429,36 +156,33 @@ export default function MarketingFunnelSuite({
   onCurrencyChange,
   onBookMarketingPackage
 }: MarketingFunnelSuiteProps) {
-  // Business Model: E-Commerce, Singular Product Drop, Personal Brand
-  const [businessModel, setBusinessModel] = useState<BusinessModel>("ecommerce");
+  // Website Scope Mode
+  const [websiteScope, setWebsiteScope] = useState<WebsiteMarketingScope>("ecommerce");
 
-  // Active Stage Filter: All, TOFU, MOFU, BOFU
-  const [stageFilter, setStageFilter] = useState<"ALL" | "TOFU" | "MOFU" | "BOFU">("ALL");
+  // Selected BOFU module for live preview
+  const [activeModule, setActiveModule] = useState<BofuPageModule>(BOFU_PAGE_MODULES[0]);
 
-  // Selected item for interactive inspector
-  const [activeItem, setActiveItem] = useState<FunnelItem>(FUNNEL_ITEMS[0]);
+  // Selected Modules checklist
+  const [selectedModuleIds, setSelectedModuleIds] = useState<string[]>([
+    "checkout_flow",
+    "countdown_timers",
+    "offer_first_banners",
+    "ugc_testimonials_wall",
+    "price_comparison_matrix",
+    "fomo_scarcity_notifiers",
+    "freebie_lead_magnets"
+  ]);
 
-  // UTM Source Generator State
+  // UTM Source Generator State (On-Site Sources Management)
   const [targetUrl, setTargetUrl] = useState("https://yourbrand.com/drop");
   const [utmSource, setUtmSource] = useState("meta_ads");
   const [utmMedium, setUtmMedium] = useState("paid_social");
   const [utmCampaign, setUtmCampaign] = useState("summer_drop_bofu");
-  const [utmContent, setUtmContent] = useState("ugc_video_v1");
-  const [utmTerm, setUtmTerm] = useState("high_intent_lookalike");
+  const [utmContent, setUtmContent] = useState("before_after_hook_v1");
+  const [utmTerm, setUtmTerm] = useState("high_intent_buyers");
   const [copiedLink, setCopiedLink] = useState(false);
 
-  // Selected items to package into the final quote
-  const [selectedFunnelIds, setSelectedFunnelIds] = useState<string[]>([
-    "checkout_mockup",
-    "countdown",
-    "offer_banners",
-    "case_studies",
-    "certification_badges",
-    "before_and_after",
-    "founder_led"
-  ]);
-
-  // Live ticking countdown for demo preview
+  // Live countdown timer for interactive preview
   const [timeLeft, setTimeLeft] = useState({ hours: 4, minutes: 18, seconds: 42 });
   useEffect(() => {
     const timer = setInterval(() => {
@@ -471,12 +195,6 @@ export default function MarketingFunnelSuite({
     }, 1000);
     return () => clearInterval(timer);
   }, []);
-
-  // Filter items by stage
-  const displayedItems = useMemo(() => {
-    if (stageFilter === "ALL") return FUNNEL_ITEMS;
-    return FUNNEL_ITEMS.filter((item) => item.stage === stageFilter);
-  }, [stageFilter]);
 
   // Computed Full UTM Link
   const fullUtmUrl = useMemo(() => {
@@ -503,164 +221,166 @@ export default function MarketingFunnelSuite({
 
   // Toggle module selection
   const toggleSelectModule = (id: string) => {
-    setSelectedFunnelIds((prev) =>
+    setSelectedModuleIds((prev) =>
       prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
     );
   };
 
-  // Book Marketing Package
+  // Trigger Booking with clean details
   const handleTriggerBooking = () => {
-    const modelLabels: Record<BusinessModel, string> = {
-      ecommerce: "E-Commerce Multi-Product",
-      single_product: "Singular Hero Product Drop",
-      personal_brand: "Personal Brand & Authority"
+    const scopeLabels: Record<WebsiteMarketingScope, string> = {
+      ecommerce: "E-Commerce Website & Checkout",
+      single_product: "Singular Hero Product Drop Page",
+      personal_brand: "Personal Brand & Authority Website"
     };
 
-    const selectedTitles = FUNNEL_ITEMS
-      .filter((item) => selectedFunnelIds.includes(item.id))
-      .map((item) => `${item.stage}: ${item.title}`);
+    const selectedTitles = BOFU_PAGE_MODULES
+      .filter((item) => selectedModuleIds.includes(item.id))
+      .map((item) => item.title);
 
     onBookMarketingPackage({
-      packageName: "Full-Funnel Growth & Marketing Campaign Engine",
-      businessModel: modelLabels[businessModel],
-      selectedItems: selectedTitles,
-      priceInr: 259000,
-      priceUsd: 3199,
-      timeline: "2–4 Weeks"
+      packageName: "BOFU Website Marketing & Sources Management Package",
+      businessModel: scopeLabels[websiteScope],
+      selectedItems: [
+        ...selectedTitles,
+        "Multi-Channel UTM Attribution Engine",
+        "Meta Pixel / CAPI & GA4 Telemetry"
+      ],
+      priceInr: 239000,
+      priceUsd: 2899,
+      timeline: "2–3 Weeks"
     });
   };
 
   return (
-    <div className="w-full space-y-12">
+    <div className="w-full space-y-10">
       {/* ------------------------------------------------------------- */}
-      {/* HEADER & ARCHITECTURE BANNER                                  */}
+      {/* 1. HERO & POSITIONING (WEBSITE BOFU ENGINE)                    */}
       {/* ------------------------------------------------------------- */}
-      <div className="relative overflow-hidden rounded-[2.5rem] border border-sky-400/30 bg-gradient-to-br from-white/90 via-[#e3f4ff]/90 to-sky-100/90 p-8 shadow-xl backdrop-blur-2xl sm:p-12">
+      <div className="relative overflow-hidden rounded-[2.5rem] border border-emerald-400/40 bg-gradient-to-br from-white/95 via-emerald-50/70 to-sky-50/90 p-8 sm:p-12 shadow-xl backdrop-blur-2xl">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8">
           <div className="space-y-4 max-w-2xl">
             <div className="flex flex-wrap items-center gap-2">
               <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-100 border border-emerald-300 px-3.5 py-1 text-xs font-extrabold uppercase tracking-widest text-emerald-900">
                 <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-                Full-Funnel Growth Package
+                Website-Only Marketing Package
               </span>
-              <span className="rounded-full bg-sky-200/80 px-3 py-1 text-xs font-bold text-sky-900">
-                Wide-Scoped Architecture
+              <span className="rounded-full bg-slate-900 px-3 py-1 text-xs font-bold text-white">
+                All 9 BOFU Pages & Modules
               </span>
             </div>
 
             <h2 className="text-3xl font-black tracking-tight text-slate-950 sm:text-4xl md:text-5xl">
-              Turn Cold Traffic into <br />
+              The Website BOFU Engine: <br />
               <span className="bg-gradient-to-r from-emerald-600 via-teal-600 to-sky-700 bg-clip-text text-transparent">
-                High-Converting Customers
+                Where Cold Clicks Turn Into Cash
               </span>
             </h2>
 
             <p className="text-base font-medium leading-relaxed text-slate-700 sm:text-lg">
-              Engineered directly around the proven 3-tier conversion pyramid: 
-              <span className="font-bold text-rose-600"> TOFU Awareness</span>, 
-              <span className="font-bold text-amber-600"> MOFU Consideration</span>, and 
-              <span className="font-bold text-emerald-600"> BOFU Conversion</span>, paired with full-spectrum UTM multi-source tracking.
+              External ads and social media get you the traffic — but <strong>your website is the Bottom of Funnel (BOFU) terminal</strong> where decisions are made. 
+              We build high-converting checkout flows, countdowns, offer banners, and on-site source tracking so every visitor converts.
             </p>
           </div>
 
-          {/* Pricing & Quick Action Card */}
-          <div className="flex flex-col items-center sm:items-end justify-center rounded-3xl border border-sky-300/80 bg-white/90 p-6 shadow-md backdrop-blur-md">
+          {/* Pricing & Booking Card */}
+          <div className="flex flex-col items-center sm:items-end justify-center rounded-3xl border border-emerald-300/80 bg-white/90 p-6 shadow-md backdrop-blur-md">
             <span className="text-xs font-bold uppercase tracking-widest text-slate-500">
-              Complete Package Investment
+              BOFU Website Package
             </span>
             <div className="flex items-baseline gap-2 my-2">
               <span className="text-4xl sm:text-5xl font-black text-slate-950">
-                {currency === "INR" ? "₹2,59,000" : "$3,199"}
+                {currency === "INR" ? "₹2,39,000" : "$2,899"}
               </span>
               <span className="text-xs font-bold text-slate-500">
                 {currency === "INR" ? "INR" : "USD"}
               </span>
             </div>
             <p className="text-xs text-slate-600 mb-4 text-center sm:text-right">
-              Includes all 27 funnel assets, tracking dashboard & 30-day conversion warranty
+              All 9 BOFU modules + multi-channel UTM source tracker & pixel telemetry
             </p>
             <button
               type="button"
               onClick={handleTriggerBooking}
               className="w-full sm:w-auto rounded-2xl bg-gradient-to-r from-emerald-600 via-teal-600 to-sky-600 px-6 py-3.5 text-sm font-black text-white shadow-lg transition-all hover:scale-105 active:scale-95 cursor-pointer"
             >
-              🚀 Book This Campaign Engine
+              🚀 Book BOFU Website Engine
             </button>
           </div>
         </div>
 
         {/* ------------------------------------------------------------- */}
-        {/* BUSINESS MODEL SWITCHER (Wide-Scoped Versatility)             */}
+        {/* 2. THREE WEBSITE TYPES (WIDE SCOPE)                           */}
         {/* ------------------------------------------------------------- */}
-        <div className="mt-10 border-t border-sky-200/80 pt-8">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
+        <div className="mt-10 border-t border-emerald-200/80 pt-8">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-4">
             <div>
               <span className="text-xs font-black uppercase tracking-wider text-slate-500">
-                Adapt For Your Business Model:
+                Adaptable For Any Business Type:
               </span>
               <h3 className="text-lg font-bold text-slate-900">
-                Select Your Industry Archetype
+                Select Your Website Focus
               </h3>
             </div>
-            <span className="text-xs font-bold text-sky-800 bg-sky-100 border border-sky-200 px-3 py-1 rounded-full self-start sm:self-auto">
-              Current: {businessModel === "ecommerce" ? "E-Commerce Store" : businessModel === "single_product" ? "Singular Hero Product Drop" : "Personal Brand & Authority"}
+            <span className="text-xs font-bold text-emerald-800 bg-emerald-100 border border-emerald-300 px-3 py-1 rounded-full self-start sm:self-auto">
+              Current: {websiteScope === "ecommerce" ? "E-Commerce Store Website" : websiteScope === "single_product" ? "Singular Hero Product Launch Page" : "Personal Brand & Authority Website"}
             </span>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            {/* E-Commerce Option */}
+            {/* E-Commerce Website */}
             <button
               type="button"
-              onClick={() => setBusinessModel("ecommerce")}
+              onClick={() => setWebsiteScope("ecommerce")}
               className={`flex items-center gap-3.5 rounded-2xl p-4 text-left border transition-all cursor-pointer ${
-                businessModel === "ecommerce"
+                websiteScope === "ecommerce"
                   ? "bg-slate-950 text-white border-slate-900 shadow-lg scale-[1.01]"
-                  : "bg-white/70 text-slate-800 border-sky-200 hover:bg-white"
+                  : "bg-white/80 text-slate-800 border-emerald-200 hover:bg-white"
               }`}
             >
               <span className="text-2xl">🛒</span>
               <div>
-                <div className="text-sm font-bold">E-Commerce & Retail</div>
-                <div className={`text-xs ${businessModel === "ecommerce" ? "text-slate-300" : "text-slate-500"}`}>
-                  Multi-SKU, cart upsells, flash drops & shipping calculator
+                <div className="text-sm font-bold">E-Commerce Website</div>
+                <div className={`text-xs ${websiteScope === "ecommerce" ? "text-slate-300" : "text-slate-500"}`}>
+                  Multi-product catalog, slide-over cart, checkout upsells & order tracking
                 </div>
               </div>
             </button>
 
-            {/* Singular Hero Product Drop */}
+            {/* Singular Hero Product Drop Page */}
             <button
               type="button"
-              onClick={() => setBusinessModel("single_product")}
+              onClick={() => setWebsiteScope("single_product")}
               className={`flex items-center gap-3.5 rounded-2xl p-4 text-left border transition-all cursor-pointer ${
-                businessModel === "single_product"
+                websiteScope === "single_product"
                   ? "bg-slate-950 text-white border-slate-900 shadow-lg scale-[1.01]"
-                  : "bg-white/70 text-slate-800 border-sky-200 hover:bg-white"
+                  : "bg-white/80 text-slate-800 border-emerald-200 hover:bg-white"
               }`}
             >
               <span className="text-2xl">📦</span>
               <div>
                 <div className="text-sm font-bold">Singular Hero Product</div>
-                <div className={`text-xs ${businessModel === "single_product" ? "text-slate-300" : "text-slate-500"}`}>
-                  Pre-order drop, 3D CAD breakdown & Kickstarter-style hype
+                <div className={`text-xs ${websiteScope === "single_product" ? "text-slate-300" : "text-slate-500"}`}>
+                  Dedicated pre-order landing page, 360 viewer & 1-page checkout
                 </div>
               </div>
             </button>
 
-            {/* Personal Brand & High-Ticket Authority */}
+            {/* Personal Brand & High-Ticket Authority Site */}
             <button
               type="button"
-              onClick={() => setBusinessModel("personal_brand")}
+              onClick={() => setWebsiteScope("personal_brand")}
               className={`flex items-center gap-3.5 rounded-2xl p-4 text-left border transition-all cursor-pointer ${
-                businessModel === "personal_brand"
+                websiteScope === "personal_brand"
                   ? "bg-slate-950 text-white border-slate-900 shadow-lg scale-[1.01]"
-                  : "bg-white/70 text-slate-800 border-sky-200 hover:bg-white"
+                  : "bg-white/80 text-slate-800 border-emerald-200 hover:bg-white"
               }`}
             >
               <span className="text-2xl">🎙️</span>
               <div>
-                <div className="text-sm font-bold">Personal Brand & Authority</div>
-                <div className={`text-xs ${businessModel === "personal_brand" ? "text-slate-300" : "text-slate-500"}`}>
-                  Founders, podcasts, high-ticket applications & keynote speaking
+                <div className="text-sm font-bold">Personal Brand Site</div>
+                <div className={`text-xs ${websiteScope === "personal_brand" ? "text-slate-300" : "text-slate-500"}`}>
+                  High-ticket client application, VIP booking calendar & lead magnet funnels
                 </div>
               </div>
             </button>
@@ -669,360 +389,191 @@ export default function MarketingFunnelSuite({
       </div>
 
       {/* ------------------------------------------------------------- */}
-      {/* 3-STAGE VISUAL FUNNEL BREAKDOWN (Graphic Mirror)              */}
+      {/* 3. THE 9 BOFU WEBSITE PAGES & MODULES GRID                    */}
       {/* ------------------------------------------------------------- */}
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
             <div className="flex items-center gap-2">
               <span className="text-xs font-black uppercase tracking-wider text-slate-500">
-                Interactive Funnel Navigator
+                On-Site Conversion Components
               </span>
-              <span className="rounded-full bg-slate-900 text-white px-2 py-0.5 text-[10px] font-bold">
-                27 Elements
+              <span className="rounded-full bg-emerald-600 text-white px-2 py-0.5 text-[10px] font-bold">
+                All 9 BOFU Deliverables
               </span>
             </div>
             <h3 className="text-2xl font-black text-slate-950">
-              The 3-Funnel Pyramid: Click Any Component to Inspect
+              The 9 On-Website BOFU Pages & Modules
             </h3>
           </div>
 
-          {/* Funnel Stage Filter Buttons */}
-          <div className="flex flex-wrap items-center gap-2">
-            <button
-              type="button"
-              onClick={() => setStageFilter("ALL")}
-              className={`rounded-full px-3.5 py-1.5 text-xs font-bold transition-all cursor-pointer border ${
-                stageFilter === "ALL"
-                  ? "bg-slate-900 text-white border-slate-900 shadow-xs"
-                  : "bg-white/80 text-slate-800 border-sky-300 hover:bg-white"
-              }`}
-            >
-              All Stages (27)
-            </button>
-            <button
-              type="button"
-              onClick={() => setStageFilter("TOFU")}
-              className={`rounded-full px-3.5 py-1.5 text-xs font-bold transition-all cursor-pointer border ${
-                stageFilter === "TOFU"
-                  ? "bg-rose-600 text-white border-rose-600 shadow-xs"
-                  : "bg-rose-50 text-rose-800 border-rose-200 hover:bg-rose-100"
-              }`}
-            >
-              🔺 TOFU (Top of Funnel - 9)
-            </button>
-            <button
-              type="button"
-              onClick={() => setStageFilter("MOFU")}
-              className={`rounded-full px-3.5 py-1.5 text-xs font-bold transition-all cursor-pointer border ${
-                stageFilter === "MOFU"
-                  ? "bg-amber-600 text-white border-amber-600 shadow-xs"
-                  : "bg-amber-50 text-amber-800 border-amber-200 hover:bg-amber-100"
-              }`}
-            >
-              ⚠️ MOFU (Middle of Funnel - 9)
-            </button>
-            <button
-              type="button"
-              onClick={() => setStageFilter("BOFU")}
-              className={`rounded-full px-3.5 py-1.5 text-xs font-bold transition-all cursor-pointer border ${
-                stageFilter === "BOFU"
-                  ? "bg-emerald-600 text-white border-emerald-600 shadow-xs"
-                  : "bg-emerald-50 text-emerald-800 border-emerald-200 hover:bg-emerald-100"
-              }`}
-            >
-              🔻 BOFU (Bottom of Funnel - 9)
-            </button>
+          <div className="flex items-center gap-2 text-xs font-bold text-slate-600">
+            <span>{selectedModuleIds.length} of 9 modules selected for your build</span>
           </div>
         </div>
 
-        {/* 3-Column / Grid View of the 3 Funnels */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* TOFU Column (Red) */}
-          <div className="rounded-3xl border border-rose-200 bg-rose-50/50 p-5 backdrop-blur-md">
-            <div className="flex items-center justify-between pb-3 border-b border-rose-200/80 mb-4">
-              <div className="flex items-center gap-2">
-                <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-rose-600 text-white font-black text-xs">
-                  ▲
-                </span>
-                <div>
-                  <h4 className="text-sm font-black text-rose-950 uppercase tracking-wide">
-                    TOFU (Awareness)
-                  </h4>
-                  <p className="text-[11px] text-rose-700">Stop the scroll & capture viral attention</p>
-                </div>
-              </div>
-              <span className="text-[10px] font-black uppercase text-rose-600 bg-rose-100 px-2 py-0.5 rounded-full">
-                9 Assets
-              </span>
-            </div>
+        {/* 9 BOFU Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {BOFU_PAGE_MODULES.map((mod) => {
+            const isSelected = selectedModuleIds.includes(mod.id);
+            const isActive = activeModule.id === mod.id;
 
-            <div className="space-y-2">
-              {FUNNEL_ITEMS.filter((i) => i.stage === "TOFU").map((item) => {
-                const isSelected = selectedFunnelIds.includes(item.id);
-                const isActive = activeItem.id === item.id;
-                return (
-                  <div
-                    key={item.id}
-                    onClick={() => setActiveItem(item)}
-                    className={`group flex items-center justify-between rounded-xl p-2.5 transition-all cursor-pointer border ${
-                      isActive
-                        ? "bg-rose-600 text-white border-rose-700 shadow-md translate-x-1"
-                        : "bg-white/80 hover:bg-rose-100/70 text-slate-800 border-rose-200/60"
+            return (
+              <div
+                key={mod.id}
+                onClick={() => setActiveModule(mod)}
+                className={`flex flex-col justify-between rounded-2xl p-5 border transition-all cursor-pointer shadow-sm ${
+                  isActive
+                    ? "bg-slate-950 text-white border-slate-900 shadow-lg ring-2 ring-emerald-500 scale-[1.01]"
+                    : isSelected
+                    ? "bg-white text-slate-900 border-emerald-300 hover:bg-emerald-50/50"
+                    : "bg-white/80 text-slate-700 border-slate-200 hover:bg-white"
+                }`}
+              >
+                <div>
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="text-2xl">{mod.icon}</span>
+                    <span
+                      className={`text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full ${
+                        isActive
+                          ? "bg-emerald-500 text-black font-black"
+                          : "bg-emerald-100 text-emerald-900 border border-emerald-300"
+                      }`}
+                    >
+                      {mod.badge}
+                    </span>
+                  </div>
+
+                  <h4 className="text-base font-bold mb-1">{mod.title}</h4>
+                  <p className={`text-xs leading-relaxed mb-3 ${isActive ? "text-slate-300" : "text-slate-600"}`}>
+                    {mod.shortDesc}
+                  </p>
+
+                  <div className={`text-[11px] p-2.5 rounded-xl border mb-4 ${
+                    isActive ? "bg-slate-900 border-slate-800 text-emerald-300" : "bg-emerald-50 border-emerald-200 text-emerald-950 font-medium"
+                  }`}>
+                    <strong>Website Role:</strong> {mod.websiteScope[websiteScope]}
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between pt-3 border-t border-slate-200/60 dark:border-slate-800">
+                  <span className={`text-[10px] font-mono ${isActive ? "text-slate-400" : "text-slate-500"}`}>
+                    {mod.conversionMetric}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      toggleSelectModule(mod.id);
+                    }}
+                    className={`text-[11px] font-bold px-3 py-1 rounded-lg transition-all cursor-pointer ${
+                      isSelected
+                        ? "bg-emerald-600 text-white shadow-xs"
+                        : "bg-slate-200 text-slate-700 hover:bg-slate-300"
                     }`}
                   >
-                    <div className="flex items-center gap-2">
-                      <span className={`text-xs ${isActive ? "text-white" : "text-rose-600"}`}>•</span>
-                      <span className="text-xs font-bold">{item.title}</span>
-                    </div>
-                    <div className="flex items-center gap-1.5">
-                      <button
-                        type="button"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          toggleSelectModule(item.id);
-                        }}
-                        className={`text-[10px] px-2 py-0.5 rounded-md font-bold transition-all ${
-                          isSelected
-                            ? isActive ? "bg-white text-rose-600" : "bg-emerald-600 text-white"
-                            : isActive ? "bg-rose-700 text-white" : "bg-slate-200 text-slate-700"
-                        }`}
-                        title="Include in custom scope"
-                      >
-                        {isSelected ? "✓ Included" : "+ Add"}
-                      </button>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* MOFU Column (Yellow) */}
-          <div className="rounded-3xl border border-amber-200 bg-amber-50/50 p-5 backdrop-blur-md">
-            <div className="flex items-center justify-between pb-3 border-b border-amber-200/80 mb-4">
-              <div className="flex items-center gap-2">
-                <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-amber-500 text-white font-black text-xs">
-                  ■
-                </span>
-                <div>
-                  <h4 className="text-sm font-black text-amber-950 uppercase tracking-wide">
-                    MOFU (Consideration)
-                  </h4>
-                  <p className="text-[11px] text-amber-700">Educate, prove claims & build intense trust</p>
+                    {isSelected ? "✓ Included" : "+ Add"}
+                  </button>
                 </div>
               </div>
-              <span className="text-[10px] font-black uppercase text-amber-600 bg-amber-100 px-2 py-0.5 rounded-full">
-                9 Assets
-              </span>
-            </div>
-
-            <div className="space-y-2">
-              {FUNNEL_ITEMS.filter((i) => i.stage === "MOFU").map((item) => {
-                const isSelected = selectedFunnelIds.includes(item.id);
-                const isActive = activeItem.id === item.id;
-                return (
-                  <div
-                    key={item.id}
-                    onClick={() => setActiveItem(item)}
-                    className={`group flex items-center justify-between rounded-xl p-2.5 transition-all cursor-pointer border ${
-                      isActive
-                        ? "bg-amber-500 text-white border-amber-600 shadow-md translate-x-1"
-                        : "bg-white/80 hover:bg-amber-100/70 text-slate-800 border-amber-200/60"
-                    }`}
-                  >
-                    <div className="flex items-center gap-2">
-                      <span className={`text-xs ${isActive ? "text-white" : "text-amber-500"}`}>•</span>
-                      <span className="text-xs font-bold">{item.title}</span>
-                    </div>
-                    <div className="flex items-center gap-1.5">
-                      <button
-                        type="button"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          toggleSelectModule(item.id);
-                        }}
-                        className={`text-[10px] px-2 py-0.5 rounded-md font-bold transition-all ${
-                          isSelected
-                            ? isActive ? "bg-white text-amber-700" : "bg-emerald-600 text-white"
-                            : isActive ? "bg-amber-600 text-white" : "bg-slate-200 text-slate-700"
-                        }`}
-                        title="Include in custom scope"
-                      >
-                        {isSelected ? "✓ Included" : "+ Add"}
-                      </button>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* BOFU Column (Green) */}
-          <div className="rounded-3xl border border-emerald-200 bg-emerald-50/50 p-5 backdrop-blur-md">
-            <div className="flex items-center justify-between pb-3 border-b border-emerald-200/80 mb-4">
-              <div className="flex items-center gap-2">
-                <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-emerald-600 text-white font-black text-xs">
-                  ▼
-                </span>
-                <div>
-                  <h4 className="text-sm font-black text-emerald-950 uppercase tracking-wide">
-                    BOFU (Conversion)
-                  </h4>
-                  <p className="text-[11px] text-emerald-700">Close orders with urgency & zero friction</p>
-                </div>
-              </div>
-              <span className="text-[10px] font-black uppercase text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full">
-                9 Assets
-              </span>
-            </div>
-
-            <div className="space-y-2">
-              {FUNNEL_ITEMS.filter((i) => i.stage === "BOFU").map((item) => {
-                const isSelected = selectedFunnelIds.includes(item.id);
-                const isActive = activeItem.id === item.id;
-                return (
-                  <div
-                    key={item.id}
-                    onClick={() => setActiveItem(item)}
-                    className={`group flex items-center justify-between rounded-xl p-2.5 transition-all cursor-pointer border ${
-                      isActive
-                        ? "bg-emerald-600 text-white border-emerald-700 shadow-md translate-x-1"
-                        : "bg-white/80 hover:bg-emerald-100/70 text-slate-800 border-emerald-200/60"
-                    }`}
-                  >
-                    <div className="flex items-center gap-2">
-                      <span className={`text-xs ${isActive ? "text-white" : "text-emerald-600"}`}>•</span>
-                      <span className="text-xs font-bold">{item.title}</span>
-                    </div>
-                    <div className="flex items-center gap-1.5">
-                      <button
-                        type="button"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          toggleSelectModule(item.id);
-                        }}
-                        className={`text-[10px] px-2 py-0.5 rounded-md font-bold transition-all ${
-                          isSelected
-                            ? isActive ? "bg-white text-emerald-700" : "bg-emerald-600 text-white"
-                            : isActive ? "bg-emerald-700 text-white" : "bg-slate-200 text-slate-700"
-                        }`}
-                        title="Include in custom scope"
-                      >
-                        {isSelected ? "✓ Included" : "+ Add"}
-                      </button>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
+            );
+          })}
         </div>
       </div>
 
       {/* ------------------------------------------------------------- */}
-      {/* INTERACTIVE COMPONENT INSPECTOR & LIVE MOCKUP PREVIEW          */}
+      {/* 4. LIVE INTERACTIVE COMPONENT PREVIEW INSPECTOR               */}
       {/* ------------------------------------------------------------- */}
       <div className="rounded-[2.2rem] border border-sky-300/80 bg-white/95 p-6 sm:p-10 shadow-xl backdrop-blur-xl">
         <div className="flex flex-col lg:flex-row gap-8 items-start">
-          {/* Left: Component Details & Strategy Context */}
-          <div className="lg:w-1/2 space-y-6">
-            <div className="flex items-center gap-2.5">
-              <span
-                className="rounded-full px-3 py-1 text-xs font-extrabold uppercase tracking-widest text-white"
-                style={{ backgroundColor: activeItem.color }}
-              >
-                {activeItem.stage} • {activeItem.tag}
-              </span>
-              <span className="text-xs font-bold text-slate-500">
-                Element #{FUNNEL_ITEMS.findIndex((i) => i.id === activeItem.id) + 1} of 27
-              </span>
-            </div>
-
-            <div>
-              <h3 className="text-3xl font-black text-slate-950">
-                {activeItem.title}
-              </h3>
-              <p className="text-base text-slate-600 mt-2 font-medium">
-                {activeItem.shortDesc}
-              </p>
-            </div>
-
-            {/* Contextual Implementation for Selected Business Model */}
-            <div className="rounded-2xl border border-sky-200 bg-sky-50/70 p-5 space-y-2">
-              <div className="flex items-center gap-2 text-xs font-black uppercase tracking-wider text-sky-900">
-                <span>🎯 Tailored Strategy for</span>
-                <span className="underline">
-                  {businessModel === "ecommerce" ? "E-Commerce" : businessModel === "single_product" ? "Single Product Launch" : "Personal Brand Authority"}
+          {/* Details & Specs */}
+          <div className="lg:w-1/2 space-y-5">
+            <div className="flex items-center gap-2">
+              <span className="text-2xl">{activeModule.icon}</span>
+              <div>
+                <span className="text-[10px] font-extrabold uppercase tracking-widest text-emerald-700 bg-emerald-100 px-2.5 py-0.5 rounded-md border border-emerald-300">
+                  BOFU Website Feature
                 </span>
+                <h3 className="text-2xl sm:text-3xl font-black text-slate-950 mt-1">
+                  {activeModule.title}
+                </h3>
               </div>
-              <p className="text-sm font-semibold text-slate-800 leading-relaxed">
-                {activeItem.contexts[businessModel]}
+            </div>
+
+            <p className="text-sm sm:text-base text-slate-700 leading-relaxed font-medium">
+              {activeModule.shortDesc}
+            </p>
+
+            <div className="rounded-2xl border border-sky-200 bg-sky-50/80 p-4 space-y-1.5">
+              <div className="text-xs font-black uppercase text-sky-900">
+                🎯 Contextual Setup for: {websiteScope === "ecommerce" ? "E-Commerce Store" : websiteScope === "single_product" ? "Single Product Drop" : "Personal Brand Authority"}
+              </div>
+              <p className="text-xs sm:text-sm text-slate-800 font-semibold leading-relaxed">
+                {activeModule.websiteScope[websiteScope]}
               </p>
             </div>
 
-            {/* Inclusion Toggle */}
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 pt-2">
               <button
                 type="button"
-                onClick={() => toggleSelectModule(activeItem.id)}
-                className={`flex items-center gap-2 rounded-xl px-4 py-2.5 text-xs font-bold transition-all cursor-pointer ${
-                  selectedFunnelIds.includes(activeItem.id)
+                onClick={() => toggleSelectModule(activeModule.id)}
+                className={`rounded-xl px-5 py-2.5 text-xs font-bold transition cursor-pointer ${
+                  selectedModuleIds.includes(activeModule.id)
                     ? "bg-emerald-600 text-white shadow-sm"
                     : "bg-slate-900 text-white hover:bg-slate-800"
                 }`}
               >
-                <span>{selectedFunnelIds.includes(activeItem.id) ? "✓ Included in Your Custom Scope" : "+ Add to Selected Funnel Package"}</span>
+                {selectedModuleIds.includes(activeModule.id) ? "✓ Included in Your Website Scope" : "+ Add to Selected Modules"}
               </button>
               <span className="text-xs text-slate-500 font-medium">
-                ({selectedFunnelIds.length} of 27 components currently selected)
+                {activeModule.conversionMetric}
               </span>
             </div>
           </div>
 
-          {/* Right: Live Interactive Mockup Render */}
+          {/* Interactive Live Component Simulation */}
           <div className="lg:w-1/2 w-full">
-            <div className="rounded-2xl border border-slate-200 bg-slate-950 p-5 text-white shadow-2xl overflow-hidden relative min-h-[340px] flex flex-col justify-center">
+            <div className="rounded-2xl border border-slate-800 bg-slate-950 p-6 text-white shadow-2xl relative min-h-[340px] flex flex-col justify-center">
               <div className="absolute top-3 left-4 flex items-center gap-1.5">
                 <span className="h-2.5 w-2.5 rounded-full bg-rose-500/80" />
                 <span className="h-2.5 w-2.5 rounded-full bg-amber-500/80" />
                 <span className="h-2.5 w-2.5 rounded-full bg-emerald-500/80" />
-                <span className="text-[10px] font-mono text-slate-500 ml-2">live_component_mockup.tsx</span>
+                <span className="text-[10px] font-mono text-slate-500 ml-2">bofu_website_module.tsx</span>
               </div>
 
               <div className="pt-6">
-                {/* 1. Checkout Mockup */}
-                {activeItem.id === "checkout_mockup" && (
+                {/* 1. Checkout Flow Simulation */}
+                {activeModule.id === "checkout_flow" && (
                   <div className="space-y-4 max-w-sm mx-auto">
                     <div className="flex items-center justify-between border-b border-slate-800 pb-3">
                       <div className="flex items-center gap-3">
-                        <div className="h-10 w-10 rounded-lg bg-sky-900/60 border border-sky-700/50 flex items-center justify-center text-lg">
-                          💎
+                        <div className="h-10 w-10 rounded-lg bg-emerald-900/60 border border-emerald-700/50 flex items-center justify-center text-lg">
+                          🛍️
                         </div>
                         <div>
-                          <div className="text-xs font-bold text-white">Full-Funnel Growth Suite</div>
-                          <div className="text-[10px] text-slate-400">1x License • Instant Access</div>
+                          <div className="text-xs font-bold text-white">Express Checkout Cart</div>
+                          <div className="text-[10px] text-slate-400">1-Page Frictionless Pay</div>
                         </div>
                       </div>
                       <div className="text-right">
-                        <div className="text-xs font-bold text-emerald-400">$3,199</div>
-                        <div className="text-[9px] text-slate-500 line-through">$4,500</div>
+                        <div className="text-xs font-bold text-emerald-400">$2,899</div>
+                        <div className="text-[9px] text-slate-500 line-through">$3,800</div>
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
                       <input
                         type="text"
-                        defaultValue="LAUNCH25"
+                        defaultValue="BOFU20"
                         readOnly
                         className="bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1 text-xs text-slate-200 w-full"
                       />
                       <span className="bg-emerald-950 text-emerald-400 border border-emerald-800 text-[10px] font-bold px-2 py-1 rounded-md whitespace-nowrap">
-                        -25% Applied
+                        -20% Code Active
                       </span>
                     </div>
                     <div className="grid grid-cols-2 gap-2">
                       <button type="button" className="bg-white text-black font-black text-xs py-2 rounded-lg flex items-center justify-center gap-1.5 shadow-sm">
-                        <span>Pay</span>
+                        <span>Pay / GPay</span>
                       </button>
                       <button type="button" className="bg-emerald-600 text-white font-bold text-xs py-2 rounded-lg flex items-center justify-center gap-1.5 shadow-sm">
                         <span>⚡ 1-Click Buy</span>
@@ -1031,16 +582,16 @@ export default function MarketingFunnelSuite({
                     <div className="text-[10px] text-slate-400 text-center flex items-center justify-center gap-1.5 pt-1">
                       <span>🔒 256-Bit SSL Encrypted</span>
                       <span>•</span>
-                      <span>30-Day Money Back</span>
+                      <span>Razorpay & Stripe Enabled</span>
                     </div>
                   </div>
                 )}
 
-                {/* 2. Countdown Mockup */}
-                {activeItem.id === "countdown" && (
+                {/* 2. Countdown Timers Simulation */}
+                {activeModule.id === "countdown_timers" && (
                   <div className="text-center space-y-4 py-4">
                     <span className="inline-block bg-rose-950 text-rose-300 border border-rose-800 text-xs font-extrabold uppercase px-3 py-1 rounded-full animate-pulse">
-                      🔥 Price Increases When Timer Hits Zero
+                      🔥 Drop Pricing Locks When Timer Reaches Zero
                     </span>
                     <div className="flex items-center justify-center gap-3">
                       <div className="bg-slate-900 border border-slate-800 rounded-xl px-4 py-3 min-w-[64px]">
@@ -1062,139 +613,147 @@ export default function MarketingFunnelSuite({
                         <div className="text-[9px] uppercase tracking-wider text-slate-400">Seconds</div>
                       </div>
                     </div>
-                    <p className="text-xs text-slate-400">Batch 01 tier locking — Only 4 spots remaining</p>
+                    <p className="text-xs text-slate-400">Batch 01 tier locking — Only 4 units remaining in stock</p>
                   </div>
                 )}
 
-                {/* 3. Offer First Banners */}
-                {activeItem.id === "offer_banners" && (
+                {/* 3. Offer First Banners Simulation */}
+                {activeModule.id === "offer_first_banners" && (
                   <div className="space-y-4 py-6">
-                    <div className="bg-gradient-to-r from-emerald-600 via-teal-600 to-sky-600 p-3 rounded-xl flex items-center justify-between text-xs font-bold text-white shadow-lg">
+                    <div className="bg-gradient-to-r from-emerald-600 via-teal-600 to-sky-600 p-3.5 rounded-xl flex items-center justify-between text-xs font-bold text-white shadow-lg">
                       <div className="flex items-center gap-2">
                         <span className="animate-bounce">🎁</span>
-                        <span>SUMMER DROP: Free Gift + 20% OFF with code</span>
+                        <span>EXCLUSIVE DROP: 20% OFF First Order with code</span>
                         <span className="bg-black/30 px-2 py-0.5 rounded font-mono">BOFU20</span>
                       </div>
                       <button type="button" className="bg-white text-emerald-950 text-[10px] font-black px-2.5 py-1 rounded-md shadow-xs">
-                        Claim Now →
+                        Claim Deal →
                       </button>
                     </div>
                     <div className="bg-slate-900 border border-slate-800 p-3 rounded-xl flex items-center justify-between text-xs">
-                      <span className="text-slate-300">⚡ 100% Guaranteed 30-Day Conversion Lift</span>
-                      <span className="text-emerald-400 font-bold">Included</span>
+                      <span className="text-slate-300">📦 Free Worldwide Shipping on orders over $100</span>
+                      <span className="text-emerald-400 font-bold">Auto-Applied</span>
                     </div>
                   </div>
                 )}
 
-                {/* 4. Before & After */}
-                {activeItem.id === "before_and_after" && (
-                  <div className="space-y-4 py-2">
-                    <div className="grid grid-cols-2 gap-3 text-xs">
-                      <div className="bg-rose-950/40 border border-rose-800/60 rounded-xl p-3 space-y-1.5">
-                        <span className="text-[10px] font-bold uppercase tracking-wider text-rose-400">❌ Before (Generic)</span>
-                        <div className="text-slate-300 text-xs font-medium">Standard template, 0.8% conversion rate, no source attribution, cold dropoffs.</div>
-                      </div>
-                      <div className="bg-emerald-950/40 border border-emerald-800/60 rounded-xl p-3 space-y-1.5">
-                        <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-400">✓ After (Our Funnel)</span>
-                        <div className="text-slate-200 text-xs font-medium">3.8% conversion rate, 1-click checkout, UTM multichannel telemetry, instant WhatsApp pings.</div>
-                      </div>
-                    </div>
-                    <div className="h-1.5 w-full bg-slate-800 rounded-full overflow-hidden flex">
-                      <div className="w-[20%] bg-rose-500" />
-                      <div className="w-[80%] bg-emerald-500" />
-                    </div>
-                    <div className="text-[10px] text-center text-slate-400 font-mono">+375% Average Conversion Lift</div>
-                  </div>
-                )}
-
-                {/* 5. Phone Call / Chat Mockup */}
-                {activeItem.id === "phone_call_mockup" && (
-                  <div className="max-w-xs mx-auto bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-xl space-y-3">
-                    <div className="flex items-center justify-between border-b border-slate-800 pb-2">
-                      <span className="text-[10px] text-slate-400">WhatsApp Business</span>
-                      <span className="text-[10px] text-emerald-400 font-bold">Now</span>
-                    </div>
-                    <div className="space-y-2">
-                      <div className="bg-slate-800 text-slate-200 p-2.5 rounded-xl rounded-tl-none text-xs">
-                        &quot;Hey Tanie, our ad just went live with the new BOFU checkout page!&quot;
-                      </div>
-                      <div className="bg-emerald-900 text-emerald-100 p-2.5 rounded-xl rounded-tr-none text-xs ml-auto max-w-[90%]">
-                        &quot;Already got 14 orders in the first 20 minutes! That countdown timer is working crazy well 🚀&quot;
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-                {/* 6. Case Studies Mockup */}
-                {activeItem.id === "case_studies" && (
+                {/* 4. Product Images Gallery Simulation */}
+                {activeModule.id === "product_images_gallery" && (
                   <div className="space-y-3 max-w-sm mx-auto">
-                    <div className="flex items-center justify-between text-xs border-b border-slate-800 pb-2">
-                      <span className="text-slate-400 font-bold">Case Study: Brand Transformation</span>
-                      <span className="text-emerald-400 font-mono font-bold">+412% Revenue</span>
+                    <div className="h-40 rounded-xl bg-slate-900 border border-slate-800 flex flex-col items-center justify-center p-4 relative overflow-hidden">
+                      <span className="text-4xl mb-1">📸</span>
+                      <span className="text-xs font-bold text-white">Interactive 360° Zoom Viewer</span>
+                      <span className="text-[10px] text-slate-400">Hover / Drag to inspect craftsmanship</span>
+                      <div className="absolute bottom-2 right-2 bg-black/60 px-2 py-0.5 rounded text-[9px] font-mono text-emerald-400">
+                        4K Ultra-Sharp
+                      </div>
                     </div>
-                    <div className="grid grid-cols-3 gap-2 text-center">
-                      <div className="bg-slate-900 p-2.5 rounded-xl border border-slate-800">
-                        <div className="text-lg font-black text-white">3.4x</div>
-                        <div className="text-[9px] text-slate-400">ROAS Lift</div>
+                    <div className="grid grid-cols-4 gap-2">
+                      <div className="h-10 rounded-lg bg-emerald-950 border border-emerald-500 flex items-center justify-center text-xs">Angle 1</div>
+                      <div className="h-10 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-center text-xs">Angle 2</div>
+                      <div className="h-10 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-center text-xs">Macro</div>
+                      <div className="h-10 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-center text-xs">In-Use</div>
+                    </div>
+                  </div>
+                )}
+
+                {/* 5. Studio Shoots Presentation Simulation */}
+                {activeModule.id === "studio_shoots_presentation" && (
+                  <div className="space-y-3 py-4 text-center">
+                    <div className="grid grid-cols-2 gap-2 text-xs">
+                      <div className="bg-slate-900 border border-slate-800 p-3 rounded-xl">
+                        <div className="text-lg mb-1">📐</div>
+                        <div className="font-bold text-white">Exploded CAD View</div>
+                        <div className="text-[9px] text-slate-400">Highlights internal alloy & precision parts</div>
                       </div>
-                      <div className="bg-slate-900 p-2.5 rounded-xl border border-slate-800">
-                        <div className="text-lg font-black text-emerald-400">64%</div>
-                        <div className="text-[9px] text-slate-400">Cart Drop Reduction</div>
+                      <div className="bg-slate-900 border border-slate-800 p-3 rounded-xl">
+                        <div className="text-lg mb-1">💡</div>
+                        <div className="font-bold text-white">Studio Seamless Lighting</div>
+                        <div className="text-[9px] text-slate-400">Crisp shadows & true-to-life colors</div>
                       </div>
-                      <div className="bg-slate-900 p-2.5 rounded-xl border border-slate-800">
-                        <div className="text-lg font-black text-sky-400">&lt;1.2s</div>
-                        <div className="text-[9px] text-slate-400">Load Speed</div>
+                    </div>
+                    <div className="text-[10px] text-emerald-400 font-mono">Web-optimized WebP & AVIF format (98+ PageSpeed)</div>
+                  </div>
+                )}
+
+                {/* 6. UGC Wall Simulation */}
+                {activeModule.id === "ugc_testimonials_wall" && (
+                  <div className="grid grid-cols-2 gap-3 py-2">
+                    <div className="bg-slate-900 border border-slate-800 p-3 rounded-xl space-y-1">
+                      <div className="flex items-center text-amber-400 text-xs">★★★★★</div>
+                      <div className="text-xs font-bold text-white">&quot;Arrived in 2 days, 10x better than photos!&quot;</div>
+                      <div className="text-[10px] text-emerald-400">✓ Verified Buyer • Sarah M.</div>
+                    </div>
+                    <div className="bg-slate-900 border border-slate-800 p-3 rounded-xl space-y-1">
+                      <div className="flex items-center text-amber-400 text-xs">★★★★★</div>
+                      <div className="text-xs font-bold text-white">&quot;The checkout was so fast with Apple Pay.&quot;</div>
+                      <div className="text-[10px] text-emerald-400">✓ Verified Buyer • Daniel K.</div>
+                    </div>
+                  </div>
+                )}
+
+                {/* 7. Price Comparison Matrix Simulation */}
+                {activeModule.id === "price_comparison_matrix" && (
+                  <div className="space-y-2 py-2 max-w-sm mx-auto">
+                    <div className="text-center text-xs font-bold text-slate-300 mb-1">Value Comparison Table</div>
+                    <div className="grid grid-cols-3 gap-1.5 text-center text-xs">
+                      <div className="p-2 bg-slate-900 rounded-lg text-slate-400 text-[10px]">Feature</div>
+                      <div className="p-2 bg-emerald-950 border border-emerald-600 rounded-lg text-emerald-300 font-bold text-[10px]">Our Engine</div>
+                      <div className="p-2 bg-slate-900 rounded-lg text-slate-400 text-[10px]">Generic Store</div>
+                    </div>
+                    <div className="grid grid-cols-3 gap-1.5 text-center text-xs">
+                      <div className="p-2 bg-slate-900/60 rounded-lg text-slate-400 text-[10px]">1-Click Checkout</div>
+                      <div className="p-2 bg-emerald-950/60 rounded-lg text-emerald-400 font-bold text-[10px]">✓ Included</div>
+                      <div className="p-2 bg-slate-900/60 rounded-lg text-rose-400 text-[10px]">✗ Multi-step</div>
+                    </div>
+                    <div className="grid grid-cols-3 gap-1.5 text-center text-xs">
+                      <div className="p-2 bg-slate-900/60 rounded-lg text-slate-400 text-[10px]">UTM Attribution</div>
+                      <div className="p-2 bg-emerald-950/60 rounded-lg text-emerald-400 font-bold text-[10px]">✓ Built-in</div>
+                      <div className="p-2 bg-slate-900/60 rounded-lg text-rose-400 text-[10px]">✗ Blind spend</div>
+                    </div>
+                  </div>
+                )}
+
+                {/* 8. FOMO Scarcity Notifiers Simulation */}
+                {activeModule.id === "fomo_scarcity_notifiers" && (
+                  <div className="space-y-4 py-4 max-w-sm mx-auto">
+                    <div className="bg-slate-900 border border-slate-800 p-3 rounded-xl flex items-center gap-3 shadow-lg">
+                      <div className="h-8 w-8 rounded-full bg-emerald-600 flex items-center justify-center font-bold text-xs">
+                        🛒
+                      </div>
+                      <div className="text-left">
+                        <div className="text-xs font-bold text-white">Just Ordered!</div>
+                        <div className="text-[10px] text-slate-400">Marcus in San Francisco purchased 2 units (Only 3 left)</div>
+                      </div>
+                    </div>
+                    <div className="space-y-1">
+                      <div className="flex justify-between text-[10px] text-slate-400">
+                        <span>Stock Remaining:</span>
+                        <span className="text-rose-400 font-bold">Only 12% Left</span>
+                      </div>
+                      <div className="h-2 w-full bg-slate-800 rounded-full overflow-hidden">
+                        <div className="h-full bg-gradient-to-r from-amber-500 to-rose-500 w-[88%]" />
                       </div>
                     </div>
                   </div>
                 )}
 
-                {/* 7. Certification Badges */}
-                {activeItem.id === "certification_badges" && (
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center py-4">
-                    <div className="bg-slate-900 border border-slate-800 p-3 rounded-xl">
-                      <div className="text-xl mb-1">🛡️</div>
-                      <div className="text-[10px] font-bold text-white">SSL 256-Bit</div>
-                      <div className="text-[8px] text-slate-400">Verified Secure</div>
-                    </div>
-                    <div className="bg-slate-900 border border-slate-800 p-3 rounded-xl">
-                      <div className="text-xl mb-1">⚡</div>
-                      <div className="text-[10px] font-bold text-white">Stripe Verified</div>
-                      <div className="text-[8px] text-slate-400">1-Click Fast Pay</div>
-                    </div>
-                    <div className="bg-slate-900 border border-slate-800 p-3 rounded-xl">
-                      <div className="text-xl mb-1">✨</div>
-                      <div className="text-[10px] font-bold text-white">30-Day Guarantee</div>
-                      <div className="text-[8px] text-slate-400">Zero Risk Refund</div>
-                    </div>
-                    <div className="bg-slate-900 border border-slate-800 p-3 rounded-xl">
-                      <div className="text-xl mb-1">🎖️</div>
-                      <div className="text-[10px] font-bold text-white">Google Partner</div>
-                      <div className="text-[8px] text-slate-400">Certified Setup</div>
-                    </div>
-                  </div>
-                )}
-
-                {/* 8. Fallback / Generic Interactive Mockup for other items */}
-                {![
-                  "checkout_mockup",
-                  "countdown",
-                  "offer_banners",
-                  "before_and_after",
-                  "phone_call_mockup",
-                  "case_studies",
-                  "certification_badges"
-                ].includes(activeItem.id) && (
-                  <div className="text-center py-6 space-y-3">
-                    <div className="h-12 w-12 rounded-2xl mx-auto flex items-center justify-center text-2xl border" style={{ backgroundColor: `${activeItem.color}20`, borderColor: activeItem.color }}>
-                      🚀
-                    </div>
-                    <h4 className="text-lg font-bold text-white">{activeItem.title}</h4>
-                    <p className="text-xs text-slate-400 max-w-sm mx-auto">
-                      Engineered component with high-contrast copy, mobile responsive viewports, and custom Framer Motion micro-interactions.
-                    </p>
-                    <div className="inline-flex items-center gap-1.5 rounded-full bg-slate-900 border border-slate-800 px-3 py-1 text-[10px] font-mono text-slate-300">
-                      <span>Interactive {activeItem.stage} Production Module</span>
+                {/* 9. Freebie Lead Magnets Simulation */}
+                {activeModule.id === "freebie_lead_magnets" && (
+                  <div className="space-y-3 py-4 max-w-sm mx-auto text-center">
+                    <span className="text-2xl">🎁</span>
+                    <h4 className="text-sm font-bold text-white">Claim Your Free Resource / Gift</h4>
+                    <p className="text-[10px] text-slate-400">Instant PDF Blueprint delivered to your email within 10 seconds.</p>
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="email"
+                        placeholder="founder@yourbrand.com"
+                        readOnly
+                        className="bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-slate-300 w-full"
+                      />
+                      <button type="button" className="bg-emerald-600 text-white font-bold text-xs px-3 py-1.5 rounded-lg whitespace-nowrap">
+                        Download Free →
+                      </button>
                     </div>
                   </div>
                 )}
@@ -1205,7 +764,7 @@ export default function MarketingFunnelSuite({
       </div>
 
       {/* ------------------------------------------------------------- */}
-      {/* SOURCES MANAGEMENT & UTM ATTRIBUTION ENGINE                   */}
+      {/* 5. SOURCES MANAGEMENT & UTM ATTRIBUTION ENGINE                */}
       {/* ------------------------------------------------------------- */}
       <div className="rounded-[2.5rem] border border-sky-400/40 bg-gradient-to-br from-white via-sky-50 to-[#dff4ff] p-8 sm:p-12 shadow-xl backdrop-blur-2xl">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 pb-6 border-b border-sky-200">
@@ -1219,10 +778,10 @@ export default function MarketingFunnelSuite({
               </span>
             </div>
             <h3 className="text-2xl sm:text-3xl font-black text-slate-950 mt-2">
-              Multi-Channel UTM Campaign & Source Generator
+              Website Multi-Channel Sources Management & Tracking
             </h3>
             <p className="text-sm font-medium text-slate-600 mt-1 max-w-2xl">
-              Track exactly where every dollar, inquiry, and booking comes from. Every page we build includes built-in first-touch and last-touch attribution capture.
+              Track exactly where every dollar, order, and lead comes from. Every page we build automatically grabs UTM parameters on arrival and attaches them to the checkout receipt and lead profile in your admin dashboard.
             </p>
           </div>
 
@@ -1239,7 +798,7 @@ export default function MarketingFunnelSuite({
           {/* Target URL */}
           <div className="space-y-1.5">
             <label className="text-xs font-bold uppercase tracking-wider text-slate-700">
-              Destination Landing Page URL
+              Target Website Landing Page
             </label>
             <input
               type="text"
@@ -1253,7 +812,7 @@ export default function MarketingFunnelSuite({
           {/* Traffic Source Channel */}
           <div className="space-y-1.5">
             <label className="text-xs font-bold uppercase tracking-wider text-slate-700">
-              Traffic Source (Platform)
+              Source Channel (utm_source)
             </label>
             <select
               value={utmSource}
@@ -1307,13 +866,13 @@ export default function MarketingFunnelSuite({
           {/* Ad Creative / Content Hook */}
           <div className="space-y-1.5">
             <label className="text-xs font-bold uppercase tracking-wider text-slate-700">
-              Ad Creative Hook (utm_content)
+              Ad Variant / Creative Hook (utm_content)
             </label>
             <input
               type="text"
               value={utmContent}
               onChange={(e) => setUtmContent(e.target.value)}
-              placeholder="before_after_slider_v1"
+              placeholder="before_after_hook_v1"
               className="w-full rounded-xl border border-sky-300 bg-white px-3.5 py-2.5 text-xs font-semibold text-slate-900 focus:border-sky-600 focus:outline-none shadow-xs"
             />
           </div>
@@ -1321,7 +880,7 @@ export default function MarketingFunnelSuite({
           {/* Keyword / Target Audience */}
           <div className="space-y-1.5">
             <label className="text-xs font-bold uppercase tracking-wider text-slate-700">
-              Audience / Term (utm_term)
+              Target Audience / Keyword (utm_term)
             </label>
             <input
               type="text"
@@ -1370,14 +929,14 @@ export default function MarketingFunnelSuite({
               <span>Campaign: <strong className="text-white">{utmCampaign}</strong></span>
             </div>
             <div className="text-emerald-400 font-bold">
-              Automatic lead recording on /admin & /client
+              Automatic lead attribution recording on /admin & /client
             </div>
           </div>
         </div>
       </div>
 
       {/* ------------------------------------------------------------- */}
-      {/* FINAL PACKAGE SUMMARY & DIRECT BOOKING ACTION                 */}
+      {/* 6. FINAL SUMMARY & DIRECT BOOKING ACTION                      */}
       {/* ------------------------------------------------------------- */}
       <div className="rounded-[2.2rem] border border-emerald-400/40 bg-gradient-to-br from-emerald-950 via-slate-950 to-teal-950 p-8 sm:p-12 text-white shadow-2xl">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8">
@@ -1385,30 +944,30 @@ export default function MarketingFunnelSuite({
             <div className="inline-flex items-center gap-2 rounded-full bg-emerald-900/60 border border-emerald-700/60 px-3.5 py-1 text-xs font-bold text-emerald-300">
               <span>💎 Ready for Launch</span>
               <span>•</span>
-              <span>{selectedFunnelIds.length} Modules Included</span>
+              <span>{selectedModuleIds.length} BOFU Modules Selected</span>
             </div>
 
             <h3 className="text-3xl sm:text-4xl font-black text-white">
-              Launch Your Full-Funnel Marketing Engine
+              Launch Your High-Converting BOFU Website Engine
             </h3>
 
             <p className="text-sm sm:text-base text-slate-300 leading-relaxed">
-              We design, code, and deploy the complete marketing machine: from high-converting TOFU hook pages to frictionless BOFU 1-click checkouts, integrated with multi-source UTM attribution and analytics.
+              We design, code, and deploy the entire Bottom-of-Funnel architecture directly on your website: 1-click checkouts, urgency countdowns, offer banners, 4K galleries, price comparisons, and multi-source UTM attribution.
             </p>
 
             <div className="flex flex-wrap items-center gap-3 pt-2">
               <span className="text-xs text-slate-400 font-medium">Included Standard:</span>
               <span className="rounded-lg bg-white/10 px-2.5 py-1 text-xs font-semibold text-slate-200">
-                Figma Design Kit
+                All 9 BOFU Pages & Modules
               </span>
               <span className="rounded-lg bg-white/10 px-2.5 py-1 text-xs font-semibold text-slate-200">
-                Production Code (Next.js)
+                1-Click Express Checkout
               </span>
               <span className="rounded-lg bg-white/10 px-2.5 py-1 text-xs font-semibold text-slate-200">
-                Pixel & UTM Telemetry
+                UTM & Sources Tracking
               </span>
               <span className="rounded-lg bg-white/10 px-2.5 py-1 text-xs font-semibold text-slate-200">
-                30-Day Conversion Support
+                Meta CAPI & GA4 Telemetry
               </span>
             </div>
           </div>
@@ -1418,10 +977,10 @@ export default function MarketingFunnelSuite({
               Package Investment
             </div>
             <div className="text-4xl sm:text-5xl font-black text-white my-1">
-              {currency === "INR" ? "₹2,59,000" : "$3,199"}
+              {currency === "INR" ? "₹2,39,000" : "$2,899"}
             </div>
             <div className="text-xs text-emerald-400 font-semibold mb-5">
-              Turnaround: 2–4 Weeks • 50% Milestone Deposit
+              Turnaround: 2–3 Weeks • 50% Milestone Deposit
             </div>
 
             <button
@@ -1429,7 +988,7 @@ export default function MarketingFunnelSuite({
               onClick={handleTriggerBooking}
               className="w-full sm:w-auto rounded-xl bg-gradient-to-r from-emerald-500 via-teal-500 to-sky-500 px-8 py-4 text-sm font-black text-white shadow-xl transition-all hover:scale-105 active:scale-95 cursor-pointer"
             >
-              🚀 Book Campaign Engine Now
+              🚀 Book BOFU Website Package
             </button>
           </div>
         </div>

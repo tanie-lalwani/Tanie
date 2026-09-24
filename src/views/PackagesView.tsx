@@ -616,7 +616,7 @@ ${companyName.trim() ? `🏢 Company / Brand: ${companyName.trim()}` : ""}
                   }`}
                 >
                   <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-                  <span>🚀 Marketing Engine (BOFU • MOFU • TOFU)</span>
+                  <span>🚀 BOFU Website Engine & Sources</span>
                 </button>
 
                 <button
@@ -669,11 +669,11 @@ ${companyName.trim() ? `🏢 Company / Brand: ${companyName.trim()}` : ""}
                         New Launch
                       </span>
                       <span className="text-xs font-black text-slate-900">
-                        Full-Funnel Marketing Campaigns Package
+                        BOFU Website Marketing & Sources Management Package
                       </span>
                     </div>
                     <p className="text-xs text-slate-700 font-medium mt-0.5">
-                      Need BOFU checkouts, urgency countdowns, MOFU social proof collages, and multi-channel UTM source tracking?
+                      Need 1-click checkouts, urgency countdowns, offer banners, 4K galleries, and multi-channel UTM source tracking on your website?
                     </p>
                   </div>
                 </div>
@@ -682,7 +682,7 @@ ${companyName.trim() ? `🏢 Company / Brand: ${companyName.trim()}` : ""}
                   onClick={() => setActiveTab("marketing")}
                   className="shrink-0 rounded-xl bg-slate-950 px-4 py-2.5 text-xs font-black text-white hover:bg-slate-800 transition cursor-pointer shadow-sm"
                 >
-                  Explore Marketing Suite →
+                  Explore BOFU Suite →
                 </button>
               </div>
             )}
