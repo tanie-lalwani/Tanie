@@ -17,6 +17,8 @@ import {
   type ClientCustomQuote
 } from "@/lib/portalServices";
 import { useAuth } from "@/hooks/useAuth";
+import { useGeoPricing } from "@/context/GeoPricingContext";
+import MarketRegionSelector from "@/components/ui/MarketRegionSelector";
 
 interface CustomScopeCalculatorProps {
   onProceedWithScope?: (quoteData: {
@@ -38,12 +40,20 @@ export default function CustomScopeCalculator({
   onCurrencyChange
 }: CustomScopeCalculatorProps) {
   const { user, isAuthenticated, signInWithPassword, signUp } = useAuth();
+  const { tierConfig } = useGeoPricing();
 
   // Active currency
   const [activeCurrency, setActiveCurrency] = useState<"INR" | "USD">(currency);
+  
   useEffect(() => {
-    setActiveCurrency(currency);
-  }, [currency]);
+    if (tierConfig.currencyCode === "INR") {
+      setActiveCurrency("INR");
+      onCurrencyChange?.("INR");
+    } else {
+      setActiveCurrency("USD");
+      onCurrencyChange?.("USD");
+    }
+  }, [tierConfig]);
 
   // Selected Industry Template
   const [selectedIndustry, setSelectedIndustry] = useState<IndustryPreset>(INDUSTRY_PRESETS[0]);
@@ -392,37 +402,8 @@ I'd love to discuss starting this project with you!`;
           </div>
 
           <div className="flex flex-wrap items-center gap-3">
-            {/* Currency Toggle */}
-            <div className="flex items-center p-1 rounded-xl bg-slate-800/80 border border-slate-700/60">
-              <button
-                type="button"
-                onClick={() => {
-                  setActiveCurrency("INR");
-                  onCurrencyChange?.("INR");
-                }}
-                className={`px-3 py-1.5 rounded-lg text-xs font-mono font-medium transition-all ${
-                  activeCurrency === "INR"
-                    ? "bg-cyan-500 text-slate-950 shadow-md font-bold"
-                    : "text-slate-400 hover:text-white"
-                }`}
-              >
-                ₹ INR
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setActiveCurrency("USD");
-                  onCurrencyChange?.("USD");
-                }}
-                className={`px-3 py-1.5 rounded-lg text-xs font-mono font-medium transition-all ${
-                  activeCurrency === "USD"
-                    ? "bg-cyan-500 text-slate-950 shadow-md font-bold"
-                    : "text-slate-400 hover:text-white"
-                }`}
-              >
-                $ USD
-              </button>
-            </div>
+            {/* Auto-detected Market & Country Selector */}
+            <MarketRegionSelector />
 
             {/* My Saved Quotes Button */}
             <button

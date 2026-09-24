@@ -86,7 +86,18 @@ export default function PackagesView() {
   const [mustHaves, setMustHaves] = useState("");
   const [dealbreakers, setDealbreakers] = useState("");
   const [estimatedPriceUsd, setEstimatedPriceUsd] = useState<number | null>(2899);
-  const [estimatedPriceInr, setEstimatedPriceInr] = useState<number | null>(240000);
+  const [estimatedPriceInr, setEstimatedPriceInr] = useState<number | null>(2899);
+  const [estimatedPriceAmount, setEstimatedPriceAmount] = useState<number | null>(2899);
+  const [estimatedPriceCurrency, setEstimatedPriceCurrency] = useState<string>("INR");
+  const [estimatedPriceSymbol, setEstimatedPriceSymbol] = useState<string>("₹");
+
+  // Sync pricing currency/symbol with detected market
+  useEffect(() => {
+    if (tierConfig) {
+      setEstimatedPriceCurrency(tierConfig.currencyCode);
+      setEstimatedPriceSymbol(tierConfig.currencySymbol);
+    }
+  }, [tierConfig]);
 
   // Auto-fill from user or stored profile
   useEffect(() => {
@@ -183,18 +194,26 @@ export default function PackagesView() {
     setReferenceLinks(wizardAnswers.references || "");
     setFeaturesList(["Lead Capture & Contact System", "Interactive Micro-Animations", "SEO & Performance Architecture"]);
 
-    // Calculate clear estimated pricing based on scope tier
-    let usd = 2899;
-    let inr = 240000;
-    if (defaultScope.toLowerCase().includes("starter")) {
-      usd = 1499;
-      inr = 120000;
+    // Calculate clear estimated pricing based on scope tier and active country market tier
+    const sprintBase = tierConfig?.packages["luxury-landing-sprint"] ?? 1999;
+    const bofuBase = tierConfig?.packages["growth-marketing-campaigns"] ?? 2899;
+    const customBase = tierConfig?.packages["interactive-3d-experience"] ?? 3499;
+    const fullstackBase = tierConfig?.packages["fullstack-web-app"] ?? 4299;
+
+    let marketAmount = bofuBase;
+    if (defaultScope.toLowerCase().includes("starter") || defaultScope.toLowerCase().includes("1–3")) {
+      marketAmount = sprintBase;
     } else if (defaultScope.toLowerCase().includes("flagship") || defaultScope.toLowerCase().includes("custom") || defaultScope.toLowerCase().includes("3d")) {
-      usd = 4999;
-      inr = 400000;
+      marketAmount = customBase;
+    } else if (defaultScope.toLowerCase().includes("fullstack") || defaultScope.toLowerCase().includes("app")) {
+      marketAmount = fullstackBase;
     }
-    setEstimatedPriceUsd(usd);
-    setEstimatedPriceInr(inr);
+
+    setEstimatedPriceAmount(marketAmount);
+    setEstimatedPriceCurrency(tierConfig?.currencyCode || "INR");
+    setEstimatedPriceSymbol(tierConfig?.currencySymbol || "₹");
+    setEstimatedPriceUsd(marketAmount);
+    setEstimatedPriceInr(marketAmount);
 
     setShowIntakeModal(true);
     setAuthStepRequired(false);
@@ -219,6 +238,10 @@ export default function PackagesView() {
     setProjectName(quoteData.projectName);
     setCompanyName(quoteData.projectName);
     setFeaturesList(quoteData.selectedFeatureNames);
+    const amount = tierConfig.currencyCode === "INR" ? quoteData.finalTotalInr : quoteData.finalTotalUsd;
+    setEstimatedPriceAmount(amount);
+    setEstimatedPriceCurrency(tierConfig.currencyCode);
+    setEstimatedPriceSymbol(tierConfig.currencySymbol);
     setEstimatedPriceInr(quoteData.finalTotalInr);
     setEstimatedPriceUsd(quoteData.finalTotalUsd);
     setCurrency(quoteData.currency);
@@ -235,12 +258,13 @@ export default function PackagesView() {
     setCompanyName(quoteData.socialAccount ? `${business} (${quoteData.socialAccount})` : business);
     setFeaturesList(quoteData.bundles ? quoteData.bundles.map((b: any) => b.name) : quoteData.selectedBundles || []);
     
-    // Safely extract price without undefined!
-    const inr = quoteData.finalTotalInr ?? quoteData.totalPriceInr ?? 240000;
-    const usd = quoteData.finalTotalUsd ?? quoteData.totalPriceUsd ?? 2899;
-    setEstimatedPriceInr(inr);
-    setEstimatedPriceUsd(usd);
-    if (quoteData.currency) setCurrency(quoteData.currency);
+    // Safely extract price with market support
+    const marketAmount = quoteData.finalTotalMarket ?? (tierConfig.currencyCode === "INR" ? quoteData.finalTotalInr : quoteData.finalTotalUsd) ?? 2899;
+    setEstimatedPriceAmount(marketAmount);
+    setEstimatedPriceCurrency(tierConfig.currencyCode);
+    setEstimatedPriceSymbol(tierConfig.currencySymbol);
+    setEstimatedPriceInr(marketAmount);
+    setEstimatedPriceUsd(marketAmount);
 
     const goalLabel = quoteData.goal || quoteData.industry || "Custom Bespoke Build";
     setSelectedScopeTier(`Goal: ${goalLabel}`);
@@ -254,16 +278,24 @@ export default function PackagesView() {
     packageName: string;
     businessModel: string;
     selectedItems: string[];
-    priceInr: number;
-    priceUsd: number;
+    priceInr?: number;
+    priceUsd?: number;
+    priceAmount?: number;
+    currencyCode?: string;
+    currencySymbol?: string;
+    formattedPrice?: string;
     timeline: string;
   }) => {
     const title = `${marketingData.packageName} (${marketingData.businessModel})`;
     setProjectName(title);
     setCompanyName(marketingData.businessModel);
     setFeaturesList(marketingData.selectedItems);
-    setEstimatedPriceInr(marketingData.priceInr);
-    setEstimatedPriceUsd(marketingData.priceUsd);
+    const amount = marketingData.priceAmount ?? tierConfig.packages["growth-marketing-campaigns"] ?? 2899;
+    setEstimatedPriceAmount(amount);
+    setEstimatedPriceCurrency(marketingData.currencyCode || tierConfig.currencyCode);
+    setEstimatedPriceSymbol(marketingData.currencySymbol || tierConfig.currencySymbol);
+    setEstimatedPriceInr(amount);
+    setEstimatedPriceUsd(amount);
     setSelectedScopeTier(`Marketing Funnel: ${marketingData.businessModel}`);
     setTargetDeadline(marketingData.timeline || "2–4 Weeks");
     setShowIntakeModal(true);
@@ -282,14 +314,16 @@ export default function PackagesView() {
     setIsSubmitting(true);
     try {
       const aestheticName = selectedAestheticForRequest?.name || "Bespoke Custom Direction";
-      const inrPrice = estimatedPriceInr ?? (currency === "INR" ? 240000 : Math.round(2899 * 83));
-      const usdPrice = estimatedPriceUsd ?? (currency === "USD" ? 2899 : Math.round(240000 / 83));
+      const currentAmount = estimatedPriceAmount ?? tierConfig.packages["growth-marketing-campaigns"] ?? 2899;
+      const formattedInvestment = `${estimatedPriceSymbol}${currentAmount.toLocaleString()} ${estimatedPriceCurrency} (${tierConfig.countryName} Market Pricing)`;
+      const usdPrice = estimatedPriceUsd ?? currentAmount;
+      const inrPrice = estimatedPriceInr ?? currentAmount;
 
       const fullDescription = `
 [Website Booking Intake]
 📞 Phone / WhatsApp: ${contactPhone.trim()}
 💎 Aesthetic & Scope: ${aestheticName} • ${selectedScopeTier}
-💰 Estimated Investment: ₹${inrPrice.toLocaleString()} ($${usdPrice.toLocaleString()} USD)
+💰 Estimated Investment: ${formattedInvestment}
 ⚡ Options / Selected Modules: ${featuresList.length > 0 ? featuresList.join(", ") : "Standard Core Architecture"}
 📝 Client Note: ${clientMessage.trim() || "No additional note provided."}
 ${companyName.trim() ? `🏢 Company / Brand: ${companyName.trim()}` : ""}
@@ -1382,14 +1416,10 @@ ${companyName.trim() ? `🏢 Company / Brand: ${companyName.trim()}` : ""}
                     <div className="text-left sm:text-right">
                       <span className="text-[10px] font-bold uppercase tracking-wider text-sky-700">Estimated Investment</span>
                       <div className="text-xl sm:text-2xl font-black text-[#0a192f]">
-                        {currency === "INR"
-                          ? `₹${(estimatedPriceInr ?? 240000).toLocaleString()}`
-                          : `$${(estimatedPriceUsd ?? 2899).toLocaleString()}`}
+                        {estimatedPriceSymbol}{(estimatedPriceAmount ?? 2899).toLocaleString()} {estimatedPriceCurrency}
                       </div>
-                      <div className="text-[10px] text-slate-500">
-                        {currency === "INR"
-                          ? `(Approx. $${(estimatedPriceUsd ?? 2899).toLocaleString()} USD)`
-                          : `(Approx. ₹${(estimatedPriceInr ?? 240000).toLocaleString()})`}
+                      <div className="text-[10px] font-semibold text-emerald-700">
+                        📍 {tierConfig.countryName} Market Pricing
                       </div>
                     </div>
                   </div>

@@ -1,18 +1,24 @@
 "use client";
 
 import React, { useState, useMemo, useEffect } from "react";
+import { useGeoPricing } from "@/context/GeoPricingContext";
+import MarketRegionSelector from "@/components/ui/MarketRegionSelector";
 
 export type WebsiteMarketingScope = "ecommerce" | "single_product" | "personal_brand";
 
 export interface MarketingFunnelSuiteProps {
-  currency: "USD" | "INR";
+  currency?: "USD" | "INR";
   onCurrencyChange?: (c: "USD" | "INR") => void;
   onBookMarketingPackage: (packageDetails: {
     packageName: string;
     businessModel: string;
     selectedItems: string[];
-    priceInr: number;
-    priceUsd: number;
+    priceInr?: number;
+    priceUsd?: number;
+    priceAmount?: number;
+    currencyCode?: string;
+    currencySymbol?: string;
+    formattedPrice?: string;
     timeline: string;
   }) => void;
 }
@@ -156,6 +162,9 @@ export default function MarketingFunnelSuite({
   onCurrencyChange,
   onBookMarketingPackage
 }: MarketingFunnelSuiteProps) {
+  const { tierConfig, formatPackagePrice } = useGeoPricing();
+  const bofuPrice = formatPackagePrice("growth-marketing-campaigns");
+
   // Website Scope Mode
   const [websiteScope, setWebsiteScope] = useState<WebsiteMarketingScope>("ecommerce");
 
@@ -246,8 +255,12 @@ export default function MarketingFunnelSuite({
         "Multi-Channel UTM Attribution Engine",
         "Meta Pixel / CAPI & GA4 Telemetry"
       ],
-      priceInr: 239000,
-      priceUsd: 2899,
+      priceAmount: bofuPrice.amount,
+      currencyCode: bofuPrice.currency,
+      currencySymbol: bofuPrice.symbol,
+      formattedPrice: `${bofuPrice.symbol}${bofuPrice.formatted}`,
+      priceInr: tierConfig.currencyCode === "INR" ? bofuPrice.amount : undefined,
+      priceUsd: tierConfig.currencyCode === "USD" ? bofuPrice.amount : undefined,
       timeline: "2–3 Weeks"
     });
   };
@@ -285,16 +298,23 @@ export default function MarketingFunnelSuite({
 
           {/* Pricing & Booking Card */}
           <div className="flex flex-col items-center sm:items-end justify-center rounded-3xl border border-emerald-300/80 bg-white/90 p-6 shadow-md backdrop-blur-md">
-            <span className="text-xs font-bold uppercase tracking-widest text-slate-500">
-              BOFU Website Package
-            </span>
+            <div className="flex items-center justify-between w-full mb-2 gap-3">
+              <span className="text-xs font-bold uppercase tracking-widest text-slate-500">
+                BOFU Website Package
+              </span>
+              <MarketRegionSelector compact />
+            </div>
             <div className="flex items-baseline gap-2 my-2">
               <span className="text-4xl sm:text-5xl font-black text-slate-950">
-                {currency === "INR" ? "₹2,39,000" : "$2,899"}
+                {bofuPrice.symbol}{bofuPrice.formatted}
               </span>
               <span className="text-xs font-bold text-slate-500">
-                {currency === "INR" ? "INR" : "USD"}
+                {bofuPrice.currency}
               </span>
+            </div>
+            <div className="text-[11px] font-semibold text-emerald-800 bg-emerald-50 border border-emerald-200/80 px-2.5 py-1 rounded-full mb-3 flex items-center gap-1.5">
+              <span>{tierConfig.flag}</span>
+              <span>{tierConfig.countryName} Local Market Rate</span>
             </div>
             <p className="text-xs text-slate-600 mb-4 text-center sm:text-right">
               All 9 BOFU modules + multi-channel UTM source tracker & pixel telemetry
@@ -974,13 +994,13 @@ export default function MarketingFunnelSuite({
 
           <div className="flex flex-col items-center sm:items-end justify-center rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-md">
             <div className="text-xs uppercase tracking-widest text-slate-400 font-bold mb-1">
-              Package Investment
+              Package Investment ({tierConfig.countryName})
             </div>
             <div className="text-4xl sm:text-5xl font-black text-white my-1">
-              {currency === "INR" ? "₹2,39,000" : "$2,899"}
+              {bofuPrice.symbol}{bofuPrice.formatted}
             </div>
             <div className="text-xs text-emerald-400 font-semibold mb-5">
-              Turnaround: 2–3 Weeks • 50% Milestone Deposit
+              {bofuPrice.currency} • Turnaround: 2–3 Weeks • 50% Milestone Deposit
             </div>
 
             <button
