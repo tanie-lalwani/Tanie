@@ -164,6 +164,12 @@ export interface PackageGranularFeature {
   complexity: "Standard" | "Advanced" | "Specialized" | "Enterprise";
   is_core: boolean;
   display_order: number;
+  included_limit?: string;
+  feature_price_inr?: number;
+  feature_price_usd?: number;
+  overage_unit_label?: string | null;
+  overage_price_inr?: number | null;
+  overage_price_usd?: number | null;
   created_at?: string;
 }
 
@@ -456,7 +462,13 @@ export const DEFAULT_GRANULAR_FEATURES: Record<string, PackageGranularFeature[]>
       business_impact: "Captures visitor attention in the first 3 seconds and slashes bounce rates on paid and organic traffic.",
       complexity: "Standard",
       is_core: true,
-      display_order: 1
+      display_order: 1,
+      included_limit: "1 primary hero narrative & magnetic CTA lockup",
+      feature_price_inr: 2500,
+      feature_price_usd: 80,
+      overage_unit_label: "Per additional custom hero variant",
+      overage_price_inr: 1000,
+      overage_price_usd: 35
     },
     {
       id: "ls-2",
@@ -469,7 +481,13 @@ export const DEFAULT_GRANULAR_FEATURES: Record<string, PackageGranularFeature[]>
       business_impact: "Ensures the 70%+ of mobile visitors coming from social media experience native-app visual perfection.",
       complexity: "Standard",
       is_core: true,
-      display_order: 2
+      display_order: 2,
+      included_limit: "Up to 5 standard sections / pages (320px to 4K)",
+      feature_price_inr: 3500,
+      feature_price_usd: 110,
+      overage_unit_label: "Per additional custom page / section",
+      overage_price_inr: 900,
+      overage_price_usd: 30
     },
     {
       id: "ls-3",
@@ -482,7 +500,13 @@ export const DEFAULT_GRANULAR_FEATURES: Record<string, PackageGranularFeature[]>
       business_impact: "Subconsciously elevates the perceived value of your service or brand, commanding premium client pricing.",
       complexity: "Advanced",
       is_core: true,
-      display_order: 3
+      display_order: 3,
+      included_limit: "Full site interactive micro-interactions & reveals",
+      feature_price_inr: 1500,
+      feature_price_usd: 50,
+      overage_unit_label: null,
+      overage_price_inr: null,
+      overage_price_usd: null
     },
     {
       id: "ls-4",
@@ -495,7 +519,13 @@ export const DEFAULT_GRANULAR_FEATURES: Record<string, PackageGranularFeature[]>
       business_impact: "Eliminates form abandonment caused by confusing errors, maximizing inquiry conversion rates.",
       complexity: "Standard",
       is_core: true,
-      display_order: 4
+      display_order: 4,
+      included_limit: "1 lead intake form with email/webhook routing",
+      feature_price_inr: 1500,
+      feature_price_usd: 50,
+      overage_unit_label: "Per additional specialized intake form",
+      overage_price_inr: 1000,
+      overage_price_usd: 35
     },
     {
       id: "ls-5",
@@ -508,7 +538,13 @@ export const DEFAULT_GRANULAR_FEATURES: Record<string, PackageGranularFeature[]>
       business_impact: "Guarantees 100% human-verified inquiries in your inbox without annoying genuine clients.",
       complexity: "Standard",
       is_core: true,
-      display_order: 5
+      display_order: 5,
+      included_limit: "Invisible bot protection across all forms",
+      feature_price_inr: 800,
+      feature_price_usd: 25,
+      overage_unit_label: null,
+      overage_price_inr: null,
+      overage_price_usd: null
     },
     {
       id: "ls-6",
@@ -521,7 +557,13 @@ export const DEFAULT_GRANULAR_FEATURES: Record<string, PackageGranularFeature[]>
       business_impact: "Instantly builds authoritative social proof and trust before the prospect scrolls down to pricing.",
       complexity: "Standard",
       is_core: true,
-      display_order: 6
+      display_order: 6,
+      included_limit: "1 infinite marquee (up to 12 logos)",
+      feature_price_inr: 900,
+      feature_price_usd: 30,
+      overage_unit_label: null,
+      overage_price_inr: null,
+      overage_price_usd: null
     },
     {
       id: "ls-7",
@@ -534,7 +576,13 @@ export const DEFAULT_GRANULAR_FEATURES: Record<string, PackageGranularFeature[]>
       business_impact: "Neutralizes pre-booking hesitations and unlocks Google rich FAQ search snippet eligibility.",
       complexity: "Standard",
       is_core: true,
-      display_order: 7
+      display_order: 7,
+      included_limit: "Up to 8 objection FAQ items + Schema.org markup",
+      feature_price_inr: 800,
+      feature_price_usd: 25,
+      overage_unit_label: null,
+      overage_price_inr: null,
+      overage_price_usd: null
     },
     {
       id: "ls-8",
@@ -547,7 +595,13 @@ export const DEFAULT_GRANULAR_FEATURES: Record<string, PackageGranularFeature[]>
       business_impact: "Maximizes Google Ads Quality Score, lowers paid traffic CPC, and retains mobile visitors on slow networks.",
       complexity: "Advanced",
       is_core: true,
-      display_order: 8
+      display_order: 8,
+      included_limit: "Full site 95+ Lighthouse speed tuning",
+      feature_price_inr: 1500,
+      feature_price_usd: 50,
+      overage_unit_label: null,
+      overage_price_inr: null,
+      overage_price_usd: null
     },
     {
       id: "ls-9",
@@ -560,7 +614,13 @@ export const DEFAULT_GRANULAR_FEATURES: Record<string, PackageGranularFeature[]>
       business_impact: "Ensures every link shared across messaging apps and social media displays an enticing, branded preview.",
       complexity: "Standard",
       is_core: true,
-      display_order: 9
+      display_order: 9,
+      included_limit: "Complete OpenGraph 1200x630 preview cards + sitemap",
+      feature_price_inr: 1000,
+      feature_price_usd: 35,
+      overage_unit_label: null,
+      overage_price_inr: null,
+      overage_price_usd: null
     },
     {
       id: "ls-10",
@@ -573,7 +633,13 @@ export const DEFAULT_GRANULAR_FEATURES: Record<string, PackageGranularFeature[]>
       business_impact: "Provides 99.99% uptime with sub-50ms response times worldwide with zero server maintenance required.",
       complexity: "Standard",
       is_core: true,
-      display_order: 10
+      display_order: 10,
+      included_limit: "1 production domain + SSL + global Edge CDN",
+      feature_price_inr: 999,
+      feature_price_usd: 44,
+      overage_unit_label: "Per additional custom domain / sub-domain DNS setup",
+      overage_price_inr: 800,
+      overage_price_usd: 25
     }
   ],
   "growth-marketing-campaigns": [
@@ -588,7 +654,13 @@ export const DEFAULT_GRANULAR_FEATURES: Record<string, PackageGranularFeature[]>
       business_impact: "Cuts cart abandonment in half by facilitating impulsive, high-intent purchases directly from ad traffic.",
       complexity: "Advanced",
       is_core: true,
-      display_order: 1
+      display_order: 1,
+      included_limit: "1 primary payment gateway (Razorpay / Stripe / UPI)",
+      feature_price_inr: 4500,
+      feature_price_usd: 135,
+      overage_unit_label: "Per additional checkout gateway / currency pipeline",
+      overage_price_inr: 2500,
+      overage_price_usd: 75
     },
     {
       id: "gm-2",
@@ -601,7 +673,13 @@ export const DEFAULT_GRANULAR_FEATURES: Record<string, PackageGranularFeature[]>
       business_impact: "Drives immediate purchase decisions by up to 40% during time-sensitive promotional drops.",
       complexity: "Standard",
       is_core: true,
-      display_order: 2
+      display_order: 2,
+      included_limit: "2 dynamic campaign drop timers",
+      feature_price_inr: 2000,
+      feature_price_usd: 60,
+      overage_unit_label: "Per additional active countdown timer",
+      overage_price_inr: 1000,
+      overage_price_usd: 30
     },
     {
       id: "gm-3",
@@ -614,7 +692,13 @@ export const DEFAULT_GRANULAR_FEATURES: Record<string, PackageGranularFeature[]>
       business_impact: "Ensures 100% of incoming visitors immediately recognize your core promotional incentive.",
       complexity: "Standard",
       is_core: true,
-      display_order: 3
+      display_order: 3,
+      included_limit: "Sticky announcement header with 1-tap coupon copy",
+      feature_price_inr: 1500,
+      feature_price_usd: 45,
+      overage_unit_label: "Per additional seasonal promo bar / sticky modal",
+      overage_price_inr: 800,
+      overage_price_usd: 25
     },
     {
       id: "gm-4",
@@ -627,7 +711,13 @@ export const DEFAULT_GRANULAR_FEATURES: Record<string, PackageGranularFeature[]>
       business_impact: "Overcomes tactile buyer hesitation for luxury goods and physical products by showcasing micro-details.",
       complexity: "Advanced",
       is_core: true,
-      display_order: 4
+      display_order: 4,
+      included_limit: "Up to 12 featured products with 4K multi-angle viewer",
+      feature_price_inr: 3500,
+      feature_price_usd: 105,
+      overage_unit_label: "Per batch of 10 additional products / variants",
+      overage_price_inr: 1500,
+      overage_price_usd: 45
     },
     {
       id: "gm-5",
@@ -640,7 +730,13 @@ export const DEFAULT_GRANULAR_FEATURES: Record<string, PackageGranularFeature[]>
       business_impact: "Justifies higher price points by presenting your product with the prestige of a luxury designer label.",
       complexity: "Advanced",
       is_core: true,
-      display_order: 5
+      display_order: 5,
+      included_limit: "Up to 4 editorial studio showcases & spec hotspots",
+      feature_price_inr: 3000,
+      feature_price_usd: 90,
+      overage_unit_label: "Per extra studio product breakdown showcase",
+      overage_price_inr: 1000,
+      overage_price_usd: 30
     },
     {
       id: "gm-6",
@@ -653,7 +749,13 @@ export const DEFAULT_GRANULAR_FEATURES: Record<string, PackageGranularFeature[]>
       business_impact: "Delivers authentic peer-to-peer social proof that drastically outperforms standard written testimonials.",
       complexity: "Advanced",
       is_core: true,
-      display_order: 6
+      display_order: 6,
+      included_limit: "6 vertical TikTok/Reels customer review embeds",
+      feature_price_inr: 3000,
+      feature_price_usd: 90,
+      overage_unit_label: "Per batch of 6 extra video reviews",
+      overage_price_inr: 1000,
+      overage_price_usd: 30
     },
     {
       id: "gm-7",
@@ -666,7 +768,13 @@ export const DEFAULT_GRANULAR_FEATURES: Record<string, PackageGranularFeature[]>
       business_impact: "Frames your offer as the obvious superior choice, making your price feel like an exceptional bargain.",
       complexity: "Standard",
       is_core: true,
-      display_order: 7
+      display_order: 7,
+      included_limit: "1 interactive comparison matrix (up to 4 tiers)",
+      feature_price_inr: 2000,
+      feature_price_usd: 60,
+      overage_unit_label: "Per additional comparison table",
+      overage_price_inr: 1000,
+      overage_price_usd: 30
     },
     {
       id: "gm-8",
@@ -679,7 +787,13 @@ export const DEFAULT_GRANULAR_FEATURES: Record<string, PackageGranularFeature[]>
       business_impact: "Leverages social validation and scarcity psychology to convert indecisive visitors into active buyers.",
       complexity: "Standard",
       is_core: true,
-      display_order: 8
+      display_order: 8,
+      included_limit: "Real-time purchase popup queue + low-stock meters",
+      feature_price_inr: 2000,
+      feature_price_usd: 60,
+      overage_unit_label: null,
+      overage_price_inr: null,
+      overage_price_usd: null
     },
     {
       id: "gm-9",
@@ -692,7 +806,13 @@ export const DEFAULT_GRANULAR_FEATURES: Record<string, PackageGranularFeature[]>
       business_impact: "Recovers 15% to 25% of visitors who are not ready to purchase immediately, building an owned email/SMS list.",
       complexity: "Standard",
       is_core: true,
-      display_order: 9
+      display_order: 9,
+      included_limit: "1 lead magnet gate with instant automated delivery",
+      feature_price_inr: 2000,
+      feature_price_usd: 60,
+      overage_unit_label: "Per additional gated freebie resource",
+      overage_price_inr: 1000,
+      overage_price_usd: 30
     },
     {
       id: "gm-10",
@@ -705,7 +825,13 @@ export const DEFAULT_GRANULAR_FEATURES: Record<string, PackageGranularFeature[]>
       business_impact: "Reveals your exact Customer Acquisition Cost (CAC) and ROAS across Instagram, TikTok, Google Ads, and influencers.",
       complexity: "Advanced",
       is_core: true,
-      display_order: 10
+      display_order: 10,
+      included_limit: "Automatic capture of 7 UTM parameters on leads/orders",
+      feature_price_inr: 3000,
+      feature_price_usd: 90,
+      overage_unit_label: null,
+      overage_price_inr: null,
+      overage_price_usd: null
     },
     {
       id: "gm-11",
@@ -718,7 +844,13 @@ export const DEFAULT_GRANULAR_FEATURES: Record<string, PackageGranularFeature[]>
       business_impact: "Bypasses iOS 14+ ad-blockers and privacy filters, delivering 100% signal accuracy to Meta/Google ad algorithms for cheaper conversions.",
       complexity: "Advanced",
       is_core: true,
-      display_order: 11
+      display_order: 11,
+      included_limit: "Meta CAPI, GA4, GTM & TikTok Pixel pre-wired",
+      feature_price_inr: 2500,
+      feature_price_usd: 75,
+      overage_unit_label: "Per additional bespoke ad platform pixel",
+      overage_price_inr: 1000,
+      overage_price_usd: 30
     },
     {
       id: "gm-12",
@@ -731,7 +863,13 @@ export const DEFAULT_GRANULAR_FEATURES: Record<string, PackageGranularFeature[]>
       business_impact: "Allows you or your team to launch targeted marketing campaigns without tracking mistakes or broken attribution.",
       complexity: "Standard",
       is_core: true,
-      display_order: 12
+      display_order: 12,
+      included_limit: "In-portal UTM link generator with 1-click presets",
+      feature_price_inr: 999,
+      feature_price_usd: 29,
+      overage_unit_label: null,
+      overage_price_inr: null,
+      overage_price_usd: null
     }
   ],
   "interactive-3d-experience": [
@@ -746,7 +884,13 @@ export const DEFAULT_GRANULAR_FEATURES: Record<string, PackageGranularFeature[]>
       business_impact: "Instantly places your brand in the tier of Awwwards Site of the Year nominees and global tech pioneers like Apple.",
       complexity: "Specialized",
       is_core: true,
-      display_order: 1
+      display_order: 1,
+      included_limit: "1 primary responsive 3D WebGL scene canvas",
+      feature_price_inr: 12000,
+      feature_price_usd: 310,
+      overage_unit_label: "Per additional separate 3D canvas viewport",
+      overage_price_inr: 6000,
+      overage_price_usd: 155
     },
     {
       id: "td-2",
@@ -759,7 +903,13 @@ export const DEFAULT_GRANULAR_FEATURES: Record<string, PackageGranularFeature[]>
       business_impact: "Creates an irresistible tactile browsing experience that boosts visitor dwell time by up to 300%.",
       complexity: "Specialized",
       is_core: true,
-      display_order: 2
+      display_order: 2,
+      included_limit: "Interactive GPU particle field with mouse dynamics",
+      feature_price_inr: 7500,
+      feature_price_usd: 195,
+      overage_unit_label: "Per additional bespoke GLSL custom shader effect",
+      overage_price_inr: 4000,
+      overage_price_usd: 105
     },
     {
       id: "td-3",
@@ -772,7 +922,13 @@ export const DEFAULT_GRANULAR_FEATURES: Record<string, PackageGranularFeature[]>
       business_impact: "Delivers rich 3D visuals without sluggish download times or mobile bandwidth consumption.",
       complexity: "Advanced",
       is_core: true,
-      display_order: 3
+      display_order: 3,
+      included_limit: "Optimization of 1 primary 3D GLB/GLTF model asset",
+      feature_price_inr: 5500,
+      feature_price_usd: 145,
+      overage_unit_label: "Per additional 3D model asset integration",
+      overage_price_inr: 3500,
+      overage_price_usd: 90
     },
     {
       id: "td-4",
@@ -785,7 +941,13 @@ export const DEFAULT_GRANULAR_FEATURES: Record<string, PackageGranularFeature[]>
       business_impact: "Turns passive browsing into an active, cinematic journey that guides the user through your product narrative.",
       complexity: "Specialized",
       is_core: true,
-      display_order: 4
+      display_order: 4,
+      included_limit: "Up to 4 scroll-driven camera journey keyframes",
+      feature_price_inr: 7500,
+      feature_price_usd: 195,
+      overage_unit_label: "Per extra scroll camera journey keyframe",
+      overage_price_inr: 2000,
+      overage_price_usd: 50
     },
     {
       id: "td-5",
@@ -798,7 +960,13 @@ export const DEFAULT_GRANULAR_FEATURES: Record<string, PackageGranularFeature[]>
       business_impact: "Produces hyper-realistic material textures (brushed aluminum, gold, glass) that reflect elite product craftsmanship.",
       complexity: "Advanced",
       is_core: true,
-      display_order: 5
+      display_order: 5,
+      included_limit: "Photorealistic PBR textures, HDRI reflections & shadows",
+      feature_price_inr: 6000,
+      feature_price_usd: 155,
+      overage_unit_label: null,
+      overage_price_inr: null,
+      overage_price_usd: null
     },
     {
       id: "td-6",
@@ -811,7 +979,13 @@ export const DEFAULT_GRANULAR_FEATURES: Record<string, PackageGranularFeature[]>
       business_impact: "Gives your web application the visual aesthetic of high-budget AAA video game engines and luxury automotive configurators.",
       complexity: "Specialized",
       is_core: true,
-      display_order: 6
+      display_order: 6,
+      included_limit: "Cinematic post-processing pass (Bloom & DoF)",
+      feature_price_inr: 4500,
+      feature_price_usd: 120,
+      overage_unit_label: null,
+      overage_price_inr: null,
+      overage_price_usd: null
     },
     {
       id: "td-7",
@@ -824,7 +998,13 @@ export const DEFAULT_GRANULAR_FEATURES: Record<string, PackageGranularFeature[]>
       business_impact: "Engages the visitor auditory senses, creating an unforgettable emotional bond with the experience.",
       complexity: "Advanced",
       is_core: true,
-      display_order: 7
+      display_order: 7,
+      included_limit: "Tactile sound design & ambient audio cues",
+      feature_price_inr: 3500,
+      feature_price_usd: 90,
+      overage_unit_label: "Per additional soundscape / interactive cue suite",
+      overage_price_inr: 2000,
+      overage_price_usd: 50
     },
     {
       id: "td-8",
@@ -837,7 +1017,13 @@ export const DEFAULT_GRANULAR_FEATURES: Record<string, PackageGranularFeature[]>
       business_impact: "Ensures flawless execution across high-end desktops and everyday mobile smartphones without battery drain or lag.",
       complexity: "Advanced",
       is_core: true,
-      display_order: 8
+      display_order: 8,
+      included_limit: "Device orientation gyroscope control + adaptive 60fps guard",
+      feature_price_inr: 3499,
+      feature_price_usd: 89,
+      overage_unit_label: null,
+      overage_price_inr: null,
+      overage_price_usd: null
     }
   ],
   "fullstack-web-app": [
@@ -852,7 +1038,13 @@ export const DEFAULT_GRANULAR_FEATURES: Record<string, PackageGranularFeature[]>
       business_impact: "Provides an enterprise-grade relational data foundation that scales effortlessly to hundreds of thousands of users without data corruption.",
       complexity: "Enterprise",
       is_core: true,
-      display_order: 1
+      display_order: 1,
+      included_limit: "Up to 6 relational database tables with foreign keys",
+      feature_price_inr: 14000,
+      feature_price_usd: 330,
+      overage_unit_label: "Per additional database table / entity schema",
+      overage_price_inr: 2500,
+      overage_price_usd: 60
     },
     {
       id: "fs-2",
@@ -865,7 +1057,13 @@ export const DEFAULT_GRANULAR_FEATURES: Record<string, PackageGranularFeature[]>
       business_impact: "Eliminates catastrophic data leaks at the database level, ensuring full compliance with GDPR and industry security standards.",
       complexity: "Enterprise",
       is_core: true,
-      display_order: 2
+      display_order: 2,
+      included_limit: "Complete RLS security policies on all included tables",
+      feature_price_inr: 9000,
+      feature_price_usd: 215,
+      overage_unit_label: null,
+      overage_price_inr: null,
+      overage_price_usd: null
     },
     {
       id: "fs-3",
@@ -878,7 +1076,13 @@ export const DEFAULT_GRANULAR_FEATURES: Record<string, PackageGranularFeature[]>
       business_impact: "Zero-friction onboarding for new users while keeping accounts protected against brute-force and credential stuffing.",
       complexity: "Advanced",
       is_core: true,
-      display_order: 3
+      display_order: 3,
+      included_limit: "Email/Password + Google OAuth + Magic Link sessions",
+      feature_price_inr: 9000,
+      feature_price_usd: 215,
+      overage_unit_label: "Per additional complex OAuth provider (e.g. Apple, GitHub)",
+      overage_price_inr: 3000,
+      overage_price_usd: 70
     },
     {
       id: "fs-4",
@@ -891,7 +1095,13 @@ export const DEFAULT_GRANULAR_FEATURES: Record<string, PackageGranularFeature[]>
       business_impact: "Instant monetization with automated digital fulfillment and zero manual payment verification required.",
       complexity: "Enterprise",
       is_core: true,
-      display_order: 4
+      display_order: 4,
+      included_limit: "1 payment gateway with subscription/order webhooks",
+      feature_price_inr: 9000,
+      feature_price_usd: 215,
+      overage_unit_label: "Per additional payment gateway / currency pipeline",
+      overage_price_inr: 4500,
+      overage_price_usd: 110
     },
     {
       id: "fs-5",
@@ -904,7 +1114,13 @@ export const DEFAULT_GRANULAR_FEATURES: Record<string, PackageGranularFeature[]>
       business_impact: "Drastically cuts customer support tickets by 80% through self-serve management.",
       complexity: "Advanced",
       is_core: true,
-      display_order: 5
+      display_order: 5,
+      included_limit: "1 client self-service dashboard with order/profile center",
+      feature_price_inr: 11000,
+      feature_price_usd: 260,
+      overage_unit_label: "Per additional client portal module/subview",
+      overage_price_inr: 3000,
+      overage_price_usd: 70
     },
     {
       id: "fs-6",
@@ -917,7 +1133,13 @@ export const DEFAULT_GRANULAR_FEATURES: Record<string, PackageGranularFeature[]>
       business_impact: "Provides founders total clarity and control over their business operations from a single clean screen.",
       complexity: "Enterprise",
       is_core: true,
-      display_order: 6
+      display_order: 6,
+      included_limit: "1 master founder admin cockpit with analytics & users",
+      feature_price_inr: 13000,
+      feature_price_usd: 310,
+      overage_unit_label: "Per additional admin sub-portal (e.g. Manager / Staff)",
+      overage_price_inr: 5000,
+      overage_price_usd: 120
     },
     {
       id: "fs-7",
@@ -930,7 +1152,13 @@ export const DEFAULT_GRANULAR_FEATURES: Record<string, PackageGranularFeature[]>
       business_impact: "Maintains high customer engagement and establishes a professional post-purchase experience.",
       complexity: "Standard",
       is_core: true,
-      display_order: 7
+      display_order: 7,
+      included_limit: "Up to 4 custom transactional email notification templates",
+      feature_price_inr: 5000,
+      feature_price_usd: 120,
+      overage_unit_label: "Per extra custom email/SMS template flow",
+      overage_price_inr: 1500,
+      overage_price_usd: 35
     },
     {
       id: "fs-8",
@@ -943,7 +1171,13 @@ export const DEFAULT_GRANULAR_FEATURES: Record<string, PackageGranularFeature[]>
       business_impact: "Prevents public leakage of sensitive business documents and contracts while handling large files effortlessly.",
       complexity: "Advanced",
       is_core: true,
-      display_order: 8
+      display_order: 8,
+      included_limit: "2 secure cloud storage buckets with signed URL access",
+      feature_price_inr: 4000,
+      feature_price_usd: 95,
+      overage_unit_label: "Per additional private storage bucket",
+      overage_price_inr: 1500,
+      overage_price_usd: 35
     },
     {
       id: "fs-9",
@@ -956,7 +1190,13 @@ export const DEFAULT_GRANULAR_FEATURES: Record<string, PackageGranularFeature[]>
       business_impact: "Essential for team delegation, preventing unauthorized modifications and providing a verifiable record of all platform activities.",
       complexity: "Enterprise",
       is_core: true,
-      display_order: 9
+      display_order: 9,
+      included_limit: "2 user roles (Admin + Customer) with action audit logging",
+      feature_price_inr: 3000,
+      feature_price_usd: 70,
+      overage_unit_label: "Per additional custom role permission level",
+      overage_price_inr: 2000,
+      overage_price_usd: 50
     },
     {
       id: "fs-10",
@@ -969,7 +1209,13 @@ export const DEFAULT_GRANULAR_FEATURES: Record<string, PackageGranularFeature[]>
       business_impact: "Allows seamless integration with your existing CRM, accounting software, and Slack alert channels.",
       complexity: "Advanced",
       is_core: true,
-      display_order: 10
+      display_order: 10,
+      included_limit: "Up to 3 outbound webhook event dispatches (Slack/Zapier)",
+      feature_price_inr: 2999,
+      feature_price_usd: 69,
+      overage_unit_label: "Per additional third-party webhook destination",
+      overage_price_inr: 1500,
+      overage_price_usd: 35
     }
   ]
 };
