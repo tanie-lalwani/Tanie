@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback } from "react";
 import type { Session, User, AuthError } from "@supabase/supabase-js";
 import { supabase, isSupabaseConfigured } from "@/lib/supabaseClient";
+import { initiateDirectGoogleAuth } from "@/lib/googleAuth";
 
 export interface AuthState {
   user: User | null;
@@ -120,25 +121,13 @@ export function useAuth() {
 
   const signInWithGoogle = useCallback(async (redirectTo?: string) => {
     setError(null);
-    if (!isSupabaseConfigured()) {
-      const err = { message: "Supabase authentication is not configured in this environment." } as AuthError;
-      setError(err.message);
-      return { data: { provider: "google" as const, url: null }, error: err };
-    }
-
     try {
-      const res = await supabase.auth.signInWithOAuth({
-        provider: "google",
-        options: {
-          redirectTo:
-            redirectTo ||
-            (typeof window !== "undefined" ? window.location.href : undefined),
-        },
-      });
-      if (res.error) {
-        setError(res.error.message);
+      let target = redirectTo || "/client";
+      if (typeof window !== "undefined" && target.startsWith(window.location.origin)) {
+        target = target.replace(window.location.origin, "");
       }
-      return res;
+      await initiateDirectGoogleAuth(target || "/client");
+      return { data: { provider: "google" as const, url: null }, error: null };
     } catch (err: any) {
       const errorObj = { message: err?.message || "Google authentication failed." } as AuthError;
       setError(errorObj.message);
