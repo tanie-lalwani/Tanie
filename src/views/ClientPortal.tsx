@@ -16,6 +16,7 @@ import {
   getWebsitePackages,
   getProjectChangeRequests,
   submitChangeRequest,
+  createClientProject,
   type ClientProject,
   type EContract,
   type ProjectAsset,
@@ -40,6 +41,7 @@ export default function ClientPortal() {
     signInWithPassword,
     signUp,
     signInWithOtp,
+    signInWithGoogle,
     signOut,
   } = useAuth();
 
@@ -90,14 +92,16 @@ export default function ClientPortal() {
       try {
         const [pkgs, projs] = await Promise.all([
           getWebsitePackages(),
-          email ? getClientProjects(email) : Promise.resolve([DEMO_CLIENT_PROJECT]),
+          email
+            ? getClientProjects(email)
+            : Promise.resolve(isDemoMode ? [DEMO_CLIENT_PROJECT] : []),
         ]);
 
         if (!isMounted) return;
         setPackages(pkgs);
         setProjects(projs);
 
-        const currentProj = projs[0] || DEMO_CLIENT_PROJECT;
+        const currentProj = projs[0] || (isDemoMode ? DEMO_CLIENT_PROJECT : null);
         setSelectedProject(currentProj);
 
         if (currentProj) {
@@ -110,6 +114,10 @@ export default function ClientPortal() {
           setContract(ctr);
           setAssets(asts);
           setChangeRequests(chgReqs);
+        } else {
+          setContract(null);
+          setAssets([]);
+          setChangeRequests([]);
         }
       } catch (err) {
         console.error("Portal data loading error:", err);
@@ -128,6 +136,27 @@ export default function ClientPortal() {
       isMounted = false;
     };
   }, [user, isDemoMode]);
+
+  // Google OAuth Handler
+  const handleGoogleSignIn = async () => {
+    setAuthMessage(null);
+    setIsSubmittingAuth(true);
+    try {
+      const res = await signInWithGoogle(
+        typeof window !== "undefined" ? window.location.href : undefined
+      );
+      if (res?.error) {
+        setAuthMessage({ type: "error", text: res.error.message });
+      }
+    } catch (err: unknown) {
+      setAuthMessage({
+        type: "error",
+        text: (err as Error)?.message || "Failed to sign in with Google.",
+      });
+    } finally {
+      setIsSubmittingAuth(false);
+    }
+  };
 
   // Auth Handlers
   const handleAuthSubmit = async (e: React.FormEvent) => {
@@ -320,6 +349,71 @@ export default function ClientPortal() {
   const stages = ["Discovery", "Design", "Development", "Review", "Launch", "Completed"];
   const currentStageIndex = selectedProject ? stages.indexOf(selectedProject.status) : 0;
 
+  // Sprint Reservation & Advance Deposit Handler
+  const [selectedSprintPackageId, setSelectedSprintPackageId] = useState<string>("interactive-3d-experience");
+  const [isPayingDeposit, setIsPayingDeposit] = useState(false);
+
+  const handlePayAdvanceDeposit = async (pkg: WebsitePackage) => {
+    setIsPayingDeposit(true);
+    // 25% deposit in paise (INR)
+    const depositAmountInr = Math.round(pkg.price_inr * 0.25 * 100);
+    const clientEmail = user?.email || "client@company.com";
+    const clientName = user?.user_metadata?.full_name || clientEmail.split("@")[0];
+
+    try {
+      await openRazorpayCheckout({
+        amount: depositAmountInr,
+        currency: "INR",
+        name: "Tanie Lalwani Studio",
+        description: `25% Advance Sprint Deposit — ${pkg.name}`,
+        prefill: {
+          email: clientEmail,
+          name: clientName,
+        },
+        onSuccess: async (payment) => {
+          setPaidReceipt({
+            paymentId: payment.razorpay_payment_id,
+            amount: Math.round(pkg.price_inr * 0.25),
+            date: new Date().toLocaleDateString(),
+          });
+
+          try {
+            const newProj = await createClientProject({
+              client_name: clientName,
+              client_email: clientEmail,
+              title: `${clientName} — ${pkg.name}`,
+              package_id: pkg.id,
+              budget_usd: pkg.price_usd,
+              budget_inr: pkg.price_inr,
+              description: `Sprint reserved via 25% Advance Deposit (Razorpay ID: ${payment.razorpay_payment_id}).`,
+              status: "Discovery",
+              progress_percent: 15,
+            });
+            setProjects([newProj]);
+            setSelectedProject(newProj);
+          } catch (projErr) {
+            console.error("Auto project creation error:", projErr);
+          }
+          setIsPayingDeposit(false);
+        },
+        onFailure: (err) => {
+          console.error("Payment failure:", err);
+          setIsPayingDeposit(false);
+        },
+        onDismiss: () => {
+          setIsPayingDeposit(false);
+        },
+      });
+    } catch (err: unknown) {
+      console.error("Deposit trigger error:", err);
+      setIsPayingDeposit(false);
+    }
+  };
+
+  const isDemo = isDemoMode;
+  const isGuest = !user && !isDemo;
+  const isConfirmedClient = isDemo || (Boolean(user) && (projects.length > 0 || Boolean(paidReceipt)));
+  const isProspectAwaitingSprint = Boolean(user) && !isDemo && (!selectedProject || projects.length === 0) && !paidReceipt;
   const isAuthenticatedUser = Boolean(user) || isDemoMode;
 
   return (
@@ -470,16 +564,24 @@ export default function ClientPortal() {
             <div>
               <div className="inline-flex items-center gap-2 rounded-full border border-sky-300/80 bg-sky-100/70 px-3.5 py-1 text-xs font-bold uppercase tracking-wider text-sky-900">
                 <span className="h-2 w-2 animate-ping rounded-full bg-sky-500" />
-                {isAuthenticatedUser ? "Active Client Workspace" : "Private Client Hub & Gateway"}
+                {isConfirmedClient
+                  ? "Active Client Workspace"
+                  : isProspectAwaitingSprint
+                  ? "Sprint Reservation & Kickoff"
+                  : "Private Client Hub & Gateway"}
               </div>
               <h1 className="mt-2.5 text-2xl font-black tracking-tight text-slate-950 sm:text-4xl">
-                {isAuthenticatedUser
+                {isConfirmedClient
                   ? `Welcome, ${selectedProject?.client_name || user?.email?.split("@")[0] || "Partner"}`
+                  : isProspectAwaitingSprint
+                  ? `Welcome, ${user?.user_metadata?.full_name || user?.email?.split("@")[0] || "Client"}`
                   : "Client Management & Workspace"}
               </h1>
               <p className="mt-1 text-sm text-slate-600 max-w-2xl font-medium">
-                {isAuthenticatedUser
+                {isConfirmedClient
                   ? "Track live project milestones, upload brand assets, access staging deliverables, pay invoices, and sign digital agreements."
+                  : isProspectAwaitingSprint
+                  ? "Your account is verified! Lock in your production dates by submitting an advance deposit, or await project setup from Tanie."
                   : "A dedicated private engineering portal for sprint tracking, digital contract execution, asset delivery, and milestone settlement."}
               </p>
             </div>
@@ -492,13 +594,21 @@ export default function ClientPortal() {
                 Pricing & Calculator
               </Link>
 
-              {isAuthenticatedUser ? (
+              {user ? (
                 <button
                   type="button"
                   onClick={handleSignOut}
                   className="rounded-full border border-rose-300 bg-rose-50 px-4 py-2 text-xs font-bold text-rose-800 transition hover:bg-rose-100 cursor-pointer"
                 >
-                  Sign Out ({isDemoMode ? "Demo" : user?.email})
+                  Sign Out ({user?.email})
+                </button>
+              ) : isDemoMode ? (
+                <button
+                  type="button"
+                  onClick={() => setIsDemoMode(false)}
+                  className="rounded-full border border-rose-300 bg-rose-50 px-4 py-2 text-xs font-bold text-rose-800 transition hover:bg-rose-100 cursor-pointer"
+                >
+                  Exit Demo Mode
                 </button>
               ) : (
                 <button
@@ -515,7 +625,7 @@ export default function ClientPortal() {
           {/* ------------------------------------------------------------- */}
           {/* VIEW 1: UNAUTHENTICATED GUEST / DISCOVERY UI                   */}
           {/* ------------------------------------------------------------- */}
-          {!isAuthenticatedUser ? (
+          {isGuest ? (
             <div className="space-y-10">
               {/* Feature Showcase Grid for Prospective Clients */}
               <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-4">
@@ -574,8 +684,43 @@ export default function ClientPortal() {
                     </p>
                   </div>
 
+                  {/* 1-Click Google OAuth */}
+                  <button
+                    type="button"
+                    disabled={isSubmittingAuth || authLoading}
+                    onClick={handleGoogleSignIn}
+                    className="mt-6 w-full py-3 px-4 rounded-2xl bg-white hover:bg-slate-50 text-slate-900 border border-black/15 font-bold text-xs uppercase tracking-wider shadow-sm hover:shadow transition-all flex items-center justify-center gap-3 cursor-pointer"
+                  >
+                    <svg className="w-4 h-4" viewBox="0 0 24 24">
+                      <path
+                        fill="#4285F4"
+                        d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                      />
+                      <path
+                        fill="#34A853"
+                        d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                      />
+                      <path
+                        fill="#FBBC05"
+                        d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"
+                      />
+                      <path
+                        fill="#EA4335"
+                        d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"
+                      />
+                    </svg>
+                    <span>{isSubmittingAuth ? "Connecting to Google..." : "Continue with Google"}</span>
+                  </button>
+
+                  <div className="relative my-5 flex items-center justify-center">
+                    <div className="w-full border-t border-black/10" />
+                    <span className="absolute bg-white px-3 text-[10px] font-semibold uppercase tracking-wider text-slate-500">
+                      Or continue with email
+                    </span>
+                  </div>
+
                   {/* Auth Mode Tabs */}
-                  <div className="mt-6 flex rounded-full bg-slate-100 p-1 border border-black/5 text-xs">
+                  <div className="flex rounded-full bg-slate-100 p-1 border border-black/5 text-xs">
                     <button
                       type="button"
                       onClick={() => setAuthMode("login")}
@@ -741,9 +886,187 @@ export default function ClientPortal() {
                 </div>
               </div>
             </div>
+          ) : isProspectAwaitingSprint ? (
+            /* ------------------------------------------------------------- */
+            /* VIEW 2: LOGGED-IN PROSPECT (AWAITING SPRINT DEPOSIT / CONFIRM) */
+            /* ------------------------------------------------------------- */
+            <div className="space-y-8">
+              {/* Status Alert Banner */}
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-3xl border border-sky-300/80 bg-gradient-to-r from-sky-50 via-white to-sky-100/60 p-6 shadow-sm">
+                <div className="flex items-start gap-4">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-sky-200/80 text-2xl border border-sky-300">
+                    🚀
+                  </div>
+                  <div>
+                    <div className="inline-flex items-center gap-2 rounded-full border border-sky-400/40 bg-sky-200/60 px-3 py-0.5 text-[11px] font-extrabold uppercase tracking-wider text-sky-950">
+                      Step 2: Confirm Sprint & Unlock Dashboard
+                    </div>
+                    <h3 className="mt-1 text-lg font-black text-slate-950">
+                      Reserve Your Production Sprint
+                    </h3>
+                    <p className="mt-1 text-xs text-slate-600 max-w-2xl leading-relaxed">
+                      Your account is verified! To assign your dedicated sprint queue, unlock the live deliverables vault, and generate your digital contract, select your package and submit your 25% sprint deposit below.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex shrink-0 items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setIsDemoMode(true)}
+                    className="rounded-full border border-black/10 bg-white/90 px-4 py-2 text-xs font-bold text-slate-800 shadow-xs hover:bg-white cursor-pointer"
+                  >
+                    Preview Demo Workspace ⚡
+                  </button>
+                </div>
+              </div>
+
+              {/* Sprint Package Options */}
+              <div>
+                <div className="mb-4 flex items-center justify-between">
+                  <div>
+                    <h2 className="text-xl font-black text-slate-950">Choose Your Engineering Sprint</h2>
+                    <p className="text-xs text-slate-600">Select an architecture tier to lock in with a 25% advance deposit.</p>
+                  </div>
+                  <span className="text-xs font-bold text-sky-900 bg-sky-100/80 px-3 py-1 rounded-full border border-sky-200">
+                    25% Advance • 75% on Delivery
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
+                  {packages.map((pkg) => {
+                    const isSelected = selectedSprintPackageId === pkg.id;
+                    const depositInr = Math.round(pkg.price_inr * 0.25);
+                    const depositUsd = Math.round(pkg.price_usd * 0.25);
+
+                    return (
+                      <div
+                        key={pkg.id}
+                        onClick={() => setSelectedSprintPackageId(pkg.id)}
+                        className={`relative rounded-3xl p-6 transition-all cursor-pointer flex flex-col justify-between ${
+                          isSelected
+                            ? "border-2 border-sky-500 bg-white shadow-xl ring-4 ring-sky-200/50"
+                            : "border border-black/10 bg-white/80 hover:bg-white hover:border-black/20 shadow-sm"
+                        }`}
+                      >
+                        {pkg.popular && (
+                          <span className="absolute -top-3 right-6 rounded-full bg-slate-950 px-3 py-0.5 text-[10px] font-extrabold uppercase tracking-wider text-white shadow-xs">
+                            Most Popular
+                          </span>
+                        )}
+
+                        <div>
+                          <div className="flex items-center justify-between">
+                            <span className="rounded-md border border-sky-300 bg-sky-100 px-2.5 py-0.5 text-[10px] font-extrabold uppercase tracking-wider text-sky-900">
+                              {pkg.turnaround_weeks}
+                            </span>
+                            <div className={`h-5 w-5 rounded-full border flex items-center justify-center ${isSelected ? "border-sky-600 bg-sky-600 text-white" : "border-slate-300 bg-white"}`}>
+                              {isSelected && <span className="text-xs font-bold">✓</span>}
+                            </div>
+                          </div>
+
+                          <h3 className="mt-3 text-lg font-black text-slate-950">{pkg.name}</h3>
+                          <p className="mt-1 text-xs text-slate-600 line-clamp-2">{pkg.tagline}</p>
+
+                          <div className="mt-4 pt-4 border-t border-black/5">
+                            <div className="flex items-baseline gap-2">
+                              <span className="text-2xl font-black text-slate-950">₹{depositInr.toLocaleString("en-IN")}</span>
+                              <span className="text-xs font-bold text-slate-500">(${depositUsd.toLocaleString()})</span>
+                            </div>
+                            <span className="text-[11px] font-semibold text-sky-700">
+                              25% sprint advance deposit
+                            </span>
+                            <div className="text-[10px] text-slate-400 mt-0.5">
+                              Total Sprint: ₹{pkg.price_inr.toLocaleString("en-IN")} (${pkg.price_usd.toLocaleString()})
+                            </div>
+                          </div>
+
+                          <div className="mt-4 space-y-2">
+                            {pkg.deliverables.slice(0, 3).map((item, idx) => (
+                              <div key={idx} className="flex items-start gap-2 text-xs text-slate-700">
+                                <span className="text-sky-600 font-bold shrink-0">✦</span>
+                                <span className="line-clamp-1">{item}</span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+
+                        <div className="mt-6 pt-4 border-t border-black/5">
+                          <button
+                            type="button"
+                            disabled={isPayingDeposit}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handlePayAdvanceDeposit(pkg);
+                            }}
+                            className={`w-full py-3 px-4 rounded-xl text-xs font-extrabold uppercase tracking-wider transition-all flex items-center justify-center gap-2 cursor-pointer ${
+                              isSelected
+                                ? "bg-slate-950 text-white hover:bg-slate-800 shadow-md"
+                                : "bg-sky-100 hover:bg-sky-200 text-sky-950"
+                            }`}
+                          >
+                            <span>{isPayingDeposit && selectedSprintPackageId === pkg.id ? "Opening Checkout..." : "Pay 25% Deposit & Unlock →"}</span>
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Direct Booking & Custom Scope Help */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">
+                <div className="rounded-3xl border border-sky-300/70 bg-white/90 p-6 flex flex-col justify-between shadow-sm">
+                  <div>
+                    <span className="text-2xl">🤝</span>
+                    <h4 className="mt-3 text-base font-bold text-slate-950">
+                      Already in contact with Tanie for a custom scope?
+                    </h4>
+                    <p className="mt-1 text-xs text-slate-600 leading-relaxed">
+                      If you're already discussing a tailored milestone agreement, wire transfer, or custom sprint timeline, Tanie will manually link your active workspace within 12 hours.
+                    </p>
+                  </div>
+                  <div className="mt-6 flex flex-wrap items-center gap-3">
+                    <Link
+                      href="/contact"
+                      className="rounded-full bg-slate-950 px-5 py-2.5 text-xs font-bold uppercase tracking-wider text-white shadow-xs hover:bg-slate-800 !no-underline"
+                    >
+                      Send Message to Tanie
+                    </Link>
+                    <a
+                      href="mailto:tanielalwani.work@gmail.com"
+                      className="rounded-full border border-black/10 bg-white px-4 py-2 text-xs font-bold text-slate-800 hover:bg-slate-50 !no-underline"
+                    >
+                      Email Tanie ↗
+                    </a>
+                  </div>
+                </div>
+
+                <div className="rounded-3xl border border-black/10 bg-gradient-to-br from-slate-950 to-slate-900 text-white p-6 flex flex-col justify-between shadow-md">
+                  <div>
+                    <span className="text-2xl">⚡</span>
+                    <h4 className="mt-3 text-base font-bold text-white">
+                      Curious what your workspace looks like?
+                    </h4>
+                    <p className="mt-1 text-xs text-slate-300 leading-relaxed">
+                      Launch the 1-click interactive demo workspace. You can preview live sprint progress, test the cryptographic canvas signature pad, and inspect the deliverables vault.
+                    </p>
+                  </div>
+                  <div className="mt-6">
+                    <button
+                      type="button"
+                      onClick={() => setIsDemoMode(true)}
+                      className="rounded-full bg-sky-400 hover:bg-sky-300 text-slate-950 px-6 py-2.5 text-xs font-extrabold uppercase tracking-wider transition-all shadow-md cursor-pointer"
+                    >
+                      Launch Demo Mode Now →
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
           ) : (
             /* ------------------------------------------------------------- */
-            /* VIEW 2: AUTHENTICATED CLIENT DASHBOARD / DEMO MODE            */
+            /* VIEW 3: AUTHENTICATED CLIENT DASHBOARD / DEMO MODE            */
             /* ------------------------------------------------------------- */
             <div>
               {/* Navigation Tabs */}

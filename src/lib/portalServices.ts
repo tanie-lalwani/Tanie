@@ -427,12 +427,12 @@ export async function getClientProjects(email: string): Promise<ClientProject[]>
       .order("created_at", { ascending: false });
 
     if (error || !data || data.length === 0) {
-      return [DEMO_CLIENT_PROJECT];
+      return [];
     }
     return data as ClientProject[];
   } catch (err) {
-    console.warn("Using fallback client project:", err);
-    return [DEMO_CLIENT_PROJECT];
+    console.warn("Error fetching client projects:", err);
+    return [];
   }
 }
 
