@@ -1,6 +1,8 @@
 "use client";
 import { useState, useMemo, useEffect, useRef } from "react";
 import { useAuth } from "@/hooks/useAuth";
+import { useLanguage } from "@/context/LanguageContext";
+import { packagesTranslations } from "@/data/packagesTranslations";
 import { saveClientCustomQuote } from "@/lib/portalServices";
 import { getSavedLeadProfile, saveLeadProfile } from "@/features/lead-capture/lib/cookieHelper";
 
@@ -277,6 +279,8 @@ export default function WebsiteCostCalculatorFunnel({
   onStepChange
 }: WebsiteCostCalculatorFunnelProps) {
   const { user, isAuthenticated, signInWithPassword, signUp, signInWithGoogle } = useAuth();
+  const { locale } = useLanguage();
+  const t = packagesTranslations[locale] || packagesTranslations.en;
 
   // Lead ID for deduplication across steps
   const [leadId, setLeadId] = useState<string>("");
@@ -570,7 +574,7 @@ Let's discuss getting started!`;
   };
 
   return (
-    <div ref={funnelContainerRef} className="w-full">
+    <div ref={funnelContainerRef} className="w-full" dir={locale === "ur" ? "rtl" : "ltr"}>
       {/* SUCCESS TOAST */}
       {saveToast && (
         <div className="fixed top-24 right-6 z-50 bg-[#0a192f] text-white text-xs px-5 py-3 rounded-xl shadow-xl border border-sky-400/30 flex items-center gap-2">
@@ -585,11 +589,11 @@ Let's discuss getting started!`;
       {currentStep === 0 && (
         <div className="max-w-4xl mx-auto text-center pt-4 pb-8 sm:pb-12">
           <h1 className="text-4xl sm:text-6xl font-black tracking-tight !text-[#0a192f] leading-tight">
-            Calculate your <span className="text-sky-700">website cost</span>
+            {t.hero.titlePrefix}<span className="text-sky-700">{t.hero.titleHighlight}</span>
           </h1>
 
           <p className="mt-3 text-base sm:text-lg text-sky-950/80 max-w-2xl mx-auto font-medium leading-relaxed">
-            Get an instant, transparent price estimate tailored to your exact industry and features.
+            {t.hero.subtitle}
           </p>
 
           {/* FILL-IN SEARCH CTA FORM */}
@@ -607,7 +611,7 @@ Let's discuss getting started!`;
                     setBusinessName(e.target.value);
                     saveLeadProfile({ businessName: e.target.value });
                   }}
-                  placeholder="Enter your business or project name (e.g. Lumina Hair Lounge)..."
+                  placeholder={t.hero.inputPlaceholder}
                   className="w-full bg-transparent text-sm sm:text-base !text-[#0a192f] placeholder-sky-900/40 focus:outline-none py-2 font-semibold"
                 />
               </div>
@@ -616,15 +620,17 @@ Let's discuss getting started!`;
                 type="submit"
                 className="w-full sm:w-auto px-7 py-3 rounded-full bg-[#0a192f] hover:bg-slate-800 text-white font-bold text-xs uppercase tracking-wider transition-all shadow-sm shrink-0 flex items-center justify-center gap-2 cursor-pointer"
               >
-                <span>CALCULATE COST</span>
-                <span>→</span>
+                <span>{t.hero.ctaButton}</span>
+                <span>{locale === "ur" ? "←" : "→"}</span>
               </button>
             </div>
           </form>
 
           {/* QUICK CHOICE SUGGESTIONS PILLS */}
           <div className="mt-4 flex flex-wrap items-center justify-center gap-2 max-w-3xl mx-auto">
-            <span className="text-xs font-semibold text-sky-950/70 mr-1">Quick choice:</span>
+            <span className="text-xs font-semibold text-sky-950/70 mr-1">
+              {locale === "ur" ? "فوری انتخاب:" : locale === "es" ? "Elección rápida:" : locale === "fr" ? "Choix rapide :" : locale === "hi" ? "त्वरित विकल्प:" : locale === "ja" ? "クイック選択:" : locale === "zh" ? "快捷选择：" : "Quick choice:"}
+            </span>
             {INDUSTRIES.slice(0, 7).map((ind) => (
               <button
                 key={ind.id}
@@ -649,14 +655,15 @@ Let's discuss getting started!`;
           <div className="flex items-center justify-between border-b border-sky-200/80 pb-4">
             <div>
               <h2 className="text-2xl sm:text-3xl font-black !text-[#0a192f] tracking-tight" style={{ color: '#0a192f' }}>
-                {currentStep === 1 && "What type of website are you building?"}
-                {currentStep === 2 && "What is your specific industry?"}
-                {currentStep === 3 && "Select the features & capabilities you need"}
-                {currentStep === 4 && "Target budget & launch timeline"}
-                {currentStep === 5 && "Calculated Cost & Deliverable Breakdown"}
+                {currentStep === 1 && t.funnel.step1Title}
+                {currentStep === 2 && t.funnel.step2Title}
+                {currentStep === 3 && t.funnel.step3Title}
+                {currentStep === 4 && t.funnel.step4Title}
+                {currentStep === 5 && t.funnel.step5Title}
               </h2>
               <p className="text-xs text-sky-950/80 mt-1 font-medium" style={{ color: '#0a192f' }}>
-                Step {currentStep} of 4 • Project: <span className="font-bold !text-[#0a192f]" style={{ color: '#0a192f' }}>{businessName || "My Website"}</span>
+                {locale === "ur" ? `مرحلہ ${currentStep} از 4 • پروجیکٹ: ` : `Step ${currentStep} of 4 • Project: `}
+                <span className="font-bold !text-[#0a192f]" style={{ color: '#0a192f' }}>{businessName || (locale === "ur" ? "میری ویب سائٹ" : "My Website")}</span>
               </p>
             </div>
 
@@ -685,27 +692,27 @@ Let's discuss getting started!`;
                 {[
                   {
                     id: "business",
-                    title: "Business / Company Website",
+                    title: t.hero.foundations.business.title,
                     icon: "🏢",
-                    desc: "For local salons, clinics, restaurants, consulting firms, builders & services."
+                    desc: t.hero.foundations.business.desc
                   },
                   {
                     id: "ecommerce",
-                    title: "E-Commerce / D2C Online Store",
+                    title: t.hero.foundations.ecommerce.title,
                     icon: "🛍️",
-                    desc: "For selling physical or digital products with cart, payments & automated invoices."
+                    desc: t.hero.foundations.ecommerce.desc
                   },
                   {
                     id: "portfolio",
-                    title: "Personal Brand / Creative Studio",
+                    title: t.hero.foundations.portfolio.title,
                     icon: "🎨",
-                    desc: "For freelancers, photographers, designers, creators, and executive portfolios."
+                    desc: t.hero.foundations.portfolio.desc
                   },
                   {
                     id: "saas",
-                    title: "Custom SaaS / Web Application",
+                    title: t.hero.foundations.saas.title,
                     icon: "⚡",
-                    desc: "For digital platforms, member dashboards, user accounts, and AI workflows."
+                    desc: t.hero.foundations.saas.desc
                   }
                 ].map((type) => {
                   const isSelected = websiteType === type.id;
@@ -741,7 +748,7 @@ Let's discuss getting started!`;
                   onClick={() => goToStep(2)}
                   className="px-8 py-3 rounded-full bg-[#0a192f] hover:bg-slate-800 text-white font-bold text-xs uppercase tracking-wider transition-all shadow-md cursor-pointer"
                 >
-                  Continue to Industry →
+                  {t.funnel.nextBtn}
                 </button>
               </div>
             </div>
@@ -788,7 +795,7 @@ Let's discuss getting started!`;
                   onClick={() => goToStep(3)}
                   className="px-8 py-3 rounded-full bg-[#0a192f] hover:bg-slate-800 text-white font-bold text-xs uppercase tracking-wider transition-all shadow-md cursor-pointer"
                 >
-                  Continue to Features →
+                  {t.funnel.nextBtn}
                 </button>
               </div>
             </div>
@@ -801,10 +808,10 @@ Let's discuss getting started!`;
             <div className="space-y-6">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs text-sky-950 bg-[#c8ecff]/30 border border-sky-300/80 rounded-xl p-3.5">
                 <span className="font-medium" style={{ color: '#0a192f' }}>
-                  💡 Select the feature modules you need for your website. We will calculate the total development investment at the end.
+                  💡 {t.funnel.step3Subtitle}
                 </span>
                 <span className="font-black !text-[#0a192f] shrink-0" style={{ color: '#0a192f' }}>
-                  {selectedBundles.length} Modules Selected
+                  {selectedBundles.length} {locale === "ur" ? "ماڈیولز منتخب شدہ" : "Modules Selected"}
                 </span>
               </div>
 
@@ -867,10 +874,10 @@ Let's discuss getting started!`;
 
                       <div className="mt-4 pt-2.5 border-t border-sky-200/60 flex items-center justify-between text-xs font-semibold">
                         <span className="text-sky-900 font-bold" style={{ color: '#0a192f' }}>
-                          {isEssential ? "Core Foundation Architecture" : "Interactive Module"}
+                          {isEssential ? (locale === "ur" ? "بنیادی آرکیٹیکچر" : "Core Foundation Architecture") : (locale === "ur" ? "ماڈیول" : "Interactive Module")}
                         </span>
                         <span className={`text-[11px] font-bold ${isSelected ? "text-sky-800" : "text-sky-600"}`}>
-                          {isSelected ? "✓ Included" : "+ Select Module"}
+                          {isSelected ? (locale === "ur" ? "✓ شامل ہے" : "✓ Included") : (locale === "ur" ? "+ منتخب کریں" : "+ Select Module")}
                         </span>
                       </div>
                     </div>
@@ -884,7 +891,7 @@ Let's discuss getting started!`;
                   onClick={() => goToStep(4)}
                   className="px-8 py-3 rounded-full bg-[#0a192f] hover:bg-slate-800 text-white font-bold text-xs uppercase tracking-wider transition-all shadow-md cursor-pointer"
                 >
-                  Continue to Budget & Timeline →
+                  {t.funnel.nextBtn}
                 </button>
               </div>
             </div>
@@ -898,7 +905,7 @@ Let's discuss getting started!`;
               {/* Budget Range */}
               <div>
                 <label className="block text-xs font-black !text-[#0a192f] uppercase tracking-wider mb-3">
-                  Target Budget Bracket (Optional)
+                  {locale === "ur" ? "ہدف کا بجٹ (اختیاری)" : locale === "hi" ? "लक्ष्य बजट (वैकल्पिक)" : locale === "es" ? "Presupuesto objetivo (opcional)" : locale === "fr" ? "Fourchette de budget (optionnel)" : locale === "ja" ? "目標予算（任意）" : locale === "zh" ? "目标预算（可选）" : "Target Budget Bracket (Optional)"}
                 </label>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
                   {[
@@ -926,7 +933,7 @@ Let's discuss getting started!`;
               {/* Timeline */}
               <div>
                 <label className="block text-xs font-black !text-[#0a192f] uppercase tracking-wider mb-3">
-                  Target Launch Speed
+                  {locale === "ur" ? "ہدف کی رفتار" : locale === "hi" ? "लॉन्च की समय सीमा" : locale === "es" ? "Plazo de lanzamiento" : locale === "fr" ? "Vitesse de lancement ciblée" : locale === "ja" ? "公開希望時期" : locale === "zh" ? "目标上线周期" : "Target Launch Speed"}
                 </label>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                   {[
@@ -956,7 +963,7 @@ Let's discuss getting started!`;
                   onClick={() => goToStep(5)}
                   className="px-8 py-3.5 rounded-full bg-[#0a192f] hover:bg-slate-800 text-white font-bold text-xs uppercase tracking-wider shadow-lg transition-all cursor-pointer"
                 >
-                  UNLOCK ESTIMATE & TIMELINE →
+                  {t.funnel.calculateBtn}
                 </button>
               </div>
             </div>
@@ -975,10 +982,10 @@ Let's discuss getting started!`;
                   </div>
 
                   <h3 className="text-2xl font-black !text-[#0a192f]">
-                    Unlock Your Custom Quotation & Roadmap
+                    {t.funnel.unlockTitle}
                   </h3>
                   <p className="text-xs text-sky-950/80 max-w-md mx-auto mt-2 mb-6 leading-relaxed font-medium">
-                    Your website architecture for <span className="font-bold text-[#0a192f]">{businessName || "your project"}</span> with {selectedBundles.length} selected modules is ready. Sign in or create a free account to calculate your itemized pricing, timeline deliverables, and lock in your development sprint.
+                    {t.funnel.unlockSubtitle}
                   </p>
 
                   {authError && (
@@ -1036,19 +1043,25 @@ Let's discuss getting started!`;
                           d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"
                         />
                       </svg>
-                      <span>Continue with Google / Gmail</span>
+                      <span>
+                        {locale === "ur" ? "Google / Gmail کے ساتھ جاری رکھیں" : locale === "hi" ? "Google / Gmail के साथ जारी रखें" : locale === "es" ? "Continuar con Google / Gmail" : locale === "fr" ? "Continuer avec Google / Gmail" : locale === "ja" ? "Google / Gmail で続行" : locale === "zh" ? "通过 Google / Gmail 继续" : "Continue with Google / Gmail"}
+                      </span>
                     </button>
 
                     <div className="flex items-center gap-3 my-3">
                       <div className="h-px bg-sky-200 flex-1" />
-                      <span className="text-[11px] text-sky-900/60 font-semibold uppercase tracking-wider">or with email</span>
+                      <span className="text-[11px] text-sky-900/60 font-semibold uppercase tracking-wider">
+                        {locale === "ur" ? "یا ای میل کے ساتھ" : "or with email"}
+                      </span>
                       <div className="h-px bg-sky-200 flex-1" />
                     </div>
 
                     <form onSubmit={handleUnlockSubmit} className="space-y-3.5 text-left" autoComplete="on">
                       {authMode === "signup" && (
                         <div>
-                          <label htmlFor="calc_auth_name" className="block text-xs font-bold !text-[#0a192f] mb-1">Your Full Name</label>
+                          <label htmlFor="calc_auth_name" className="block text-xs font-bold !text-[#0a192f] mb-1">
+                            {t.funnel.nameLabel}
+                          </label>
                           <input
                             id="calc_auth_name"
                             name="name"
@@ -1067,7 +1080,9 @@ Let's discuss getting started!`;
                       )}
 
                       <div>
-                        <label htmlFor="calc_auth_email" className="block text-xs font-bold !text-[#0a192f] mb-1">Email Address</label>
+                        <label htmlFor="calc_auth_email" className="block text-xs font-bold !text-[#0a192f] mb-1">
+                          {t.funnel.emailLabel}
+                        </label>
                         <input
                           id="calc_auth_email"
                           name="email"
@@ -1085,7 +1100,9 @@ Let's discuss getting started!`;
                       </div>
 
                       <div>
-                        <label htmlFor="calc_auth_password" className="block text-xs font-bold !text-[#0a192f] mb-1">Password</label>
+                        <label htmlFor="calc_auth_password" className="block text-xs font-bold !text-[#0a192f] mb-1">
+                          {t.funnel.passwordLabel}
+                        </label>
                         <input
                           id="calc_auth_password"
                           name="password"
@@ -1105,10 +1122,10 @@ Let's discuss getting started!`;
                         className="w-full py-3.5 rounded-full bg-[#0a192f] hover:bg-slate-800 text-white font-bold text-xs uppercase tracking-wider shadow-md transition-all cursor-pointer"
                       >
                         {isAuthSubmitting
-                          ? "Calculating & Unlocking..."
+                          ? (locale === "ur" ? "حساب لگایا جا رہا ہے..." : "Calculating & Unlocking...")
                           : authMode === "signup"
-                          ? "CALCULATE & UNLOCK CUSTOM QUOTE →"
-                          : "SIGN IN & UNLOCK QUOTE →"}
+                          ? t.funnel.unlockBtn
+                          : t.funnel.signinTab}
                       </button>
                     </form>
                   </div>
@@ -1116,24 +1133,24 @@ Let's discuss getting started!`;
                   <div className="mt-4 text-xs text-sky-950/80">
                     {authMode === "signup" ? (
                       <>
-                        Already have an account?{" "}
+                        {locale === "ur" ? "پہلے سے اکاؤنٹ ہے؟ " : "Already have an account? "}
                         <button
                           type="button"
                           onClick={() => setAuthMode("signin")}
                           className="text-sky-700 hover:underline font-black cursor-pointer"
                         >
-                          Sign In
+                          {t.funnel.signinTab}
                         </button>
                       </>
                     ) : (
                       <>
-                        New client?{" "}
+                        {locale === "ur" ? "نیا کلائنٹ؟ " : "New client? "}
                         <button
                           type="button"
                           onClick={() => setAuthMode("signup")}
                           className="text-sky-700 hover:underline font-black cursor-pointer"
                         >
-                          Create Free Account
+                          {t.funnel.signupTab}
                         </button>
                       </>
                     )}
@@ -1146,13 +1163,13 @@ Let's discuss getting started!`;
                   <div className="p-6 sm:p-8 rounded-3xl bg-[#c8ecff]/35 border border-sky-300/90 backdrop-blur-md shadow-md flex flex-col md:flex-row items-center justify-between gap-6">
                     <div>
                       <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-sky-100 text-sky-950 text-xs font-bold mb-2 border border-sky-200">
-                        ✓ Verified Quotation for {businessName}
+                        ✓ {businessName || (locale === "ur" ? "آپ کا پروجیکٹ" : "Your Project")}
                       </span>
                       <h3 className="text-2xl font-black !text-[#0a192f]">
-                        Total Estimated Investment
+                        {t.funnel.totalInvestment}
                       </h3>
                       <p className="text-xs text-sky-950/80 mt-1 font-medium">
-                        Timeline: <span className="font-bold !text-[#0a192f]">{timeline}</span> • Budget: <span className="font-bold !text-[#0a192f]">{budgetTier}</span>
+                        {locale === "ur" ? `مدت: ${timeline} • بجٹ: ${budgetTier}` : `Timeline: ${timeline} • Budget: ${budgetTier}`}
                       </p>
                     </div>
 
@@ -1161,7 +1178,7 @@ Let's discuss getting started!`;
                         {currency === "INR" ? `₹${calculation.finalTotalInr.toLocaleString()}` : `$${calculation.finalTotalUsd.toLocaleString()}`}
                       </div>
                       <div className="text-xs text-sky-700 font-bold mt-1">
-                        Includes {calculation.discountPercent}% Bundle Discount (-₹{calculation.discountAmountInr.toLocaleString()})
+                        {t.funnel.bundleDiscount} ({calculation.discountPercent}%)
                       </div>
                     </div>
                   </div>
@@ -1169,7 +1186,7 @@ Let's discuss getting started!`;
                   {/* ITEMISED BREAKDOWN */}
                   <div className="p-6 rounded-2xl bg-[#c8ecff]/25 border border-sky-200/80 shadow-xs space-y-3">
                     <h4 className="text-xs font-black uppercase tracking-wider text-sky-800">
-                      Included Scope Modules ({calculation.bundleCount})
+                      {locale === "ur" ? `شامل ماڈیولز (${calculation.bundleCount})` : `Included Scope Modules (${calculation.bundleCount})`}
                     </h4>
 
                     <div className="divide-y divide-sky-200/50">
@@ -1190,7 +1207,7 @@ Let's discuss getting started!`;
                               </div>
                             </div>
                             <span className="font-black text-sky-950 shrink-0">
-                              {bundle.isEssential ? "Included" : `+₹${bundle.priceInr.toLocaleString()}`}
+                              {bundle.isEssential ? (locale === "ur" ? "شامل ہے" : "Included") : `+₹${bundle.priceInr.toLocaleString()}`}
                             </span>
                           </div>
                         );
@@ -1216,7 +1233,7 @@ Let's discuss getting started!`;
                       }}
                       className="py-3.5 px-6 rounded-full bg-[#0a192f] hover:bg-slate-800 text-white font-bold text-xs uppercase tracking-wider shadow-md transition-all text-center cursor-pointer"
                     >
-                      REQUEST SPRINT / LOCK IN QUEUE →
+                      {t.funnel.proceedBooking}
                     </button>
 
                     <button
@@ -1225,15 +1242,15 @@ Let's discuss getting started!`;
                       className="py-3.5 px-6 rounded-full bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 cursor-pointer shadow-md"
                     >
                       <span>💬</span>
-                      <span>DISCUSS ON WHATSAPP</span>
+                      <span>{t.funnel.whatsappShare}</span>
                     </button>
                   </div>
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
-        )}
-      </div>
-    );
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
 }

@@ -19,11 +19,15 @@ import {
 } from "@/data/aestheticDatabase";
 import CustomScopeCalculator from "@/components/CustomScopeCalculator";
 import WebsiteCostCalculatorFunnel from "@/components/packages/WebsiteCostCalculatorFunnel";
+import { useLanguage } from "@/context/LanguageContext";
+import { packagesTranslations } from "@/data/packagesTranslations";
 
 export default function PackagesView() {
   const router = useRouter();
   const pathname = usePathname();
   const { user, isAuthenticated, signInWithPassword, signUp } = useAuth();
+  const { copy, locale } = useLanguage();
+  const pkgCopy = packagesTranslations[locale] || packagesTranslations.en;
 
   // Active View Tab: "home" (Overview & Scope), "calculator" (Interactive Estimator), "gallery" (Browse Aesthetics), "wizard" (Make Your Website Questionnaire), "results" (Curated Suggestions)
   const [activeTab, setActiveTab] = useState<"home" | "calculator" | "gallery" | "wizard" | "results">("home");
@@ -314,6 +318,17 @@ Features: ${featuresList.join(", ")}
     );
   };
 
+  const categoryKeys: Record<string, keyof typeof pkgCopy.categories> = {
+    "All": "all",
+    "Editorial & Luxury": "editorial",
+    "Modern SaaS & Bento": "saas",
+    "3D & Spatial": "spatial3d",
+    "Pop & Brutalist": "brutalist",
+    "Tactile & Organic": "tactile",
+    "Retro, Cyber & Y2K": "cyber",
+    "Artistic & Avant-Garde": "artistic"
+  };
+
   return (
     <main
       style={{
@@ -322,6 +337,7 @@ Features: ${featuresList.join(", ")}
         color: "#0a192f"
       } as React.CSSProperties}
       className="min-h-screen bg-[#dff4ff] text-[#0a192f] font-sans selection:bg-sky-200 selection:text-black theme-ocean-light pricing-page-theme"
+      dir={locale === "ur" ? "rtl" : "ltr"}
     >
       
       {/* ------------------------------------------------------------- */}
@@ -338,12 +354,12 @@ Features: ${featuresList.join(", ")}
               className={`flex w-14 flex-col items-center rounded-[1.35rem] px-2 py-3 !no-underline transition-all ${
                 pathname === "/" ? "bg-[#c8ecff] !text-black shadow-xs" : "!text-black hover:bg-white/55 hover:!text-black"
               }`}
-              title="Home"
+              title={pkgCopy.nav.home}
             >
               <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.8" className="mb-1">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M3 12l9-8 9 8M4 10v10a1 1 0 001 1h3m10-11v10a1 1 0 01-1 1h-3m-6 0h6" />
               </svg>
-              <span className="text-[10px] font-semibold">Home</span>
+              <span className="text-[10px] font-semibold">{pkgCopy.nav.home}</span>
             </Link>
 
             <Link
@@ -351,12 +367,12 @@ Features: ${featuresList.join(", ")}
               className={`flex w-14 flex-col items-center rounded-[1.35rem] px-2 py-3 !no-underline transition-all ${
                 pathname === "/projects" ? "bg-[#c8ecff] !text-black shadow-xs" : "!text-black hover:bg-white/55 hover:!text-black"
               }`}
-              title="Projects"
+              title={pkgCopy.nav.projects}
             >
               <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.8" className="mb-1">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
               </svg>
-              <span className="text-[10px] font-semibold">Projects</span>
+              <span className="text-[10px] font-semibold">{pkgCopy.nav.projects}</span>
             </Link>
 
             <Link
@@ -364,12 +380,12 @@ Features: ${featuresList.join(", ")}
               className={`flex w-14 flex-col items-center rounded-[1.35rem] px-2 py-3 !no-underline transition-all ${
                 pathname === "/pricing" || pathname === "/packages" ? "bg-[#c8ecff] !text-black shadow-xs" : "!text-black hover:bg-white/55 hover:!text-black"
               }`}
-              title="Pricing"
+              title={pkgCopy.nav.pricing}
             >
               <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.8" className="mb-1">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
               </svg>
-              <span className="text-[10px] font-semibold">Pricing</span>
+              <span className="text-[10px] font-semibold">{pkgCopy.nav.pricing}</span>
             </Link>
 
             <Link
@@ -377,12 +393,12 @@ Features: ${featuresList.join(", ")}
               className={`flex w-14 flex-col items-center rounded-[1.35rem] px-2 py-3 !no-underline transition-all ${
                 pathname === "/client" ? "bg-[#c8ecff] !text-black shadow-xs" : "!text-black hover:bg-white/55 hover:!text-black"
               }`}
-              title="Client Board"
+              title={pkgCopy.nav.clientHub}
             >
               <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.8" className="mb-1">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
               </svg>
-              <span className="text-[10px] font-semibold">Client Hub</span>
+              <span className="text-[10px] font-semibold">{pkgCopy.nav.clientHub}</span>
             </Link>
 
             <Link
@@ -390,12 +406,38 @@ Features: ${featuresList.join(", ")}
               className={`flex w-14 flex-col items-center rounded-[1.35rem] px-2 py-3 !no-underline transition-all ${
                 pathname === "/qna" ? "bg-[#c8ecff] !text-black shadow-xs" : "!text-black hover:bg-white/55 hover:!text-black"
               }`}
-              title="Q&A"
+              title={pkgCopy.nav.qna}
             >
               <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.8" className="mb-1">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
-              <span className="text-[10px] font-semibold">Q&A</span>
+              <span className="text-[10px] font-semibold">{pkgCopy.nav.qna}</span>
+            </Link>
+
+            <Link
+              href="/faq"
+              className={`flex w-14 flex-col items-center rounded-[1.35rem] px-2 py-3 !no-underline transition-all ${
+                pathname === "/faq" ? "bg-[#c8ecff] !text-black shadow-xs" : "!text-black hover:bg-white/55 hover:!text-black"
+              }`}
+              title={pkgCopy.nav.faq}
+            >
+              <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.8" className="mb-1">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <span className="text-[10px] font-semibold">{pkgCopy.nav.faq}</span>
+            </Link>
+
+            <Link
+              href="/terms"
+              className={`flex w-14 flex-col items-center rounded-[1.35rem] px-2 py-3 !no-underline transition-all ${
+                pathname === "/terms" ? "bg-[#c8ecff] !text-black shadow-xs" : "!text-black hover:bg-white/55 hover:!text-black"
+              }`}
+              title={pkgCopy.nav.terms}
+            >
+              <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.8" className="mb-1">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+              <span className="text-[10px] font-semibold">{pkgCopy.nav.terms}</span>
             </Link>
 
             <Link
@@ -403,13 +445,13 @@ Features: ${featuresList.join(", ")}
               className={`flex w-14 flex-col items-center rounded-[1.35rem] px-2 py-3 !no-underline transition-all ${
                 pathname === "/contact" ? "bg-[#c8ecff] !text-black shadow-xs" : "!text-black hover:bg-white/55 hover:!text-black"
               }`}
-              title="Contact"
+              title={pkgCopy.nav.contact}
             >
               <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.8" className="mb-1">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M21 10.5V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2h7.5" />
                 <path strokeLinecap="round" strokeLinejoin="round" d="M21 10.5l-9 6.5-9-6.5" />
               </svg>
-              <span className="text-[10px] font-semibold">Contact</span>
+              <span className="text-[10px] font-semibold">{pkgCopy.nav.contact}</span>
             </Link>
           </div>
         </nav>
@@ -424,17 +466,17 @@ Features: ${featuresList.join(", ")}
             <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
               <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
             </svg>
-            <span>Home</span>
+            <span>{pkgCopy.nav.home}</span>
           </Link>
           <span className="text-xs font-bold uppercase tracking-widest text-slate-800">
-            Website Marketplace
+            {pkgCopy.nav.mobileMarketplace}
           </span>
           <button
             type="button"
             onClick={handleStartQuestionnaire}
             className="rounded-full bg-slate-950 px-3 py-1 text-[11px] font-bold text-white shadow-xs cursor-pointer"
           >
-            ✨ Build
+            {pkgCopy.nav.mobileBuild}
           </button>
         </header>
       )}
@@ -477,7 +519,7 @@ Features: ${featuresList.join(", ")}
                         : "bg-[#c8ecff]/30 text-sky-950 hover:bg-[#c8ecff]/50 border border-sky-300/80"
                     }`}
                   >
-                    {cat}
+                    {categoryKeys[cat] ? pkgCopy.categories[categoryKeys[cat]] : cat}
                   </button>
                 ))}
               </div>
@@ -493,7 +535,7 @@ Features: ${featuresList.join(", ")}
                   }`}
                 >
                   <span>⚡</span>
-                  <span className="ml-1.5">{activeTab === "calculator" ? "Show Aesthetics Catalog" : "18-Category Detailed Scope Matrix"}</span>
+                  <span className="ml-1.5">{activeTab === "calculator" ? pkgCopy.aesthetics.showCatalog : pkgCopy.aesthetics.showMatrix}</span>
                 </button>
               </div>
             </div>
@@ -565,7 +607,7 @@ Features: ${featuresList.join(", ")}
                       {/* Color Palette Swatches */}
                       <div className="mb-4">
                         <span className="block text-[10px] font-bold uppercase tracking-wider text-sky-800 mb-1.5">
-                          Signature Color DNA
+                          {pkgCopy.aesthetics.colorDna}
                         </span>
                         <div className="flex items-center gap-2">
                           {style.defaultPalette.map((swatch) => (
@@ -599,14 +641,14 @@ Features: ${featuresList.join(", ")}
                         onClick={() => setPreviewStyleModal(style)}
                         className="flex-1 rounded-xl border border-sky-300/80 bg-white/70 py-2 text-xs font-bold text-[#0a192f] hover:bg-white transition cursor-pointer"
                       >
-                        Inspect Preview
+                        {pkgCopy.aesthetics.inspectPreview}
                       </button>
                       <button
                         type="button"
                         onClick={() => handleChooseAesthetic(style, "Business")}
                         className="flex-1 rounded-xl bg-[#0a192f] py-2 text-xs font-bold text-white hover:bg-slate-800 transition cursor-pointer"
                       >
-                        Choose Style →
+                        {pkgCopy.aesthetics.chooseStyle}
                       </button>
                     </div>
                   </div>
@@ -618,8 +660,8 @@ Features: ${featuresList.join(", ")}
             <div className="rounded-[2.4rem] border border-sky-300/80 bg-[#c8ecff]/30 p-6 sm:p-10 shadow-md backdrop-blur-xl">
               <div className="flex items-center justify-between mb-6">
                 <div>
-                  <span className="text-xs font-extrabold uppercase tracking-widest text-sky-700">Modular Add-ons</span>
-                  <h3 className="text-2xl font-bold text-[#0a192f] mt-0.5">Sprint Enhancements</h3>
+                  <span className="text-xs font-extrabold uppercase tracking-widest text-sky-700">{pkgCopy.addons.tag}</span>
+                  <h3 className="text-2xl font-bold text-[#0a192f] mt-0.5">{pkgCopy.addons.title}</h3>
                 </div>
                 <div className="flex items-center gap-1 rounded-full border border-sky-300/80 bg-white/70 p-1">
                   <button
@@ -641,9 +683,9 @@ Features: ${featuresList.join(", ")}
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
                 {[
-                  { name: "Headless CMS (Sanity / Contentful)", usd: 499, inr: 41000, desc: "Visual self-serve content & blog manager." },
-                  { name: "Gemini / OpenAI AI Copilot", usd: 599, inr: 49000, desc: "Custom-trained domain assistant & lead capture." },
-                  { name: "Original Soundscape & Micro Audio", usd: 299, inr: 24000, desc: "Reactive sound design and ambient audio toggle." }
+                  { name: pkgCopy.addons.cms.name, usd: 499, inr: 41000, desc: pkgCopy.addons.cms.desc },
+                  { name: pkgCopy.addons.ai.name, usd: 599, inr: 49000, desc: pkgCopy.addons.ai.desc },
+                  { name: pkgCopy.addons.audio.name, usd: 299, inr: 24000, desc: pkgCopy.addons.audio.desc }
                 ].map((a, i) => (
                   <div key={i} className="rounded-2xl border border-sky-200/80 bg-white/50 p-4">
                     <div className="flex items-center justify-between font-bold text-[#0a192f] mb-1">
@@ -1131,14 +1173,14 @@ Features: ${featuresList.join(", ")}
                 onClick={() => setPreviewStyleModal(null)}
                 className="rounded-full px-5 py-2.5 text-xs font-bold text-slate-600 hover:text-black cursor-pointer"
               >
-                Close
+                {pkgCopy.intakeModal.close}
               </button>
               <button
                 type="button"
                 onClick={() => handleChooseAesthetic(previewStyleModal, "Business")}
                 className="rounded-full bg-slate-950 px-7 py-3 text-xs font-bold uppercase tracking-widest text-white hover:bg-slate-800 transition cursor-pointer shadow-md"
               >
-                Choose This Aesthetic →
+                {pkgCopy.aesthetics.chooseStyle}
               </button>
             </div>
           </div>
@@ -1155,7 +1197,10 @@ Features: ${featuresList.join(", ")}
             if (e.target === e.currentTarget) setShowIntakeModal(false);
           }}
         >
-          <div className="relative w-full max-w-xl rounded-[2.4rem] border border-sky-300/80 bg-[#dff4ff]/95 p-6 sm:p-8 shadow-2xl max-h-[90vh] overflow-y-auto backdrop-blur-xl">
+          <div
+            className="relative w-full max-w-xl rounded-[2.4rem] border border-sky-300/80 bg-[#dff4ff]/95 p-6 sm:p-8 shadow-2xl max-h-[90vh] overflow-y-auto backdrop-blur-xl"
+            dir={locale === "ur" ? "rtl" : "ltr"}
+          >
             <button
               type="button"
               onClick={() => setShowIntakeModal(false)}
@@ -1169,19 +1214,16 @@ Features: ${featuresList.join(", ")}
                 <div className="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-sky-100 border border-sky-200 text-[#0a192f] text-3xl mb-4">
                   🎉
                 </div>
-                <h3 className="text-2xl font-black text-[#0a192f] mb-2">Project Registered!</h3>
-                <p className="text-xs text-sky-900/80 max-w-md mx-auto mb-4">
-                  Your project brief with selected aesthetic <strong>{selectedAestheticForRequest?.name}</strong> has been created. Redirecting to your dedicated Client Board...
-                </p>
+                <h3 className="text-2xl font-black text-[#0a192f] mb-2">{pkgCopy.intakeModal.success}</h3>
                 <div className="animate-spin h-5 w-5 border-2 border-sky-600 border-t-transparent rounded-full mx-auto" />
               </div>
             ) : !authStepRequired ? (
               <div>
                 <span className="text-[10px] font-extrabold uppercase tracking-widest text-sky-700">
-                  Project Request Brief
+                  {pkgCopy.intakeModal.title}
                 </span>
                 <h3 className="text-2xl font-black text-[#0a192f] mt-1 mb-1">
-                  Request This Website
+                  {pkgCopy.intakeModal.subtitle}
                 </h3>
                 <p className="text-xs text-sky-800/80 mb-6">
                   Selected Aesthetic: <span className="font-bold text-[#0a192f]">{selectedAestheticForRequest?.name}</span>
@@ -1191,7 +1233,7 @@ Features: ${featuresList.join(", ")}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
                       <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1">
-                        Your Full Name *
+                        {pkgCopy.intakeModal.clientName} *
                       </label>
                       <input
                         type="text"
@@ -1204,7 +1246,7 @@ Features: ${featuresList.join(", ")}
                     </div>
                     <div>
                       <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1">
-                        Work Email *
+                        {pkgCopy.intakeModal.clientEmail} *
                       </label>
                       <input
                         type="email"
@@ -1220,7 +1262,7 @@ Features: ${featuresList.join(", ")}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
                       <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1">
-                        Project / Business Name
+                        {pkgCopy.intakeModal.projectName}
                       </label>
                       <input
                         type="text"
@@ -1232,7 +1274,7 @@ Features: ${featuresList.join(", ")}
                     </div>
                     <div>
                       <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1">
-                        Scope Foundation
+                        {pkgCopy.intakeModal.pages}
                       </label>
                       <select
                         value={selectedScopeTier}
@@ -1248,7 +1290,7 @@ Features: ${featuresList.join(", ")}
 
                   <div>
                     <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1">
-                      Website Purpose & Key Goals
+                      {pkgCopy.intakeModal.purpose}
                     </label>
                     <textarea
                       rows={2}
@@ -1276,7 +1318,7 @@ Features: ${featuresList.join(", ")}
                     </div>
                     <div>
                       <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1">
-                        Target Deadline
+                        {pkgCopy.intakeModal.timeline}
                       </label>
                       <input
                         type="text"
@@ -1319,7 +1361,7 @@ Features: ${featuresList.join(", ")}
                     disabled={isSubmitting}
                     className="w-full rounded-full bg-slate-950 py-3.5 text-xs font-bold uppercase tracking-widest text-white shadow-xl hover:bg-slate-800 disabled:opacity-50 cursor-pointer mt-2"
                   >
-                    Continue to Client Board Setup →
+                    {isSubmitting ? pkgCopy.intakeModal.submitting : pkgCopy.intakeModal.submit}
                   </button>
                 </form>
               </div>

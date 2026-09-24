@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
+import { useLanguage } from "@/context/LanguageContext";
+import { packagesTranslations } from "@/data/packagesTranslations";
 import {
   getClientProjects,
   getContractForProject,
@@ -30,6 +32,8 @@ import SignaturePad from "@/components/SignaturePad";
 
 export default function ClientPortal() {
   const pathname = usePathname();
+  const { locale } = useLanguage();
+  const pkgCopy = packagesTranslations[locale] || packagesTranslations.en;
   const {
     user,
     loading: authLoading,
@@ -319,7 +323,7 @@ export default function ClientPortal() {
   const isAuthenticatedUser = Boolean(user) || isDemoMode;
 
   return (
-    <main className="min-h-screen bg-[#dff4ff] text-slate-900 font-sans selection:bg-sky-200 selection:text-black">
+    <main className="min-h-screen bg-[#dff4ff] text-slate-900 font-sans selection:bg-sky-200 selection:text-black" dir={locale === "ur" ? "rtl" : "ltr"}>
       {/* ------------------------------------------------------------- */}
       {/* 1. LEFT VERTICAL NAVIGATION (DESKTOP)                         */}
       {/* ------------------------------------------------------------- */}
@@ -333,12 +337,12 @@ export default function ClientPortal() {
             className={`flex w-14 flex-col items-center rounded-[1.35rem] px-2 py-3 !no-underline transition-all ${
               pathname === "/" ? "bg-[#c8ecff] !text-black shadow-xs" : "!text-slate-800 hover:bg-white/60 hover:!text-black"
             }`}
-            title="Home"
+            title={pkgCopy.nav.home}
           >
             <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.8" className="mb-1">
               <path strokeLinecap="round" strokeLinejoin="round" d="M3 12l9-8 9 8M4 10v10a1 1 0 001 1h3m10-11v10a1 1 0 01-1 1h-3m-6 0h6" />
             </svg>
-            <span className="text-[10px] font-semibold">Home</span>
+            <span className="text-[10px] font-semibold">{pkgCopy.nav.home}</span>
           </Link>
 
           <Link
@@ -346,12 +350,12 @@ export default function ClientPortal() {
             className={`flex w-14 flex-col items-center rounded-[1.35rem] px-2 py-3 !no-underline transition-all ${
               pathname === "/projects" ? "bg-[#c8ecff] !text-black shadow-xs" : "!text-slate-800 hover:bg-white/60 hover:!text-black"
             }`}
-            title="Projects"
+            title={pkgCopy.nav.projects}
           >
             <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.8" className="mb-1">
               <path strokeLinecap="round" strokeLinejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
             </svg>
-            <span className="text-[10px] font-semibold">Projects</span>
+            <span className="text-[10px] font-semibold">{pkgCopy.nav.projects}</span>
           </Link>
 
           <Link
@@ -359,12 +363,12 @@ export default function ClientPortal() {
             className={`flex w-14 flex-col items-center rounded-[1.35rem] px-2 py-3 !no-underline transition-all ${
               pathname === "/pricing" || pathname === "/packages" ? "bg-[#c8ecff] !text-black shadow-xs" : "!text-slate-800 hover:bg-white/60 hover:!text-black"
             }`}
-            title="Pricing"
+            title={pkgCopy.nav.pricing}
           >
             <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.8" className="mb-1">
               <path strokeLinecap="round" strokeLinejoin="round" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
             </svg>
-            <span className="text-[10px] font-semibold">Pricing</span>
+            <span className="text-[10px] font-semibold">{pkgCopy.nav.pricing}</span>
           </Link>
 
           <Link
@@ -372,27 +376,51 @@ export default function ClientPortal() {
             className={`flex w-14 flex-col items-center rounded-[1.35rem] px-2 py-3 !no-underline transition-all ${
               pathname === "/client" ? "bg-white !text-black shadow-md border border-sky-300/80" : "!text-slate-800 hover:bg-white/60 hover:!text-black"
             }`}
-            title="Client Board"
+            title={pkgCopy.nav.clientHub}
           >
             <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.8" className="mb-1">
               <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
             </svg>
-            <span className="text-[10px] font-bold">Client Hub</span>
+            <span className="text-[10px] font-bold">{pkgCopy.nav.clientHub}</span>
           </Link>
-
-
 
           <Link
             href="/qna"
             className={`flex w-14 flex-col items-center rounded-[1.35rem] px-2 py-3 !no-underline transition-all ${
               pathname === "/qna" ? "bg-[#c8ecff] !text-black shadow-xs" : "!text-slate-800 hover:bg-white/60 hover:!text-black"
             }`}
-            title="Q&A"
+            title={pkgCopy.nav.qna}
           >
             <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.8" className="mb-1">
               <path strokeLinecap="round" strokeLinejoin="round" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
-            <span className="text-[10px] font-semibold">Q&A</span>
+            <span className="text-[10px] font-semibold">{pkgCopy.nav.qna}</span>
+          </Link>
+
+          <Link
+            href="/faq"
+            className={`flex w-14 flex-col items-center rounded-[1.35rem] px-2 py-3 !no-underline transition-all ${
+              pathname === "/faq" ? "bg-[#c8ecff] !text-black shadow-xs" : "!text-slate-800 hover:bg-white/60 hover:!text-black"
+            }`}
+            title={pkgCopy.nav.faq}
+          >
+            <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.8" className="mb-1">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span className="text-[10px] font-semibold">{pkgCopy.nav.faq}</span>
+          </Link>
+
+          <Link
+            href="/terms"
+            className={`flex w-14 flex-col items-center rounded-[1.35rem] px-2 py-3 !no-underline transition-all ${
+              pathname === "/terms" ? "bg-[#c8ecff] !text-black shadow-xs" : "!text-slate-800 hover:bg-white/60 hover:!text-black"
+            }`}
+            title={pkgCopy.nav.terms}
+          >
+            <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.8" className="mb-1">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            <span className="text-[10px] font-semibold">{pkgCopy.nav.terms}</span>
           </Link>
 
           <Link
@@ -400,13 +428,13 @@ export default function ClientPortal() {
             className={`flex w-14 flex-col items-center rounded-[1.35rem] px-2 py-3 !no-underline transition-all ${
               pathname === "/contact" ? "bg-[#c8ecff] !text-black shadow-xs" : "!text-slate-800 hover:bg-white/60 hover:!text-black"
             }`}
-            title="Contact"
+            title={pkgCopy.nav.contact}
           >
             <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.8" className="mb-1">
               <path strokeLinecap="round" strokeLinejoin="round" d="M21 10.5V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2h7.5" />
               <path strokeLinecap="round" strokeLinejoin="round" d="M21 10.5l-9 6.5-9-6.5" />
             </svg>
-            <span className="text-[10px] font-semibold">Contact</span>
+            <span className="text-[10px] font-semibold">{pkgCopy.nav.contact}</span>
           </Link>
         </div>
       </nav>
@@ -419,16 +447,16 @@ export default function ClientPortal() {
           <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
             <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
           </svg>
-          <span>Home</span>
+          <span>{pkgCopy.nav.home}</span>
         </Link>
         <span className="text-xs font-bold uppercase tracking-widest text-slate-800">
-          Client Workspace
+          {pkgCopy.nav.clientHub}
         </span>
         <Link
           href="/pricing"
           className="rounded-full bg-slate-950 px-3 py-1 text-[11px] font-bold text-white shadow-xs cursor-pointer !no-underline"
         >
-          Pricing
+          {pkgCopy.nav.pricing}
         </Link>
       </header>
 
