@@ -93,6 +93,7 @@ export default function Navbar({ phase }: NavbarProps) {
   const glowColor = rgba([186, 230, 253, 0.54], [150, 190, 204, 0.36], diveProgress)
   const dotColor = rgba([186, 230, 253, 1], [202, 228, 236, 0.92], diveProgress)
   const selectedLanguage = languageOptions.find((option) => option.locale === locale) ?? languageOptions[0]
+  const isRtl = locale === 'ur'
   
   const linkStyle = (isActive = false): CSSProperties => ({
     backgroundColor: isActive ? activeBackground : linkBackground,
@@ -168,7 +169,9 @@ export default function Navbar({ phase }: NavbarProps) {
               role="dialog"
               aria-modal="false"
               aria-label="Site Navigation"
-              className="absolute end-0 top-[calc(100%+0.5rem)] z-50 w-72 sm:w-80 max-h-[80svh] overflow-y-auto rounded-2xl border border-sky-300/30 bg-slate-950/96 p-3 sm:p-4 shadow-[0_20px_50px_rgba(2,8,23,0.7)] backdrop-blur-2xl text-slate-100"
+              className={`absolute top-[calc(100%+0.5rem)] z-50 w-72 sm:w-80 max-w-[calc(100vw-1.5rem)] max-h-[80svh] overflow-y-auto rounded-2xl border border-sky-300/30 bg-slate-950/96 p-3 sm:p-4 shadow-[0_20px_50px_rgba(2,8,23,0.7)] backdrop-blur-2xl text-slate-100 ${
+                isRtl ? 'left-0' : 'right-0'
+              }`}
             >
               {/* Menu Header */}
               <div className="flex items-center justify-between border-b border-white/10 pb-2.5 mb-2.5">
