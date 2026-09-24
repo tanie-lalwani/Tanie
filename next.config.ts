@@ -34,6 +34,21 @@ const nextConfig: NextConfig = {
         destination: "https://me.developers.google.com/u/tanielalwani",
         permanent: false,
       },
+      {
+        source: "/privacy",
+        destination: "/terms#privacy",
+        permanent: true,
+      },
+      {
+        source: "/refund-policy",
+        destination: "/terms#refunds",
+        permanent: true,
+      },
+      {
+        source: "/shipping-policy",
+        destination: "/terms#delivery",
+        permanent: true,
+      },
     ];
   },
 };

@@ -92,32 +92,23 @@ export function ProjectsCarousel({ projects }: ProjectsCarouselProps) {
     const scroller = scrollRef.current
     if (!scroller) return
 
-    const isRtl = getComputedStyle(scroller).direction === "rtl"
     const maxScrollLeft = scroller.scrollWidth - scroller.clientWidth
-    // In RTL, scrollLeft can be negative (Firefox) or positive (Chrome)
-    const absScroll = Math.abs(scroller.scrollLeft)
-    if (isRtl) {
-      setCanScrollLeft(absScroll < maxScrollLeft - 4)  // "left" visually = end of content in RTL
-      setCanScrollRight(absScroll > 4)
-    } else {
-      setCanScrollLeft(scroller.scrollLeft > 4)
-      setCanScrollRight(scroller.scrollLeft < maxScrollLeft - 4)
-    }
+    setCanScrollLeft(scroller.scrollLeft > 4)
+    setCanScrollRight(scroller.scrollLeft < maxScrollLeft - 4)
   }
 
   const scrollProjects = (direction: -1 | 1) => {
     const scroller = scrollRef.current
     if (!scroller) return
 
-    const isRtl = getComputedStyle(scroller).direction === "rtl"
-    const card = scroller.querySelector("article")
+    const card = scroller.firstElementChild as HTMLElement | null
     const cardWidth = card?.getBoundingClientRect().width ?? scroller.clientWidth * 0.8
     const computedStyle = window.getComputedStyle(scroller)
     const gapValue = computedStyle.columnGap || computedStyle.gap || "0"
     const gap = Number.parseFloat(gapValue) || 0
 
     scroller.scrollBy({
-      left: (isRtl ? -direction : direction) * (cardWidth + gap),
+      left: direction * (cardWidth + gap),
       behavior: "smooth",
     })
   }
@@ -234,7 +225,7 @@ export function ProjectsCarousel({ projects }: ProjectsCarouselProps) {
         </Link>
       </div>
 
-      <div className="relative">
+      <div className="relative" dir="ltr">
         <div
           ref={scrollRef}
           className="project-scroll -mx-4 flex snap-x snap-mandatory gap-3.5 overflow-x-auto px-4 pb-9 sm:-mx-6 sm:gap-4 sm:px-6 sm:pb-10"

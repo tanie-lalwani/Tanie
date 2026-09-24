@@ -99,9 +99,50 @@ User scrolls to #contact
 
 ---
 
+## 📌 Incident: Horizontal Card Scrolling Mirroring & Faulty Scroll Controls in RTL
+### 1. Symptoms & Report
+- In Urdu/RTL mode (`locale === "ur"`), the project cards carousel on the Home page was mirrored right-to-left: the first project appeared at the far right edge instead of the start.
+- The scroll buttons and swipe gestures inverted or became erratic and jumped around awkwardly.
+### 2. Root Cause Analysis
+- `LanguageContext.tsx` applies `document.documentElement.dir = "rtl"` when `locale === "ur"`.
+- The flex scroller `.project-scroll` inherited `dir="rtl"`.
+- Browser implementations handle RTL `scrollLeft` inconsistently (some negative, some reversed), causing `onTouchMove`, mouse wheel, and `scrollBy` controls to conflict.
+- Additionally, `scroller.querySelector("article")` returned `null` because `ProjectCard` renders as a `motion.div`, causing `cardWidth` calculation to fall back to `scroller.clientWidth * 0.8`.
+### 3. Resolution & Architectural Safeguards
+1. **Explicit LTR on Scroller Container**: Wrapped the scroller in `<div className="relative" dir="ltr">` in [`src/components/ProjectsCarousel.tsx`](file:///c:/Users/words/Desktop/Websites/Completed/Portfolio/src/components/ProjectsCarousel.tsx) so project cards always flow naturally from left to right across all languages.
+2. **Normalized Scroll Coordinates**: Simplified `updateScrollControls` and `scrollProjects` to standard non-negative LTR coordinates.
+3. **Accurate Card Sizing**: Used `scroller.firstElementChild as HTMLElement | null` to get exact card width and gap dimensions.
+4. **Bidirectional Card Content**: Added `dir="auto" text-start` to [`src/components/ProjectCard.tsx`](file:///c:/Users/words/Desktop/Websites/Completed/Portfolio/src/components/ProjectCard.tsx) so Urdu text descriptions flow RTL within the card while the horizontal card track flows LTR.
+
+---
+
+## 📌 Incident: Fragmented Terms/Policy Pages & Untranslated Pseudo-RTL Formatting
+### 1. Symptoms & Report
+- Policy content was fragmented across 4 separate pages: `/terms`, `/privacy`, `/refund-policy`, and `/shipping-policy`.
+- In RTL mode, English policy text was displayed inside `dir="rtl"` containers, causing punctuation, numbering (e.g. `Information We Collect .1`), and bullet points to render in reverse.
+- Navigation drawer menu labels were partly hardcoded in English.
+### 2. Root Cause Analysis
+- Separate policy pages duplicated layout wrappers and lacked search/filtering.
+- Global `dir="rtl"` without explicit `dir="ltr"` container boundaries caused the browser BiDi engine to treat English sentences and numbers with inverted right-to-left punctuation.
+### 3. Resolution & Architectural Safeguards
+1. **Unified Terms & Policies Page ([`src/views/TermsView.tsx`](file:///c:/Users/words/Desktop/Websites/Completed/Portfolio/src/views/TermsView.tsx), [`src/app/terms/page.tsx`](file:///c:/Users/words/Desktop/Websites/Completed/Portfolio/src/app/terms/page.tsx))**:
+   - Consolidated Terms of Service, Privacy Policy, Milestone Refunds, Service Delivery, and Razorpay Security into a single unified `/terms` page.
+   - Built a dynamic **Search by Topics & Clauses** hero section with instant live search and topic filter chips (`All Policies`, `Terms of Service`, `Privacy Policy`, `Refunds & Cancellations`, `Service Delivery`, `Payment Security`, `Intellectual Property`).
+   - Added deep anchor link support (`#terms`, `#privacy`, `#refunds`, `#delivery`, `#payments`, `#ip`).
+2. **Legacy Route Redirects ([`next.config.ts`](file:///c:/Users/words/Desktop/Websites/Completed/Portfolio/next.config.ts))**:
+   - Redirected `/privacy`, `/refund-policy`, and `/shipping-policy` to their corresponding anchors on `/terms`.
+3. **Interactive FAQ Page ([`src/views/FaqView.tsx`](file:///c:/Users/words/Desktop/Websites/Completed/Portfolio/src/views/FaqView.tsx), [`src/app/faq/page.tsx`](file:///c:/Users/words/Desktop/Websites/Completed/Portfolio/src/app/faq/page.tsx))**:
+   - Created a `/faq` page featuring the same live search by topic, expandable accordions, and comprehensive answers covering pricing, custom scopes, turnaround, 3D WebGL, and client portal access.
+4. **Typographic Integrity & Multilingual Drawer ([`src/components/Navbar.tsx`](file:///c:/Users/words/Desktop/Websites/Completed/Portfolio/src/components/Navbar.tsx))**:
+   - Wrapped English legal and documentation text in `dir="ltr" text-left` to preserve punctuation and numbering in all locales.
+   - Added localized drawer labels across all 7 supported languages (English, Urdu, Spanish, French, Hindi, Japanese, Chinese).
+
+---
+
 ## 📐 General Prevention Guidelines
 1. **Never use `history.replaceState` or `pushState` inside scroll/intersection listeners in Next.js App Router apps** unless you explicitly intend to trigger Next.js router listeners and `usePathname()`.
 2. **Never key root animation wrappers (`<motion.div key={...}>`) by raw `pathname` if multiple routes render the same view** (e.g. `/` and `/contact`). Group them using a stable key.
 3. **Keep swipe/carousel gesture containers in `dir="ltr"`** to avoid touch/drag axis inversion bugs in RTL languages.
-4. **Audit in-page anchor and icon links** to ensure every `href` maps to a registered `page.tsx` route or anchor ID.
+4. **Wrap English legal and documentation text in `dir="ltr" text-left`** when global `dir="rtl"` is active to prevent reversed punctuation and distorted numbers.
+5. **Audit in-page anchor and icon links** to ensure every `href` maps to a registered `page.tsx` route or anchor ID.
 

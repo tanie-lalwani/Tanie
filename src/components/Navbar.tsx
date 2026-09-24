@@ -101,13 +101,26 @@ export default function Navbar({ phase }: NavbarProps) {
     color: linkText,
   })
 
+  const navLabels: Record<string, { pricing: string; client: string; projects: string; faq: string; qna: string; contact: string; terms: string }> = {
+    en: { pricing: "Pricing", client: "Client Workspace", projects: "Projects & Works", faq: "FAQ", qna: "Q&A Bot", contact: "Contact", terms: "Terms & Policies" },
+    ur: { pricing: "قیمتیں", client: "کلائنٹ ورک اسپیس", projects: "پروجیکٹس اور کام", faq: "عمومی سوالات", qna: "انٹرویو بوٹ", contact: "رابطہ", terms: "شرائط و پالیسیاں" },
+    es: { pricing: "Precios", client: "Área de Clientes", projects: "Proyectos y Trabajos", faq: "Preguntas Frecuentes", qna: "Bot de Entrevista", contact: "Contacto", terms: "Términos y Políticas" },
+    fr: { pricing: "Tarifs", client: "Espace Client", projects: "Projets & Travaux", faq: "FAQ", qna: "Bot Interview", contact: "Contact", terms: "Conditions & Politiques" },
+    hi: { pricing: "मूल्य निर्धारण", client: "क्लाइंट कार्यक्षेत्र", projects: "परियोजनाएं और कार्य", faq: "सामान्य प्रश्न", qna: "साक्षात्कार बॉट", contact: "संपर्क", terms: "नियम एवं नीतियां" },
+    ja: { pricing: "料金プラン", client: "クライアントワークスペース", projects: "実績・プロジェクト", faq: "よくある質問", qna: "Q&A ボット", contact: "お問い合わせ", terms: "利用規約とポリシー" },
+    zh: { pricing: "价格方案", client: "客户工作区", projects: "项目与作品", faq: "常见问题", qna: "问答机器人", contact: "联系我们", terms: "条款与政策" },
+  }
+
+  const currentLabels = navLabels[locale] || navLabels.en
+
   const NAV_PAGES = [
     { href: '/', label: copy.nav.homeLabel || 'Home', icon: '🏠' },
-    { href: '/pricing', label: 'Pricing', icon: '💎' },
-    { href: '/client', label: 'Client Workspace', icon: '💼' },
-    { href: '/projects', label: 'Projects & Works', icon: '🛠️' },
-    { href: '/qna', label: copy.nav.qna || 'Q&A Bot', icon: '❓' },
-    { href: '/contact', label: copy.nav.contactLabel || 'Contact', icon: '📬' },
+    { href: '/pricing', label: currentLabels.pricing, icon: '💎' },
+    { href: '/client', label: currentLabels.client, icon: '💼' },
+    { href: '/projects', label: currentLabels.projects, icon: '🛠️' },
+    { href: '/faq', label: currentLabels.faq, icon: '💡' },
+    { href: '/qna', label: copy.nav.qna || currentLabels.qna, icon: '❓' },
+    { href: '/contact', label: copy.nav.contactLabel || currentLabels.contact, icon: '📬' },
   ]
 
   return (
@@ -257,14 +270,14 @@ export default function Navbar({ phase }: NavbarProps) {
               </div>
 
               {/* Tiny Policy Links Footer */}
-              <div className="mt-3 border-t border-white/10 pt-2 text-[10px] text-slate-500 flex flex-wrap gap-x-2 justify-center">
-                <a href="/terms" onClick={() => setIsMobileNavOpen(false)} className="hover:text-slate-300 !no-underline">Terms</a>
+              <div className="mt-3 border-t border-white/10 pt-2 text-[11px] text-slate-400 flex flex-wrap gap-x-3 gap-y-1 justify-center">
+                <a href="/terms" onClick={() => setIsMobileNavOpen(false)} className="hover:text-sky-300 !no-underline font-medium">
+                  {currentLabels.terms}
+                </a>
                 <span>•</span>
-                <a href="/refund-policy" onClick={() => setIsMobileNavOpen(false)} className="hover:text-slate-300 !no-underline">Refunds</a>
-                <span>•</span>
-                <a href="/privacy" onClick={() => setIsMobileNavOpen(false)} className="hover:text-slate-300 !no-underline">Privacy</a>
-                <span>•</span>
-                <a href="/shipping-policy" onClick={() => setIsMobileNavOpen(false)} className="hover:text-slate-300 !no-underline">Delivery</a>
+                <a href="/faq" onClick={() => setIsMobileNavOpen(false)} className="hover:text-sky-300 !no-underline font-medium">
+                  {currentLabels.faq}
+                </a>
               </div>
             </div>
           )}

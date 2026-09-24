@@ -1146,10 +1146,10 @@ export default function ClientPortal() {
                       <div className="rounded-2xl border border-black/8 bg-white/80 p-5 text-xs text-slate-600 space-y-2">
                         <div className="font-bold text-slate-900 uppercase tracking-wider text-[10px]">Statutory Policies</div>
                         <div className="flex flex-col gap-1.5 text-sky-800 font-medium">
-                          <Link href="/terms" className="hover:underline">Terms & Conditions</Link>
-                          <Link href="/refund-policy" className="hover:underline">Cancellation & Refund Policy</Link>
-                          <Link href="/privacy" className="hover:underline">Privacy Policy</Link>
-                          <Link href="/shipping-policy" className="hover:underline">Delivery Policy</Link>
+                          <Link href="/terms#terms" className="hover:underline">Terms & Conditions</Link>
+                          <Link href="/terms#refunds" className="hover:underline">Cancellation & Refund Policy</Link>
+                          <Link href="/terms#privacy" className="hover:underline">Privacy Policy</Link>
+                          <Link href="/terms#delivery" className="hover:underline">Delivery Policy</Link>
                         </div>
                       </div>
                     </div>
