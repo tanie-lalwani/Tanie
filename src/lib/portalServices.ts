@@ -152,6 +152,21 @@ export interface LeadItem {
   scope_tier?: string;
 }
 
+export interface PackageGranularFeature {
+  id: string;
+  package_id: string;
+  function_key: string;
+  title: string;
+  category: string;
+  description: string;
+  technical_deliverables: string;
+  business_impact: string;
+  complexity: "Standard" | "Advanced" | "Specialized" | "Enterprise";
+  is_core: boolean;
+  display_order: number;
+  created_at?: string;
+}
+
 // --------------------------------------------------------------------------------
 // DEFAULT FALLBACK DATA (Guarantees zero-blank states and rapid offline preview)
 // --------------------------------------------------------------------------------
@@ -408,6 +423,619 @@ export async function saveWebsitePackage(pkg: WebsitePackage): Promise<void> {
   }
   const { error } = await supabase.from("packages").upsert(pkg);
   if (error) throw error;
+}
+
+/**
+ * Returns the dedicated table name for a given package
+ */
+export function getPackageFeatureTableName(packageId: string): string {
+  switch (packageId) {
+    case "luxury-landing-sprint":
+      return "package_landing_sprint_features";
+    case "growth-marketing-campaigns":
+      return "package_bofu_marketing_features";
+    case "interactive-3d-experience":
+      return "package_3d_experience_features";
+    case "fullstack-web-app":
+      return "package_fullstack_backend_features";
+    default:
+      return "package_landing_sprint_features";
+  }
+}
+
+export const DEFAULT_GRANULAR_FEATURES: Record<string, PackageGranularFeature[]> = {
+  "luxury-landing-sprint": [
+    {
+      id: "ls-1",
+      package_id: "luxury-landing-sprint",
+      function_key: "landing_hero_narrative_architecture",
+      title: "Above-the-Fold Hero Narrative & Magnetic CTA Lockup",
+      category: "UI & Layout",
+      description: "Single-focus visual entrance engineered to immediately communicate your primary value proposition with luxury typography, high-contrast CTA, and zero cognitive clutter.",
+      technical_deliverables: "Semantic HTML5 header structure, responsive flex/grid CSS layout, fluid clamp() typography scaling, and high-contrast CTA button with subtle shimmer glow animation.",
+      business_impact: "Captures visitor attention in the first 3 seconds and slashes bounce rates on paid and organic traffic.",
+      complexity: "Standard",
+      is_core: true,
+      display_order: 1
+    },
+    {
+      id: "ls-2",
+      package_id: "luxury-landing-sprint",
+      function_key: "landing_responsive_viewport_system",
+      title: "Adaptive Multi-Device Breakpoint System (320px to 4K)",
+      category: "UI & Layout",
+      description: "Flawless layout responsiveness across all screen sizes, including ultra-small mobile displays, tablets, laptops, and ultra-wide desktop monitors with dedicated mobile navigation.",
+      technical_deliverables: "Mobile-first CSS media queries, responsive touch gestures, slide-out mobile drawer with backdrop blur, and thumb-friendly sticky navigation bar.",
+      business_impact: "Ensures the 70%+ of mobile visitors coming from social media experience native-app visual perfection.",
+      complexity: "Standard",
+      is_core: true,
+      display_order: 2
+    },
+    {
+      id: "ls-3",
+      package_id: "luxury-landing-sprint",
+      function_key: "landing_framer_motion_microinteractions",
+      title: "Framer Motion Micro-Interactions & Scroll Reveals",
+      category: "Animation & Motion",
+      description: "Buttery-smooth entrance transitions, magnetic cursor pull effects on buttons, interactive card hover states, and staggered content reveals that create an unmistakable feel of craftsmanship.",
+      technical_deliverables: "Framer Motion useScroll and useTransform hooks, staggered viewport entrance variants, and hardware-accelerated GPU transforms (will-change: transform).",
+      business_impact: "Subconsciously elevates the perceived value of your service or brand, commanding premium client pricing.",
+      complexity: "Advanced",
+      is_core: true,
+      display_order: 3
+    },
+    {
+      id: "ls-4",
+      package_id: "luxury-landing-sprint",
+      function_key: "landing_intake_form_validation",
+      title: "Frictionless Lead Intake Form with Real-Time Validation",
+      category: "Lead Capture",
+      description: "Streamlined 3-to-4 field lead intake form with immediate inline error feedback, smart international phone formatting, and smooth loading submission states.",
+      technical_deliverables: "React Hook Form client validation, masked phone input formatting, asynchronous submission handler, and Formspree/Email notification webhook integration.",
+      business_impact: "Eliminates form abandonment caused by confusing errors, maximizing inquiry conversion rates.",
+      complexity: "Standard",
+      is_core: true,
+      display_order: 4
+    },
+    {
+      id: "ls-5",
+      package_id: "luxury-landing-sprint",
+      function_key: "landing_antispam_honeypot_layer",
+      title: "Invisible Bot Shield & Honeypot Spam Prevention",
+      category: "Security & Deliverability",
+      description: "Client-side invisible honeypot trap and timestamp velocity verification that silently drops automated bot submissions without forcing users to solve ugly CAPTCHA puzzles.",
+      technical_deliverables: "CSS-hidden honeypot trap field, client-side timestamp submission verification (<500ms rejected), and payload sanitization pipeline.",
+      business_impact: "Guarantees 100% human-verified inquiries in your inbox without annoying genuine clients.",
+      complexity: "Standard",
+      is_core: true,
+      display_order: 5
+    },
+    {
+      id: "ls-6",
+      package_id: "luxury-landing-sprint",
+      function_key: "landing_social_proof_logo_marquee",
+      title: "Brand Partner & Client Social Proof Marquee",
+      category: "Social Proof",
+      description: "Seamless infinite-scrolling marquee bar showcasing featured client logos, press mentions, or certification badges with interactive pause-on-hover.",
+      technical_deliverables: "Pure CSS continuous keyframe translation (translateX -50%), responsive SVG vector logo grid, and subtle monochrome-to-color hover filter transitions.",
+      business_impact: "Instantly builds authoritative social proof and trust before the prospect scrolls down to pricing.",
+      complexity: "Standard",
+      is_core: true,
+      display_order: 6
+    },
+    {
+      id: "ls-7",
+      package_id: "luxury-landing-sprint",
+      function_key: "landing_faq_objection_accordion",
+      title: "Interactive Objection-Crushing FAQ Accordion",
+      category: "Content & Conversion",
+      description: "Animated disclosure accordion resolving top buyer objections regarding timelines, pricing, process, and deliverables with single-click accordion reveals.",
+      technical_deliverables: "Accessible WAI-ARIA disclosure pattern, animated height transitions via Framer Motion, and embedded Schema.org FAQPage structured data.",
+      business_impact: "Neutralizes pre-booking hesitations and unlocks Google rich FAQ search snippet eligibility.",
+      complexity: "Standard",
+      is_core: true,
+      display_order: 7
+    },
+    {
+      id: "ls-8",
+      package_id: "luxury-landing-sprint",
+      function_key: "landing_lighthouse_speed_optimization",
+      title: "Lighthouse 95+ Core Web Vitals & Asset Compression",
+      category: "Performance",
+      description: "Sub-second First Contentful Paint (FCP), zero Cumulative Layout Shift (CLS < 0.01), next-gen WebP/AVIF image formats, and minimal blocking JavaScript.",
+      technical_deliverables: "Next.js image optimization pipeline, font preloading with font-display: swap, aggressive CSS tree-shaking, and critical path CSS inlining.",
+      business_impact: "Maximizes Google Ads Quality Score, lowers paid traffic CPC, and retains mobile visitors on slow networks.",
+      complexity: "Advanced",
+      is_core: true,
+      display_order: 8
+    },
+    {
+      id: "ls-9",
+      package_id: "luxury-landing-sprint",
+      function_key: "landing_technical_seo_opengraph",
+      title: "Semantic Technical SEO & Custom OpenGraph Cards",
+      category: "SEO & Social",
+      description: "Full semantic HTML5 structure, customized 1200x630 social sharing preview banners for WhatsApp, LinkedIn, iMessage, and X (Twitter), plus automated XML sitemap.",
+      technical_deliverables: "Dynamic OpenGraph meta tags, Twitter card specifications, JSON-LD Organization schema markup, and complete favicon suite (Apple Touch, 32x32, 16x16, SVG).",
+      business_impact: "Ensures every link shared across messaging apps and social media displays an enticing, branded preview.",
+      complexity: "Standard",
+      is_core: true,
+      display_order: 9
+    },
+    {
+      id: "ls-10",
+      package_id: "luxury-landing-sprint",
+      function_key: "landing_edge_cdn_domain_setup",
+      title: "Custom Domain DNS Pointing & Global Edge CDN Setup",
+      category: "Infrastructure",
+      description: "Complete domain DNS connection, automated SSL/TLS encryption certificate provisioning, and multi-region edge caching on Vercel or Cloudflare.",
+      technical_deliverables: "DNS A/CNAME configuration, automated Let's Encrypt HTTPS certificates, edge cache invalidation rules, and production environment secrets lockdown.",
+      business_impact: "Provides 99.99% uptime with sub-50ms response times worldwide with zero server maintenance required.",
+      complexity: "Standard",
+      is_core: true,
+      display_order: 10
+    }
+  ],
+  "growth-marketing-campaigns": [
+    {
+      id: "gm-1",
+      package_id: "growth-marketing-campaigns",
+      function_key: "bofu_1click_express_checkout",
+      title: "1-Click Express Checkout & Dynamic Payment Modal",
+      category: "BOFU Conversion Engine",
+      description: "Frictionless on-site checkout modal supporting Apple Pay, Google Pay, Razorpay UPI, and direct credit cards without redirecting users through a convoluted multi-page cart maze.",
+      technical_deliverables: "Razorpay / Stripe Elements modal integration, automated webhook payment listener, and immediate in-page order receipt and confirmation state.",
+      business_impact: "Cuts cart abandonment in half by facilitating impulsive, high-intent purchases directly from ad traffic.",
+      complexity: "Advanced",
+      is_core: true,
+      display_order: 1
+    },
+    {
+      id: "gm-2",
+      package_id: "growth-marketing-campaigns",
+      function_key: "bofu_urgency_countdown_clock",
+      title: "Dynamic Urgency Countdown Timers & Drop Deadlines",
+      category: "BOFU Conversion Engine",
+      description: "Configurable drop timers with persistent client-side cookies or fixed promotional deadlines to trigger genuine urgency and immediate order placement.",
+      technical_deliverables: "Synchronized JavaScript countdown component with localStorage session recovery, millisecond precision ticker, and automated expired-state banner changeover.",
+      business_impact: "Drives immediate purchase decisions by up to 40% during time-sensitive promotional drops.",
+      complexity: "Standard",
+      is_core: true,
+      display_order: 2
+    },
+    {
+      id: "gm-3",
+      package_id: "growth-marketing-campaigns",
+      function_key: "bofu_offer_announcement_bars",
+      title: "Offer-First Sticky Announcement Bar & 1-Tap Coupon Copy",
+      category: "BOFU Conversion Engine",
+      description: "High-contrast sticky top bar highlighting current discount codes, free shipping thresholds, or limited gift bonuses with 1-tap clipboard copying and toast confirmation.",
+      technical_deliverables: "Sticky CSS top bar with automatic page offset calculation, navigator.clipboard API copy action, visual toast feedback, and dismiss cookie logic.",
+      business_impact: "Ensures 100% of incoming visitors immediately recognize your core promotional incentive.",
+      complexity: "Standard",
+      is_core: true,
+      display_order: 3
+    },
+    {
+      id: "gm-4",
+      package_id: "growth-marketing-campaigns",
+      function_key: "bofu_4k_product_zoom_loupe",
+      title: "Ultra-Crisp 4K Multi-Angle Product Gallery & Zoom Loupe",
+      category: "BOFU Visual Showcase",
+      description: "Interactive product photo gallery with smooth cursor-following magnifying loupe, fluid thumbnail carousel, and instant color/finish variant preview switchers.",
+      technical_deliverables: "Canvas / CSS transform magnifying loupe, responsive thumbnail strip, swipeable mobile touch gallery, and high-density retina image preloading.",
+      business_impact: "Overcomes tactile buyer hesitation for luxury goods and physical products by showcasing micro-details.",
+      complexity: "Advanced",
+      is_core: true,
+      display_order: 4
+    },
+    {
+      id: "gm-5",
+      package_id: "growth-marketing-campaigns",
+      function_key: "bofu_studio_photography_staging",
+      title: "Editorial Studio Presentation & Technical Breakdown Cards",
+      category: "BOFU Visual Showcase",
+      description: "Magazine-grade editorial presentation featuring high-resolution studio photography, exploded product views, material callouts, and interactive spec hotspots.",
+      technical_deliverables: "Interactive SVG/CSS hotspot annotations with popover tooltips, high-res WebP visual grids, and before-and-after comparison slider.",
+      business_impact: "Justifies higher price points by presenting your product with the prestige of a luxury designer label.",
+      complexity: "Advanced",
+      is_core: true,
+      display_order: 5
+    },
+    {
+      id: "gm-6",
+      package_id: "growth-marketing-campaigns",
+      function_key: "bofu_ugc_video_reels_wall",
+      title: "Vertical UGC Video Reviews Wall & 9:16 Reels Player",
+      category: "BOFU Social Validation",
+      description: "Embedded vertical video player showcasing authentic customer unboxings, video testimonials, and creator reviews with star ratings and product tags.",
+      technical_deliverables: "Custom lightweight 9:16 HTML5 video player with autoplay-on-view, tap-to-unmute toggle, mobile swipe transition, and customer verification badges.",
+      business_impact: "Delivers authentic peer-to-peer social proof that drastically outperforms standard written testimonials.",
+      complexity: "Advanced",
+      is_core: true,
+      display_order: 6
+    },
+    {
+      id: "gm-7",
+      package_id: "growth-marketing-campaigns",
+      function_key: "bofu_sidebyside_comparison_matrix",
+      title: "Side-by-Side Value-Anchoring Comparison Matrix",
+      category: "BOFU Value Anchoring",
+      description: "Interactive comparison table clearly highlighting your product advantages vs. cheaper knock-offs or generic alternatives with checkmarks and feature breakdowns.",
+      technical_deliverables: "Sticky header comparison table with checkmark/cross badges, highlighted recommended tier column, and horizontal touch scrolling on mobile devices.",
+      business_impact: "Frames your offer as the obvious superior choice, making your price feel like an exceptional bargain.",
+      complexity: "Standard",
+      is_core: true,
+      display_order: 7
+    },
+    {
+      id: "gm-8",
+      package_id: "growth-marketing-campaigns",
+      function_key: "bofu_fomo_scarcity_stock_counters",
+      title: "Real-Time FOMO Scarcity Toasts & Dynamic Stock Counters",
+      category: "BOFU Urgency",
+      description: "Live order notification popups (e.g., 'Sarah from London just purchased...') paired with low-stock inventory warning meters (e.g., 'Only 3 items remaining').",
+      technical_deliverables: "Staggered notification queue with animated exit transitions, realistic randomized order pool or live DB order feed, and animated SVG stock meter.",
+      business_impact: "Leverages social validation and scarcity psychology to convert indecisive visitors into active buyers.",
+      complexity: "Standard",
+      is_core: true,
+      display_order: 8
+    },
+    {
+      id: "gm-9",
+      package_id: "growth-marketing-campaigns",
+      function_key: "bofu_freebie_lead_magnet_gate",
+      title: "High-Value Freebie Lead Magnet & Instant Asset Gate",
+      category: "BOFU Lead Capture",
+      description: "Premium digital asset giveaway (PDF buyer guide, discount voucher, lookbook) gated behind a 1-tap email or WhatsApp opt-in with immediate automated download.",
+      technical_deliverables: "Modal opt-in with instant client validation, direct signed download link generation, and automated lead sync to Supabase database.",
+      business_impact: "Recovers 15% to 25% of visitors who are not ready to purchase immediately, building an owned email/SMS list.",
+      complexity: "Standard",
+      is_core: true,
+      display_order: 9
+    },
+    {
+      id: "gm-10",
+      package_id: "growth-marketing-campaigns",
+      function_key: "bofu_utm_multisource_attribution_engine",
+      title: "Multi-Source UTM Tracking & Channel Attribution Engine",
+      category: "Attribution & Analytics",
+      description: "Automatic capture and storage of URL campaign parameters (utm_source, utm_medium, utm_campaign, utm_term, utm_content, gclid, fbclid) with every order and lead.",
+      technical_deliverables: "URL query parser, browser sessionStorage/localStorage session persistence, and automatic payload enrichment sent to Supabase bookings and orders.",
+      business_impact: "Reveals your exact Customer Acquisition Cost (CAC) and ROAS across Instagram, TikTok, Google Ads, and influencers.",
+      complexity: "Advanced",
+      is_core: true,
+      display_order: 10
+    },
+    {
+      id: "gm-11",
+      package_id: "growth-marketing-campaigns",
+      function_key: "bofu_pixel_telemetry_capi_suite",
+      title: "Full-Spectrum Conversion Pixels & Server-Side CAPI Telemetry",
+      category: "Attribution & Analytics",
+      description: "Pre-wired conversion tracking: Meta Pixel + Server-Side Conversions API (CAPI), Google Tag Manager, GA4 e-commerce events, and TikTok Pixel.",
+      technical_deliverables: "Standardized e-commerce events (ViewContent, InitiateCheckout, Purchase), client-to-server event deduplication with event_id, and data layer push triggers.",
+      business_impact: "Bypasses iOS 14+ ad-blockers and privacy filters, delivering 100% signal accuracy to Meta/Google ad algorithms for cheaper conversions.",
+      complexity: "Advanced",
+      is_core: true,
+      display_order: 11
+    },
+    {
+      id: "gm-12",
+      package_id: "growth-marketing-campaigns",
+      function_key: "bofu_campaign_link_generator_tool",
+      title: "In-Portal Campaign UTM Link Generator & Source Manager",
+      category: "Campaign Management",
+      description: "Self-serve tool inside your client admin portal to generate tracked campaign URLs for ad sets, influencers, and newsletters in under 5 seconds.",
+      technical_deliverables: "Interactive URL builder UI with preset channels (Instagram Bio, Meta Ad 1, TikTok Creator A, Email Blast), 1-click clipboard copy, and historical link registry.",
+      business_impact: "Allows you or your team to launch targeted marketing campaigns without tracking mistakes or broken attribution.",
+      complexity: "Standard",
+      is_core: true,
+      display_order: 12
+    }
+  ],
+  "interactive-3d-experience": [
+    {
+      id: "td-1",
+      package_id: "interactive-3d-experience",
+      function_key: "threed_webgl_canvas_render_loop",
+      title: "Custom Three.js / WebGL Scene Canvas & Render Lifecycle",
+      category: "3D Core Architecture",
+      description: "Dedicated high-performance WebGL 3D scene embedded smoothly within modern HTML DOM, supporting retina displays, auto-resizing, and dynamic aspect ratios.",
+      technical_deliverables: "Three.js Scene, PerspectiveCamera, WebGLRenderer with tone mapping and anti-aliasing, and requestAnimationFrame render loop with delta timing.",
+      business_impact: "Instantly places your brand in the tier of Awwwards Site of the Year nominees and global tech pioneers like Apple.",
+      complexity: "Specialized",
+      is_core: true,
+      display_order: 1
+    },
+    {
+      id: "td-2",
+      package_id: "interactive-3d-experience",
+      function_key: "threed_glsl_particle_fluid_shaders",
+      title: "Custom GLSL Particle System & Fluid Physics Shaders",
+      category: "3D Shaders & Physics",
+      description: "Interactive GPU-accelerated particle field reacting dynamically to mouse movement, velocity, and touch gestures using custom GLSL vertex and fragment shaders.",
+      technical_deliverables: "BufferGeometry with custom Float32Array attributes, custom ShaderMaterial, curl noise algorithms, and GPU instanced rendering.",
+      business_impact: "Creates an irresistible tactile browsing experience that boosts visitor dwell time by up to 300%.",
+      complexity: "Specialized",
+      is_core: true,
+      display_order: 2
+    },
+    {
+      id: "td-3",
+      package_id: "interactive-3d-experience",
+      function_key: "threed_draco_gltf_compression_pipeline",
+      title: "3D Model Optimization & Draco/KTX2 Mesh Compression",
+      category: "3D Asset Optimization",
+      description: "Ultra-compact 3D model loading pipeline converting high-poly models into lightweight Draco-compressed GLB assets with KTX2 GPU textures for instant loading.",
+      technical_deliverables: "Three.js GLTFLoader, DRACOLoader multi-worker thread decoder, and progressive asset loading state with luxury percentage indicator.",
+      business_impact: "Delivers rich 3D visuals without sluggish download times or mobile bandwidth consumption.",
+      complexity: "Advanced",
+      is_core: true,
+      display_order: 3
+    },
+    {
+      id: "td-4",
+      package_id: "interactive-3d-experience",
+      function_key: "threed_camera_scrollytelling_choreography",
+      title: "Cinematic Camera Choreography & Scroll-Synced Orbit",
+      category: "3D Camera & Motion",
+      description: "Cinematic camera paths and focal-point rotations mathematically synchronized to page scroll position (scrollytelling) and subtle mouse parallax.",
+      technical_deliverables: "Lenis smooth scroll integration, Three.js CatmullRomCurve3 spline interpolation, damping orbit controls, and smooth lerp calculations.",
+      business_impact: "Turns passive browsing into an active, cinematic journey that guides the user through your product narrative.",
+      complexity: "Specialized",
+      is_core: true,
+      display_order: 4
+    },
+    {
+      id: "td-5",
+      package_id: "interactive-3d-experience",
+      function_key: "threed_pbr_hdri_lighting_shadows",
+      title: "Photorealistic PBR Materials, HDRI Lighting & Soft Shadows",
+      category: "3D Visual Fidelity",
+      description: "Physically Based Rendering (PBR) materials with realistic metallic, glass transmission, roughness reflections, and HDR environment map radiance.",
+      technical_deliverables: "MeshPhysicalMaterial with transmission and roughness maps, RGBELoader environment radiance maps, and PCFSoftShadowMap calculations.",
+      business_impact: "Produces hyper-realistic material textures (brushed aluminum, gold, glass) that reflect elite product craftsmanship.",
+      complexity: "Advanced",
+      is_core: true,
+      display_order: 5
+    },
+    {
+      id: "td-6",
+      package_id: "interactive-3d-experience",
+      function_key: "threed_postprocessing_bloom_dof",
+      title: "Cinematic Post-Processing Pipeline (Bloom & Depth of Field)",
+      category: "3D Post-Processing",
+      description: "Bespoke post-processing pass including selective bloom glow for emissive elements, chromatic aberration, subtle vignette, and realistic depth of field (DoF).",
+      technical_deliverables: "Three.js EffectComposer, RenderPass, UnrealBloomPass, and custom ShaderPass color grading curves.",
+      business_impact: "Gives your web application the visual aesthetic of high-budget AAA video game engines and luxury automotive configurators.",
+      complexity: "Specialized",
+      is_core: true,
+      display_order: 6
+    },
+    {
+      id: "td-7",
+      package_id: "interactive-3d-experience",
+      function_key: "threed_spatial_audio_haptic_sound",
+      title: "Ambient Spatial Audio & Interactive Haptic Sound Design",
+      category: "Audio Immersion",
+      description: "Subtle interactive sound design: low-frequency ambient drone, tactile clicking frequencies on button interactions, and 3D sound positioning.",
+      technical_deliverables: "Web Audio API sound synthesis / Howler.js integration, user interaction audio unlock handler, sound toggle UI control with sound waves.",
+      business_impact: "Engages the visitor auditory senses, creating an unforgettable emotional bond with the experience.",
+      complexity: "Advanced",
+      is_core: true,
+      display_order: 7
+    },
+    {
+      id: "td-8",
+      package_id: "interactive-3d-experience",
+      function_key: "threed_mobile_gyroscope_thermal_guard",
+      title: "Mobile Gyroscope Controls & Adaptive 60fps Thermal Guard",
+      category: "Mobile Performance",
+      description: "Device orientation sensor integration on smartphones for physical tilt navigation, paired with automatic quality scaling to maintain solid 60fps on mobile.",
+      technical_deliverables: "DeviceOrientationEvent API with iOS permission trigger, dynamic pixelRatio downscaling on frame drops, and WebGL context loss recovery.",
+      business_impact: "Ensures flawless execution across high-end desktops and everyday mobile smartphones without battery drain or lag.",
+      complexity: "Advanced",
+      is_core: true,
+      display_order: 8
+    }
+  ],
+  "fullstack-web-app": [
+    {
+      id: "fs-1",
+      package_id: "fullstack-web-app",
+      function_key: "backend_supabase_postgres_relational_schema",
+      title: "Supabase PostgreSQL Production Database Architecture",
+      category: "Database & Architecture",
+      description: "Normalized relational database schema with foreign key constraints, UUID primary keys, automated timestamp triggers, and optimized indexes.",
+      technical_deliverables: "PostgreSQL DDL schema scripts, migration management, custom PL/pgSQL database functions, and automated backups.",
+      business_impact: "Provides an enterprise-grade relational data foundation that scales effortlessly to hundreds of thousands of users without data corruption.",
+      complexity: "Enterprise",
+      is_core: true,
+      display_order: 1
+    },
+    {
+      id: "fs-2",
+      package_id: "fullstack-web-app",
+      function_key: "backend_row_level_security_rls",
+      title: "Zero-Trust Row-Level Security (RLS) Policy Architecture",
+      category: "Security & Compliance",
+      description: "Granular database-level access policies guaranteeing that clients can only read/write their own records, while administrative roles have global access.",
+      technical_deliverables: "Postgres RLS policies on all tables (FOR SELECT, INSERT, UPDATE, DELETE), auth.uid() validation, and SQL injection immune queries.",
+      business_impact: "Eliminates catastrophic data leaks at the database level, ensuring full compliance with GDPR and industry security standards.",
+      complexity: "Enterprise",
+      is_core: true,
+      display_order: 2
+    },
+    {
+      id: "fs-3",
+      package_id: "fullstack-web-app",
+      function_key: "backend_omnichannel_auth_suite",
+      title: "Multi-Provider Auth & Session Management",
+      category: "Authentication & Identity",
+      description: "Enterprise authentication supporting Google OAuth 2.0, GitHub, Magic Link passwordless login, and traditional email/password with secure password resets.",
+      technical_deliverables: "Supabase Auth SSR client, PKCE auth flow, secure HTTP-only session cookies, and automated email verification triggers.",
+      business_impact: "Zero-friction onboarding for new users while keeping accounts protected against brute-force and credential stuffing.",
+      complexity: "Advanced",
+      is_core: true,
+      display_order: 3
+    },
+    {
+      id: "fs-4",
+      package_id: "fullstack-web-app",
+      function_key: "backend_stripe_razorpay_webhook_pipeline",
+      title: "Stripe & Razorpay Payment Webhooks Engine",
+      category: "Payments & Billing",
+      description: "Automated payment processing handling one-time purchases, subscriptions, recurring billing cycles, invoice generation, and refund webhooks.",
+      technical_deliverables: "Idempotent Next.js API webhook endpoints, cryptographic signature verification, and database transaction updates on payment confirmation.",
+      business_impact: "Instant monetization with automated digital fulfillment and zero manual payment verification required.",
+      complexity: "Enterprise",
+      is_core: true,
+      display_order: 4
+    },
+    {
+      id: "fs-5",
+      package_id: "fullstack-web-app",
+      function_key: "backend_customer_selfserve_portal",
+      title: "Customer Self-Serve Portal & Order Center",
+      category: "Client Portal",
+      description: "Authenticated client dashboard where customers view active orders, download invoices, access purchased assets, update profiles, and manage subscriptions.",
+      technical_deliverables: "Protected route middleware, responsive client dashboard UI, real-time status tracker, and digital asset secure download generator.",
+      business_impact: "Drastically cuts customer support tickets by 80% through self-serve management.",
+      complexity: "Advanced",
+      is_core: true,
+      display_order: 5
+    },
+    {
+      id: "fs-6",
+      package_id: "fullstack-web-app",
+      function_key: "backend_executive_admin_cockpit",
+      title: "Executive Admin Cockpit & Business Intelligence",
+      category: "Admin Management",
+      description: "Private master control dashboard for founders: real-time revenue stats, active user count, order management, status transitions, and user bans.",
+      technical_deliverables: "Role-guarded admin layout (is_admin() check), data tables with multi-filter sorting, pagination, and CSV data export.",
+      business_impact: "Provides founders total clarity and control over their business operations from a single clean screen.",
+      complexity: "Enterprise",
+      is_core: true,
+      display_order: 6
+    },
+    {
+      id: "fs-7",
+      package_id: "fullstack-web-app",
+      function_key: "backend_transactional_email_sms_pipeline",
+      title: "Automated Transactional Emails & SMS Notifications",
+      category: "Communications",
+      description: "Beautiful React Email templates dispatched automatically on order completion, password resets, welcome sequences, and project milestone updates.",
+      technical_deliverables: "Resend / Twilio API integration, React Email component templates, and DKIM / SPF email authentication setup for 99%+ deliverability.",
+      business_impact: "Maintains high customer engagement and establishes a professional post-purchase experience.",
+      complexity: "Standard",
+      is_core: true,
+      display_order: 7
+    },
+    {
+      id: "fs-8",
+      package_id: "fullstack-web-app",
+      function_key: "backend_s3_storage_signed_uploads",
+      title: "Encrypted Cloud Storage & Secure File Uploads",
+      category: "Storage & Media",
+      description: "Direct-to-storage file upload pipeline for user avatars, project documents, high-res assets, and signed legal contracts with signed URL downloads.",
+      technical_deliverables: "Supabase Storage buckets (client-assets, contracts), fine-grained storage RLS policies, and client-side image compression before upload.",
+      business_impact: "Prevents public leakage of sensitive business documents and contracts while handling large files effortlessly.",
+      complexity: "Advanced",
+      is_core: true,
+      display_order: 8
+    },
+    {
+      id: "fs-9",
+      package_id: "fullstack-web-app",
+      function_key: "backend_rbac_audit_logging",
+      title: "Role-Based Access Control (RBAC) & Audit Logging",
+      category: "Governance & Audit",
+      description: "Granular permission tiers (Super Admin, Manager, Client, Member) with an immutable audit log tracking critical account modifications and payments.",
+      technical_deliverables: "Role column with PostgreSQL CHECK constraints, audit log triggers capturing user IP, timestamp, action type, and old/new state.",
+      business_impact: "Essential for team delegation, preventing unauthorized modifications and providing a verifiable record of all platform activities.",
+      complexity: "Enterprise",
+      is_core: true,
+      display_order: 9
+    },
+    {
+      id: "fs-10",
+      package_id: "fullstack-web-app",
+      function_key: "backend_outbound_webhook_bridge",
+      title: "Secure External API & Outbound Webhook Dispatcher",
+      category: "Integrations & Automation",
+      description: "Expose secure REST endpoints with API key authorization or trigger outbound webhooks to Zapier, Make.com, or Slack whenever key events occur.",
+      technical_deliverables: "API route handlers with rate limiting, SHA-256 HMAC payload signing, and outbound HTTP fetch retry queue.",
+      business_impact: "Allows seamless integration with your existing CRM, accounting software, and Slack alert channels.",
+      complexity: "Advanced",
+      is_core: true,
+      display_order: 10
+    }
+  ]
+};
+
+/**
+ * Fetch granular features from the dedicated table for a given package
+ */
+export async function getGranularPackageFeatures(packageId: string): Promise<PackageGranularFeature[]> {
+  const fallback = DEFAULT_GRANULAR_FEATURES[packageId] || [];
+  if (!isSupabaseConfigured()) {
+    return fallback;
+  }
+
+  const tableName = getPackageFeatureTableName(packageId);
+  try {
+    const { data, error } = await supabase
+      .from(tableName)
+      .select("*")
+      .eq("package_id", packageId)
+      .order("display_order", { ascending: true });
+
+    if (error || !data || data.length === 0) {
+      return fallback;
+    }
+    return data as PackageGranularFeature[];
+  } catch (err) {
+    console.warn(`Falling back to static features for ${tableName}:`, err);
+    return fallback;
+  }
+}
+
+/**
+ * Fetch all package features across all 4 dedicated tables (or unified view)
+ */
+export async function getAllGranularPackageFeatures(): Promise<PackageGranularFeature[]> {
+  const allFallback = Object.values(DEFAULT_GRANULAR_FEATURES).flat();
+  if (!isSupabaseConfigured()) {
+    return allFallback;
+  }
+
+  try {
+    const { data, error } = await supabase
+      .from("package_all_features_view")
+      .select("*")
+      .order("display_order", { ascending: true });
+
+    if (!error && data && data.length > 0) {
+      return data as PackageGranularFeature[];
+    }
+  } catch {
+    // view might not be compiled yet, fallback to fetching tables
+  }
+
+  // Fallback to querying each of the 4 dedicated tables
+  try {
+    const [p1, p2, p3, p4] = await Promise.all([
+      getGranularPackageFeatures("luxury-landing-sprint"),
+      getGranularPackageFeatures("growth-marketing-campaigns"),
+      getGranularPackageFeatures("interactive-3d-experience"),
+      getGranularPackageFeatures("fullstack-web-app"),
+    ]);
+    const merged = [...p1, ...p2, ...p3, ...p4];
+    return merged.length > 0 ? merged : allFallback;
+  } catch {
+    return allFallback;
+  }
 }
 
 /**

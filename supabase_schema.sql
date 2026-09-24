@@ -528,3 +528,102 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order,
   description = EXCLUDED.description;
 
+-- ==============================================================================
+-- 9. DEDICATED GRANULAR FEATURE TABLES PER PACKAGE
+-- Linked to Master: public.packages
+-- ==============================================================================
+
+-- 9.1 Package 1 Features: Base Luxury Landing Sprint
+CREATE TABLE IF NOT EXISTS public.package_landing_sprint_features (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  package_id TEXT NOT NULL DEFAULT 'luxury-landing-sprint' REFERENCES public.packages(id) ON DELETE CASCADE,
+  function_key TEXT NOT NULL UNIQUE,
+  title TEXT NOT NULL,
+  category TEXT NOT NULL,
+  description TEXT NOT NULL,
+  technical_deliverables TEXT NOT NULL,
+  business_impact TEXT NOT NULL,
+  complexity TEXT NOT NULL DEFAULT 'Standard' CHECK (complexity IN ('Standard', 'Advanced', 'Specialized', 'Enterprise')),
+  is_core BOOLEAN NOT NULL DEFAULT TRUE,
+  display_order INT NOT NULL DEFAULT 0,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+-- 9.2 Package 2 Features: BOFU Marketing & Sources Management
+CREATE TABLE IF NOT EXISTS public.package_bofu_marketing_features (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  package_id TEXT NOT NULL DEFAULT 'growth-marketing-campaigns' REFERENCES public.packages(id) ON DELETE CASCADE,
+  function_key TEXT NOT NULL UNIQUE,
+  title TEXT NOT NULL,
+  category TEXT NOT NULL,
+  description TEXT NOT NULL,
+  technical_deliverables TEXT NOT NULL,
+  business_impact TEXT NOT NULL,
+  complexity TEXT NOT NULL DEFAULT 'Standard' CHECK (complexity IN ('Standard', 'Advanced', 'Specialized', 'Enterprise')),
+  is_core BOOLEAN NOT NULL DEFAULT TRUE,
+  display_order INT NOT NULL DEFAULT 0,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+-- 9.3 Package 3 Features: 3D Interactive & Brand Experience
+CREATE TABLE IF NOT EXISTS public.package_3d_experience_features (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  package_id TEXT NOT NULL DEFAULT 'interactive-3d-experience' REFERENCES public.packages(id) ON DELETE CASCADE,
+  function_key TEXT NOT NULL UNIQUE,
+  title TEXT NOT NULL,
+  category TEXT NOT NULL,
+  description TEXT NOT NULL,
+  technical_deliverables TEXT NOT NULL,
+  business_impact TEXT NOT NULL,
+  complexity TEXT NOT NULL DEFAULT 'Standard' CHECK (complexity IN ('Standard', 'Advanced', 'Specialized', 'Enterprise')),
+  is_core BOOLEAN NOT NULL DEFAULT TRUE,
+  display_order INT NOT NULL DEFAULT 0,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+-- 9.4 Package 4 Features: Full-Stack Web App / SaaS MVP
+CREATE TABLE IF NOT EXISTS public.package_fullstack_backend_features (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  package_id TEXT NOT NULL DEFAULT 'fullstack-web-app' REFERENCES public.packages(id) ON DELETE CASCADE,
+  function_key TEXT NOT NULL UNIQUE,
+  title TEXT NOT NULL,
+  category TEXT NOT NULL,
+  description TEXT NOT NULL,
+  technical_deliverables TEXT NOT NULL,
+  business_impact TEXT NOT NULL,
+  complexity TEXT NOT NULL DEFAULT 'Standard' CHECK (complexity IN ('Standard', 'Advanced', 'Specialized', 'Enterprise')),
+  is_core BOOLEAN NOT NULL DEFAULT TRUE,
+  display_order INT NOT NULL DEFAULT 0,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+-- 9.5 RLS on Feature Tables
+ALTER TABLE public.package_landing_sprint_features ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.package_bofu_marketing_features ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.package_3d_experience_features ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.package_fullstack_backend_features ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Public read on landing sprint features" 
+  ON public.package_landing_sprint_features FOR SELECT TO anon, authenticated USING (true);
+CREATE POLICY "Public read on bofu marketing features" 
+  ON public.package_bofu_marketing_features FOR SELECT TO anon, authenticated USING (true);
+CREATE POLICY "Public read on 3d experience features" 
+  ON public.package_3d_experience_features FOR SELECT TO anon, authenticated USING (true);
+CREATE POLICY "Public read on fullstack backend features" 
+  ON public.package_fullstack_backend_features FOR SELECT TO anon, authenticated USING (true);
+
+-- 9.6 Unified Multi-Table View
+CREATE OR REPLACE VIEW public.package_all_features_view AS
+SELECT f.id, f.package_id, p.name AS package_name, p.price_usd, p.price_inr, 'package_landing_sprint_features' AS source_table, f.function_key, f.title, f.category, f.description, f.technical_deliverables, f.business_impact, f.complexity, f.is_core, f.display_order, f.created_at
+FROM public.package_landing_sprint_features f JOIN public.packages p ON p.id = f.package_id
+UNION ALL
+SELECT f.id, f.package_id, p.name AS package_name, p.price_usd, p.price_inr, 'package_bofu_marketing_features' AS source_table, f.function_key, f.title, f.category, f.description, f.technical_deliverables, f.business_impact, f.complexity, f.is_core, f.display_order, f.created_at
+FROM public.package_bofu_marketing_features f JOIN public.packages p ON p.id = f.package_id
+UNION ALL
+SELECT f.id, f.package_id, p.name AS package_name, p.price_usd, p.price_inr, 'package_3d_experience_features' AS source_table, f.function_key, f.title, f.category, f.description, f.technical_deliverables, f.business_impact, f.complexity, f.is_core, f.display_order, f.created_at
+FROM public.package_3d_experience_features f JOIN public.packages p ON p.id = f.package_id
+UNION ALL
+SELECT f.id, f.package_id, p.name AS package_name, p.price_usd, p.price_inr, 'package_fullstack_backend_features' AS source_table, f.function_key, f.title, f.category, f.description, f.technical_deliverables, f.business_impact, f.complexity, f.is_core, f.display_order, f.created_at
+FROM public.package_fullstack_backend_features f JOIN public.packages p ON p.id = f.package_id;
+
+
