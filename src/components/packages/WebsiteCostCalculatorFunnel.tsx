@@ -185,6 +185,40 @@ export const FEATURE_BUNDLES: FeatureBundle[] = [
       "60-Day Extended Hypercare Bug Fix Warranty",
       "3-Month Monthly Software & Content Maintenance Retainer"
     ]
+  },
+  {
+    id: "marketing_funnel_suite",
+    name: "Full-Funnel Campaign Engine (TOFU • MOFU • BOFU)",
+    icon: "🚀",
+    priceInr: 12000,
+    priceUsd: 165,
+    badge: "High ROI",
+    tagline: "BOFU checkout flow, FOMO countdowns, MOFU proof collage & TOFU viral hooks.",
+    description: "End-to-end multi-funnel marketing package: TOFU awareness reels & before/afters, MOFU case study collages & trust badges, and BOFU 1-click checkouts, price matrix & countdown timers.",
+    includedFeatures: [
+      "BOFU: 1-Click Fast Checkout, Countdown Urgency & Price Comparison Matrix",
+      "BOFU: Offer-First Banners, Studio Shoots & UGC Video Reviews",
+      "MOFU: Case Studies, Certification Badges & Educational Carousels",
+      "MOFU: Community Comment Responses & Social Proof Collage",
+      "TOFU: Before & After Sliders, Behind the Scenes & PR News Mockups"
+    ]
+  },
+  {
+    id: "source_attribution_hub",
+    name: "Multi-Source UTM Campaign & Attribution Hub",
+    icon: "📊",
+    priceInr: 6000,
+    priceUsd: 85,
+    badge: "Tracking",
+    tagline: "UTM campaign generator, multi-channel source tracker & ad conversion pixels.",
+    description: "Track and attribute every lead and sale across Meta Ads, Google Ads, TikTok, YouTube, Newsletters, and Influencers with live tracking link generator.",
+    includedFeatures: [
+      "Interactive Multi-Channel UTM Campaign Generator",
+      "Meta Conversions API (CAPI) & TikTok Pixel Integration",
+      "Google Tag Manager & GA4 E-Commerce Event Telemetry",
+      "First-Touch & Last-Touch Source Tracking on Leads",
+      "Custom Campaign QR Codes & 1-Click Shortlinks"
+    ]
   }
 ];
 

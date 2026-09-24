@@ -193,6 +193,41 @@ export const DEFAULT_PACKAGES: WebsitePackage[] = [
     is_active: true
   },
   {
+    id: "growth-marketing-campaigns",
+    name: "Full-Funnel Growth & Marketing Campaign Engine",
+    tagline: "End-to-end TOFU awareness, MOFU consideration & BOFU conversion pages + UTM Source Tracking.",
+    price_usd: 3199,
+    price_inr: 259000,
+    turnaround_weeks: "2-4 weeks",
+    badge: "High Growth",
+    popular: true,
+    description: "The complete full-funnel digital marketing engine engineered for high ROI. Covers Top of Funnel (Before & After, BTS, hooks, founder stories, PR mockups), Middle of Funnel (case studies, trust badges, educational carousels, podcasts, social proof collages), and Bottom of Funnel (1-click checkouts, countdowns, offer banners, studio shoots, UGC reviews, price comparisons, FOMO offers, freebie magnets) with multi-channel UTM source attribution.",
+    features: [
+      "TOFU: Before & After sliders, Behind the scenes, viral hook cards, phone call & PR news mockups",
+      "MOFU: Interactive case studies, accreditation badges, expert explainer carousels, podcast audio player",
+      "BOFU: High-converting 1-click checkout, countdown timers, offer-first banners & price comparison matrix",
+      "Multi-Channel UTM Tracking & Source Management link generator (Meta, Google, TikTok, X, Email)",
+      "Adaptive architecture for E-Commerce, Singular Hero Product Drops & Personal Brand Authority",
+      "Conversion Pixel suite (Meta CAPI, Google Ads GTM, GA4 custom purchase events, TikTok Pixel)",
+      "High-converting micro-copy, FOMO live purchase notifications & lead capture freebies",
+      "Lighthouse 95+ performance score & mobile-first conversion optimization"
+    ],
+    deliverables: [
+      "Full 3-Stage Funnel Implementation (TOFU, MOFU, BOFU Pages & Sections)",
+      "Centralized Source Attribution & UTM Tracking Generator Dashboard",
+      "Pixel & Analytics Event Tracking Integration (Meta CAPI, GA4, GTM)",
+      "Dynamic Business Mode Adaptation (E-Commerce / Single Drop / Personal Brand)",
+      "Figma marketing design kit & production-ready deployment",
+      "30-day post-launch optimization & conversion rate monitoring"
+    ],
+    addons: [
+      { id: "ab-testing", name: "Dynamic A/B Testing & Split Routing Engine", price_usd: 499 },
+      { id: "retention-flows", name: "Automated Email/SMS Nurture Sequence (Klaviyo/Resend)", price_usd: 399 },
+      { id: "influencer-portal", name: "Affiliate & Influencer Source Tracking Portal", price_usd: 599 }
+    ],
+    is_active: true
+  },
+  {
     id: "fullstack-web-app",
     name: "Full-Stack Web App / SaaS MVP",
     tagline: "Robust, scalable web applications with Supabase DB, Auth, Payments & Admin portals.",

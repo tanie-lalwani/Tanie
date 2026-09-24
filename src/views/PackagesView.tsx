@@ -20,6 +20,7 @@ import {
 } from "@/data/aestheticDatabase";
 import CustomScopeCalculator from "@/components/CustomScopeCalculator";
 import WebsiteCostCalculatorFunnel from "@/components/packages/WebsiteCostCalculatorFunnel";
+import MarketingFunnelSuite from "@/components/packages/MarketingFunnelSuite";
 import { useLanguage } from "@/context/LanguageContext";
 import { packagesTranslations } from "@/data/packagesTranslations";
 
@@ -30,8 +31,8 @@ export default function PackagesView() {
   const { copy, locale } = useLanguage();
   const pkgCopy = packagesTranslations[locale] || packagesTranslations.en;
 
-  // Active View Tab: "home" (Overview & Scope), "calculator" (Interactive Estimator), "gallery" (Browse Aesthetics), "wizard" (Make Your Website Questionnaire), "results" (Curated Suggestions)
-  const [activeTab, setActiveTab] = useState<"home" | "calculator" | "gallery" | "wizard" | "results">("home");
+  // Active View Tab: "home" (Overview & Scope), "marketing" (Full-Funnel Campaign Engine), "calculator" (Interactive Estimator), "gallery" (Browse Aesthetics), "wizard" (Make Your Website Questionnaire), "results" (Curated Suggestions)
+  const [activeTab, setActiveTab] = useState<"home" | "marketing" | "calculator" | "gallery" | "wizard" | "results">("home");
 
   // Currency toggle: USD or INR
   const [currency, setCurrency] = useState<"USD" | "INR">("USD");
@@ -240,6 +241,27 @@ export default function PackagesView() {
 
     setSelectedScopeTier(quoteData.suggestedPackage?.title || (quoteData.industry ? `${quoteData.industry} Custom Build` : "Custom Bespoke Build"));
     setTargetDeadline(quoteData.timeline || "3–4 Weeks");
+    setShowIntakeModal(true);
+    setAuthStepRequired(false);
+  };
+
+  // Handle direct booking from Marketing Funnel Suite
+  const handleBookMarketingPackage = (marketingData: {
+    packageName: string;
+    businessModel: string;
+    selectedItems: string[];
+    priceInr: number;
+    priceUsd: number;
+    timeline: string;
+  }) => {
+    const title = `${marketingData.packageName} (${marketingData.businessModel})`;
+    setProjectName(title);
+    setCompanyName(marketingData.businessModel);
+    setFeaturesList(marketingData.selectedItems);
+    setEstimatedPriceInr(marketingData.priceInr);
+    setEstimatedPriceUsd(marketingData.priceUsd);
+    setSelectedScopeTier(`Marketing Funnel: ${marketingData.businessModel}`);
+    setTargetDeadline(marketingData.timeline || "2–4 Weeks");
     setShowIntakeModal(true);
     setAuthStepRequired(false);
   };
@@ -583,7 +605,20 @@ ${companyName.trim() ? `🏢 Company / Brand: ${companyName.trim()}` : ""}
                 ))}
               </div>
 
-              <div className="flex items-center gap-2">
+              <div className="flex flex-wrap items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => setActiveTab(activeTab === "marketing" ? "home" : "marketing")}
+                  className={`rounded-full px-4 py-2 text-xs font-bold uppercase tracking-wider transition-all cursor-pointer border flex items-center gap-1.5 ${
+                    activeTab === "marketing"
+                      ? "bg-gradient-to-r from-emerald-600 to-teal-600 text-white border-emerald-500 font-black shadow-md scale-105"
+                      : "bg-emerald-100/80 text-emerald-950 hover:bg-emerald-200/90 border-emerald-300 font-extrabold"
+                  }`}
+                >
+                  <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+                  <span>🚀 Marketing Engine (BOFU • MOFU • TOFU)</span>
+                </button>
+
                 <button
                   type="button"
                   onClick={() => setActiveTab(activeTab === "calculator" ? "home" : "calculator")}
@@ -599,6 +634,17 @@ ${companyName.trim() ? `🏢 Company / Brand: ${companyName.trim()}` : ""}
               </div>
             </div>
 
+            {/* VIEW: MARKETING CAMPAIGNS FULL-FUNNEL PACKAGE (MARKETING TAB) */}
+            {activeTab === "marketing" && (
+              <div className="space-y-8 animate-fadeIn">
+                <MarketingFunnelSuite
+                  currency={currency}
+                  onCurrencyChange={setCurrency}
+                  onBookMarketingPackage={handleBookMarketingPackage}
+                />
+              </div>
+            )}
+
             {/* VIEW: INTERACTIVE SCOPE & PRICE ESTIMATOR (CALCULATOR TAB) */}
             {activeTab === "calculator" && (
               <div className="space-y-8">
@@ -607,6 +653,37 @@ ${companyName.trim() ? `🏢 Company / Brand: ${companyName.trim()}` : ""}
                   onCurrencyChange={setCurrency}
                   onProceedWithScope={handleProceedWithScope}
                 />
+              </div>
+            )}
+
+            {/* PROMO BANNER FOR MARKETING SUITE (SHOWN ON HOME) */}
+            {activeTab === "home" && (
+              <div className="relative overflow-hidden rounded-3xl border border-emerald-300/80 bg-gradient-to-r from-emerald-100/90 via-teal-50/90 to-sky-100/90 p-5 sm:p-6 shadow-sm flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div className="flex items-center gap-3.5">
+                  <div className="h-11 w-11 shrink-0 rounded-2xl bg-emerald-600 text-white flex items-center justify-center text-xl font-bold shadow-sm">
+                    🚀
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-[10px] font-black uppercase tracking-wider text-emerald-800 bg-emerald-200/80 px-2 py-0.5 rounded-full">
+                        New Launch
+                      </span>
+                      <span className="text-xs font-black text-slate-900">
+                        Full-Funnel Marketing Campaigns Package
+                      </span>
+                    </div>
+                    <p className="text-xs text-slate-700 font-medium mt-0.5">
+                      Need BOFU checkouts, urgency countdowns, MOFU social proof collages, and multi-channel UTM source tracking?
+                    </p>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setActiveTab("marketing")}
+                  className="shrink-0 rounded-xl bg-slate-950 px-4 py-2.5 text-xs font-black text-white hover:bg-slate-800 transition cursor-pointer shadow-sm"
+                >
+                  Explore Marketing Suite →
+                </button>
               </div>
             )}
 
