@@ -75,8 +75,9 @@ User scrolls to #contact
 - **Language Strings**: Translation dictionaries (`copy.home`) lacked localized keys for CTAs, and `Home.tsx` had hardcoded strings `"Work →"` and `"Pricing →"`.
 
 ### 3. Resolution & Architectural Safeguards
-1. **Isolated Menu Directionality ([`src/components/Navbar.tsx`](file:///c:/Users/words/Desktop/Websites/Completed/Portfolio/src/components/Navbar.tsx))**:
-   - Added `dir="ltr"` and `end-0` to the mobile navigation popover element so it always remains safely anchored within viewport bounds regardless of site-wide RTL mirroring.
+1. **Direction-Aware Menu Positioning ([`src/components/Navbar.tsx`](file:///c:/Users/words/Desktop/Websites/Completed/Portfolio/src/components/Navbar.tsx))**:
+   - In RTL mode (`locale === 'ur'`), the navbar controls sit on the top-left of the screen. We dynamically set `isRtl ? 'left-0' : 'right-0'` and `max-w-[calc(100vw-1.5rem)]` on the popover container.
+   - This ensures that in RTL, the popover anchors to the left edge and expands rightward into the screen, completely preventing it from clipping off-screen into negative coordinates.
 2. **Normalized Horizontal Drag Context ([`src/components/ProjectsCarousel.tsx`](file:///c:/Users/words/Desktop/Websites/Completed/Portfolio/src/components/ProjectsCarousel.tsx))**:
    - Enforced `dir="ltr"` on the carousel track container to maintain consistent positive delta math across all touch and pointer interactions.
 3. **Localized CTAs & Pricing Fallbacks ([`src/views/Home.tsx`](file:///c:/Users/words/Desktop/Websites/Completed/Portfolio/src/views/Home.tsx), [`src/context/LanguageContext.tsx`](file:///c:/Users/words/Desktop/Websites/Completed/Portfolio/src/context/LanguageContext.tsx))**:
