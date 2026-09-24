@@ -222,6 +222,73 @@ export const FEATURE_BUNDLES: FeatureBundle[] = [
   }
 ];
 
+export interface WebsiteGoalOption {
+  id: string;
+  title: string;
+  tag: string;
+  icon: string;
+  symptom: string;
+  outcome: string;
+  recommendedBundles: string[];
+}
+
+export const WEBSITE_GOALS: WebsiteGoalOption[] = [
+  {
+    id: "more_sales",
+    title: "Get More Inbound Leads & Sales",
+    tag: "Sales & Pipeline",
+    icon: "🎯",
+    symptom: "Visitors browse but inquiries are low. Leads slip through the cracks without immediate follow-ups.",
+    outcome: "Interactive quote builders, centralized lead database & instant WhatsApp alerts to owner.",
+    recommendedBundles: ["essential_core", "lead_crm", "growth_seo"]
+  },
+  {
+    id: "bofu_conversion",
+    title: "Turn Traffic into Immediate Buyers (E-Comm / Drop)",
+    tag: "Conversion & Orders",
+    icon: "🚀",
+    symptom: "High bounce rate and cart abandonment. Visitors leave without purchasing from ads or socials.",
+    outcome: "1-Click checkout, urgency countdowns, offer banners, UGC video reviews & UTM tracking.",
+    recommendedBundles: ["essential_core", "marketing_funnel_suite", "ecommerce_ordering", "source_attribution_hub"]
+  },
+  {
+    id: "ai_assistant",
+    title: "24/7 AI Customer Concierge & Smart Chat",
+    tag: "AI Automation",
+    icon: "🧠",
+    symptom: "Tired of answering repetitive FAQs manually and losing customers outside business hours.",
+    outcome: "Context-aware AI concierge trained on your business to answer questions & qualify buyers 24/7.",
+    recommendedBundles: ["essential_core", "ai_assistant", "lead_crm"]
+  },
+  {
+    id: "brand_authority",
+    title: "Elevate Brand Presence to Luxury / Premium Tier",
+    tag: "High-Status Trust",
+    icon: "💎",
+    symptom: "Site looks generic or outdated. Can't justify charging premium prices or closing enterprise deals.",
+    outcome: "Awwwards-tier 3D WebGL visuals, silky Lenis scroll, kinetic typography & luxury positioning.",
+    recommendedBundles: ["essential_core", "design_3d_gsap", "growth_seo"]
+  },
+  {
+    id: "automate_operations",
+    title: "Save Time & Automate Bookings / Operations",
+    tag: "Time-Saving Hub",
+    icon: "⚙️",
+    symptom: "Wasting hours scheduling calls, coordinating staff appointments, and chasing client updates.",
+    outcome: "Self-serve 24/7 calendar booking, staff rosters, deposit payments & client portal.",
+    recommendedBundles: ["essential_core", "booking_appointments", "staff_portal"]
+  },
+  {
+    id: "fast_launchpad",
+    title: "Clean, High-Speed Launchpad (Base)",
+    tag: "Fast Go-Live",
+    icon: "🟢",
+    symptom: "Just need a razor-sharp, ultra-fast modern frontend landing page to go live right away.",
+    outcome: "Next.js performance foundation, mobile responsiveness, contact form & edge hosting.",
+    recommendedBundles: ["essential_core"]
+  }
+];
+
 export interface IndustryOption {
   id: string;
   name: string;
@@ -324,9 +391,11 @@ export default function WebsiteCostCalculatorFunnel({
 
   // User input states
   const [businessName, setBusinessName] = useState("");
+  const [socialAccount, setSocialAccount] = useState("");
+  const [selectedGoal, setSelectedGoal] = useState<string>("more_sales");
   const [websiteType, setWebsiteType] = useState<"business" | "portfolio" | "ecommerce" | "saas">("business");
   const [selectedIndustry, setSelectedIndustry] = useState<IndustryOption>(INDUSTRIES[0]);
-  const [selectedBundles, setSelectedBundles] = useState<string[]>(["essential_core", "booking_appointments", "growth_seo"]);
+  const [selectedBundles, setSelectedBundles] = useState<string[]>(["essential_core", "lead_crm", "growth_seo"]);
   const [budgetTier, setBudgetTier] = useState<string>("₹25,000 – ₹50,000 (Growth Suite)");
   const [timeline, setTimeline] = useState<string>("3–4 Weeks (Standard Launch)");
   const [currency, setCurrency] = useState<"INR" | "USD">("INR");
@@ -358,6 +427,12 @@ export default function WebsiteCostCalculatorFunnel({
     if (saved.leadId && !leadId) {
       setLeadId(saved.leadId);
     }
+    try {
+      const savedSocial = localStorage.getItem("tanie_client_social");
+      if (savedSocial && !socialAccount) {
+        setSocialAccount(savedSocial);
+      }
+    } catch (_) {}
   }, []);
 
   // Background lead capture dispatcher
@@ -366,8 +441,10 @@ export default function WebsiteCostCalculatorFunnel({
       const payload = {
         id: leadId || undefined,
         businessName: businessName.trim() || undefined,
+        socialAccount: socialAccount.trim() || undefined,
+        goal: selectedGoal,
         businessType: websiteType,
-        industry: selectedIndustry.name,
+        industry: selectedGoal,
         selectedBundles,
         budgetTier,
         timeline,
@@ -590,8 +667,10 @@ export default function WebsiteCostCalculatorFunnel({
 
   // WhatsApp share
   const handleWhatsAppQuote = () => {
-    const text = `Hi Tanie! I just calculated my website cost on your website:
-🏢 *Business:* ${businessName} (${selectedIndustry.name})
+    const goalTitle = WEBSITE_GOALS.find((g) => g.id === selectedGoal)?.title || "Custom Growth";
+    const text = `Hi Tanie! I just calculated my website estimate on your site:
+🏢 *Brand:* ${businessName}${socialAccount ? ` (${socialAccount})` : ""}
+🎯 *Primary Goal:* ${goalTitle}
 📦 *Selected Modules (${calculation.bundleCount}):*
 ${selectedBundles
   .map((id) => {
@@ -660,20 +739,26 @@ Let's discuss getting started!`;
             </div>
           </form>
 
-          {/* QUICK CHOICE SUGGESTIONS PILLS */}
+          {/* QUICK CHOICE GOAL SUGGESTIONS PILLS */}
           <div className="mt-4 flex flex-wrap items-center justify-center gap-2 max-w-3xl mx-auto">
             <span className="text-xs font-semibold text-sky-950/70 mr-1">
-              {locale === "ur" ? "فوری انتخاب:" : locale === "es" ? "Elección rápida:" : locale === "fr" ? "Choix rapide :" : locale === "hi" ? "त्वरित विकल्प:" : locale === "ja" ? "クイック選択:" : locale === "zh" ? "快捷选择：" : "Quick choice:"}
+              Select your goal:
             </span>
-            {INDUSTRIES.slice(0, 7).map((ind) => (
+            {WEBSITE_GOALS.map((goal) => (
               <button
-                key={ind.id}
+                key={goal.id}
                 type="button"
-                onClick={() => handleQuickPick(ind)}
+                onClick={() => {
+                  setSelectedGoal(goal.id);
+                  setSelectedBundles(goal.recommendedBundles);
+                  setCurrentStep(1);
+                  onStepChange?.(1);
+                  scrollToFunnel();
+                }}
                 className="px-3.5 py-1.5 rounded-full bg-white/70 hover:bg-white border border-sky-200/80 hover:border-sky-400 text-xs font-semibold text-[#0a192f] hover:text-sky-900 shadow-xs transition-all cursor-pointer flex items-center gap-1.5"
               >
-                <span>{ind.icon}</span>
-                <span>{ind.name.split(",")[0]}</span>
+                <span>{goal.icon}</span>
+                <span>{goal.title.split("(")[0]}</span>
               </button>
             ))}
           </div>
@@ -689,15 +774,15 @@ Let's discuss getting started!`;
           <div className="flex items-center justify-between border-b border-sky-200/80 pb-4">
             <div>
               <h2 className="text-2xl sm:text-3xl font-black !text-[#0a192f] tracking-tight" style={{ color: '#0a192f' }}>
-                {currentStep === 1 && t.funnel.step1Title}
-                {currentStep === 2 && t.funnel.step2Title}
-                {currentStep === 3 && t.funnel.step3Title}
-                {currentStep === 4 && t.funnel.step4Title}
-                {currentStep === 5 && t.funnel.step5Title}
+                {currentStep === 1 && "Step 1: Your Brand & Social Media"}
+                {currentStep === 2 && "Step 2: What is Your Main Goal or Challenge?"}
+                {currentStep === 3 && "Step 3: Recommended Package & Custom Modules"}
+                {currentStep === 4 && "Step 4: Launch Timing & Budget Comfort"}
+                {currentStep === 5 && "Step 5: Review & Unlock Your Custom Estimate"}
               </h2>
               <p className="text-xs text-sky-950/80 mt-1 font-medium" style={{ color: '#0a192f' }}>
                 {locale === "ur" ? `مرحلہ ${currentStep} از 4 • پروجیکٹ: ` : `Step ${currentStep} of 4 • Project: `}
-                <span className="font-bold !text-[#0a192f]" style={{ color: '#0a192f' }}>{businessName || (locale === "ur" ? "میری ویب سائٹ" : "My Website")}</span>
+                <span className="font-bold !text-[#0a192f]" style={{ color: '#0a192f' }}>{businessName || (locale === "ur" ? "میری ویب سائٹ" : "My Brand Project")}</span>
               </p>
             </div>
 
@@ -718,45 +803,87 @@ Let's discuss getting started!`;
           </div>
 
           {/* ------------------------------------------------------------- */}
-          {/* QUESTION 1: WEBSITE TYPE                                      */}
+          {/* STEP 1: BUSINESS NAME & SOCIAL MEDIA ACCOUNT                  */}
           {/* ------------------------------------------------------------- */}
           {currentStep === 1 && (
             <div className="space-y-6">
+              <div className="rounded-2xl border border-sky-300/80 bg-white/90 p-6 sm:p-8 shadow-sm space-y-5">
+                <div>
+                  <label htmlFor="calc_biz_name" className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
+                    1. Business or Brand Name <span className="text-rose-500">*</span>
+                  </label>
+                  <input
+                    id="calc_biz_name"
+                    type="text"
+                    value={businessName}
+                    onChange={(e) => {
+                      setBusinessName(e.target.value);
+                      saveLeadProfile({ businessName: e.target.value });
+                    }}
+                    placeholder="e.g. Aura Design Studio, Dr. Mehta Aesthetics, Velocity Apparel"
+                    className="w-full rounded-xl border border-sky-300 bg-white px-4 py-3 text-sm font-semibold text-slate-900 focus:border-sky-600 focus:ring-2 focus:ring-sky-500/20 focus:outline-none shadow-xs"
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="calc_social_account" className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
+                    2. Social Media Account or Current Website <span className="text-slate-500 font-normal">(Optional)</span>
+                  </label>
+                  <input
+                    id="calc_social_account"
+                    type="text"
+                    value={socialAccount}
+                    onChange={(e) => {
+                      setSocialAccount(e.target.value);
+                      try {
+                        localStorage.setItem("tanie_client_social", e.target.value);
+                      } catch (_) {}
+                    }}
+                    placeholder="e.g. @aurastudio on Instagram, linkedin.com/company/..., or existing URL"
+                    className="w-full rounded-xl border border-sky-300 bg-white px-4 py-3 text-sm font-semibold text-slate-900 focus:border-sky-600 focus:ring-2 focus:ring-sky-500/20 focus:outline-none shadow-xs"
+                  />
+                  <p className="text-[11px] text-slate-500 mt-1.5 font-medium">
+                    Helps us check your brand aesthetic, vibe, and scale so our recommendations fit your business perfectly.
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex justify-end pt-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (!businessName.trim()) setBusinessName("My Brand Project");
+                    goToStep(2);
+                  }}
+                  className="px-8 py-3 rounded-full bg-[#0a192f] hover:bg-slate-800 text-white font-bold text-xs uppercase tracking-wider transition-all shadow-md cursor-pointer flex items-center gap-2"
+                >
+                  <span>Next: Choose Your Goal</span>
+                  <span>→</span>
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* ------------------------------------------------------------- */}
+          {/* STEP 2: WHAT IS YOUR MAIN GOAL / PROBLEM?                     */}
+          {/* ------------------------------------------------------------- */}
+          {currentStep === 2 && (
+            <div className="space-y-6">
+              <div className="text-xs text-sky-950 font-medium">
+                Select your primary challenge — we&apos;ll automatically pre-configure the ideal package modules:
+              </div>
+
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-                {[
-                  {
-                    id: "business",
-                    title: t.hero.foundations.business.title,
-                    icon: "🏢",
-                    desc: t.hero.foundations.business.desc
-                  },
-                  {
-                    id: "ecommerce",
-                    title: t.hero.foundations.ecommerce.title,
-                    icon: "🛍️",
-                    desc: t.hero.foundations.ecommerce.desc
-                  },
-                  {
-                    id: "portfolio",
-                    title: t.hero.foundations.portfolio.title,
-                    icon: "🎨",
-                    desc: t.hero.foundations.portfolio.desc
-                  },
-                  {
-                    id: "saas",
-                    title: t.hero.foundations.saas.title,
-                    icon: "⚡",
-                    desc: t.hero.foundations.saas.desc
-                  }
-                ].map((type) => {
-                  const isSelected = websiteType === type.id;
+                {WEBSITE_GOALS.map((goal) => {
+                  const isSelected = selectedGoal === goal.id;
                   return (
                     <button
-                      key={type.id}
+                      key={goal.id}
                       type="button"
                       onClick={() => {
-                        setWebsiteType(type.id as any);
-                        goToStep(2);
+                        setSelectedGoal(goal.id);
+                        setSelectedBundles(goal.recommendedBundles);
+                        goToStep(3);
                       }}
                       className={`p-5 rounded-2xl border text-left transition-all cursor-pointer flex items-start gap-4 ${
                         isSelected
@@ -765,71 +892,41 @@ Let's discuss getting started!`;
                       }`}
                     >
                       <div className="text-2xl p-2.5 rounded-xl bg-sky-100/80 shrink-0 text-[#0a192f]">
-                        {type.icon}
+                        {goal.icon}
                       </div>
-                      <div>
-                        <h3 className="text-base font-black !text-[#0a192f] mb-1" style={{ color: '#0a192f' }}>{type.title}</h3>
-                        <p className="text-xs text-sky-950/80 leading-relaxed font-medium" style={{ color: '#082f49' }}>{type.desc}</p>
+                      <div className="space-y-1">
+                        <div className="flex items-center justify-between">
+                          <span className="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-sky-100 text-sky-900 border border-sky-200">
+                            {goal.tag}
+                          </span>
+                          <span className="text-[10px] text-sky-700 font-bold">
+                            {goal.recommendedBundles.length} Modules Pre-set
+                          </span>
+                        </div>
+                        <h3 className="text-sm sm:text-base font-black text-[#0a192f]">{goal.title}</h3>
+                        <p className="text-xs text-slate-600 font-medium leading-relaxed">
+                          <strong className="text-slate-800">Symptom:</strong> {goal.symptom}
+                        </p>
                       </div>
                     </button>
                   );
                 })}
               </div>
 
-              <div className="flex justify-end pt-4">
+              <div className="flex items-center justify-between pt-4 border-t border-sky-200/60">
                 <button
                   type="button"
-                  onClick={() => goToStep(2)}
-                  className="px-8 py-3 rounded-full bg-[#0a192f] hover:bg-slate-800 text-white font-bold text-xs uppercase tracking-wider transition-all shadow-md cursor-pointer"
+                  onClick={() => goToStep(1)}
+                  className="px-6 py-2.5 rounded-full border border-sky-300 text-[#0a192f] font-bold text-xs hover:bg-white transition cursor-pointer"
                 >
-                  {t.funnel.nextBtn}
+                  ← Back
                 </button>
-              </div>
-            </div>
-          )}
-
-          {/* ------------------------------------------------------------- */}
-          {/* QUESTION 2: INDUSTRY SELECTION                                */}
-          {/* ------------------------------------------------------------- */}
-          {currentStep === 2 && (
-            <div className="space-y-6">
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
-                {INDUSTRIES.map((ind) => {
-                  const isSelected = selectedIndustry.id === ind.id;
-                  return (
-                    <button
-                      key={ind.id}
-                      type="button"
-                      onClick={() => {
-                        setSelectedIndustry(ind);
-                        setSelectedBundles(ind.recommendedBundles);
-                        goToStep(3);
-                      }}
-                      className={`p-4 rounded-xl border text-left transition-all cursor-pointer flex flex-col justify-between ${
-                        isSelected
-                          ? "bg-sky-50/90 border-2 border-sky-600 shadow-md ring-2 ring-sky-500/15"
-                          : "bg-white/70 hover:bg-white border-sky-200/80 hover:border-sky-400 shadow-xs"
-                      }`}
-                    >
-                      <div className="text-2xl mb-2">{ind.icon}</div>
-                      <div>
-                        <div className="text-xs font-black !text-[#0a192f]">{ind.name}</div>
-                        <div className="text-[10px] text-sky-800 font-bold mt-1">
-                          {ind.recommendedBundles.length} Bundles Pre-set
-                        </div>
-                      </div>
-                    </button>
-                  );
-                })}
-              </div>
-
-              <div className="flex justify-end pt-4">
                 <button
                   type="button"
                   onClick={() => goToStep(3)}
                   className="px-8 py-3 rounded-full bg-[#0a192f] hover:bg-slate-800 text-white font-bold text-xs uppercase tracking-wider transition-all shadow-md cursor-pointer"
                 >
-                  {t.funnel.nextBtn}
+                  Next: Review Modules →
                 </button>
               </div>
             </div>
@@ -841,8 +938,8 @@ Let's discuss getting started!`;
           {currentStep === 3 && (
             <div className="space-y-6">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs text-sky-950 bg-[#c8ecff]/30 border border-sky-300/80 rounded-xl p-3.5">
-                <span className="font-medium" style={{ color: '#0a192f' }}>
-                  💡 {t.funnel.step3Subtitle}
+                <span className="font-semibold text-slate-800" style={{ color: '#0a192f' }}>
+                  🎯 Pre-configured for: <strong className="text-sky-950 underline">{WEBSITE_GOALS.find(g => g.id === selectedGoal)?.title || "Your Goal"}</strong>
                 </span>
                 <span className="font-black !text-[#0a192f] shrink-0" style={{ color: '#0a192f' }}>
                   {selectedBundles.length} {locale === "ur" ? "ماڈیولز منتخب شدہ" : "Modules Selected"}
@@ -1255,13 +1352,19 @@ Let's discuss getting started!`;
                       type="button"
                       onClick={() => {
                         if (onProceedWithCustomQuote) {
+                          const goalObj = WEBSITE_GOALS.find((g) => g.id === selectedGoal);
                           onProceedWithCustomQuote({
                             projectName: businessName,
-                            industry: selectedIndustry.name,
+                            socialAccount: socialAccount.trim() || undefined,
+                            goal: goalObj?.title || selectedGoal,
+                            industry: goalObj?.title || selectedGoal,
                             selectedBundles,
+                            bundles: selectedBundles.map((id) => FEATURE_BUNDLES.find((b) => b.id === id)).filter(Boolean),
                             finalTotalInr: calculation.finalTotalInr,
                             finalTotalUsd: calculation.finalTotalUsd,
-                            currency
+                            currency,
+                            timeline,
+                            budgetTier
                           });
                         }
                       }}

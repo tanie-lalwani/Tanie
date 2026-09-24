@@ -229,7 +229,7 @@ export default function PackagesView() {
   const handleProceedWithCostCalculatorFunnel = (quoteData: any) => {
     const business = quoteData.businessName || quoteData.projectName || "Custom Web Project";
     setProjectName(business);
-    setCompanyName(business);
+    setCompanyName(quoteData.socialAccount ? `${business} (${quoteData.socialAccount})` : business);
     setFeaturesList(quoteData.bundles ? quoteData.bundles.map((b: any) => b.name) : quoteData.selectedBundles || []);
     
     // Safely extract price without undefined!
@@ -239,7 +239,8 @@ export default function PackagesView() {
     setEstimatedPriceUsd(usd);
     if (quoteData.currency) setCurrency(quoteData.currency);
 
-    setSelectedScopeTier(quoteData.suggestedPackage?.title || (quoteData.industry ? `${quoteData.industry} Custom Build` : "Custom Bespoke Build"));
+    const goalLabel = quoteData.goal || quoteData.industry || "Custom Bespoke Build";
+    setSelectedScopeTier(`Goal: ${goalLabel}`);
     setTargetDeadline(quoteData.timeline || "3–4 Weeks");
     setShowIntakeModal(true);
     setAuthStepRequired(false);
