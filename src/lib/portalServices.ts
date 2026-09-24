@@ -320,55 +320,6 @@ export const DEMO_ASSETS: ProjectAsset[] = [
   }
 ];
 
-export const REVIEWER_CLIENT_PROJECT: ClientProject = {
-  id: "reviewer-project-001",
-  client_email: "wordsofvoice2210@gmail.com",
-  client_name: "Words of Voice (Razorpay Verification)",
-  company_name: "Razorpay Compliance & Audit",
-  title: "Aesthetic Brand Engineering & Retainer Checkout",
-  description: "Verified client engineering workspace for review of milestones, digital agreements, and Razorpay live payment gateway integration.",
-  package_id: "interactive-3d-experience",
-  status: "Development",
-  progress_percent: 75,
-  budget_usd: 3499,
-  budget_inr: 289000,
-  target_launch_date: "2026-10-15",
-  live_preview_url: "https://tanie.me/client-portal",
-  figma_url: "https://figma.com",
-  github_repo: "https://github.com/tanie-lalwani",
-  milestones: [
-    { id: "rm1", title: "Site Architecture & Discovery", description: "Design tokens, color swatches & interactive WebGL physics specifications.", status: "completed" },
-    { id: "rm2", title: "Frontend Layout & Animations", description: "Next.js App Router components, Tailwind styles & Framer Motion transitions.", status: "completed" },
-    { id: "rm3", title: "Razorpay Gateway & Checkout API", description: "Payment order creation, HMAC signature validation & reviewer test credentials.", status: "in-progress" },
-    { id: "rm4", title: "Client Review & QA Signoff", description: "Lighthouse 98+ score audit, cross-browser responsiveness & contract execution.", status: "pending" },
-    { id: "rm5", title: "Final Launch & Handover", description: "Custom domain DNS mapping, Vercel edge deployment & IP transfer.", status: "pending" }
-  ],
-  deliverables: [
-    { id: "rd1", title: "Production Staging Link", url: "https://tanie.me", type: "preview", added_at: "2026-09-01" },
-    { id: "rd2", title: "Figma UI Kit & Design Matrix", url: "https://figma.com", type: "figma", added_at: "2026-09-02" },
-    { id: "rd3", title: "Source Code Repository", url: "https://github.com/tanie-lalwani", type: "github", added_at: "2026-09-05" }
-  ],
-  created_at: "2026-09-01T09:00:00Z"
-};
-
-export const REVIEWER_CONTRACT: EContract = {
-  id: "reviewer-contract-001",
-  project_id: "reviewer-project-001",
-  client_email: "wordsofvoice2210@gmail.com",
-  client_name: "Words of Voice (Razorpay Verification)",
-  package_name: "3D Interactive & Brand Experience Sprint",
-  scope_summary: "Bespoke high-performance Next.js creative portfolio with WebGL canvas, Razorpay live payment checkout, e-contract signing pad, and client portal.",
-  total_amount_usd: 3499,
-  payment_terms: "50% upfront sprint retainer via Razorpay, 50% upon final production launch approval.",
-  legal_terms: `1. ENGAGEMENT & SCOPE: Tanie Lalwani ("Developer") agrees to engineer bespoke web solutions as outlined in the active sprint agreement.
-2. PAYMENT VIA RAZORPAY: All payments and retainers are processed securely through Razorpay gateway in accordance with RBI compliance standards.
-3. INTELLECTUAL PROPERTY: Full source code and asset rights transfer to Client upon milestone fee clearance.
-4. WARRANTY & SUPPORT: Developer provides a 30-day post-launch hypercare warranty.`,
-  status: "sent",
-  created_at: "2026-09-01T10:00:00Z"
-};
-
-
 /**
  * Fetch all active website packages
  */
@@ -412,13 +363,13 @@ export async function saveWebsitePackage(pkg: WebsitePackage): Promise<void> {
  */
 export async function getClientProjects(email: string): Promise<ClientProject[]> {
   const cleanEmail = (email || "").trim().toLowerCase();
-  if (cleanEmail === "wordsofvoice2210@gmail.com") {
-    return [REVIEWER_CLIENT_PROJECT];
+  if (!cleanEmail) {
+    return [];
   }
 
   try {
-    if (!isSupabaseConfigured() || !email) {
-      return [DEMO_CLIENT_PROJECT];
+    if (!isSupabaseConfigured()) {
+      return [];
     }
     const { data, error } = await supabase
       .from("projects")
@@ -442,7 +393,7 @@ export async function getClientProjects(email: string): Promise<ClientProject[]>
 export async function getAllProjects(): Promise<ClientProject[]> {
   try {
     if (!isSupabaseConfigured()) {
-      return [DEMO_CLIENT_PROJECT];
+      return [];
     }
     const { data, error } = await supabase
       .from("projects")
@@ -450,12 +401,12 @@ export async function getAllProjects(): Promise<ClientProject[]> {
       .order("created_at", { ascending: false });
 
     if (error || !data || data.length === 0) {
-      return [DEMO_CLIENT_PROJECT];
+      return [];
     }
     return data as ClientProject[];
   } catch (err) {
     console.warn("Using fallback all projects:", err);
-    return [DEMO_CLIENT_PROJECT];
+    return [];
   }
 }
 
@@ -513,13 +464,11 @@ export async function updateProject(projectId: string, updates: Partial<ClientPr
  * Fetch contract for a project
  */
 export async function getContractForProject(projectId: string): Promise<EContract | null> {
-  if (projectId === "reviewer-project-001") {
-    return REVIEWER_CONTRACT;
-  }
+  if (!projectId) return null;
 
   try {
     if (!isSupabaseConfigured()) {
-      return DEMO_CONTRACT;
+      return null;
     }
     const { data, error } = await supabase
       .from("contracts")
@@ -528,12 +477,12 @@ export async function getContractForProject(projectId: string): Promise<EContrac
       .maybeSingle();
 
     if (error || !data) {
-      return DEMO_CONTRACT;
+      return null;
     }
     return data as EContract;
   } catch (err) {
     console.warn("Using fallback contract:", err);
-    return DEMO_CONTRACT;
+    return null;
   }
 }
 
@@ -543,7 +492,7 @@ export async function getContractForProject(projectId: string): Promise<EContrac
 export async function getAllContracts(): Promise<EContract[]> {
   try {
     if (!isSupabaseConfigured()) {
-      return [DEMO_CONTRACT];
+      return [];
     }
     const { data, error } = await supabase
       .from("contracts")
@@ -551,11 +500,11 @@ export async function getAllContracts(): Promise<EContract[]> {
       .order("created_at", { ascending: false });
 
     if (error || !data || data.length === 0) {
-      return [DEMO_CONTRACT];
+      return [];
     }
     return data as EContract[];
   } catch (err) {
-    return [DEMO_CONTRACT];
+    return [];
   }
 }
 
@@ -603,9 +552,10 @@ export async function signContract(
  * Fetch uploaded assets for a project
  */
 export async function getProjectAssets(projectId: string): Promise<ProjectAsset[]> {
+  if (!projectId) return [];
   try {
     if (!isSupabaseConfigured()) {
-      return DEMO_ASSETS;
+      return [];
     }
     const { data, error } = await supabase
       .from("project_assets")
@@ -614,12 +564,12 @@ export async function getProjectAssets(projectId: string): Promise<ProjectAsset[
       .order("created_at", { ascending: false });
 
     if (error || !data || data.length === 0) {
-      return DEMO_ASSETS;
+      return [];
     }
     return data as ProjectAsset[];
   } catch (err) {
     console.warn("Using fallback assets:", err);
-    return DEMO_ASSETS;
+    return [];
   }
 }
 
@@ -629,7 +579,7 @@ export async function getProjectAssets(projectId: string): Promise<ProjectAsset[
 export async function getAllAssets(): Promise<ProjectAsset[]> {
   try {
     if (!isSupabaseConfigured()) {
-      return DEMO_ASSETS;
+      return [];
     }
     const { data, error } = await supabase
       .from("project_assets")
@@ -637,11 +587,11 @@ export async function getAllAssets(): Promise<ProjectAsset[]> {
       .order("created_at", { ascending: false });
 
     if (error || !data || data.length === 0) {
-      return DEMO_ASSETS;
+      return [];
     }
     return data as ProjectAsset[];
   } catch (err) {
-    return DEMO_ASSETS;
+    return [];
   }
 }
 
@@ -841,7 +791,7 @@ export async function submitLead(lead: {
 export async function getAllLeads(): Promise<LeadItem[]> {
   try {
     if (!isSupabaseConfigured()) {
-      return DEMO_LEADS;
+      return [];
     }
     const { data, error } = await supabase
       .from("bookings")
@@ -849,7 +799,7 @@ export async function getAllLeads(): Promise<LeadItem[]> {
       .order("created_at", { ascending: false });
 
     if (error || !data || data.length === 0) {
-      return DEMO_LEADS;
+      return [];
     }
 
     return data.map((b: any) => ({
@@ -864,7 +814,7 @@ export async function getAllLeads(): Promise<LeadItem[]> {
       created_at: b.created_at || new Date().toISOString()
     }));
   } catch (err) {
-    return DEMO_LEADS;
+    return [];
   }
 }
 

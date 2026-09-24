@@ -33,7 +33,6 @@ export async function POST(req: Request) {
         notes: {
           ...notes,
           platform: "Tanie Lalwani Portfolio & Studio",
-          review_account: "wordsofvoice2210@gmail.com",
         },
       }),
     });

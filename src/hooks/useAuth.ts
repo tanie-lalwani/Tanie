@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
-import type { Session, User } from "@supabase/supabase-js";
+import type { Session, User, AuthError } from "@supabase/supabase-js";
 import { supabase, isSupabaseConfigured } from "@/lib/supabaseClient";
 
 export interface AuthState {
@@ -21,23 +21,6 @@ export function useAuth() {
     let isMounted = true;
 
     async function initializeAuth() {
-      // Check for saved test reviewer session first
-      if (typeof window !== "undefined") {
-        const savedReviewer = localStorage.getItem("tanie_reviewer_user");
-        if (savedReviewer) {
-          try {
-            const parsed = JSON.parse(savedReviewer);
-            if (isMounted) {
-              setUser(parsed);
-              setLoading(false);
-              return;
-            }
-          } catch {
-            localStorage.removeItem("tanie_reviewer_user");
-          }
-        }
-      }
-
       if (!isSupabaseConfigured()) {
         if (isMounted) setLoading(false);
         return;
@@ -69,9 +52,7 @@ export function useAuth() {
     } = supabase.auth.onAuthStateChange((_event, currentSession) => {
       if (isMounted) {
         setSession(currentSession);
-        if (currentSession?.user) {
-          setUser(currentSession.user);
-        }
+        setUser(currentSession?.user ?? null);
         setLoading(false);
       }
     });
@@ -87,87 +68,25 @@ export function useAuth() {
       setError(null);
       const cleanEmail = email.trim().toLowerCase();
 
-      // Special handling for Razorpay Test / Reviewer Account
-      if (cleanEmail === "wordsofvoice2210@gmail.com" && password === "Ant!l0pe") {
-        const reviewerUser = {
-          id: "razorpay-reviewer-user-id",
-          email: "wordsofvoice2210@gmail.com",
-          aud: "authenticated",
-          role: "authenticated",
-          user_metadata: {
-            full_name: "Words of Voice (Razorpay Verification)",
-            company_name: "Razorpay Compliance & Review",
-          },
-          app_metadata: { provider: "email" },
-          created_at: new Date().toISOString(),
-        } as unknown as User;
-
-        if (typeof window !== "undefined") {
-          localStorage.setItem("tanie_reviewer_user", JSON.stringify(reviewerUser));
-        }
-        setUser(reviewerUser);
-
-        // Optionally attempt Supabase in the background
-        if (isSupabaseConfigured()) {
-          supabase.auth.signInWithPassword({ email: cleanEmail, password }).catch(() => {
-            // Silently ignore if not registered in Supabase
-          });
-        }
-
-        return { data: { user: reviewerUser, session: null }, error: null };
-      }
-
       if (!isSupabaseConfigured()) {
-        // Fallback mock sign in for development/testing
-        const mockUser = {
-          id: "demo-client-user-id",
-          email: cleanEmail,
-          aud: "authenticated",
-          role: "authenticated",
-          app_metadata: {},
-          user_metadata: {},
-          created_at: new Date().toISOString(),
-        } as unknown as User;
-        setUser(mockUser);
-        return { data: { user: mockUser, session: null }, error: null };
+        const err = { message: "Supabase authentication is not configured in this environment." } as AuthError;
+        setError(err.message);
+        return { data: { user: null, session: null }, error: err };
       }
 
       try {
         const res = await supabase.auth.signInWithPassword({ email: cleanEmail, password });
         if (res.error) {
-          // Fallback if this is the test account but with case differences
-          if (cleanEmail === "wordsofvoice2210@gmail.com" && password === "Ant!l0pe") {
-            const reviewerUser = {
-              id: "razorpay-reviewer-user-id",
-              email: "wordsofvoice2210@gmail.com",
-              aud: "authenticated",
-              role: "authenticated",
-              user_metadata: { full_name: "Razorpay Reviewer" },
-              created_at: new Date().toISOString(),
-            } as unknown as User;
-            setUser(reviewerUser);
-            if (typeof window !== "undefined") {
-              localStorage.setItem("tanie_reviewer_user", JSON.stringify(reviewerUser));
-            }
-            return { data: { user: reviewerUser, session: null }, error: null };
-          }
           setError(res.error.message);
+        } else if (res.data.session) {
+          setSession(res.data.session);
+          setUser(res.data.user);
         }
         return res;
       } catch (networkErr: any) {
-        // Resilient fallback when Supabase server is offline/unreachable
-        console.warn("Supabase network error, authenticating locally:", networkErr);
-        const fallbackUser = {
-          id: `local-user-${Date.now()}`,
-          email: cleanEmail,
-          aud: "authenticated",
-          role: "authenticated",
-          app_metadata: { provider: "email" },
-          user_metadata: { full_name: cleanEmail.split("@")[0] },
-          created_at: new Date().toISOString(),
-        } as unknown as User;
-        setUser(fallbackUser);
-        return { data: { user: fallbackUser, session: null }, error: null };
+        const err = { message: networkErr?.message || "Failed to authenticate." } as AuthError;
+        setError(err.message);
+        return { data: { user: null, session: null }, error: err };
       }
     },
     []
@@ -177,71 +96,34 @@ export function useAuth() {
     setError(null);
     const cleanEmail = email.trim().toLowerCase();
 
-    // Special handling for Reviewer Account
-    if (cleanEmail === "wordsofvoice2210@gmail.com" && password === "Ant!l0pe") {
-      const reviewerUser = {
-        id: "razorpay-reviewer-user-id",
-        email: "wordsofvoice2210@gmail.com",
-        aud: "authenticated",
-        role: "authenticated",
-        user_metadata: { full_name: "Words of Voice (Razorpay Verification)" },
-        created_at: new Date().toISOString(),
-      } as unknown as User;
-      if (typeof window !== "undefined") {
-        localStorage.setItem("tanie_reviewer_user", JSON.stringify(reviewerUser));
-      }
-      setUser(reviewerUser);
-      return { data: { user: reviewerUser, session: null }, error: null };
-    }
-
     if (!isSupabaseConfigured()) {
-      const mockUser = {
-        id: "demo-client-user-id",
-        email: cleanEmail,
-        aud: "authenticated",
-        role: "authenticated",
-        app_metadata: {},
-        user_metadata: {},
-        created_at: new Date().toISOString(),
-      } as unknown as User;
-      setUser(mockUser);
-      return { data: { user: mockUser, session: null }, error: null };
+      const err = { message: "Supabase authentication is not configured in this environment." } as AuthError;
+      setError(err.message);
+      return { data: { user: null, session: null }, error: err };
     }
 
     try {
       const res = await supabase.auth.signUp({ email: cleanEmail, password });
-      if (res.error) setError(res.error.message);
+      if (res.error) {
+        setError(res.error.message);
+      } else if (res.data.session) {
+        setSession(res.data.session);
+        setUser(res.data.user);
+      }
       return res;
     } catch (networkErr: any) {
-      console.warn("Supabase network error, signing up locally:", networkErr);
-      const fallbackUser = {
-        id: `local-user-${Date.now()}`,
-        email: cleanEmail,
-        aud: "authenticated",
-        role: "authenticated",
-        app_metadata: { provider: "email" },
-        user_metadata: { full_name: cleanEmail.split("@")[0] },
-        created_at: new Date().toISOString(),
-      } as unknown as User;
-      setUser(fallbackUser);
-      return { data: { user: fallbackUser, session: null }, error: null };
+      const err = { message: networkErr?.message || "Failed to create account." } as AuthError;
+      setError(err.message);
+      return { data: { user: null, session: null }, error: err };
     }
   }, []);
 
   const signInWithGoogle = useCallback(async (redirectTo?: string) => {
     setError(null);
     if (!isSupabaseConfigured()) {
-      const mockUser = {
-        id: `google-user-${Date.now()}`,
-        email: "google.user@example.com",
-        aud: "authenticated",
-        role: "authenticated",
-        user_metadata: { full_name: "Google Client" },
-        app_metadata: { provider: "google" },
-        created_at: new Date().toISOString(),
-      } as unknown as User;
-      setUser(mockUser);
-      return { data: { user: mockUser, session: null }, error: null };
+      const err = { message: "Supabase authentication is not configured in this environment." } as AuthError;
+      setError(err.message);
+      return { data: { provider: "google" as const, url: null }, error: err };
     }
 
     try {
@@ -258,18 +140,9 @@ export function useAuth() {
       }
       return res;
     } catch (err: any) {
-      console.warn("Google OAuth error, falling back locally:", err);
-      const fallbackUser = {
-        id: `google-user-${Date.now()}`,
-        email: "client@gmail.com",
-        aud: "authenticated",
-        role: "authenticated",
-        user_metadata: { full_name: "Google User" },
-        app_metadata: { provider: "google" },
-        created_at: new Date().toISOString(),
-      } as unknown as User;
-      setUser(fallbackUser);
-      return { data: { user: fallbackUser, session: null }, error: null };
+      const errorObj = { message: err?.message || "Google authentication failed." } as AuthError;
+      setError(errorObj.message);
+      return { data: { provider: "google" as const, url: null }, error: errorObj };
     }
   }, []);
 
@@ -277,11 +150,13 @@ export function useAuth() {
     async (email: string, emailRedirectTo?: string) => {
       setError(null);
       if (!isSupabaseConfigured()) {
-        return { data: { user: null, session: null }, error: null };
+        const err = { message: "Supabase authentication is not configured in this environment." } as AuthError;
+        setError(err.message);
+        return { data: { user: null, session: null }, error: err };
       }
 
       const res = await supabase.auth.signInWithOtp({
-        email,
+        email: email.trim().toLowerCase(),
         options: {
           emailRedirectTo:
             emailRedirectTo ||
@@ -296,9 +171,6 @@ export function useAuth() {
 
   const signOut = useCallback(async () => {
     setError(null);
-    if (typeof window !== "undefined") {
-      localStorage.removeItem("tanie_reviewer_user");
-    }
     if (isSupabaseConfigured()) {
       await supabase.auth.signOut().catch(() => {});
     }

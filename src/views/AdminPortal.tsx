@@ -30,11 +30,13 @@ const ADMIN_EMAILS = [
 ];
 
 export default function AdminPortal() {
-  const { user, signInWithGoogle, signOut, loading: authLoading } = useAuth();
+  const { user, signInWithPassword, signInWithGoogle, signOut, loading: authLoading } = useAuth();
   const [isAdminUnlocked, setIsAdminUnlocked] = useState(false);
-  const [adminPasscode, setAdminPasscode] = useState("");
+  const [adminEmail, setAdminEmail] = useState("");
+  const [adminPassword, setAdminPassword] = useState("");
   const [authError, setAuthError] = useState("");
   const [isSigningInGoogle, setIsSigningInGoogle] = useState(false);
+  const [isSubmittingPassword, setIsSubmittingPassword] = useState(false);
 
   const [activeTab, setActiveTab] = useState<"metrics" | "projects" | "leads" | "contracts" | "assets" | "packages">("metrics");
   const [projects, setProjects] = useState<ClientProject[]>([]);
@@ -93,10 +95,12 @@ export default function AdminPortal() {
     };
   }, []);
 
-  // Auto-unlock if authenticated via Google with an admin email
+  // Auto-unlock if authenticated via Supabase with an admin email
   useEffect(() => {
     if (user?.email && ADMIN_EMAILS.includes(user.email.toLowerCase())) {
       setIsAdminUnlocked(true);
+    } else {
+      setIsAdminUnlocked(false);
     }
   }, [user]);
 
@@ -118,15 +122,22 @@ export default function AdminPortal() {
     }
   };
 
-  // Admin Passcode Authenticator (Master Access)
-  const handleAdminLogin = (e: React.FormEvent) => {
+  // Real Supabase Email/Password Admin Sign-in
+  const handleAdminEmailLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setAuthError("");
-    // Secure master passcode or developer override
-    if (adminPasscode.trim().toLowerCase() === "tanie2026" || adminPasscode.trim().toLowerCase() === "admin") {
-      setIsAdminUnlocked(true);
-    } else {
-      setAuthError("Incorrect admin master passcode. Use 'tanie2026' to unlock.");
+    setIsSubmittingPassword(true);
+    try {
+      const res = await signInWithPassword(adminEmail, adminPassword);
+      if (res?.error) {
+        setAuthError(res.error.message);
+      } else if (res?.data?.user?.email && !ADMIN_EMAILS.includes(res.data.user.email.toLowerCase())) {
+        setAuthError("Access restricted: This account is not registered as a studio administrator.");
+      }
+    } catch (err: unknown) {
+      setAuthError((err as Error)?.message || "Failed to sign in.");
+    } finally {
+      setIsSubmittingPassword(false);
     }
   };
 
@@ -222,26 +233,50 @@ export default function AdminPortal() {
                 Sign Out ({user.email?.split("@")[0]})
               </button>
             )}
-            {isAdminUnlocked && !user && (
+            {user && (
               <button
                 type="button"
-                onClick={() => setIsAdminUnlocked(false)}
-                className="rounded-full border border-rose-500/30 bg-rose-500/10 px-4 py-2 text-xs font-medium text-rose-300 hover:bg-rose-500/20 cursor-pointer"
+                onClick={() => signOut()}
+                className="rounded-full border border-slate-700 bg-slate-900/80 px-4 py-2 text-xs font-medium text-slate-300 hover:text-white cursor-pointer"
+                title={`Signed in as ${user.email}`}
               >
-                Lock Admin
+                Sign Out ({user.email?.split("@")[0]})
               </button>
             )}
           </div>
         </div>
 
-        {/* ADMIN PASSCODE UNLOCK (If Locked) */}
-        {!isAdminUnlocked ? (
+        {/* AUTHENTICATION / ACCESS GUARD */}
+        {user && !isAdminUnlocked ? (
+          <div className="mx-auto max-w-md rounded-3xl border border-rose-500/30 bg-slate-950/90 p-8 backdrop-blur-2xl shadow-2xl text-center">
+            <span className="text-4xl">🚫</span>
+            <h2 className="mt-3 text-xl font-black text-white">Administrator Access Required</h2>
+            <p className="mt-2 text-xs text-slate-400 leading-relaxed">
+              You are signed in as <span className="font-semibold text-rose-300">{user.email}</span>. This account does not have administrative privileges for the studio dashboard.
+            </p>
+            <div className="mt-6 flex flex-col gap-3">
+              <button
+                type="button"
+                onClick={() => signOut()}
+                className="w-full rounded-xl bg-rose-500/20 border border-rose-500/40 py-2.5 text-xs font-bold text-rose-200 hover:bg-rose-500/30 cursor-pointer transition"
+              >
+                Sign Out & Switch Account
+              </button>
+              <Link
+                href="/client-portal"
+                className="w-full rounded-xl border border-white/10 bg-slate-900 py-2.5 text-xs font-bold text-slate-300 hover:bg-slate-800 hover:text-white transition !no-underline"
+              >
+                Go to Client Workspace →
+              </Link>
+            </div>
+          </div>
+        ) : !isAdminUnlocked ? (
           <div className="mx-auto max-w-md rounded-3xl border border-sky-400/20 bg-slate-950/90 p-8 backdrop-blur-2xl shadow-2xl">
             <div className="text-center">
               <span className="text-3xl">🔐</span>
-              <h2 className="mt-2 text-xl font-bold text-white">Unlock Admin Workspace</h2>
+              <h2 className="mt-2 text-xl font-bold text-white">Studio Admin Authentication</h2>
               <p className="mt-1 text-xs text-slate-400">
-                Enter your administrative key or passcode to manage studio deliverables.
+                Sign in with an authorized administrator account to manage clients, contracts, and revenue.
               </p>
             </div>
 
@@ -283,46 +318,48 @@ export default function AdminPortal() {
               <div className="relative my-5 flex items-center justify-center">
                 <div className="w-full border-t border-white/10" />
                 <span className="absolute bg-slate-950 px-3 text-[10px] font-semibold uppercase tracking-wider text-slate-500">
-                  Or use admin key
+                  Or admin email & password
                 </span>
               </div>
             </div>
 
-            <form onSubmit={handleAdminLogin} className="space-y-4">
+            <form onSubmit={handleAdminEmailLogin} className="space-y-4">
               <div>
                 <label className="block text-xs font-medium uppercase tracking-wider text-slate-300">
-                  Admin Passcode
+                  Admin Email
+                </label>
+                <input
+                  type="email"
+                  required
+                  value={adminEmail}
+                  onChange={(e) => setAdminEmail(e.target.value)}
+                  placeholder="admin@tanie.me"
+                  className="mt-1.5 w-full rounded-xl border border-white/10 bg-slate-900/80 px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:border-sky-400 focus:outline-none focus:ring-1 focus:ring-sky-400"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-medium uppercase tracking-wider text-slate-300">
+                  Admin Password
                 </label>
                 <input
                   type="password"
                   required
-                  value={adminPasscode}
-                  onChange={(e) => setAdminPasscode(e.target.value)}
-                  placeholder="Enter passcode (e.g. tanie2026)"
+                  value={adminPassword}
+                  onChange={(e) => setAdminPassword(e.target.value)}
+                  placeholder="••••••••••••"
                   className="mt-1.5 w-full rounded-xl border border-white/10 bg-slate-900/80 px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:border-sky-400 focus:outline-none focus:ring-1 focus:ring-sky-400"
                 />
               </div>
 
               <button
                 type="submit"
-                className="w-full rounded-xl bg-gradient-to-r from-sky-400 to-cyan-500 py-3 text-sm font-bold text-slate-950 shadow-[0_0_20px_rgba(56,189,248,0.3)] transition hover:brightness-110 cursor-pointer"
+                disabled={isSubmittingPassword}
+                className="w-full rounded-xl bg-gradient-to-r from-sky-400 to-cyan-500 py-3 text-sm font-bold text-slate-950 shadow-[0_0_20px_rgba(56,189,248,0.3)] transition hover:brightness-110 cursor-pointer disabled:opacity-50"
               >
-                Unlock Dashboard
+                {isSubmittingPassword ? "Verifying..." : "Sign In to Admin Workspace"}
               </button>
             </form>
-
-            <div className="mt-6 border-t border-white/10 pt-4 text-center">
-              <button
-                type="button"
-                onClick={() => {
-                  setAdminPasscode("tanie2026");
-                  setIsAdminUnlocked(true);
-                }}
-                className="text-xs text-sky-400 underline underline-offset-4 hover:text-sky-300"
-              >
-                Quick Demo Unlock (Passcode: tanie2026) →
-              </button>
-            </div>
           </div>
         ) : (
           /* UNLOCKED ADMIN DASHBOARD */

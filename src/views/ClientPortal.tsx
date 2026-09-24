@@ -22,11 +22,9 @@ import {
   type ProjectAsset,
   type WebsitePackage,
   type ChangeRequest,
-  DEMO_CLIENT_PROJECT,
 } from "@/lib/portalServices";
 import {
   openRazorpayCheckout,
-  RAZORPAY_TEST_CREDENTIALS,
   type RazorpayPaymentSuccessResponse,
 } from "@/lib/razorpay";
 import SignaturePad from "@/components/SignaturePad";
@@ -50,7 +48,6 @@ export default function ClientPortal() {
   const [authMode, setAuthMode] = useState<"login" | "signup" | "magic">("login");
   const [authMessage, setAuthMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
   const [isSubmittingAuth, setIsSubmittingAuth] = useState(false);
-  const [isDemoMode, setIsDemoMode] = useState(false);
 
   // Portal State
   const [activeTab, setActiveTab] = useState<"overview" | "payments" | "assets" | "contracts" | "changes" | "packages">("overview");
@@ -82,26 +79,24 @@ export default function ClientPortal() {
   const [contractSignedSuccess, setContractSignedSuccess] = useState(false);
   const [legalAgreed, setLegalAgreed] = useState(false);
 
-  // Load project, contract, assets, packages, and change requests when user or demo mode changes
+  // Load project, contract, assets, packages, and change requests when authenticated user changes
   useEffect(() => {
     let isMounted = true;
     async function loadPortalData() {
       setLoadingData(true);
-      const email = user?.email || (isDemoMode ? "client@demo.com" : "");
+      const email = user?.email || "";
 
       try {
         const [pkgs, projs] = await Promise.all([
           getWebsitePackages(),
-          email
-            ? getClientProjects(email)
-            : Promise.resolve(isDemoMode ? [DEMO_CLIENT_PROJECT] : []),
+          email ? getClientProjects(email) : Promise.resolve([]),
         ]);
 
         if (!isMounted) return;
         setPackages(pkgs);
         setProjects(projs);
 
-        const currentProj = projs[0] || (isDemoMode ? DEMO_CLIENT_PROJECT : null);
+        const currentProj = projs[0] || null;
         setSelectedProject(currentProj);
 
         if (currentProj) {
@@ -126,16 +121,21 @@ export default function ClientPortal() {
       }
     }
 
-    if (user || isDemoMode) {
+    if (user) {
       loadPortalData();
     } else {
       setLoadingData(false);
+      setProjects([]);
+      setSelectedProject(null);
+      setContract(null);
+      setAssets([]);
+      setChangeRequests([]);
     }
 
     return () => {
       isMounted = false;
     };
-  }, [user, isDemoMode]);
+  }, [user]);
 
   // Google OAuth Handler
   const handleGoogleSignIn = async () => {
@@ -204,7 +204,6 @@ export default function ClientPortal() {
 
   const handleSignOut = async () => {
     await signOut();
-    setIsDemoMode(false);
   };
 
   // Asset Upload Handlers
@@ -308,13 +307,13 @@ export default function ClientPortal() {
         name: "Tanie Lalwani Studio",
         description,
         prefill: {
-          name: selectedProject?.client_name || RAZORPAY_TEST_CREDENTIALS.name,
-          email: user?.email || selectedProject?.client_email || RAZORPAY_TEST_CREDENTIALS.email,
-          contact: RAZORPAY_TEST_CREDENTIALS.phone,
+          name: selectedProject?.client_name || user?.user_metadata?.full_name || "",
+          email: user?.email || selectedProject?.client_email || "",
+          contact: "",
         },
         notes: {
-          project_id: selectedProject?.id || "demo-project",
-          client_email: user?.email || "client@portal.com",
+          project_id: selectedProject?.id || "",
+          client_email: user?.email || "",
         },
         onSuccess: (res: RazorpayPaymentSuccessResponse) => {
           setIsPayingWithRazorpay(false);
@@ -410,11 +409,10 @@ export default function ClientPortal() {
     }
   };
 
-  const isDemo = isDemoMode;
-  const isGuest = !user && !isDemo;
-  const isConfirmedClient = isDemo || (Boolean(user) && (projects.length > 0 || Boolean(paidReceipt)));
-  const isProspectAwaitingSprint = Boolean(user) && !isDemo && (!selectedProject || projects.length === 0) && !paidReceipt;
-  const isAuthenticatedUser = Boolean(user) || isDemoMode;
+  const isGuest = !user;
+  const isConfirmedClient = Boolean(user) && (projects.length > 0 || Boolean(paidReceipt));
+  const isProspectAwaitingSprint = Boolean(user) && (!selectedProject || projects.length === 0) && !paidReceipt;
+  const isAuthenticatedUser = Boolean(user);
 
   return (
     <main className="min-h-screen bg-[#dff4ff] text-slate-900 font-sans selection:bg-sky-200 selection:text-black" dir={locale === "ur" ? "rtl" : "ltr"}>
@@ -602,23 +600,7 @@ export default function ClientPortal() {
                 >
                   Sign Out ({user?.email})
                 </button>
-              ) : isDemoMode ? (
-                <button
-                  type="button"
-                  onClick={() => setIsDemoMode(false)}
-                  className="rounded-full border border-rose-300 bg-rose-50 px-4 py-2 text-xs font-bold text-rose-800 transition hover:bg-rose-100 cursor-pointer"
-                >
-                  Exit Demo Mode
-                </button>
-              ) : (
-                <button
-                  type="button"
-                  onClick={() => setIsDemoMode(true)}
-                  className="rounded-full bg-slate-950 px-5 py-2 text-xs font-bold uppercase tracking-wider text-white shadow-md transition hover:bg-slate-800 cursor-pointer"
-                >
-                  Explore Demo Workspace ⚡
-                </button>
-              )}
+              ) : null}
             </div>
           </div>
 
@@ -813,59 +795,46 @@ export default function ClientPortal() {
                         : "Create Client Account"}
                     </button>
                   </form>
-
-                  <div className="mt-6 border-t border-black/8 pt-4 text-center">
-                    <p className="text-xs text-slate-500">Want to test the full client experience right away?</p>
-                    <button
-                      type="button"
-                      onClick={() => setIsDemoMode(true)}
-                      className="mt-2 inline-flex items-center gap-1.5 text-xs font-bold text-sky-700 hover:text-sky-900 underline underline-offset-4 cursor-pointer"
-                    >
-                      <span>Launch One-Click Demo Client Workspace</span>
-                      <span>→</span>
-                    </button>
-                  </div>
                 </div>
 
-                {/* Right Column: Interactive Demo Experience Highlight */}
+                {/* Right Column: Authentic Client Experience Overview */}
                 <div className="lg:col-span-6 space-y-6">
                   <div className="rounded-[2rem] border border-sky-300/70 bg-gradient-to-br from-white/95 via-sky-50/70 to-indigo-50/60 p-8 backdrop-blur-xl shadow-lg">
                     <span className="inline-block rounded-md border border-sky-300 bg-sky-100 px-2.5 py-0.5 text-xs font-extrabold uppercase tracking-wider text-sky-900">
-                      Interactive Experience
+                      Studio Client Workspace
                     </span>
-                    <h3 className="mt-3 text-2xl font-black text-slate-950">Test-Drive the Client Hub</h3>
+                    <h3 className="mt-3 text-2xl font-black text-slate-950">Bespoke Engineering & Milestone Portal</h3>
                     <p className="mt-2 text-xs text-slate-600 leading-relaxed font-medium">
-                      Experience what it feels like to collaborate with Tanie Lalwani. With the demo workspace, you can inspect live milestone progression, try the canvas signature pad, and test the cloud asset dropzone.
+                      Every project commissioned with Tanie Lalwani includes a dedicated, private client workspace. Real-time sprint telemetry, cryptographic e-contracts, and cloud asset synchronization.
                     </p>
 
                     <div className="mt-6 space-y-3">
                       <div className="flex items-center gap-3 rounded-2xl border border-black/5 bg-white/80 p-3 text-xs text-slate-700 font-medium">
                         <span className="text-sky-600 font-bold">✓</span>
-                        <span>No sign-up or credit card required for demo exploration</span>
+                        <span>Single Sign-On via Google OAuth or verified email authentication</span>
                       </div>
                       <div className="flex items-center gap-3 rounded-2xl border border-black/5 bg-white/80 p-3 text-xs text-slate-700 font-medium">
                         <span className="text-sky-600 font-bold">✓</span>
-                        <span>Simulated real-world e-contract agreement & signature pad</span>
+                        <span>RBI-compliant Razorpay invoice processing and automatic receipts</span>
                       </div>
                       <div className="flex items-center gap-3 rounded-2xl border border-black/5 bg-white/80 p-3 text-xs text-slate-700 font-medium">
                         <span className="text-sky-600 font-bold">✓</span>
-                        <span>Active sprint milestone tracker with progress analytics</span>
+                        <span>Interactive canvas signature pad with verifiable IP ownership transfer</span>
                       </div>
                     </div>
 
                     <div className="mt-8 flex flex-wrap items-center gap-4">
-                      <button
-                        type="button"
-                        onClick={() => setIsDemoMode(true)}
-                        className="rounded-xl bg-slate-950 px-6 py-3 text-xs font-bold uppercase tracking-wider text-white shadow-md transition hover:bg-slate-800 cursor-pointer"
-                      >
-                        Open Demo Workspace ⚡
-                      </button>
                       <Link
                         href="/contact"
-                        className="rounded-xl border border-black/15 bg-white px-6 py-3 text-xs font-bold uppercase tracking-wider text-slate-800 transition hover:bg-slate-50 !no-underline"
+                        className="rounded-xl bg-slate-950 px-6 py-3 text-xs font-bold uppercase tracking-wider text-white shadow-md transition hover:bg-slate-800 !no-underline"
                       >
                         Inquire for New Project
+                      </Link>
+                      <Link
+                        href="/pricing"
+                        className="rounded-xl border border-black/15 bg-white px-6 py-3 text-xs font-bold uppercase tracking-wider text-slate-800 transition hover:bg-slate-50 !no-underline"
+                      >
+                        Explore Packages
                       </Link>
                     </div>
                   </div>
@@ -911,13 +880,12 @@ export default function ClientPortal() {
                 </div>
 
                 <div className="flex shrink-0 items-center gap-2">
-                  <button
-                    type="button"
-                    onClick={() => setIsDemoMode(true)}
-                    className="rounded-full border border-black/10 bg-white/90 px-4 py-2 text-xs font-bold text-slate-800 shadow-xs hover:bg-white cursor-pointer"
+                  <Link
+                    href="/contact"
+                    className="rounded-full border border-black/10 bg-white/90 px-4 py-2 text-xs font-bold text-slate-800 shadow-xs hover:bg-white !no-underline"
                   >
-                    Preview Demo Workspace ⚡
-                  </button>
+                    Custom Consultation →
+                  </Link>
                 </div>
               </div>
 
@@ -1044,22 +1012,21 @@ export default function ClientPortal() {
 
                 <div className="rounded-3xl border border-black/10 bg-gradient-to-br from-slate-950 to-slate-900 text-white p-6 flex flex-col justify-between shadow-md">
                   <div>
-                    <span className="text-2xl">⚡</span>
+                    <span className="text-2xl">🛡️</span>
                     <h4 className="mt-3 text-base font-bold text-white">
-                      Curious what your workspace looks like?
+                      Guaranteed Security & Transparency
                     </h4>
                     <p className="mt-1 text-xs text-slate-300 leading-relaxed">
-                      Launch the 1-click interactive demo workspace. You can preview live sprint progress, test the cryptographic canvas signature pad, and inspect the deliverables vault.
+                      Every production sprint is backed by an official service agreement, milestone sign-offs, and encrypted Razorpay transaction receipts. Full IP transfer upon completion.
                     </p>
                   </div>
                   <div className="mt-6">
-                    <button
-                      type="button"
-                      onClick={() => setIsDemoMode(true)}
-                      className="rounded-full bg-sky-400 hover:bg-sky-300 text-slate-950 px-6 py-2.5 text-xs font-extrabold uppercase tracking-wider transition-all shadow-md cursor-pointer"
+                    <Link
+                      href="/terms"
+                      className="inline-flex rounded-full bg-sky-400 hover:bg-sky-300 text-slate-950 px-6 py-2.5 text-xs font-extrabold uppercase tracking-wider transition-all shadow-md !no-underline"
                     >
-                      Launch Demo Mode Now →
-                    </button>
+                      Review Terms of Service →
+                    </Link>
                   </div>
                 </div>
               </div>

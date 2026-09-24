@@ -81,16 +81,6 @@ export function getRazorpayKeyId(): string {
 }
 
 /**
- * Standard test credentials for Razorpay verification & reviewers.
- */
-export const RAZORPAY_TEST_CREDENTIALS = {
-  email: "wordsofvoice2210@gmail.com",
-  password: "Ant!l0pe",
-  name: "Razorpay Site Reviewer",
-  phone: "+919876543210",
-};
-
-/**
  * Initiates the standard Razorpay checkout modal.
  */
 export async function openRazorpayCheckout({
@@ -99,11 +89,7 @@ export async function openRazorpayCheckout({
   name = "Tanie Lalwani | Creative Engineering",
   description = "Website Architecture & Sprint Retainer",
   orderId,
-  prefill = {
-    email: RAZORPAY_TEST_CREDENTIALS.email,
-    name: RAZORPAY_TEST_CREDENTIALS.name,
-    contact: RAZORPAY_TEST_CREDENTIALS.phone,
-  },
+  prefill = {},
   notes = {},
   onSuccess,
   onFailure,
@@ -128,14 +114,13 @@ export async function openRazorpayCheckout({
     image: "https://tanie.me/og.webp",
     order_id: orderId || undefined,
     prefill: {
-      name: prefill.name || RAZORPAY_TEST_CREDENTIALS.name,
-      email: prefill.email || RAZORPAY_TEST_CREDENTIALS.email,
-      contact: prefill.contact || RAZORPAY_TEST_CREDENTIALS.phone,
+      name: prefill.name || "",
+      email: prefill.email || "",
+      contact: prefill.contact || "",
     },
     notes: {
       ...notes,
       platform: "Tanie Lalwani Studio",
-      verified_account: RAZORPAY_TEST_CREDENTIALS.email,
     },
     theme: {
       color: "#0284c7",
