@@ -9,6 +9,7 @@ import {
   getWebsitePackages,
   submitLead,
   submitBooking,
+  createClientProject,
   type WebsitePackage
 } from "@/lib/portalServices";
 import {
@@ -68,16 +69,38 @@ export default function PackagesView() {
   const [projectName, setProjectName] = useState("");
   const [clientName, setClientName] = useState("");
   const [clientEmail, setClientEmail] = useState("");
+  const [contactPhone, setContactPhone] = useState("");
+  const [clientMessage, setClientMessage] = useState("");
   const [companyName, setCompanyName] = useState("");
   const [websitePurpose, setWebsitePurpose] = useState("");
   const [pagesRequired, setPagesRequired] = useState("4–7 pages");
   const [featuresList, setFeaturesList] = useState<string[]>(["Lead Capture Form", "Interactive Animations"]);
   const [contentStatus, setContentStatus] = useState<"Ready" | "In Progress" | "Need Copywriting">("In Progress");
-  const [targetDeadline, setTargetDeadline] = useState("4 Weeks");
+  const [targetDeadline, setTargetDeadline] = useState("3–4 Weeks");
   const [existingWebsite, setExistingWebsite] = useState("");
   const [referenceLinks, setReferenceLinks] = useState("");
   const [mustHaves, setMustHaves] = useState("");
   const [dealbreakers, setDealbreakers] = useState("");
+  const [estimatedPriceUsd, setEstimatedPriceUsd] = useState<number | null>(2899);
+  const [estimatedPriceInr, setEstimatedPriceInr] = useState<number | null>(240000);
+
+  // Auto-fill from user or stored profile
+  useEffect(() => {
+    if (user?.email && !clientEmail) {
+      setClientEmail(user.email);
+    }
+    if (user?.user_metadata?.full_name && !clientName) {
+      setClientName(user.user_metadata.full_name);
+    }
+    try {
+      const savedEmail = typeof window !== "undefined" ? localStorage.getItem("tanie_client_email") : null;
+      if (savedEmail && !clientEmail) setClientEmail(savedEmail);
+      const savedName = typeof window !== "undefined" ? localStorage.getItem("tanie_client_name") : null;
+      if (savedName && !clientName) setClientName(savedName);
+      const savedPhone = typeof window !== "undefined" ? localStorage.getItem("tanie_client_phone") : null;
+      if (savedPhone && !contactPhone) setContactPhone(savedPhone);
+    } catch {}
+  }, [user]);
 
   // Auth / Account Step in Intake
   const [authStepRequired, setAuthStepRequired] = useState(false);
@@ -154,7 +177,21 @@ export default function PackagesView() {
     setSelectedScopeTier(defaultScope);
     setPreviewStyleModal(null);
     setReferenceLinks(wizardAnswers.references || "");
-    setWebsitePurpose(wizardAnswers.visitorFeeling || "");
+    setFeaturesList(["Lead Capture & Contact System", "Interactive Micro-Animations", "SEO & Performance Architecture"]);
+
+    // Calculate clear estimated pricing based on scope tier
+    let usd = 2899;
+    let inr = 240000;
+    if (defaultScope.toLowerCase().includes("starter")) {
+      usd = 1499;
+      inr = 120000;
+    } else if (defaultScope.toLowerCase().includes("flagship") || defaultScope.toLowerCase().includes("custom") || defaultScope.toLowerCase().includes("3d")) {
+      usd = 4999;
+      inr = 400000;
+    }
+    setEstimatedPriceUsd(usd);
+    setEstimatedPriceInr(inr);
+
     setShowIntakeModal(true);
     setAuthStepRequired(false);
   };
@@ -176,49 +213,41 @@ export default function PackagesView() {
     currency: "INR" | "USD";
   }) => {
     setProjectName(quoteData.projectName);
+    setCompanyName(quoteData.projectName);
     setFeaturesList(quoteData.selectedFeatureNames);
-    setWebsitePurpose(
-      `Custom ${quoteData.industry} scope configuration with ${quoteData.selectedFeatureNames.length} selected features. Total Estimated Investment: ${
-        quoteData.currency === "INR"
-          ? `₹${quoteData.finalTotalInr.toLocaleString()}`
-          : `$${quoteData.finalTotalUsd.toLocaleString()}`
-      }`
-    );
+    setEstimatedPriceInr(quoteData.finalTotalInr);
+    setEstimatedPriceUsd(quoteData.finalTotalUsd);
+    setCurrency(quoteData.currency);
     setSelectedScopeTier(`${quoteData.industry} Custom Scope`);
+    setTargetDeadline("3–4 Weeks");
     setShowIntakeModal(true);
     setAuthStepRequired(false);
   };
 
   // Handle custom quote submission from WebsiteCostCalculatorFunnel
   const handleProceedWithCostCalculatorFunnel = (quoteData: any) => {
-    setProjectName(quoteData.businessName || "Custom Web Project");
-    setCompanyName(quoteData.businessName || "");
-    setFeaturesList(quoteData.bundles ? quoteData.bundles.map((b: any) => b.name) : []);
-    setWebsitePurpose(
-      `Custom Website Plan | Industry: ${quoteData.industry || "General"} | Foundation: ${quoteData.websiteType || "Business"} | Calculated Total: ${
-        quoteData.currency === "INR"
-          ? `₹${quoteData.totalPriceInr?.toLocaleString()}`
-          : `$${quoteData.totalPriceUsd?.toLocaleString()}`
-      }`
-    );
-    setSelectedScopeTier(quoteData.suggestedPackage?.title || "Custom Bespoke Build");
+    const business = quoteData.businessName || quoteData.projectName || "Custom Web Project";
+    setProjectName(business);
+    setCompanyName(business);
+    setFeaturesList(quoteData.bundles ? quoteData.bundles.map((b: any) => b.name) : quoteData.selectedBundles || []);
+    
+    // Safely extract price without undefined!
+    const inr = quoteData.finalTotalInr ?? quoteData.totalPriceInr ?? 240000;
+    const usd = quoteData.finalTotalUsd ?? quoteData.totalPriceUsd ?? 2899;
+    setEstimatedPriceInr(inr);
+    setEstimatedPriceUsd(usd);
+    if (quoteData.currency) setCurrency(quoteData.currency);
+
+    setSelectedScopeTier(quoteData.suggestedPackage?.title || (quoteData.industry ? `${quoteData.industry} Custom Build` : "Custom Bespoke Build"));
     setTargetDeadline(quoteData.timeline || "3–4 Weeks");
     setShowIntakeModal(true);
     setAuthStepRequired(false);
   };
 
-
   // Handle Intake Form Submission
   const handleIntakeSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!clientName.trim() || !clientEmail.trim()) return;
-
-    if (!user && !isAuthenticated) {
-      setAuthEmail(clientEmail.trim());
-      setAuthStepRequired(true);
-      return;
-    }
-
+    if (!clientName.trim() || !clientEmail.trim() || !contactPhone.trim()) return;
     await finalizeProjectSubmission();
   };
 
@@ -227,58 +256,84 @@ export default function PackagesView() {
     setIsSubmitting(true);
     try {
       const aestheticName = selectedAestheticForRequest?.name || "Bespoke Custom Direction";
+      const inrPrice = estimatedPriceInr ?? (currency === "INR" ? 240000 : Math.round(2899 * 83));
+      const usdPrice = estimatedPriceUsd ?? (currency === "USD" ? 2899 : Math.round(240000 / 83));
+
       const fullDescription = `
-[Website Design Marketplace Intake]
-Selected Aesthetic: ${aestheticName} (${selectedAestheticForRequest?.category || "Custom"})
-Scope Foundation: ${selectedScopeTier} (${pagesRequired})
-Website Purpose: ${websitePurpose}
-Target Audience / Vibe: ${wizardAnswers.vibe || "Modern"}
-Content Status: ${contentStatus}
-Target Deadline: ${targetDeadline}
-Existing Website: ${existingWebsite || "None"}
-Reference Websites: ${referenceLinks || "None"}
-Must-Haves: ${mustHaves || "None specified"}
-Dealbreakers / Don't Wants: ${dealbreakers || "None specified"}
-Features: ${featuresList.join(", ")}
+[Website Booking Intake]
+📞 Phone / WhatsApp: ${contactPhone.trim()}
+💎 Aesthetic & Scope: ${aestheticName} • ${selectedScopeTier}
+💰 Estimated Investment: ₹${inrPrice.toLocaleString()} ($${usdPrice.toLocaleString()} USD)
+⚡ Options / Selected Modules: ${featuresList.length > 0 ? featuresList.join(", ") : "Standard Core Architecture"}
+📝 Client Note: ${clientMessage.trim() || "No additional note provided."}
+${companyName.trim() ? `🏢 Company / Brand: ${companyName.trim()}` : ""}
       `.trim();
 
+      // 1. Submit Booking Record
       await submitBooking({
         client_name: clientName.trim(),
         client_email: clientEmail.trim().toLowerCase(),
+        phone: contactPhone.trim(),
         company_name: companyName.trim() || projectName.trim() || undefined,
-        package_id: selectedScopeTier.toLowerCase().includes("starter")
-          ? "luxury-landing-sprint"
-          : selectedScopeTier.toLowerCase().includes("custom")
-          ? "interactive-3d-experience"
-          : "fullstack-web-app",
+        package_id: `${aestheticName} - ${selectedScopeTier}`,
+        selected_aesthetic: aestheticName,
+        scope_tier: selectedScopeTier,
         selected_addons: featuresList,
-        timeline_requirement: targetDeadline,
-        project_description: fullDescription
+        estimated_budget_usd: usdPrice,
+        estimated_budget_inr: inrPrice,
+        timeline_requirement: targetDeadline || "3–4 Weeks",
+        project_description: fullDescription,
+        client_message: clientMessage.trim()
       });
 
+      // 2. Submit Lead Record
       await submitLead({
         client_name: clientName.trim(),
         client_email: clientEmail.trim().toLowerCase(),
+        phone: contactPhone.trim(),
         company_name: companyName.trim() || undefined,
-        package_interest: `${aestheticName} - ${selectedScopeTier}`,
-        timeline: targetDeadline,
+        package_interest: `${aestheticName} (${selectedScopeTier})`,
+        timeline: targetDeadline || "3–4 Weeks",
         source: "Marketplace Project Intake",
         project_description: fullDescription
       });
+
+      // 3. Create client project so client sees it immediately on /client!
+      await createClientProject({
+        client_name: clientName.trim(),
+        client_email: clientEmail.trim().toLowerCase(),
+        company_name: companyName.trim() || undefined,
+        title: `${aestheticName} Website Project`,
+        description: clientMessage.trim() || `Scope: ${selectedScopeTier}. Selected Features: ${featuresList.join(", ")}`,
+        selected_aesthetic: aestheticName,
+        scope_tier: selectedScopeTier,
+        budget_usd: usdPrice,
+        budget_inr: inrPrice,
+        features_requested: featuresList,
+        status: "Discovery",
+        progress_percent: 15,
+      });
+
+      // Save to localStorage so /client auto-loads the user's project
+      if (typeof window !== "undefined") {
+        localStorage.setItem("tanie_client_email", clientEmail.trim().toLowerCase());
+        localStorage.setItem("tanie_client_name", clientName.trim());
+        localStorage.setItem("tanie_client_phone", contactPhone.trim());
+      }
 
       setIntakeSuccess(true);
       setTimeout(() => {
         setShowIntakeModal(false);
         setIntakeSuccess(false);
         router.push("/client");
-      }, 2000);
+      }, 1800);
     } catch (err) {
       console.error("Submission error:", err);
       setIntakeSuccess(true);
       setTimeout(() => {
         setShowIntakeModal(false);
         router.push("/client");
-      }, 2000);
+      }, 1800);
     } finally {
       setIsSubmitting(false);
     }
@@ -1218,39 +1273,93 @@ Features: ${featuresList.join(", ")}
                 <div className="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-sky-100 border border-sky-200 text-[#0a192f] text-3xl mb-4">
                   🎉
                 </div>
-                <h3 className="text-2xl font-black text-[#0a192f] mb-2">{pkgCopy.intakeModal.success}</h3>
+                <h3 className="text-2xl font-black text-[#0a192f] mb-2">Booking & Scope Saved!</h3>
+                <p className="text-xs text-sky-900/80 mb-4">
+                  Your project and estimated pricing have been saved to your workspace. Redirecting to your Client Hub...
+                </p>
                 <div className="animate-spin h-5 w-5 border-2 border-sky-600 border-t-transparent rounded-full mx-auto" />
               </div>
-            ) : !authStepRequired ? (
+            ) : (
               <div>
-                <span className="text-[10px] font-extrabold uppercase tracking-widest text-sky-700">
-                  {pkgCopy.intakeModal.title}
-                </span>
+                {/* Header */}
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="text-[10px] font-extrabold uppercase tracking-widest text-sky-700 bg-sky-100/70 border border-sky-200 px-2.5 py-0.5 rounded-full">
+                    Fast Booking • Direct to Studio
+                  </span>
+                </div>
                 <h3 className="text-2xl font-black text-[#0a192f] mt-1 mb-1">
-                  {pkgCopy.intakeModal.subtitle}
+                  Book Your Website Project
                 </h3>
-                <p className="text-xs text-sky-800/80 mb-6">
-                  Selected Aesthetic: <span className="font-bold text-[#0a192f]">{selectedAestheticForRequest?.name}</span>
+                <p className="text-xs text-sky-900/80 mb-4">
+                  Confirm your contact details. Your selected options and estimated price are saved directly for both you and Tanie.
                 </p>
 
-                <form onSubmit={handleIntakeSubmit} className="space-y-4">
+                {/* SELECTED OPTIONS & ESTIMATED PRICE SUMMARY CARD */}
+                <div className="rounded-2xl border border-sky-300/90 bg-white/80 p-4 mb-5 shadow-xs">
+                  <div className="flex flex-wrap items-center justify-between gap-3 border-b border-sky-100 pb-3 mb-3">
+                    <div>
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-sky-700">Selected Direction</span>
+                      <div className="text-sm font-black text-[#0a192f]">
+                        {selectedAestheticForRequest?.name || "Bespoke Web Design"}
+                      </div>
+                      <div className="text-[11px] text-slate-500 font-medium">
+                        Foundation: <span className="font-bold text-slate-800">{selectedScopeTier}</span>
+                      </div>
+                    </div>
+
+                    <div className="text-left sm:text-right">
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-sky-700">Estimated Investment</span>
+                      <div className="text-xl sm:text-2xl font-black text-[#0a192f]">
+                        {currency === "INR"
+                          ? `₹${(estimatedPriceInr ?? 240000).toLocaleString()}`
+                          : `$${(estimatedPriceUsd ?? 2899).toLocaleString()}`}
+                      </div>
+                      <div className="text-[10px] text-slate-500">
+                        {currency === "INR"
+                          ? `(Approx. $${(estimatedPriceUsd ?? 2899).toLocaleString()} USD)`
+                          : `(Approx. ₹${(estimatedPriceInr ?? 240000).toLocaleString()})`}
+                      </div>
+                    </div>
+                  </div>
+
+                  {featuresList.length > 0 && (
+                    <div>
+                      <span className="block text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1.5">
+                        Selected Modules & Features ({featuresList.length})
+                      </span>
+                      <div className="flex flex-wrap gap-1.5">
+                        {featuresList.map((feat, i) => (
+                          <span
+                            key={i}
+                            className="rounded-lg bg-sky-50 border border-sky-200/80 px-2 py-0.5 text-[10px] font-semibold text-sky-950"
+                          >
+                            ✓ {feat}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* ESSENTIAL LEAD FORM */}
+                <form onSubmit={handleIntakeSubmit} className="space-y-3.5">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
                       <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1">
-                        {pkgCopy.intakeModal.clientName} *
+                        Full Name *
                       </label>
                       <input
                         type="text"
                         required
                         value={clientName}
                         onChange={(e) => setClientName(e.target.value)}
-                        placeholder="Sarah Jenkins"
-                        className="w-full rounded-xl border border-black/15 bg-white px-3.5 py-2.5 text-xs outline-none focus:border-sky-500"
+                        placeholder="e.g. Sarah Jenkins"
+                        className="w-full rounded-xl border border-black/15 bg-white px-3.5 py-2.5 text-xs text-slate-900 outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-200"
                       />
                     </div>
                     <div>
                       <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1">
-                        {pkgCopy.intakeModal.clientEmail} *
+                        Email Address *
                       </label>
                       <input
                         type="email"
@@ -1258,7 +1367,7 @@ Features: ${featuresList.join(", ")}
                         value={clientEmail}
                         onChange={(e) => setClientEmail(e.target.value)}
                         placeholder="sarah@company.com"
-                        className="w-full rounded-xl border border-black/15 bg-white px-3.5 py-2.5 text-xs outline-none focus:border-sky-500"
+                        className="w-full rounded-xl border border-black/15 bg-white px-3.5 py-2.5 text-xs text-slate-900 outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-200"
                       />
                     </div>
                   </div>
@@ -1266,186 +1375,63 @@ Features: ${featuresList.join(", ")}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
                       <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1">
-                        {pkgCopy.intakeModal.projectName}
+                        Phone / WhatsApp *
+                      </label>
+                      <input
+                        type="tel"
+                        required
+                        value={contactPhone}
+                        onChange={(e) => setContactPhone(e.target.value)}
+                        placeholder="+91 98765 43210 / +1..."
+                        className="w-full rounded-xl border border-black/15 bg-white px-3.5 py-2.5 text-xs text-slate-900 outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-200"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1">
+                        Company or Brand (Optional)
                       </label>
                       <input
                         type="text"
                         value={companyName}
                         onChange={(e) => setCompanyName(e.target.value)}
-                        placeholder="Apex Living Ltd."
-                        className="w-full rounded-xl border border-black/15 bg-white px-3.5 py-2.5 text-xs outline-none focus:border-sky-500"
+                        placeholder="e.g. Apex Living Ltd."
+                        className="w-full rounded-xl border border-black/15 bg-white px-3.5 py-2.5 text-xs text-slate-900 outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-200"
                       />
-                    </div>
-                    <div>
-                      <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1">
-                        {pkgCopy.intakeModal.pages}
-                      </label>
-                      <select
-                        value={selectedScopeTier}
-                        onChange={(e) => setSelectedScopeTier(e.target.value)}
-                        className="w-full rounded-xl border border-black/15 bg-white px-3.5 py-2.5 text-xs outline-none focus:border-sky-500"
-                      >
-                        <option value="Starter">Starter (1–3 Pages / Fast Sprint)</option>
-                        <option value="Business">Business (4–7 Pages / Full Experience)</option>
-                        <option value="Custom Flagship">Custom Flagship (8+ Pages / 3D WebGL)</option>
-                      </select>
                     </div>
                   </div>
 
                   <div>
                     <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1">
-                      {pkgCopy.intakeModal.purpose}
+                      Project Message & Notes
                     </label>
                     <textarea
-                      rows={2}
-                      value={websitePurpose}
-                      onChange={(e) => setWebsitePurpose(e.target.value)}
-                      placeholder="What should this website achieve? (e.g. Generate high-ticket bookings, showcase architecture portfolio...)"
-                      className="w-full rounded-xl border border-black/15 bg-white px-3.5 py-2.5 text-xs outline-none focus:border-sky-500 resize-none"
-                    />
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <div>
-                      <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1">
-                        Content Status
-                      </label>
-                      <select
-                        value={contentStatus}
-                        onChange={(e) => setContentStatus(e.target.value as any)}
-                        className="w-full rounded-xl border border-black/15 bg-white px-3.5 py-2.5 text-xs outline-none focus:border-sky-500"
-                      >
-                        <option value="Ready">Copy & images are ready</option>
-                        <option value="In Progress">In progress / Gathering</option>
-                        <option value="Need Copywriting">Need copywriting & assistance</option>
-                      </select>
-                    </div>
-                    <div>
-                      <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1">
-                        {pkgCopy.intakeModal.timeline}
-                      </label>
-                      <input
-                        type="text"
-                        value={targetDeadline}
-                        onChange={(e) => setTargetDeadline(e.target.value)}
-                        placeholder="e.g. 4-6 Weeks / October 2026"
-                        className="w-full rounded-xl border border-black/15 bg-white px-3.5 py-2.5 text-xs outline-none focus:border-sky-500"
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1">
-                      Must-Haves (Specific elements you want)
-                    </label>
-                    <input
-                      type="text"
-                      value={mustHaves}
-                      onChange={(e) => setMustHaves(e.target.value)}
-                      placeholder="e.g. Booking calendar, dark mode toggle, video showreel"
-                      className="w-full rounded-xl border border-black/15 bg-white px-3.5 py-2.5 text-xs outline-none focus:border-sky-500"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1">
-                      Dealbreakers (Things you absolutely DO NOT want)
-                    </label>
-                    <input
-                      type="text"
-                      value={dealbreakers}
-                      onChange={(e) => setDealbreakers(e.target.value)}
-                      placeholder="e.g. No heavy popups, no stock cartoon graphics, no auto-playing sound"
-                      className="w-full rounded-xl border border-black/15 bg-white px-3.5 py-2.5 text-xs outline-none focus:border-sky-500"
+                      rows={3}
+                      value={clientMessage}
+                      onChange={(e) => setClientMessage(e.target.value)}
+                      placeholder="Briefly describe what you're building, specific inspirations, or desired launch timeline..."
+                      className="w-full rounded-xl border border-black/15 bg-white px-3.5 py-2.5 text-xs text-slate-900 outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-200 resize-none"
                     />
                   </div>
 
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full rounded-full bg-slate-950 py-3.5 text-xs font-bold uppercase tracking-widest text-white shadow-xl hover:bg-slate-800 disabled:opacity-50 cursor-pointer mt-2"
+                    className="w-full rounded-full bg-slate-950 py-3.5 text-xs font-bold uppercase tracking-widest text-white shadow-xl hover:bg-slate-800 disabled:opacity-50 cursor-pointer mt-2 transition-all flex items-center justify-center gap-2"
                   >
-                    {isSubmitting ? pkgCopy.intakeModal.submitting : pkgCopy.intakeModal.submit}
+                    {isSubmitting ? (
+                      <>
+                        <div className="h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                        <span>Saving Booking & Scope...</span>
+                      </>
+                    ) : (
+                      <span>Confirm Booking & Save Scope →</span>
+                    )}
                   </button>
-                </form>
-              </div>
-            ) : (
-              <div>
-                {/* Account Gate: Free exploration, require account only on project submission */}
-                <div className="text-center mb-6">
-                  <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-sky-100 text-sky-600 text-xl mb-3">
-                    🔐
-                  </div>
-                  <h3 className="text-xl font-bold text-slate-950">
-                    Create Your Account to Continue
-                  </h3>
-                  <p className="text-xs text-slate-500 mt-1">
-                    Your account grants you instant access to your private Client Board with project milestones, contract signing, and the change request log.
+
+                  <p className="text-[10px] text-center text-slate-500 mt-2">
+                    🔒 Saved directly to Tanie's studio portal. You can review your saved estimate anytime on the Client Hub.
                   </p>
-                </div>
-
-                {authError && (
-                  <div className="rounded-xl bg-rose-50 p-2.5 text-xs text-rose-700 border border-rose-200 mb-3">
-                    {authError}
-                  </div>
-                )}
-
-                <form onSubmit={handleAuthSubmit} className="space-y-3">
-                  <div>
-                    <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1">
-                      Email
-                    </label>
-                    <input
-                      type="email"
-                      required
-                      value={authEmail}
-                      onChange={(e) => setAuthEmail(e.target.value)}
-                      className="w-full rounded-xl border border-black/15 px-3.5 py-2.5 text-xs outline-none focus:border-sky-500"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1">
-                      Password
-                    </label>
-                    <input
-                      type="password"
-                      required
-                      value={authPassword}
-                      onChange={(e) => setAuthPassword(e.target.value)}
-                      className="w-full rounded-xl border border-black/15 px-3.5 py-2.5 text-xs outline-none focus:border-sky-500"
-                    />
-                  </div>
-
-                  <div className="flex items-center justify-between text-xs py-1">
-                    <button
-                      type="button"
-                      onClick={() => setAuthMode(authMode === "signup" ? "signin" : "signup")}
-                      className="text-sky-600 font-bold hover:underline cursor-pointer"
-                    >
-                      {authMode === "signup" ? "Already have an account? Sign In" : "Need an account? Sign Up"}
-                    </button>
-                  </div>
-
-                  <button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="w-full rounded-full bg-slate-950 py-3 text-xs font-bold uppercase tracking-widest text-white shadow-md hover:bg-slate-800 disabled:opacity-50 cursor-pointer"
-                  >
-                    {isSubmitting ? "Submitting..." : authMode === "signup" ? "Create Account & Submit Project" : "Sign In & Submit Project"}
-                  </button>
                 </form>
-
-                {/* 1-Click Instant Demo Bypass */}
-                <div className="mt-4 pt-4 border-t border-black/8 text-center">
-                  <button
-                    type="button"
-                    onClick={handleInstantDemoSubmit}
-                    className="w-full rounded-full border border-sky-300 bg-sky-50 py-2.5 text-xs font-bold text-sky-800 hover:bg-sky-100 transition cursor-pointer"
-                  >
-                    ⚡ Test Instantly with 1-Click Demo (No Password Required)
-                  </button>
-                </div>
               </div>
             )}
           </div>

@@ -120,11 +120,16 @@ export interface BookingSubmission {
   client_name: string;
   client_email: string;
   company_name?: string;
+  phone?: string;
   package_id?: string;
+  selected_aesthetic?: string;
+  scope_tier?: string;
   selected_addons?: string[];
   estimated_budget_usd?: number;
+  estimated_budget_inr?: number;
   timeline_requirement?: string;
   project_description: string;
+  client_message?: string;
 }
 
 export interface LeadItem {
@@ -137,6 +142,14 @@ export interface LeadItem {
   source?: string;
   status: "pending" | "contacted" | "converted" | "archived";
   created_at: string;
+  selected_addons?: string[];
+  estimated_budget_usd?: number;
+  estimated_budget_inr?: number;
+  project_description?: string;
+  timeline_requirement?: string;
+  client_message?: string;
+  selected_aesthetic?: string;
+  scope_tier?: string;
 }
 
 // --------------------------------------------------------------------------------
@@ -791,7 +804,7 @@ export async function submitLead(lead: {
 export async function getAllLeads(): Promise<LeadItem[]> {
   try {
     if (!isSupabaseConfigured()) {
-      return [];
+      return DEMO_LEADS;
     }
     const { data, error } = await supabase
       .from("bookings")
@@ -799,22 +812,56 @@ export async function getAllLeads(): Promise<LeadItem[]> {
       .order("created_at", { ascending: false });
 
     if (error || !data || data.length === 0) {
-      return [];
+      return DEMO_LEADS;
     }
 
-    return data.map((b: any) => ({
-      id: b.id,
-      client_name: b.client_name || "Prospective Client",
-      client_email: b.client_email || "",
-      company_name: b.company_name || "",
-      phone: "",
-      package_interest: b.package_id || "Website Package",
-      source: b.project_description?.includes("[Lead Collected") ? "Pricing Unlock Gate" : "Booking Inquiry",
-      status: b.status || "pending",
-      created_at: b.created_at || new Date().toISOString()
-    }));
+    return data.map((b: any) => {
+      let extractedPhone = b.phone || "";
+      let extractedMessage = "";
+      let extractedAesthetic = "";
+      let extractedScope = "";
+
+      if (b.project_description) {
+        if (!extractedPhone) {
+          const phoneMatch = b.project_description.match(/Phone(?:\s*\/\s*WhatsApp)?:\s*([^\n\r|]+)/i);
+          if (phoneMatch) extractedPhone = phoneMatch[1].trim();
+        }
+        const noteMatch = b.project_description.match(/(?:Client Note|Client Message|Project Message|Message):\s*([\s\S]+?)(?=\n\[|\n⚡|\n💰|\nSelected|$)/i);
+        if (noteMatch) extractedMessage = noteMatch[1].trim();
+
+        const aesMatch = b.project_description.match(/Selected Aesthetic:\s*([^\n\r(]+)/i);
+        if (aesMatch) extractedAesthetic = aesMatch[1].trim();
+
+        const scopeMatch = b.project_description.match(/Scope Foundation:\s*([^\n\r]+)/i);
+        if (scopeMatch) extractedScope = scopeMatch[1].trim();
+      }
+
+      return {
+        id: b.id,
+        client_name: b.client_name || "Prospective Client",
+        client_email: b.client_email || "",
+        company_name: b.company_name || "",
+        phone: extractedPhone,
+        package_interest: b.package_id || "Website Package",
+        source: b.project_description?.includes("[Lead Collected")
+          ? "Pricing Unlock Gate"
+          : b.project_description?.includes("[Website Booking Intake]") || b.project_description?.includes("[Website Design Marketplace Intake]")
+          ? "Website Booking Intake"
+          : "Direct Booking",
+        status: b.status || "pending",
+        created_at: b.created_at || new Date().toISOString(),
+        selected_addons: b.selected_addons || [],
+        estimated_budget_usd: b.estimated_budget_usd,
+        estimated_budget_inr: b.estimated_budget_inr,
+        project_description: b.project_description || "",
+        timeline_requirement: b.timeline_requirement || "",
+        client_message: extractedMessage,
+        selected_aesthetic: extractedAesthetic,
+        scope_tier: extractedScope
+      };
+    });
   } catch (err) {
-    return [];
+    return DEMO_LEADS;
   }
 }
 
@@ -848,10 +895,15 @@ export async function submitBooking(booking: BookingSubmission): Promise<{ succe
           type: "Website Package Booking Kickoff",
           name: booking.client_name,
           email: booking.client_email,
+          phone: booking.phone || "N/A",
           company: booking.company_name || "N/A",
           package: booking.package_id,
+          aesthetic: booking.selected_aesthetic,
+          scope: booking.scope_tier,
           budget_usd: booking.estimated_budget_usd,
+          budget_inr: booking.estimated_budget_inr,
           timeline: booking.timeline_requirement,
+          message: booking.client_message,
           description: booking.project_description,
           addons: booking.selected_addons?.join(", ") || "None",
           timestamp: new Date().toISOString()
@@ -864,21 +916,36 @@ export async function submitBooking(booking: BookingSubmission): Promise<{ succe
 
   try {
     if (isSupabaseConfigured()) {
+      const payload: Record<string, any> = {
+        client_name: booking.client_name,
+        client_email: booking.client_email.toLowerCase(),
+        company_name: booking.company_name || "",
+        package_id: booking.package_id || booking.selected_aesthetic || "Custom Build",
+        selected_addons: booking.selected_addons || [],
+        estimated_budget_usd: booking.estimated_budget_usd,
+        timeline_requirement: booking.timeline_requirement,
+        project_description: booking.project_description,
+        status: "pending"
+      };
+
+      // Try inserting with phone and inr budget
+      try {
+        const { data, error } = await supabase
+          .from("bookings")
+          .insert([{ ...payload, phone: booking.phone, estimated_budget_inr: booking.estimated_budget_inr }])
+          .select()
+          .single();
+
+        if (!error && data) {
+          return { success: true, id: data.id };
+        }
+      } catch {
+        // Fall back to base schema if custom columns not added yet
+      }
+
       const { data, error } = await supabase
         .from("bookings")
-        .insert([
-          {
-            client_name: booking.client_name,
-            client_email: booking.client_email.toLowerCase(),
-            company_name: booking.company_name || "",
-            package_id: booking.package_id,
-            selected_addons: booking.selected_addons || [],
-            estimated_budget_usd: booking.estimated_budget_usd,
-            timeline_requirement: booking.timeline_requirement,
-            project_description: booking.project_description,
-            status: "pending"
-          }
-        ])
+        .insert([payload])
         .select()
         .single();
 

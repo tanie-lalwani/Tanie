@@ -79,12 +79,12 @@ export default function ClientPortal() {
   const [contractSignedSuccess, setContractSignedSuccess] = useState(false);
   const [legalAgreed, setLegalAgreed] = useState(false);
 
-  // Load project, contract, assets, packages, and change requests when authenticated user changes
+  // Load project, contract, assets, packages, and change requests when authenticated user changes or booked client visits
   useEffect(() => {
     let isMounted = true;
-    async function loadPortalData() {
+    async function loadPortalData(targetEmail?: string) {
       setLoadingData(true);
-      const email = user?.email || "";
+      const email = targetEmail || user?.email || (typeof window !== "undefined" ? localStorage.getItem("tanie_client_email") || "" : "");
 
       try {
         const [pkgs, projs] = await Promise.all([
@@ -121,8 +121,11 @@ export default function ClientPortal() {
       }
     }
 
-    if (user) {
-      loadPortalData();
+    const savedEmail = typeof window !== "undefined" ? localStorage.getItem("tanie_client_email") || "" : "";
+    const activeEmail = user?.email || savedEmail;
+
+    if (activeEmail) {
+      loadPortalData(activeEmail);
     } else {
       setLoadingData(false);
       setProjects([]);
@@ -409,10 +412,11 @@ export default function ClientPortal() {
     }
   };
 
-  const isGuest = !user;
-  const isConfirmedClient = Boolean(user) && (projects.length > 0 || Boolean(paidReceipt));
-  const isProspectAwaitingSprint = Boolean(user) && (!selectedProject || projects.length === 0) && !paidReceipt;
-  const isAuthenticatedUser = Boolean(user);
+  const savedClientEmail = typeof window !== "undefined" ? (localStorage.getItem("tanie_client_email") || "") : "";
+  const isGuest = !user && !savedClientEmail;
+  const isConfirmedClient = (Boolean(user) || Boolean(savedClientEmail)) && (projects.length > 0 || Boolean(paidReceipt));
+  const isProspectAwaitingSprint = (Boolean(user) || Boolean(savedClientEmail)) && (!selectedProject || projects.length === 0) && !paidReceipt;
+  const isAuthenticatedUser = Boolean(user) || Boolean(savedClientEmail);
 
   return (
     <main className="min-h-screen bg-[#dff4ff] text-slate-900 font-sans selection:bg-sky-200 selection:text-black" dir={locale === "ur" ? "rtl" : "ltr"}>
@@ -1093,26 +1097,55 @@ export default function ClientPortal() {
                   {/* Project Header Card */}
                   <div className="rounded-[2.2rem] border border-sky-300/70 bg-white/95 p-6 sm:p-8 backdrop-blur-xl shadow-lg">
                     <div className="flex flex-wrap items-start justify-between gap-4">
-                      <div>
-                        <span className="inline-block rounded-md border border-sky-300 bg-sky-100 px-2.5 py-0.5 text-xs font-bold uppercase tracking-wider text-sky-900">
-                          {selectedProject.company_name || "Active Engagement"}
-                        </span>
+                      <div className="max-w-2xl">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <span className="inline-block rounded-md border border-sky-300 bg-sky-100 px-2.5 py-0.5 text-xs font-bold uppercase tracking-wider text-sky-900">
+                            {selectedProject.company_name || "Active Engagement"}
+                          </span>
+                          <span className="inline-block rounded-md border border-emerald-300 bg-emerald-50 px-2.5 py-0.5 text-xs font-bold text-emerald-800">
+                            ✓ Scope & Estimate Saved
+                          </span>
+                        </div>
                         <h2 className="mt-2 text-2xl sm:text-3xl font-black text-slate-950">{selectedProject.title}</h2>
                         <p className="mt-1 max-w-2xl text-xs sm:text-sm text-slate-600 font-medium">{selectedProject.description}</p>
+
+                        {/* Selected Direction & Foundation Chips */}
+                        <div className="mt-3.5 flex flex-wrap items-center gap-2">
+                          {selectedProject.selected_aesthetic && (
+                            <span className="rounded-lg bg-purple-100 border border-purple-300 px-2.5 py-1 text-xs font-bold text-purple-950">
+                              🎨 Direction: {selectedProject.selected_aesthetic}
+                            </span>
+                          )}
+                          {selectedProject.scope_tier && (
+                            <span className="rounded-lg bg-sky-100 border border-sky-300 px-2.5 py-1 text-xs font-bold text-sky-950">
+                              📐 Foundation: {selectedProject.scope_tier}
+                            </span>
+                          )}
+                          {selectedProject.features_requested && selectedProject.features_requested.length > 0 && (
+                            selectedProject.features_requested.map((feat, fIdx) => (
+                              <span key={fIdx} className="rounded-lg bg-slate-100 border border-black/10 px-2 py-0.5 text-[11px] font-medium text-slate-800">
+                                ✓ {feat}
+                              </span>
+                            ))
+                          )}
+                        </div>
                       </div>
 
-                      <div className="rounded-2xl border border-black/8 bg-sky-50/70 p-4 text-right">
-                        <div className="text-[11px] font-bold uppercase tracking-wider text-slate-500">Target Launch</div>
-                        <div className="text-base font-extrabold text-slate-950">
-                          {selectedProject.target_launch_date
-                            ? new Date(selectedProject.target_launch_date).toLocaleDateString("en-US", {
-                                month: "short",
-                                day: "numeric",
-                                year: "numeric",
-                              })
-                            : "October 2026"}
+                      <div className="rounded-2xl border border-black/8 bg-sky-50/70 p-4 text-left sm:text-right">
+                        <div className="text-[11px] font-bold uppercase tracking-wider text-slate-500">Estimated Investment</div>
+                        <div className="text-xl font-black text-slate-950">
+                          {selectedProject.budget_inr
+                            ? `₹${selectedProject.budget_inr.toLocaleString()}`
+                            : selectedProject.budget_usd
+                            ? `$${selectedProject.budget_usd.toLocaleString()} USD`
+                            : "$3,499 USD"}
                         </div>
-                        <div className="mt-0.5 text-xs font-bold text-emerald-700">On Track • Active Phase</div>
+                        {selectedProject.budget_usd && selectedProject.budget_inr && (
+                          <div className="text-[10px] text-slate-500">
+                            (Approx. ${selectedProject.budget_usd.toLocaleString()} USD)
+                          </div>
+                        )}
+                        <div className="mt-1 text-xs font-bold text-emerald-700">Scope Verified • Active Phase</div>
                       </div>
                     </div>
 
