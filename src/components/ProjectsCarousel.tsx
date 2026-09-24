@@ -92,15 +92,24 @@ export function ProjectsCarousel({ projects }: ProjectsCarouselProps) {
     const scroller = scrollRef.current
     if (!scroller) return
 
+    const isRtl = getComputedStyle(scroller).direction === "rtl"
     const maxScrollLeft = scroller.scrollWidth - scroller.clientWidth
-    setCanScrollLeft(scroller.scrollLeft > 4)
-    setCanScrollRight(scroller.scrollLeft < maxScrollLeft - 4)
+    // In RTL, scrollLeft can be negative (Firefox) or positive (Chrome)
+    const absScroll = Math.abs(scroller.scrollLeft)
+    if (isRtl) {
+      setCanScrollLeft(absScroll < maxScrollLeft - 4)  // "left" visually = end of content in RTL
+      setCanScrollRight(absScroll > 4)
+    } else {
+      setCanScrollLeft(scroller.scrollLeft > 4)
+      setCanScrollRight(scroller.scrollLeft < maxScrollLeft - 4)
+    }
   }
 
   const scrollProjects = (direction: -1 | 1) => {
     const scroller = scrollRef.current
     if (!scroller) return
 
+    const isRtl = getComputedStyle(scroller).direction === "rtl"
     const card = scroller.querySelector("article")
     const cardWidth = card?.getBoundingClientRect().width ?? scroller.clientWidth * 0.8
     const computedStyle = window.getComputedStyle(scroller)
@@ -108,7 +117,7 @@ export function ProjectsCarousel({ projects }: ProjectsCarouselProps) {
     const gap = Number.parseFloat(gapValue) || 0
 
     scroller.scrollBy({
-      left: direction * (cardWidth + gap),
+      left: (isRtl ? -direction : direction) * (cardWidth + gap),
       behavior: "smooth",
     })
   }

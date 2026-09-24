@@ -417,14 +417,14 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
                   className="group inline-flex items-center gap-1.5 text-[0.88rem] font-medium no-underline transition-opacity hover:opacity-70"
                   style={{ color: "#2D466F", textDecoration: "none" }}
                 >
-                  Work →
+                  {copy.home.ctaWork} →
                 </Link>
                 <Link
                   href="/pricing"
                   className="group inline-flex items-center gap-1.5 text-[0.88rem] font-medium no-underline transition-opacity hover:opacity-70"
                   style={{ color: "rgba(45,70,111,0.7)", textDecoration: "none" }}
                 >
-                  Pricing →
+                  {copy.home.ctaPricing} →
                 </Link>
               </div>
             </motion.div>

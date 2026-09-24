@@ -164,10 +164,11 @@ export default function Navbar({ phase }: NavbarProps) {
           {isMobileNavOpen && (
             <div
               ref={mobileNavRef}
+              dir="ltr"
               role="dialog"
               aria-modal="false"
               aria-label="Site Navigation"
-              className="absolute right-0 top-[calc(100%+0.5rem)] z-50 w-72 sm:w-80 rounded-2xl border border-sky-300/30 bg-slate-950/96 p-3 sm:p-4 shadow-[0_20px_50px_rgba(2,8,23,0.7)] backdrop-blur-2xl text-slate-100"
+              className="absolute end-0 top-[calc(100%+0.5rem)] z-50 w-72 sm:w-80 max-h-[80svh] overflow-y-auto rounded-2xl border border-sky-300/30 bg-slate-950/96 p-3 sm:p-4 shadow-[0_20px_50px_rgba(2,8,23,0.7)] backdrop-blur-2xl text-slate-100"
             >
               {/* Menu Header */}
               <div className="flex items-center justify-between border-b border-white/10 pb-2.5 mb-2.5">

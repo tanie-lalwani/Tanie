@@ -46,6 +46,8 @@ type SiteCopy = {
     heroTitle: string
     heroRole: string
     heroDescription: string
+    ctaWork: string
+    ctaPricing: string
     aboutTitle: string
     aboutParagraphs: string[]
     aboutParagraphsMobile?: string[]
@@ -136,6 +138,8 @@ const translations: Record<Locale, SiteCopy> = {
       heroRole: "Creative Developer",
       heroDescription:
         "Let’s make your website your best salesperson.",
+      ctaWork: "Work",
+      ctaPricing: "Pricing",
       aboutTitle: "A bit about me:",
       aboutParagraphs: [
         "Hi, I’m Tanie Lalwani, a creative and full stack developer based in India. I’m a data science graduate, and I first got into tech at 16. Over time, I found myself interested in almost everything like data, blockchain, ML, dev-rel, and most of the usual tech buzzwords, but the thing that stuck with me the longest was web design.",
@@ -295,6 +299,8 @@ const translations: Record<Locale, SiteCopy> = {
       heroRole: "Desarrolladora creativa",
       heroDescription:
         "Hagamos de tu sitio web tu mejor vendedor.",
+      ctaWork: "Trabajos",
+      ctaPricing: "Precios",
       aboutTitle: "Un poco sobre mí:",
       aboutParagraphs: [
         "Hola, soy Tanie Lalwani, desarrolladora creativa y full-stack de India. Soy graduada en ciencia de datos y empecé en tecnología a los 16 años. Con el tiempo me interesé por casi todo: datos, blockchain, ML, dev-rel y muchos temas de tecnología, pero lo que más se quedó conmigo fue el diseño web.",
@@ -454,6 +460,8 @@ const translations: Record<Locale, SiteCopy> = {
       heroRole: "Développeuse créative",
       heroDescription:
         "Faisons de votre site web votre meilleur vendeur.",
+      ctaWork: "Travaux",
+      ctaPricing: "Tarifs",
       aboutTitle: "Un peu sur moi :",
       aboutParagraphs: [
         "Bonjour, je suis Tanie Lalwani, développeuse créative et full-stack basée en Inde. Je suis diplômée en science des données et j’ai commencé la tech à 16 ans. Avec le temps, je me suis intéressée à presque tout : data, blockchain, ML, dev-rel et beaucoup de sujets tech, mais ce qui m’a le plus suivie, c’est le design web.",
@@ -612,7 +620,9 @@ const translations: Record<Locale, SiteCopy> = {
       heroTitle: "मैं Tanie!",
       heroRole: "क्रिएटिव डेवलपर",
       heroDescription:
-        "मैं ऐसी वेबसाइट बनाती हूँ जो चलती हैं, प्रतिक्रिया देती हैं और अलग दिखती हैं.\nथोड़ा और नीचे स्क्रॉल करें; असली मज़ा नीचे है.",
+        "आपकी वेबसाइट को आपका बेस्ट सेल्सपर्सन बनाते हैं।",
+      ctaWork: "काम",
+      ctaPricing: "मूल्य",
       aboutTitle: "मेरे बारे में:",
       aboutParagraphs: [
         "नमस्ते, मैं Tanie Lalwani हूँ, भारत में रहने वाली क्रिएटिव और full-stack डेवलपर. मैं data science graduate हूँ और 16 साल की उम्र में टेक में आई. समय के साथ मुझे data, blockchain, ML, dev-rel और कई tech topics में रुचि हुई, लेकिन जो चीज़ सबसे ज़्यादा साथ रही, वह web design था.",
@@ -772,6 +782,8 @@ const translations: Record<Locale, SiteCopy> = {
       heroRole: "クリエイティブ 開発者",
       heroDescription:
         "あなたのウェブサイトを最高の営業担当者にしましょう。",
+      ctaWork: "実績",
+      ctaPricing: "料金",
       aboutTitle: "私について：",
       aboutParagraphs: [
         "こんにちは、Tanie Lalwani です。インドを拠点にするクリエイティブな full-stack developer です。データサイエンスを学び、16歳でテックの世界に入りました。data、blockchain、ML、dev-rel などいろいろな分野に興味を持ってきましたが、いちばん長く残ったのは web design でした。",
@@ -930,7 +942,9 @@ const translations: Record<Locale, SiteCopy> = {
       heroTitle: "میں Tanie!",
       heroRole: "تخلیقی ڈویلپر",
       heroDescription:
-        "میں ایسی ویب سائٹس بناتی ہوں جو حرکت کرتی ہیں، ردعمل دیتی ہیں، اور الگ نظر آتی ہیں۔\nمزید نیچے اسکرول کریں؛ مزے کی چیزیں نیچے ہیں۔",
+        "آپ کی ویب سائٹ کو آپ کا بہترین سیلزپرسن بناتے ہیں۔",
+      ctaWork: "کام",
+      ctaPricing: "قیمتیں",
       aboutTitle: "میرے بارے میں:",
       aboutParagraphs: [
         "سلام، میں Tanie Lalwani ہوں، بھارت میں رہنے والی creative اور full-stack developer۔ میں data science graduate ہوں اور 16 سال کی عمر میں tech میں آئی۔ وقت کے ساتھ مجھے data، blockchain، ML، dev-rel اور کئی tech topics میں دلچسپی ہوئی، مگر web design سب سے زیادہ میرے ساتھ رہا۔",
@@ -1090,6 +1104,8 @@ const translations: Record<Locale, SiteCopy> = {
       heroRole: "创意 开发者",
       heroDescription:
         "让您的网站成为您最好的销售员。",
+      ctaWork: "作品",
+      ctaPricing: "定价",
       aboutTitle: "关于我：",
       aboutParagraphs: [
         "你好，我是 Tanie Lalwani，一名来自印度的创意 full-stack developer。我是数据科学毕业生，16 岁开始接触技术。后来我对 data、blockchain、ML、dev-rel 和许多 tech topics 都产生过兴趣，但最让我长期坚持下来的还是 web design。",
