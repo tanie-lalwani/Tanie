@@ -1,7 +1,11 @@
 -- ==============================================================================
 -- SUPABASE MIGRATION: SEPARATE GRANULAR FEATURE TABLES FOR PACKAGES
--- Linked to Master Table: public.packages
--- Includes Included Scope Limits, Feature Price Distribution & Overage Unit Rates
+-- Architecture: Package 1 (Luxury Landing) is the Non-Negotiable Foundational Base (₹14,999 / $499)
+-- Independent Packages (2, 3, 4) ALREADY INCLUDE Base Package 1.
+-- Their specific feature tables distribute the leftover price above the ₹15k base:
+--   • BOFU Marketing: ₹14,999 base + ₹15,000 marketing delta = ₹29,999 ($899)
+--   • 3D Experience:  ₹14,999 base + ₹35,000 3D delta        = ₹49,999 ($1,299)
+--   • Fullstack SaaS: ₹14,999 base + ₹65,000 backend delta   = ₹79,999 ($1,899)
 -- ==============================================================================
 
 -- 1. Ensure Master Packages Exist with Calibrated Fast Acquisition Pricing
@@ -14,7 +18,7 @@ VALUES
   499,
   14999,
   '1-2 weeks',
-  'Fast Sprint',
+  'Foundational Base',
   false,
   'The common non-negotiable foundation for every website project. Ideal for boutique agencies, product launches, founders, and creators seeking a razor-sharp, ultra-fast landing page with bespoke animations and high-converting copy lockups.',
   true
@@ -28,7 +32,7 @@ VALUES
   '2-3 weeks',
   'High Conversion',
   true,
-  'The definitive on-website conversion architecture. Designed to receive traffic from your ad campaigns and social media, transforming cold visitors into revenue. Includes all 9 core BOFU on-site deliverables backed by full-spectrum UTM multi-source tracking and conversion pixel telemetry.',
+  'The definitive on-website conversion architecture. Includes the complete Luxury Landing Foundation (₹14,999 value) plus all 9 core BOFU conversion modules, 1-click checkout, product showcases, UGC review wall, and full-spectrum UTM multi-source tracking.',
   true
 ),
 (
@@ -40,7 +44,7 @@ VALUES
   '3-5 weeks',
   'Signature',
   false,
-  'Designed for visionary brands, high-profile portfolios, and innovative tech products requiring top-tier creative engineering, custom Three.js shaders, and buttery-smooth micro-interactions.',
+  'Designed for visionary brands, high-profile portfolios, and innovative tech products. Includes the complete Luxury Landing Foundation (₹14,999 value) plus custom Three.js WebGL canvas, particle fluid shaders, scrollytelling camera choreography, and photorealistic PBR materials.',
   true
 ),
 (
@@ -52,7 +56,7 @@ VALUES
   '4-6 weeks',
   'Full-Stack',
   false,
-  'Engineered for startups, digital products, and founders who need a production-ready web application with user auth, real-time database, role permissions, payment gateway, and an executive admin dashboard.',
+  'Engineered for startups, digital platforms, and founders. Includes the complete Luxury Landing Foundation (₹14,999 value) plus production PostgreSQL database schema, row-level security, multi-provider auth, payment webhooks, self-serve client portal, and executive founder cockpit.',
   true
 )
 ON CONFLICT (id) DO UPDATE SET
@@ -69,8 +73,8 @@ ON CONFLICT (id) DO UPDATE SET
 -- ==============================================================================
 -- TABLE 1: BASE LUXURY LANDING SPRINT FEATURES
 -- Foreign Key -> public.packages(id) = 'luxury-landing-sprint'
--- Scope: Pure frontend presentation, hero/CTA architecture, speed, form validation
--- Package Price Total: ₹14,999 INR | $499 USD
+-- Scope: Foundational website architecture, layout, typography, speed, contact, CDN
+-- Package Total: ₹14,999 INR | $499 USD (All other packages build on this)
 -- ==============================================================================
 CREATE TABLE IF NOT EXISTS public.package_landing_sprint_features (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -93,19 +97,11 @@ CREATE TABLE IF NOT EXISTS public.package_landing_sprint_features (
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
--- Ensure columns exist if table was already created
-ALTER TABLE public.package_landing_sprint_features ADD COLUMN IF NOT EXISTS included_limit TEXT NOT NULL DEFAULT 'Included in package';
-ALTER TABLE public.package_landing_sprint_features ADD COLUMN IF NOT EXISTS feature_price_inr NUMERIC(10,2) NOT NULL DEFAULT 0;
-ALTER TABLE public.package_landing_sprint_features ADD COLUMN IF NOT EXISTS feature_price_usd NUMERIC(10,2) NOT NULL DEFAULT 0;
-ALTER TABLE public.package_landing_sprint_features ADD COLUMN IF NOT EXISTS overage_unit_label TEXT DEFAULT NULL;
-ALTER TABLE public.package_landing_sprint_features ADD COLUMN IF NOT EXISTS overage_price_inr NUMERIC(10,2) DEFAULT NULL;
-ALTER TABLE public.package_landing_sprint_features ADD COLUMN IF NOT EXISTS overage_price_usd NUMERIC(10,2) DEFAULT NULL;
-
 -- ==============================================================================
 -- TABLE 2: BOFU WEBSITE MARKETING & SOURCES MANAGEMENT FEATURES
 -- Foreign Key -> public.packages(id) = 'growth-marketing-campaigns'
--- Scope: On-site BOFU conversion mechanics (all 9 modules), UTM engine, pixels
--- Package Price Total: ₹29,999 INR | $899 USD
+-- Scope: Specialty conversion mechanics, checkout, UTM attribution, pixel telemetry
+-- Delta Price (Above ₹14,999 Base): ₹15,000 INR | $400 USD (Total Package: ₹29,999 / $899)
 -- ==============================================================================
 CREATE TABLE IF NOT EXISTS public.package_bofu_marketing_features (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -128,18 +124,11 @@ CREATE TABLE IF NOT EXISTS public.package_bofu_marketing_features (
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
-ALTER TABLE public.package_bofu_marketing_features ADD COLUMN IF NOT EXISTS included_limit TEXT NOT NULL DEFAULT 'Included in package';
-ALTER TABLE public.package_bofu_marketing_features ADD COLUMN IF NOT EXISTS feature_price_inr NUMERIC(10,2) NOT NULL DEFAULT 0;
-ALTER TABLE public.package_bofu_marketing_features ADD COLUMN IF NOT EXISTS feature_price_usd NUMERIC(10,2) NOT NULL DEFAULT 0;
-ALTER TABLE public.package_bofu_marketing_features ADD COLUMN IF NOT EXISTS overage_unit_label TEXT DEFAULT NULL;
-ALTER TABLE public.package_bofu_marketing_features ADD COLUMN IF NOT EXISTS overage_price_inr NUMERIC(10,2) DEFAULT NULL;
-ALTER TABLE public.package_bofu_marketing_features ADD COLUMN IF NOT EXISTS overage_price_usd NUMERIC(10,2) DEFAULT NULL;
-
 -- ==============================================================================
 -- TABLE 3: 3D INTERACTIVE & BRAND EXPERIENCE FEATURES
 -- Foreign Key -> public.packages(id) = 'interactive-3d-experience'
--- Scope: WebGL, Three.js, custom GLSL shaders, camera choreography, spatial audio
--- Package Price Total: ₹49,999 INR | $1,299 USD
+-- Scope: Specialty WebGL 3D scene, GLSL shaders, camera choreography, spatial audio
+-- Delta Price (Above ₹14,999 Base): ₹35,000 INR | $800 USD (Total Package: ₹49,999 / $1,299)
 -- ==============================================================================
 CREATE TABLE IF NOT EXISTS public.package_3d_experience_features (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -162,18 +151,11 @@ CREATE TABLE IF NOT EXISTS public.package_3d_experience_features (
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
-ALTER TABLE public.package_3d_experience_features ADD COLUMN IF NOT EXISTS included_limit TEXT NOT NULL DEFAULT 'Included in package';
-ALTER TABLE public.package_3d_experience_features ADD COLUMN IF NOT EXISTS feature_price_inr NUMERIC(10,2) NOT NULL DEFAULT 0;
-ALTER TABLE public.package_3d_experience_features ADD COLUMN IF NOT EXISTS feature_price_usd NUMERIC(10,2) NOT NULL DEFAULT 0;
-ALTER TABLE public.package_3d_experience_features ADD COLUMN IF NOT EXISTS overage_unit_label TEXT DEFAULT NULL;
-ALTER TABLE public.package_3d_experience_features ADD COLUMN IF NOT EXISTS overage_price_inr NUMERIC(10,2) DEFAULT NULL;
-ALTER TABLE public.package_3d_experience_features ADD COLUMN IF NOT EXISTS overage_price_usd NUMERIC(10,2) DEFAULT NULL;
-
 -- ==============================================================================
 -- TABLE 4: FULL-STACK WEB APP & SAAS MVP FEATURES
 -- Foreign Key -> public.packages(id) = 'fullstack-web-app'
--- Scope: PostgreSQL DB, Auth, RLS, Stripe/Razorpay webhooks, Admin & Client portals
--- Package Price Total: ₹79,999 INR | $1,899 USD
+-- Scope: Specialty PostgreSQL DB, RLS, Auth, Stripe/Razorpay webhooks, Admin & Client portals
+-- Delta Price (Above ₹14,999 Base): ₹65,000 INR | $1,400 USD (Total Package: ₹79,999 / $1,899)
 -- ==============================================================================
 CREATE TABLE IF NOT EXISTS public.package_fullstack_backend_features (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -196,6 +178,28 @@ CREATE TABLE IF NOT EXISTS public.package_fullstack_backend_features (
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
+-- Ensure all columns exist idempotently
+ALTER TABLE public.package_landing_sprint_features ADD COLUMN IF NOT EXISTS included_limit TEXT NOT NULL DEFAULT 'Included in package';
+ALTER TABLE public.package_landing_sprint_features ADD COLUMN IF NOT EXISTS feature_price_inr NUMERIC(10,2) NOT NULL DEFAULT 0;
+ALTER TABLE public.package_landing_sprint_features ADD COLUMN IF NOT EXISTS feature_price_usd NUMERIC(10,2) NOT NULL DEFAULT 0;
+ALTER TABLE public.package_landing_sprint_features ADD COLUMN IF NOT EXISTS overage_unit_label TEXT DEFAULT NULL;
+ALTER TABLE public.package_landing_sprint_features ADD COLUMN IF NOT EXISTS overage_price_inr NUMERIC(10,2) DEFAULT NULL;
+ALTER TABLE public.package_landing_sprint_features ADD COLUMN IF NOT EXISTS overage_price_usd NUMERIC(10,2) DEFAULT NULL;
+
+ALTER TABLE public.package_bofu_marketing_features ADD COLUMN IF NOT EXISTS included_limit TEXT NOT NULL DEFAULT 'Included in package';
+ALTER TABLE public.package_bofu_marketing_features ADD COLUMN IF NOT EXISTS feature_price_inr NUMERIC(10,2) NOT NULL DEFAULT 0;
+ALTER TABLE public.package_bofu_marketing_features ADD COLUMN IF NOT EXISTS feature_price_usd NUMERIC(10,2) NOT NULL DEFAULT 0;
+ALTER TABLE public.package_bofu_marketing_features ADD COLUMN IF NOT EXISTS overage_unit_label TEXT DEFAULT NULL;
+ALTER TABLE public.package_bofu_marketing_features ADD COLUMN IF NOT EXISTS overage_price_inr NUMERIC(10,2) DEFAULT NULL;
+ALTER TABLE public.package_bofu_marketing_features ADD COLUMN IF NOT EXISTS overage_price_usd NUMERIC(10,2) DEFAULT NULL;
+
+ALTER TABLE public.package_3d_experience_features ADD COLUMN IF NOT EXISTS included_limit TEXT NOT NULL DEFAULT 'Included in package';
+ALTER TABLE public.package_3d_experience_features ADD COLUMN IF NOT EXISTS feature_price_inr NUMERIC(10,2) NOT NULL DEFAULT 0;
+ALTER TABLE public.package_3d_experience_features ADD COLUMN IF NOT EXISTS feature_price_usd NUMERIC(10,2) NOT NULL DEFAULT 0;
+ALTER TABLE public.package_3d_experience_features ADD COLUMN IF NOT EXISTS overage_unit_label TEXT DEFAULT NULL;
+ALTER TABLE public.package_3d_experience_features ADD COLUMN IF NOT EXISTS overage_price_inr NUMERIC(10,2) DEFAULT NULL;
+ALTER TABLE public.package_3d_experience_features ADD COLUMN IF NOT EXISTS overage_price_usd NUMERIC(10,2) DEFAULT NULL;
+
 ALTER TABLE public.package_fullstack_backend_features ADD COLUMN IF NOT EXISTS included_limit TEXT NOT NULL DEFAULT 'Included in package';
 ALTER TABLE public.package_fullstack_backend_features ADD COLUMN IF NOT EXISTS feature_price_inr NUMERIC(10,2) NOT NULL DEFAULT 0;
 ALTER TABLE public.package_fullstack_backend_features ADD COLUMN IF NOT EXISTS feature_price_usd NUMERIC(10,2) NOT NULL DEFAULT 0;
@@ -205,7 +209,7 @@ ALTER TABLE public.package_fullstack_backend_features ADD COLUMN IF NOT EXISTS o
 
 -- ==============================================================================
 -- SEED DATA: TABLE 1 (package_landing_sprint_features)
--- Package Total: ₹14,999 INR | $499 USD
+-- Package Total: ₹14,999 INR | $499 USD (The Foundation)
 -- ==============================================================================
 INSERT INTO public.package_landing_sprint_features 
   (package_id, function_key, title, category, description, technical_deliverables, business_impact, complexity, is_core, display_order, included_limit, feature_price_inr, feature_price_usd, overage_unit_label, overage_price_inr, overage_price_usd)
@@ -221,30 +225,30 @@ VALUES
   'Standard',
   true,
   1,
-  '1 primary hero narrative & magnetic CTA lockup',
+  'Hero narrative lockup & magnetic CTA system',
   2500,
   80,
-  'Per additional custom hero variant',
-  1000,
-  35
+  NULL,
+  NULL,
+  NULL
 ),
 (
   'luxury-landing-sprint',
   'landing_responsive_viewport_system',
   'Adaptive Multi-Device Breakpoint System (320px to 4K)',
   'UI & Layout',
-  'Flawless layout responsiveness across all screen sizes, including ultra-small mobile displays, tablets, laptops, and ultra-wide desktop monitors with dedicated mobile navigation.',
+  'Flawless layout responsiveness across all screen sizes, including mobile phones, tablets, laptops, and ultra-wide desktop monitors with dedicated mobile navigation.',
   'Mobile-first CSS media queries, responsive touch gestures, slide-out mobile drawer with backdrop blur, and thumb-friendly sticky navigation bar.',
   'Ensures the 70%+ of mobile visitors coming from social media experience native-app visual perfection.',
   'Standard',
   true,
   2,
-  'Up to 5 standard sections / pages (320px to 4K)',
+  'Full responsive website structure (up to 7 standard pages)',
   3500,
   110,
-  'Per additional custom page / section',
-  900,
-  30
+  'Per additional custom page',
+  1000,
+  35
 ),
 (
   'luxury-landing-sprint',
@@ -257,7 +261,7 @@ VALUES
   'Advanced',
   true,
   3,
-  'Full site interactive micro-interactions & reveals',
+  'Complete site-wide micro-interactions & scroll animation suite',
   1500,
   50,
   NULL,
@@ -269,18 +273,18 @@ VALUES
   'landing_intake_form_validation',
   'Frictionless Lead Intake Form with Real-Time Validation',
   'Lead Capture',
-  'Streamlined 3-to-4 field lead intake form with immediate inline error feedback, smart international phone formatting, and smooth loading submission states.',
-  'React Hook Form client validation, masked phone input formatting, asynchronous submission handler, and Formspree/Email notification webhook integration.',
+  'Streamlined lead intake form with immediate inline error feedback, international phone formatting, and smooth submission states.',
+  'React Hook Form client validation, masked phone input formatting, asynchronous submission handler, and email notification webhook integration.',
   'Eliminates form abandonment caused by confusing errors, maximizing inquiry conversion rates.',
   'Standard',
   true,
   4,
-  '1 lead intake form with email/webhook routing',
+  'Lead intake and contact forms with automated email notifications',
   1500,
   50,
-  'Per additional specialized intake form',
-  1000,
-  35
+  NULL,
+  NULL,
+  NULL
 ),
 (
   'luxury-landing-sprint',
@@ -293,7 +297,7 @@ VALUES
   'Standard',
   true,
   5,
-  'Invisible bot protection across all forms',
+  'Full invisible spam & bot shield across all forms',
   800,
   25,
   NULL,
@@ -311,7 +315,7 @@ VALUES
   'Standard',
   true,
   6,
-  '1 infinite marquee (up to 12 logos)',
+  'Infinite logo proof marquee for brand partners and press',
   900,
   30,
   NULL,
@@ -329,7 +333,7 @@ VALUES
   'Standard',
   true,
   7,
-  'Up to 8 objection FAQ items + Schema.org markup',
+  'Objection FAQ accordion with embedded Google Schema markup',
   800,
   25,
   NULL,
@@ -347,7 +351,7 @@ VALUES
   'Advanced',
   true,
   8,
-  'Full site 95+ Lighthouse speed tuning',
+  'Comprehensive 95+ Lighthouse speed tuning across desktop & mobile',
   1500,
   50,
   NULL,
@@ -365,7 +369,7 @@ VALUES
   'Standard',
   true,
   9,
-  'Complete OpenGraph 1200x630 preview cards + sitemap',
+  'Complete OpenGraph social cards, XML sitemaps & SEO meta tags',
   1000,
   35,
   NULL,
@@ -383,12 +387,12 @@ VALUES
   'Standard',
   true,
   10,
-  '1 production domain + SSL + global Edge CDN',
+  'Production custom domain connection + SSL + Global Edge CDN',
   999,
   44,
-  'Per additional custom domain / sub-domain DNS setup',
-  800,
-  25
+  NULL,
+  NULL,
+  NULL
 )
 ON CONFLICT (function_key) DO UPDATE SET
   title = EXCLUDED.title,
@@ -408,7 +412,8 @@ ON CONFLICT (function_key) DO UPDATE SET
 
 -- ==============================================================================
 -- SEED DATA: TABLE 2 (package_bofu_marketing_features)
--- Package Total: ₹29,999 INR | $899 USD
+-- Package 2 Delta Features (₹15,000 INR | $400 USD)
+-- + Base Package 1 Included (₹14,999 INR | $499 USD) = Final Price ₹29,999 / $899
 -- ==============================================================================
 INSERT INTO public.package_bofu_marketing_features 
   (package_id, function_key, title, category, description, technical_deliverables, business_impact, complexity, is_core, display_order, included_limit, feature_price_inr, feature_price_usd, overage_unit_label, overage_price_inr, overage_price_usd)
@@ -424,12 +429,12 @@ VALUES
   'Advanced',
   true,
   1,
-  '1 primary payment gateway (Razorpay / Stripe / UPI)',
-  4500,
-  135,
-  'Per additional checkout gateway / currency pipeline',
+  '1-Click checkout engine with Apple Pay, Google Pay, UPI & Cards',
   2500,
-  75
+  70,
+  NULL,
+  NULL,
+  NULL
 ),
 (
   'growth-marketing-campaigns',
@@ -442,12 +447,12 @@ VALUES
   'Standard',
   true,
   2,
-  '2 dynamic campaign drop timers',
-  2000,
-  60,
-  'Per additional active countdown timer',
+  'Dynamic campaign countdown clocks and drop deadline tickers',
   1000,
-  30
+  25,
+  NULL,
+  NULL,
+  NULL
 ),
 (
   'growth-marketing-campaigns',
@@ -460,12 +465,12 @@ VALUES
   'Standard',
   true,
   3,
-  'Sticky announcement header with 1-tap coupon copy',
-  1500,
-  45,
-  'Per additional seasonal promo bar / sticky modal',
+  'Sticky announcement header with 1-tap clipboard coupon copying',
   800,
-  25
+  20,
+  NULL,
+  NULL,
+  NULL
 ),
 (
   'growth-marketing-campaigns',
@@ -478,12 +483,12 @@ VALUES
   'Advanced',
   true,
   4,
-  'Up to 12 featured products with 4K multi-angle viewer',
-  3500,
-  105,
-  'Per batch of 10 additional products / variants',
-  1500,
-  45
+  'Complete product showcase gallery with 4K zoom loupe & variants',
+  1800,
+  50,
+  NULL,
+  NULL,
+  NULL
 ),
 (
   'growth-marketing-campaigns',
@@ -496,12 +501,12 @@ VALUES
   'Advanced',
   true,
   5,
-  'Up to 4 editorial studio showcases & spec hotspots',
-  3000,
-  90,
-  'Per extra studio product breakdown showcase',
-  1000,
-  30
+  'Editorial studio product presentations with interactive spec hotspots',
+  1500,
+  40,
+  NULL,
+  NULL,
+  NULL
 ),
 (
   'growth-marketing-campaigns',
@@ -514,12 +519,12 @@ VALUES
   'Advanced',
   true,
   6,
-  '6 vertical TikTok/Reels customer review embeds',
-  3000,
-  90,
-  'Per batch of 6 extra video reviews',
-  1000,
-  30
+  'Full vertical TikTok / Reels customer video reviews wall',
+  1500,
+  40,
+  NULL,
+  NULL,
+  NULL
 ),
 (
   'growth-marketing-campaigns',
@@ -532,12 +537,12 @@ VALUES
   'Standard',
   true,
   7,
-  '1 interactive comparison matrix (up to 4 tiers)',
-  2000,
-  60,
-  'Per additional comparison table',
+  'Side-by-side comparison tables against market alternatives',
   1000,
-  30
+  25,
+  NULL,
+  NULL,
+  NULL
 ),
 (
   'growth-marketing-campaigns',
@@ -550,9 +555,9 @@ VALUES
   'Standard',
   true,
   8,
-  'Real-time purchase popup queue + low-stock meters',
-  2000,
-  60,
+  'Live purchase notification toasts and dynamic low-stock meters',
+  1000,
+  25,
   NULL,
   NULL,
   NULL
@@ -568,12 +573,12 @@ VALUES
   'Standard',
   true,
   9,
-  '1 lead magnet gate with instant automated delivery',
-  2000,
-  60,
-  'Per additional gated freebie resource',
+  'Lead magnet opt-in gate with instant digital asset delivery',
   1000,
-  30
+  25,
+  NULL,
+  NULL,
+  NULL
 ),
 (
   'growth-marketing-campaigns',
@@ -586,9 +591,9 @@ VALUES
   'Advanced',
   true,
   10,
-  'Automatic capture of 7 UTM parameters on leads/orders',
-  3000,
-  90,
+  'Full multi-source UTM attribution engine across all marketing channels',
+  1500,
+  40,
   NULL,
   NULL,
   NULL
@@ -604,12 +609,12 @@ VALUES
   'Advanced',
   true,
   11,
-  'Meta CAPI, GA4, GTM & TikTok Pixel pre-wired',
-  2500,
-  75,
-  'Per additional bespoke ad platform pixel',
+  'Pre-wired Meta CAPI, GA4, GTM and TikTok conversion pixels',
   1000,
-  30
+  30,
+  NULL,
+  NULL,
+  NULL
 ),
 (
   'growth-marketing-campaigns',
@@ -622,9 +627,9 @@ VALUES
   'Standard',
   true,
   12,
-  'In-portal UTM link generator with 1-click presets',
-  999,
-  29,
+  'In-portal UTM campaign link builder with 1-click presets',
+  400,
+  10,
   NULL,
   NULL,
   NULL
@@ -647,7 +652,8 @@ ON CONFLICT (function_key) DO UPDATE SET
 
 -- ==============================================================================
 -- SEED DATA: TABLE 3 (package_3d_experience_features)
--- Package Total: ₹49,999 INR | $1,299 USD
+-- Package 3 Delta Features (₹35,000 INR | $800 USD)
+-- + Base Package 1 Included (₹14,999 INR | $499 USD) = Final Price ₹49,999 / $1,299
 -- ==============================================================================
 INSERT INTO public.package_3d_experience_features 
   (package_id, function_key, title, category, description, technical_deliverables, business_impact, complexity, is_core, display_order, included_limit, feature_price_inr, feature_price_usd, overage_unit_label, overage_price_inr, overage_price_usd)
@@ -663,12 +669,12 @@ VALUES
   'Specialized',
   true,
   1,
-  '1 primary responsive 3D WebGL scene canvas',
-  12000,
-  310,
-  'Per additional separate 3D canvas viewport',
-  6000,
-  155
+  'High-performance Three.js / WebGL responsive scene canvas',
+  8000,
+  180,
+  NULL,
+  NULL,
+  NULL
 ),
 (
   'interactive-3d-experience',
@@ -681,12 +687,12 @@ VALUES
   'Specialized',
   true,
   2,
-  'Interactive GPU particle field with mouse dynamics',
-  7500,
-  195,
-  'Per additional bespoke GLSL custom shader effect',
-  4000,
-  105
+  'Interactive GPU particle systems & dynamic fluid shader physics',
+  6000,
+  140,
+  NULL,
+  NULL,
+  NULL
 ),
 (
   'interactive-3d-experience',
@@ -699,12 +705,12 @@ VALUES
   'Advanced',
   true,
   3,
-  'Optimization of 1 primary 3D GLB/GLTF model asset',
-  5500,
-  145,
-  'Per additional 3D model asset integration',
-  3500,
-  90
+  'Full 3D model optimization & Draco/KTX2 asset compression pipeline',
+  5000,
+  110,
+  NULL,
+  NULL,
+  NULL
 ),
 (
   'interactive-3d-experience',
@@ -717,12 +723,12 @@ VALUES
   'Specialized',
   true,
   4,
-  'Up to 4 scroll-driven camera journey keyframes',
-  7500,
-  195,
-  'Per extra scroll camera journey keyframe',
-  2000,
-  50
+  'Scroll-driven 3D camera paths & chapter-pinned story transitions',
+  5500,
+  130,
+  NULL,
+  NULL,
+  NULL
 ),
 (
   'interactive-3d-experience',
@@ -735,9 +741,9 @@ VALUES
   'Advanced',
   true,
   5,
-  'Photorealistic PBR textures, HDRI reflections & shadows',
-  6000,
-  155,
+  'Photorealistic PBR materials, HDRI environment lighting & soft shadows',
+  4000,
+  90,
   NULL,
   NULL,
   NULL
@@ -753,9 +759,9 @@ VALUES
   'Specialized',
   true,
   6,
-  'Cinematic post-processing pass (Bloom & DoF)',
-  4500,
-  120,
+  'Cinematic post-processing pass (selective bloom, vignette & depth of field)',
+  3000,
+  70,
   NULL,
   NULL,
   NULL
@@ -771,12 +777,12 @@ VALUES
   'Advanced',
   true,
   7,
-  'Tactile sound design & ambient audio cues',
-  3500,
-  90,
-  'Per additional soundscape / interactive cue suite',
+  'Ambient spatial audio & tactile interactive sound design',
   2000,
-  50
+  50,
+  NULL,
+  NULL,
+  NULL
 ),
 (
   'interactive-3d-experience',
@@ -789,9 +795,9 @@ VALUES
   'Advanced',
   true,
   8,
-  'Device orientation gyroscope control + adaptive 60fps guard',
-  3499,
-  89,
+  'Mobile gyroscope tilt controls & adaptive 60fps thermal guard',
+  1500,
+  30,
   NULL,
   NULL,
   NULL
@@ -814,7 +820,8 @@ ON CONFLICT (function_key) DO UPDATE SET
 
 -- ==============================================================================
 -- SEED DATA: TABLE 4 (package_fullstack_backend_features)
--- Package Total: ₹79,999 INR | $1,899 USD
+-- Package 4 Delta Features (₹65,000 INR | $1,400 USD)
+-- + Base Package 1 Included (₹14,999 INR | $499 USD) = Final Price ₹79,999 / $1,899
 -- ==============================================================================
 INSERT INTO public.package_fullstack_backend_features 
   (package_id, function_key, title, category, description, technical_deliverables, business_impact, complexity, is_core, display_order, included_limit, feature_price_inr, feature_price_usd, overage_unit_label, overage_price_inr, overage_price_usd)
@@ -830,12 +837,12 @@ VALUES
   'Enterprise',
   true,
   1,
-  'Up to 6 relational database tables with foreign keys',
-  14000,
-  330,
-  'Per additional database table / entity schema',
-  2500,
-  60
+  'Production PostgreSQL relational database schema with custom triggers',
+  12000,
+  260,
+  NULL,
+  NULL,
+  NULL
 ),
 (
   'fullstack-web-app',
@@ -848,9 +855,9 @@ VALUES
   'Enterprise',
   true,
   2,
-  'Complete RLS security policies on all included tables',
-  9000,
-  215,
+  'Zero-Trust Row-Level Security policies across all database models',
+  8000,
+  170,
   NULL,
   NULL,
   NULL
@@ -866,12 +873,12 @@ VALUES
   'Advanced',
   true,
   3,
-  'Email/Password + Google OAuth + Magic Link sessions',
-  9000,
-  215,
-  'Per additional complex OAuth provider (e.g. Apple, GitHub)',
-  3000,
-  70
+  'Multi-provider auth suite (Email, Google OAuth, Magic Link & sessions)',
+  7500,
+  160,
+  NULL,
+  NULL,
+  NULL
 ),
 (
   'fullstack-web-app',
@@ -884,12 +891,12 @@ VALUES
   'Enterprise',
   true,
   4,
-  '1 payment gateway with subscription/order webhooks',
-  9000,
-  215,
-  'Per additional payment gateway / currency pipeline',
-  4500,
-  110
+  'Full payment webhooks engine for purchases and subscriptions',
+  8500,
+  180,
+  NULL,
+  NULL,
+  NULL
 ),
 (
   'fullstack-web-app',
@@ -902,12 +909,12 @@ VALUES
   'Advanced',
   true,
   5,
-  '1 client self-service dashboard with order/profile center',
-  11000,
-  260,
-  'Per additional client portal module/subview',
-  3000,
-  70
+  'Authenticated client self-service portal & order management center',
+  9000,
+  200,
+  NULL,
+  NULL,
+  NULL
 ),
 (
   'fullstack-web-app',
@@ -920,12 +927,12 @@ VALUES
   'Enterprise',
   true,
   6,
-  '1 master founder admin cockpit with analytics & users',
-  13000,
-  310,
-  'Per additional admin sub-portal (e.g. Manager / Staff)',
-  5000,
-  120
+  'Executive founder admin cockpit with live analytics & management',
+  10000,
+  220,
+  NULL,
+  NULL,
+  NULL
 ),
 (
   'fullstack-web-app',
@@ -938,12 +945,12 @@ VALUES
   'Standard',
   true,
   7,
-  'Up to 4 custom transactional email notification templates',
-  5000,
-  120,
-  'Per extra custom email/SMS template flow',
-  1500,
-  35
+  'Automated transactional email notifications & lifecycle alerts',
+  3500,
+  70,
+  NULL,
+  NULL,
+  NULL
 ),
 (
   'fullstack-web-app',
@@ -956,12 +963,12 @@ VALUES
   'Advanced',
   true,
   8,
-  '2 secure cloud storage buckets with signed URL access',
-  4000,
-  95,
-  'Per additional private storage bucket',
-  1500,
-  35
+  'Encrypted cloud storage buckets with signed URL access',
+  3000,
+  60,
+  NULL,
+  NULL,
+  NULL
 ),
 (
   'fullstack-web-app',
@@ -974,12 +981,12 @@ VALUES
   'Enterprise',
   true,
   9,
-  '2 user roles (Admin + Customer) with action audit logging',
-  3000,
-  70,
-  'Per additional custom role permission level',
+  'Role-based access control with immutable security audit logging',
   2000,
-  50
+  50,
+  NULL,
+  NULL,
+  NULL
 ),
 (
   'fullstack-web-app',
@@ -992,12 +999,12 @@ VALUES
   'Advanced',
   true,
   10,
-  'Up to 3 outbound webhook event dispatches (Slack/Zapier)',
-  2999,
-  69,
-  'Per additional third-party webhook destination',
+  'Outbound webhook dispatcher & external API connectivity',
   1500,
-  35
+  30,
+  NULL,
+  NULL,
+  NULL
 )
 ON CONFLICT (function_key) DO UPDATE SET
   title = EXCLUDED.title,
