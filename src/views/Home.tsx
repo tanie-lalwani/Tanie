@@ -439,13 +439,6 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
                   loading="lazy"
                 />
                 <div className="absolute inset-0 bg-linear-to-br from-slate-950/10 via-sky-100/4 to-slate-950/28" />
-                <a
-                  href="/gallery"
-                  className="absolute bottom-3 right-3 grid h-9 w-9 place-items-center rounded-full border border-white/14 bg-slate-950/42 text-xl !text-white/72 !no-underline backdrop-blur-md transition hover:bg-white/10 hover:!text-white"
-                  aria-label="Open gallery"
-                >
-                  ↗
-                </a>
               </figure>
 
               <div className="mt-5 overflow-hidden sm:mt-6 [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
