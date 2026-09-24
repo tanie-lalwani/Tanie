@@ -227,17 +227,7 @@ export default function AdminPortal() {
                   await signOut();
                   setIsAdminUnlocked(false);
                 }}
-                className="rounded-full border border-slate-700 bg-slate-900/80 px-4 py-2 text-xs font-medium text-slate-300 hover:text-white cursor-pointer"
-                title={`Signed in as ${user.email}`}
-              >
-                Sign Out ({user.email?.split("@")[0]})
-              </button>
-            )}
-            {user && (
-              <button
-                type="button"
-                onClick={() => signOut()}
-                className="rounded-full border border-slate-700 bg-slate-900/80 px-4 py-2 text-xs font-medium text-slate-300 hover:text-white cursor-pointer"
+                className="rounded-full border border-slate-700 bg-slate-900/80 px-4 py-2 text-xs font-medium text-slate-300 hover:text-white cursor-pointer transition"
                 title={`Signed in as ${user.email}`}
               >
                 Sign Out ({user.email?.split("@")[0]})

@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, type CSSProperties } from 'react'
 import type { TimePhase } from '../experience/timePhase'
 import { languageOptions, useLanguage } from '../context/LanguageContext'
 import AmbientOceanAudio from './AmbientOceanAudio'
+import { useAuth } from '@/hooks/useAuth'
 
 type NavbarProps = {
   phase: TimePhase
@@ -27,6 +28,7 @@ const rgba = (from: [number, number, number, number], to: [number, number, numbe
 
 export default function Navbar({ phase }: NavbarProps) {
   const { locale, setLocale, copy } = useLanguage()
+  const { user, signOut } = useAuth()
   const [diveProgress, setDiveProgress] = useState(0)
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false)
   const mobileNavRef = useRef<HTMLDivElement | null>(null)
@@ -279,6 +281,42 @@ export default function Navbar({ phase }: NavbarProps) {
                   {currentLabels.faq}
                 </a>
               </div>
+
+              {/* Logged in User & Sign Out at the end */}
+              {user && (
+                <div className="mt-3 border-t border-white/10 pt-2.5">
+                  <div className="flex items-center justify-between px-1 mb-2">
+                    <span
+                      className="text-[10px] font-mono text-slate-400 truncate max-w-[170px]"
+                      title={user.email || ''}
+                    >
+                      {user.email}
+                    </span>
+                    <span className="text-[9px] uppercase tracking-wider px-1.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-semibold border border-emerald-500/30">
+                      Signed In
+                    </span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      setIsMobileNavOpen(false)
+                      await signOut()
+                      window.location.href = '/'
+                    }}
+                    className="w-full flex items-center justify-center gap-2 rounded-xl py-2 px-3 text-xs font-semibold text-rose-300 hover:text-white bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 transition cursor-pointer"
+                  >
+                    <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                      />
+                    </svg>
+                    <span>Sign Out</span>
+                  </button>
+                </div>
+              )}
             </div>
           )}
         </div>
