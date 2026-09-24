@@ -253,7 +253,7 @@ export default function AdminPortal() {
                 Sign Out & Switch Account
               </button>
               <Link
-                href="/client-portal"
+                href="/client"
                 className="w-full rounded-xl border border-white/10 bg-slate-900 py-2.5 text-xs font-bold text-slate-300 hover:bg-slate-800 hover:text-white transition !no-underline"
               >
                 Go to Client Workspace →

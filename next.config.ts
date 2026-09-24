@@ -49,6 +49,16 @@ const nextConfig: NextConfig = {
         destination: "/terms#delivery",
         permanent: true,
       },
+      {
+        source: "/client-portal",
+        destination: "/client",
+        permanent: true,
+      },
+      {
+        source: "/admin-portal",
+        destination: "/admin",
+        permanent: true,
+      },
     ];
   },
 };
