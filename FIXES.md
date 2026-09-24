@@ -84,7 +84,23 @@ User scrolls to #contact
 
 ---
 
+## 📌 Incident: Dead `/gallery` Link Generating 404s in Google Search Console
+
+### 1. Symptoms & Report
+- Google Search Console flagged `https://www.tanie.me/gallery` as a 404 (Not Found) crawl error under Page Indexing.
+
+### 2. Root Cause Analysis
+- The profile photo figure in the About section on [`src/views/Home.tsx`](file:///c:/Users/words/Desktop/Websites/Completed/Portfolio/src/views/Home.tsx) had an overlaid circular arrow button linking to `href="/gallery"`.
+- Since no `/gallery` route exists in the application, search engine bots followed the link and encountered a 404.
+
+### 3. Resolution & Architectural Safeguards
+- Removed the dead `<a>` link element from the profile image figure in [`src/views/Home.tsx`](file:///c:/Users/words/Desktop/Websites/Completed/Portfolio/src/views/Home.tsx) without introducing unnecessary redirects.
+
+---
+
 ## 📐 General Prevention Guidelines
 1. **Never use `history.replaceState` or `pushState` inside scroll/intersection listeners in Next.js App Router apps** unless you explicitly intend to trigger Next.js router listeners and `usePathname()`.
 2. **Never key root animation wrappers (`<motion.div key={...}>`) by raw `pathname` if multiple routes render the same view** (e.g. `/` and `/contact`). Group them using a stable key.
 3. **Keep swipe/carousel gesture containers in `dir="ltr"`** to avoid touch/drag axis inversion bugs in RTL languages.
+4. **Audit in-page anchor and icon links** to ensure every `href` maps to a registered `page.tsx` route or anchor ID.
+
