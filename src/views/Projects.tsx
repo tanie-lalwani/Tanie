@@ -7,6 +7,7 @@ import { useLanguage } from "../context/LanguageContext"
 import SEOHead from "../components/SEOHead"
 import { getBotReply } from "../lib/botAssistant"
 import { getVimeoEmbedUrl } from "../lib/projectStorage"
+import { useAuth } from "@/hooks/useAuth"
 
 type BotMessage = {
   id: number
@@ -42,6 +43,7 @@ function getProjectCards() {
 
 export default function Projects() {
   const pathname = usePathname()
+  const { user, signOut } = useAuth()
   const { copy, locale } = useLanguage()
   const scrollContainerRef = useRef<HTMLElement | null>(null)
 
@@ -322,6 +324,36 @@ export default function Projects() {
             </svg>
             <span className="text-[10px] font-semibold">{copy.nav.qna}</span>
           </Link>
+
+          {user ? (
+            <button
+              type="button"
+              onClick={async () => {
+                await signOut()
+                window.location.href = "/"
+              }}
+              className="flex w-14 flex-col items-center rounded-[1.35rem] px-2 py-3 !no-underline transition-all !text-black hover:bg-rose-500/15 hover:!text-rose-600 cursor-pointer"
+              title="Sign Out"
+            >
+              <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.8" className="mb-1">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+              </svg>
+              <span className="text-[10px] font-semibold">Logout</span>
+            </button>
+          ) : (
+            <Link
+              href="/auth"
+              className={`flex w-14 flex-col items-center rounded-[1.35rem] px-2 py-3 !no-underline transition-all ${
+                pathname === "/auth" ? "bg-[#c8ecff] !text-black shadow-xs" : "!text-black hover:bg-white/55 hover:!text-black"
+              }`}
+              title="Sign In"
+            >
+              <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.8" className="mb-1">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+              </svg>
+              <span className="text-[10px] font-semibold">Login</span>
+            </Link>
+          )}
 
           <Link
             href="/contact"

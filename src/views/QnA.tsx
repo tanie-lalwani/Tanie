@@ -10,6 +10,7 @@ import { loadReels, type Reel } from "../lib/reelStorage"
 import { getVimeoEmbedUrl } from "../lib/projectStorage"
 
 import { qnaTranslations } from "../data/qnaTranslations"
+import { useAuth } from "@/hooks/useAuth"
 
 type BotMessage = {
   id: number
@@ -54,6 +55,7 @@ function getQuestionCards() {
 
 export default function QnA() {
   const pathname = usePathname()
+  const { user, signOut } = useAuth()
   const { copy, locale } = useLanguage()
   const qnaCopy = qnaTranslations[locale] || qnaTranslations.en
   const scrollContainerRef = useRef<HTMLElement | null>(null)
@@ -265,31 +267,35 @@ export default function QnA() {
             <span className="text-[10px] font-semibold">{copy.nav.qna}</span>
           </Link>
 
-          <Link
-            href="/faq"
-            className={`flex w-14 flex-col items-center rounded-[1.35rem] px-2 py-3 !no-underline transition-all ${
-              pathname === "/faq" ? "bg-[#c8ecff] !text-black shadow-xs" : "!text-black hover:bg-white/55 hover:!text-black"
-            }`}
-            title={qnaCopy.nav.faq}
-          >
-            <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.8" className="mb-1">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            <span className="text-[10px] font-semibold">{qnaCopy.nav.faq}</span>
-          </Link>
-
-          <Link
-            href="/terms"
-            className={`flex w-14 flex-col items-center rounded-[1.35rem] px-2 py-3 !no-underline transition-all ${
-              pathname === "/terms" ? "bg-[#c8ecff] !text-black shadow-xs" : "!text-black hover:bg-white/55 hover:!text-black"
-            }`}
-            title={qnaCopy.nav.terms}
-          >
-            <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.8" className="mb-1">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-            </svg>
-            <span className="text-[10px] font-semibold">{qnaCopy.nav.terms}</span>
-          </Link>
+          {user ? (
+            <button
+              type="button"
+              onClick={async () => {
+                await signOut()
+                window.location.href = "/"
+              }}
+              className="flex w-14 flex-col items-center rounded-[1.35rem] px-2 py-3 !no-underline transition-all !text-black hover:bg-rose-500/15 hover:!text-rose-600 cursor-pointer"
+              title="Sign Out"
+            >
+              <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.8" className="mb-1">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+              </svg>
+              <span className="text-[10px] font-semibold">Logout</span>
+            </button>
+          ) : (
+            <Link
+              href="/auth"
+              className={`flex w-14 flex-col items-center rounded-[1.35rem] px-2 py-3 !no-underline transition-all ${
+                pathname === "/auth" ? "bg-[#c8ecff] !text-black shadow-xs" : "!text-black hover:bg-white/55 hover:!text-black"
+              }`}
+              title="Sign In"
+            >
+              <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.8" className="mb-1">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+              </svg>
+              <span className="text-[10px] font-semibold">Login</span>
+            </Link>
+          )}
 
           <Link
             href="/contact"
