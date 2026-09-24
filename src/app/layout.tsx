@@ -24,7 +24,7 @@ const bodoniModa = Bodoni_Moda({
 
 export const viewport: Viewport = {
   themeColor: "#020617",
-  colorScheme: "dark light",
+  colorScheme: "dark",
   width: "device-width",
   initialScale: 1,
 };

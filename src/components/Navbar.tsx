@@ -194,7 +194,22 @@ export default function Navbar({ phase }: NavbarProps) {
                   <a
                     key={page.href}
                     href={page.href}
-                    onClick={() => setIsMobileNavOpen(false)}
+                    onClick={(e) => {
+                      setIsMobileNavOpen(false)
+                      if (typeof window !== 'undefined') {
+                        const isCurrentHome = window.location.pathname === '/' || window.location.pathname === '/contact'
+                        if (page.href === '/contact' && isCurrentHome) {
+                          e.preventDefault()
+                          const contactEl = document.getElementById('contact')
+                          if (contactEl) {
+                            contactEl.scrollIntoView({ behavior: 'smooth' })
+                          }
+                        } else if (page.href === '/' && isCurrentHome) {
+                          e.preventDefault()
+                          window.scrollTo({ top: 0, behavior: 'smooth' })
+                        }
+                      }
+                    }}
                     className="flex items-center justify-between rounded-xl px-3 py-2 text-xs font-semibold !no-underline text-slate-200 hover:bg-sky-500/20 hover:text-white transition"
                   >
                     <div className="flex items-center gap-2.5">

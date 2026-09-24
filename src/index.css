@@ -40,6 +40,8 @@ main[data-prerendered="true"] {
 		-moz-osx-font-smoothing: grayscale;
 		color: var(--color-text-main);
 		cursor: url("/water-cursor.svg") 16 5, auto;
+		background-color: #04111b;
+		color-scheme: dark;
 	}
 
 	body {

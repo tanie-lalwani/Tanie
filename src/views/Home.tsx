@@ -3,7 +3,6 @@
 import { AnimatePresence, motion, useScroll, useTransform } from "framer-motion"
 import { useCallback, useEffect, useLayoutEffect, useRef, useState, useMemo, type CSSProperties } from "react"
 import Link from "next/link"
-import { usePathname } from "next/navigation"
 import PageHeader from "../components/PageHeader"
 import { ProjectsCarousel, type Project as CarouselProject } from "../components/ProjectsCarousel"
 import { ContactForm } from "../components/ContactForm"
@@ -208,7 +207,6 @@ function InterviewPrompt() {
 export default function Home({ phase, onSceneReady }: HomeProps) {
   const { copy, locale } = useLanguage()
   const { markOceanReady } = useLoading()
-  const pathname = usePathname()
   const [aboutExpanded, _setAboutExpanded] = useState(true)
 
   const handleSceneReady = useCallback(() => {
@@ -216,58 +214,17 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
     markOceanReady()
   }, [onSceneReady, markOceanReady])
 
-  const isScrollingToContact = useRef(pathname === "/contact")
-
+  // Scroll to contact if loaded directly on /contact or #contact
   useEffect(() => {
-    if (pathname === "/contact") {
-      isScrollingToContact.current = true
+    if (typeof window === "undefined") return
+    if (window.location.pathname === "/contact" || window.location.hash === "#contact") {
       const contactSection = document.getElementById("contact")
       if (contactSection) {
         const timer = setTimeout(() => {
           contactSection.scrollIntoView({ behavior: "smooth" })
         }, 150)
-
-        const resetTimer = setTimeout(() => {
-          isScrollingToContact.current = false
-        }, 2000)
-
-        return () => {
-          clearTimeout(timer)
-          clearTimeout(resetTimer)
-        }
+        return () => clearTimeout(timer)
       }
-    }
-  }, [pathname])
-
-  useEffect(() => {
-    const contactSection = document.getElementById("contact")
-    if (!contactSection) return
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            isScrollingToContact.current = false
-            if (window.location.pathname !== "/contact") {
-              window.history.replaceState(null, "", "/contact")
-            }
-          } else {
-            if (!isScrollingToContact.current) {
-              if (window.location.pathname === "/contact") {
-                window.history.replaceState(null, "", "/")
-              }
-            }
-          }
-        })
-      },
-      {
-        threshold: 0.2,
-      }
-    )
-
-    observer.observe(contactSection)
-    return () => {
-      observer.disconnect()
     }
   }, [])
   const isMobile = useIsMobile()

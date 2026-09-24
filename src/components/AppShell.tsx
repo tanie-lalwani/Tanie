@@ -80,7 +80,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         </AnimatePresence>
 
         <motion.div
-          key={pathname}
+          key={isHome ? "home" : pathname}
           className="min-h-screen"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
