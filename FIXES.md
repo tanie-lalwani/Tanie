@@ -136,6 +136,9 @@ User scrolls to #contact
 4. **Typographic Integrity & Multilingual Drawer ([`src/components/Navbar.tsx`](file:///c:/Users/words/Desktop/Websites/Completed/Portfolio/src/components/Navbar.tsx))**:
    - Wrapped English legal and documentation text in `dir="ltr" text-left` to preserve punctuation and numbering in all locales.
    - Added localized drawer labels across all 7 supported languages (English, Urdu, Spanish, French, Hindi, Japanese, Chinese).
+5. **Full Native Multi-Language Translations ([`src/data/termsTranslations.ts`](file:///c:/Users/words/Desktop/Websites/Completed/Portfolio/src/data/termsTranslations.ts), [`src/data/faqTranslations.ts`](file:///c:/Users/words/Desktop/Websites/Completed/Portfolio/src/data/faqTranslations.ts))**:
+   - Translated the entirety of the unified Terms & Policies (all 7 sections, 25 legal clauses, badges, search placeholders, topic chips, and buttons) into all 7 supported languages (English, Spanish, French, Hindi, Japanese, Urdu, and Chinese).
+   - Translated the entirety of the FAQ page (questions, answers, key takeaways, categories, and action prompts) across all 7 supported languages with native RTL support for Urdu.
 
 ---
 
