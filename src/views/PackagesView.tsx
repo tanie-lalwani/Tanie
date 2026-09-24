@@ -23,6 +23,8 @@ import WebsiteCostCalculatorFunnel from "@/components/packages/WebsiteCostCalcul
 import MarketingFunnelSuite from "@/components/packages/MarketingFunnelSuite";
 import { useLanguage } from "@/context/LanguageContext";
 import { packagesTranslations } from "@/data/packagesTranslations";
+import { useGeoPricing } from "@/context/GeoPricingContext";
+import MarketRegionSelector from "@/components/ui/MarketRegionSelector";
 
 export default function PackagesView() {
   const router = useRouter();
@@ -30,6 +32,7 @@ export default function PackagesView() {
   const { user, isAuthenticated, signInWithPassword, signUp, signOut } = useAuth();
   const { copy, locale } = useLanguage();
   const pkgCopy = packagesTranslations[locale] || packagesTranslations.en;
+  const { formatAddonPrice, formatPackagePrice, tierConfig } = useGeoPricing();
 
   // Active View Tab: "home" (Overview & Scope), "marketing" (Full-Funnel Campaign Engine), "calculator" (Interactive Estimator), "gallery" (Browse Aesthetics), "wizard" (Make Your Website Questionnaire), "results" (Curated Suggestions)
   const [activeTab, setActiveTab] = useState<"home" | "marketing" | "calculator" | "gallery" | "wizard" | "results">("home");
@@ -795,43 +798,34 @@ ${companyName.trim() ? `🏢 Company / Brand: ${companyName.trim()}` : ""}
 
             {/* Currency & Addon Modules */}
             <div className="rounded-[2.4rem] border border-sky-300/80 bg-[#c8ecff]/30 p-6 sm:p-10 shadow-md backdrop-blur-xl">
-              <div className="flex items-center justify-between mb-6">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
                 <div>
                   <span className="text-xs font-extrabold uppercase tracking-widest text-sky-700">{pkgCopy.addons.tag}</span>
                   <h3 className="text-2xl font-bold text-[#0a192f] mt-0.5">{pkgCopy.addons.title}</h3>
                 </div>
-                <div className="flex items-center gap-1 rounded-full border border-sky-300/80 bg-white/70 p-1">
-                  <button
-                    type="button"
-                    onClick={() => setCurrency("USD")}
-                    className={`rounded-full px-3 py-1 text-xs font-bold transition cursor-pointer ${currency === "USD" ? "bg-[#0a192f] text-white" : "text-sky-950 hover:text-sky-700"}`}
-                  >
-                    $ USD
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setCurrency("INR")}
-                    className={`rounded-full px-3 py-1 text-xs font-bold transition cursor-pointer ${currency === "INR" ? "bg-[#0a192f] text-white" : "text-sky-950 hover:text-sky-700"}`}
-                  >
-                    ₹ INR
-                  </button>
+                {/* Market & Region Selector by the side */}
+                <div className="flex items-center gap-2">
+                  <MarketRegionSelector />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
                 {[
-                  { name: pkgCopy.addons.cms.name, usd: 499, inr: 41000, desc: pkgCopy.addons.cms.desc },
-                  { name: pkgCopy.addons.ai.name, usd: 599, inr: 49000, desc: pkgCopy.addons.ai.desc },
-                  { name: pkgCopy.addons.audio.name, usd: 299, inr: 24000, desc: pkgCopy.addons.audio.desc }
-                ].map((a, i) => (
-                  <div key={i} className="rounded-2xl border border-sky-200/80 bg-white/50 p-4">
-                    <div className="flex items-center justify-between font-bold text-[#0a192f] mb-1">
-                      <span>{a.name}</span>
-                      <span className="text-sky-700">{currency === "USD" ? `+$${a.usd}` : `+₹${a.inr.toLocaleString()}`}</span>
+                  { id: "cms", name: pkgCopy.addons.cms.name, desc: pkgCopy.addons.cms.desc },
+                  { id: "ai", name: pkgCopy.addons.ai.name, desc: pkgCopy.addons.ai.desc },
+                  { id: "audio", name: pkgCopy.addons.audio.name, desc: pkgCopy.addons.audio.desc }
+                ].map((a) => {
+                  const priceInfo = formatAddonPrice(a.id);
+                  return (
+                    <div key={a.id} className="rounded-2xl border border-sky-200/80 bg-white/50 p-4">
+                      <div className="flex items-center justify-between font-bold text-[#0a192f] mb-1">
+                        <span>{a.name}</span>
+                        <span className="text-sky-700">+{priceInfo.formatted} {priceInfo.currency}</span>
+                      </div>
+                      <p className="text-sky-900/70 text-[11px]">{a.desc}</p>
                     </div>
-                    <p className="text-sky-900/70 text-[11px]">{a.desc}</p>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
 

@@ -5,6 +5,8 @@ import { useLanguage } from "@/context/LanguageContext";
 import { packagesTranslations } from "@/data/packagesTranslations";
 import { saveClientCustomQuote } from "@/lib/portalServices";
 import { getSavedLeadProfile, saveLeadProfile } from "@/features/lead-capture/lib/cookieHelper";
+import { useGeoPricing } from "@/context/GeoPricingContext";
+import MarketRegionSelector from "@/components/ui/MarketRegionSelector";
 
 interface FeatureBundle {
   id: string;
@@ -382,6 +384,7 @@ export default function WebsiteCostCalculatorFunnel({
   const { user, isAuthenticated, signInWithPassword, signUp, signInWithGoogle } = useAuth();
   const { locale } = useLanguage();
   const t = packagesTranslations[locale] || packagesTranslations.en;
+  const { marketTier, tierConfig, formatBundlePrice } = useGeoPricing();
 
   // Lead ID for deduplication across steps
   const [leadId, setLeadId] = useState<string>("");
@@ -494,12 +497,15 @@ export default function WebsiteCostCalculatorFunnel({
   const calculation = useMemo(() => {
     let subtotalInr = 0;
     let subtotalUsd = 0;
+    let subtotalMarket = 0;
 
     selectedBundles.forEach((bundleId) => {
       const bundle = FEATURE_BUNDLES.find((b) => b.id === bundleId);
       if (bundle) {
         subtotalInr += bundle.priceInr;
         subtotalUsd += bundle.priceUsd;
+        const marketPrice = tierConfig.bundles[bundleId] ?? (tierConfig.currencyCode === "INR" ? bundle.priceInr : bundle.priceUsd);
+        subtotalMarket += marketPrice;
       }
     });
 
@@ -511,21 +517,26 @@ export default function WebsiteCostCalculatorFunnel({
 
     const discountAmountInr = Math.round((subtotalInr * discountPercent) / 100);
     const discountAmountUsd = Math.round((subtotalUsd * discountPercent) / 100);
+    const discountAmountMarket = Math.round((subtotalMarket * discountPercent) / 100);
 
     const finalTotalInr = subtotalInr - discountAmountInr;
     const finalTotalUsd = subtotalUsd - discountAmountUsd;
+    const finalTotalMarket = subtotalMarket - discountAmountMarket;
 
     return {
       subtotalInr,
       subtotalUsd,
+      subtotalMarket,
       discountPercent,
       discountAmountInr,
       discountAmountUsd,
+      discountAmountMarket,
       finalTotalInr,
       finalTotalUsd,
+      finalTotalMarket,
       bundleCount: selectedBundles.length
     };
-  }, [selectedBundles]);
+  }, [selectedBundles, tierConfig]);
 
   // Quick Pick preset click in Hero
   const handleQuickPick = (industry: IndustryOption) => {
@@ -678,7 +689,7 @@ ${selectedBundles
     return `• ${b?.name}`;
   })
   .join("\n")}
-💰 *Calculated Price:* ${currency === "INR" ? `₹${calculation.finalTotalInr.toLocaleString()}` : `$${calculation.finalTotalUsd.toLocaleString()}`} (includes ${calculation.discountPercent}% bundle discount)
+💰 *Calculated Price:* ${tierConfig.currencySymbol}${calculation.finalTotalMarket.toLocaleString()} ${tierConfig.currencyCode} (includes ${calculation.discountPercent}% bundle discount)
 ⏱️ *Timeline:* ${timeline}
 
 Let's discuss getting started!`;
@@ -701,6 +712,11 @@ Let's discuss getting started!`;
       {/* ========================================================================= */}
       {currentStep === 0 && (
         <div className="max-w-4xl mx-auto text-center pt-4 pb-8 sm:pb-12">
+          {/* REGION & MARKET SELECTOR BY THE SIDE */}
+          <div className="flex items-center justify-center mb-4">
+            <MarketRegionSelector />
+          </div>
+
           <h1 className="text-4xl sm:text-6xl font-black tracking-tight !text-[#0a192f] leading-tight">
             {t.hero.titlePrefix}<span className="text-sky-700">{t.hero.titleHighlight}</span>
           </h1>
@@ -786,19 +802,22 @@ Let's discuss getting started!`;
               </p>
             </div>
 
-            <div className="flex items-center gap-1.5 shrink-0">
-              {[1, 2, 3, 4].map((s) => (
-                <div
-                  key={s}
-                  className={`h-2 rounded-full transition-all ${
-                    s === currentStep
-                      ? "w-8 bg-[#0a192f]"
-                      : s < currentStep
-                      ? "w-4 bg-sky-600"
-                      : "w-2 bg-sky-200"
-                  }`}
-                />
-              ))}
+            <div className="flex flex-col sm:flex-row items-end sm:items-center gap-2 shrink-0">
+              <MarketRegionSelector compact={true} />
+              <div className="flex items-center gap-1.5">
+                {[1, 2, 3, 4].map((s) => (
+                  <div
+                    key={s}
+                    className={`h-2 rounded-full transition-all ${
+                      s === currentStep
+                        ? "w-8 bg-[#0a192f]"
+                        : s < currentStep
+                        ? "w-4 bg-sky-600"
+                        : "w-2 bg-sky-200"
+                    }`}
+                  />
+                ))}
+              </div>
             </div>
           </div>
 
@@ -1005,7 +1024,7 @@ Let's discuss getting started!`;
 
                       <div className="mt-4 pt-2.5 border-t border-sky-200/60 flex items-center justify-between text-xs font-semibold">
                         <span className="text-sky-900 font-bold" style={{ color: '#0a192f' }}>
-                          {isEssential ? (locale === "ur" ? "بنیادی آرکیٹیکچر" : "Core Foundation Architecture") : (locale === "ur" ? "ماڈیول" : "Interactive Module")}
+                          {tierConfig.currencySymbol}{(tierConfig.bundles[bundle.id] ?? (tierConfig.currencyCode === "INR" ? bundle.priceInr : bundle.priceUsd)).toLocaleString()} {tierConfig.currencyCode}
                         </span>
                         <span className={`text-[11px] font-bold ${isSelected ? "text-sky-800" : "text-sky-600"}`}>
                           {isSelected ? (locale === "ur" ? "✓ شامل ہے" : "✓ Included") : (locale === "ur" ? "+ منتخب کریں" : "+ Select Module")}
@@ -1306,7 +1325,7 @@ Let's discuss getting started!`;
 
                     <div className="text-center md:text-right">
                       <div className="text-4xl sm:text-5xl font-black !text-[#0a192f] tracking-tight">
-                        {currency === "INR" ? `₹${calculation.finalTotalInr.toLocaleString()}` : `$${calculation.finalTotalUsd.toLocaleString()}`}
+                        {tierConfig.currencySymbol}{calculation.finalTotalMarket.toLocaleString()} {tierConfig.currencyCode}
                       </div>
                       <div className="text-xs text-sky-700 font-bold mt-1">
                         {t.funnel.bundleDiscount} ({calculation.discountPercent}%)
@@ -1338,7 +1357,7 @@ Let's discuss getting started!`;
                               </div>
                             </div>
                             <span className="font-black text-sky-950 shrink-0">
-                              {bundle.isEssential ? (locale === "ur" ? "شامل ہے" : "Included") : `+₹${bundle.priceInr.toLocaleString()}`}
+                              {bundle.isEssential ? (locale === "ur" ? "شامل ہے" : "Included") : `+${tierConfig.currencySymbol}${(tierConfig.bundles[bundle.id] ?? (tierConfig.currencyCode === "INR" ? bundle.priceInr : bundle.priceUsd)).toLocaleString()}`}
                             </span>
                           </div>
                         );
