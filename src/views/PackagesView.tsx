@@ -834,8 +834,11 @@ ${companyName.trim() ? `🏢 Company / Brand: ${companyName.trim()}` : ""}
             <div className="rounded-[2.4rem] border border-sky-300/80 bg-[#c8ecff]/30 p-6 sm:p-10 shadow-md backdrop-blur-xl">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
                 <div>
-                  <span className="text-xs font-extrabold uppercase tracking-widest text-sky-700">{pkgCopy.addons.tag}</span>
-                  <h3 className="text-2xl font-bold text-[#0a192f] mt-0.5">{pkgCopy.addons.title}</h3>
+                  <span className="text-xs font-extrabold uppercase tracking-widest text-sky-700">Modular Architecture</span>
+                  <h3 className="text-2xl font-bold text-[#0a192f] mt-0.5">Plug & Play Addon Modules</h3>
+                  <p className="text-xs text-slate-600 mt-1">
+                    Select a core package foundation, then customize with any standalone module below.
+                  </p>
                 </div>
                 {/* Market & Region Selector by the side */}
                 <div className="flex items-center gap-2">
@@ -843,20 +846,34 @@ ${companyName.trim() ? `🏢 Company / Brand: ${companyName.trim()}` : ""}
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-xs">
                 {[
-                  { id: "cms", name: pkgCopy.addons.cms.name, desc: pkgCopy.addons.cms.desc },
-                  { id: "ai", name: pkgCopy.addons.ai.name, desc: pkgCopy.addons.ai.desc },
-                  { id: "audio", name: pkgCopy.addons.audio.name, desc: pkgCopy.addons.audio.desc }
+                  { id: "ecommerce_ordering", name: "E-Commerce & Checkout Suite", desc: "Product catalog, variants, slide-over cart, Razorpay/Stripe checkout & automated GST/tax invoices.", icon: "🛍️" },
+                  { id: "booking_appointments", name: "Smart Booking Engine", desc: "Live slot picker, staff/doctor specialist selection, deposits & automated WhatsApp reminders.", icon: "📅" },
+                  { id: "lead_crm", name: "Lead CRM & Inquiry Pipeline", desc: "Interactive consultation quote modals, centralized lead database & instant WhatsApp notifications.", icon: "🎯" },
+                  { id: "ai_assistant", name: "AI Conversational Copilot", desc: "Streaming AI chat trained on your business docs, products & policies for 24/7 client qualification.", icon: "🧠" },
+                  { id: "staff_portal", name: "Staff & Employee Portal", desc: "Dedicated employee logins, weekly shift roster, task checklists & automated sales commissions.", icon: "👥" },
+                  { id: "multi_location", name: "Multi-Location Branch Hub", desc: "Individual SEO city pages, Google store locator, and routing inquiries to local branch managers.", icon: "🏢" },
+                  { id: "growth_seo", name: "Local SEO & Ad Pixel Telemetry", desc: "Google Search Console, JSON-LD Schema rich snippets, Meta CAPI & GA4 custom e-commerce tracking.", icon: "📈" },
+                  { id: "source_attribution_hub", name: "Multi-Source UTM Attribution", desc: "Link generator, campaign QR codes, first-touch & last-touch source tracking on every inquiry.", icon: "📊" },
+                  { id: "devops_care", name: "Cloud DevOps & Care Retainer", desc: "Automated daily cloud backups, 24/7 uptime monitoring, security patches & hypercare warranty.", icon: "🛡️" },
+                  { id: "copywriting", name: "Conversion Copywriting & Messaging", desc: "Brand narrative, audience-tailored hooks, value proposition formulation & persuasive action CTAs.", icon: "✍️" },
+                  { id: "newsletter", name: "Newsletter & Waitlist Sync", desc: "Automated email synchronization with Klaviyo, Resend, or Mailchimp for continuous audience growth.", icon: "📰" },
+                  { id: "priority", name: "72-Hour Priority Fast-Track", desc: "Accelerated development sprint delivering initial full functional prototype in 72 hours.", icon: "⚡" }
                 ].map((a) => {
                   const priceInfo = formatAddonPrice(a.id);
                   return (
-                    <div key={a.id} className="rounded-2xl border border-sky-200/80 bg-white/50 p-4">
-                      <div className="flex items-center justify-between font-bold text-[#0a192f] mb-1">
-                        <span>{a.name}</span>
-                        <span className="text-sky-700">+{priceInfo.formatted} {priceInfo.currency}</span>
+                    <div key={a.id} className="rounded-2xl border border-sky-200/80 bg-white/70 hover:bg-white p-4.5 transition-all shadow-xs flex flex-col justify-between">
+                      <div>
+                        <div className="flex items-start justify-between gap-2 font-bold text-[#0a192f] mb-1.5">
+                          <span className="flex items-center gap-1.5 text-[13px]">
+                            <span>{a.icon}</span>
+                            <span>{a.name}</span>
+                          </span>
+                          <span className="text-sky-700 font-mono text-xs whitespace-nowrap">+{priceInfo.formatted}</span>
+                        </div>
+                        <p className="text-sky-950/70 text-[11px] leading-relaxed">{a.desc}</p>
                       </div>
-                      <p className="text-sky-900/70 text-[11px]">{a.desc}</p>
                     </div>
                   );
                 })}

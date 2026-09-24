@@ -82,7 +82,7 @@ export function GeoPricingProvider({ children }: { children: React.ReactNode }) 
   };
 
   const formatBundlePrice = (bundleId: string) => {
-    const amount = currentConfig.bundles[bundleId] ?? 500;
+    const amount = currentConfig.bundles[bundleId] ?? currentConfig.addons[bundleId] ?? 500;
     return {
       amount,
       formatted: `${currentConfig.currencySymbol}${amount.toLocaleString()}`,
@@ -92,7 +92,7 @@ export function GeoPricingProvider({ children }: { children: React.ReactNode }) 
   };
 
   const formatAddonPrice = (addonId: string) => {
-    const amount = currentConfig.addons[addonId] ?? 299;
+    const amount = currentConfig.addons[addonId] ?? currentConfig.bundles[addonId] ?? 299;
     return {
       amount,
       formatted: `${currentConfig.currencySymbol}${amount.toLocaleString()}`,

@@ -189,20 +189,19 @@ export const FEATURE_BUNDLES: FeatureBundle[] = [
     ]
   },
   {
-    id: "marketing_funnel_suite",
-    name: "BOFU Website Marketing & Conversion Suite",
-    icon: "🚀",
-    priceInr: 29999,
-    priceUsd: 899,
-    badge: "High ROI",
-    tagline: "1-click checkouts, urgency countdowns, offer banners & on-site conversion mechanics.",
-    description: "Turn traffic from your ads and socials into paying customers directly on your website with all 9 core BOFU modules: 1-click express checkouts, countdown timers, offer banners, 4K galleries, UGC reviews wall, price comparison matrix, and FOMO popups.",
+    id: "copywriting",
+    name: "Conversion Copywriting & Strategic Messaging",
+    icon: "✍️",
+    priceInr: 3499,
+    priceUsd: 120,
+    badge: "High Impact",
+    tagline: "Audience-tailored headlines, value propositions & conversion-tested CTAs.",
+    description: "Engage visitors immediately with bespoke narrative copywriting, pain-point hooks, clear service descriptions, and punchy action buttons that drive conversions.",
     includedFeatures: [
-      "1-Click Frictionless Express Checkout Flow (Apple Pay, Stripe, Razorpay)",
-      "Urgency Countdown Timers & Flash Drop Announcement Banners",
-      "4K Multi-Angle Product Gallery & 3D Interactive Presentation",
-      "UGC Customer Video Testimonial Wall with Star Rating Schema",
-      "Price Comparison Matrix, FOMO Live Popups & Freebie Opt-Ins"
+      "Brand Narrative & Value Proposition Formulation",
+      "Conversion-Focused Hero Headline & Sub-Headline Crafting",
+      "Feature-Benefit Translation & Micro-Copy Polish",
+      "Persuasive Section Headers & Call-to-Action Buttons"
     ]
   },
   {
@@ -251,7 +250,7 @@ export const WEBSITE_GOALS: WebsiteGoalOption[] = [
     icon: "🚀",
     symptom: "High bounce rate and cart abandonment. Visitors leave without purchasing from ads or socials.",
     outcome: "1-Click checkout, urgency countdowns, offer banners, UGC video reviews & UTM tracking.",
-    recommendedBundles: ["essential_core", "marketing_funnel_suite", "ecommerce_ordering", "source_attribution_hub"]
+    recommendedBundles: ["essential_core", "ecommerce_ordering", "source_attribution_hub", "copywriting"]
   },
   {
     id: "ai_assistant",
