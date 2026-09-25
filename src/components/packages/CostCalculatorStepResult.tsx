@@ -85,18 +85,8 @@ export default function CostCalculatorStepResult({
   handleWhatsAppQuote,
   handleUnlockSubmit,
 }: CostCalculatorStepResultProps) {
-  // Modal for granular scope breakdown overlay
-  const [showBreakdownModal, setShowBreakdownModal] = useState<boolean>(false);
-
-  // Accordion state inside breakdown modal
-  const [expandedMacroInModal, setExpandedMacroInModal] = useState<string | null>(null);
-
   // In-line macro accordion for suggested package
   const [expandedMacroInPage, setExpandedMacroInPage] = useState<string | null>(null);
-
-  const toggleMacroInModal = (macroId: string) => {
-    setExpandedMacroInModal((prev) => (prev === macroId ? null : macroId));
-  };
 
   const toggleMacroInPage = (macroId: string) => {
     setExpandedMacroInPage((prev) => (prev === macroId ? null : macroId));
@@ -375,20 +365,12 @@ export default function CostCalculatorStepResult({
               </div>
 
               <div className="flex flex-wrap items-center gap-2 self-start sm:self-auto">
-                <button
-                  type="button"
-                  onClick={() => setShowBreakdownModal(true)}
-                  className="px-3.5 py-1.5 rounded-full bg-white hover:bg-sky-50 text-sky-900 border border-sky-300 text-xs font-bold shadow-xs transition flex items-center gap-1.5 cursor-pointer"
-                >
-                  <span>🔍</span>
-                  <span>Inspect Scope (Quick View)</span>
-                </button>
                 <Link
                   href="/pricing/breakdown"
-                  className="px-3.5 py-1.5 rounded-full bg-[#0a192f] hover:bg-slate-800 text-white text-xs font-bold shadow-xs transition flex items-center gap-1.5 cursor-pointer"
+                  className="px-4 py-2 rounded-full bg-[#0a192f] hover:bg-slate-800 text-white text-xs font-bold shadow-xs transition flex items-center gap-1.5 cursor-pointer"
                 >
                   <span>📋</span>
-                  <span>Full Breakdown Page ↗</span>
+                  <span>Full Scope Breakdown Page ↗</span>
                 </Link>
               </div>
             </div>
@@ -555,88 +537,6 @@ export default function CostCalculatorStepResult({
                 className="w-full sm:w-auto px-8 py-3 rounded-full bg-[#0a192f] hover:bg-slate-800 text-white font-bold text-xs uppercase tracking-wider transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer"
               >
                 <span>{locale === "hi" ? "Project Booking Ke Liye Aage Badhein →" : t.funnel.proceedBooking}</span>
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* ========================================================================= */}
-      {/* SCOPE BREAKDOWN MODAL OVERLAY                                             */}
-      {/* ========================================================================= */}
-      {showBreakdownModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fadeIn">
-          <div className="w-full max-w-2xl max-h-[85vh] bg-[#f0f9ff] border border-sky-300 rounded-3xl p-6 sm:p-7 shadow-2xl overflow-y-auto space-y-5">
-            <div className="flex items-center justify-between border-b border-sky-200 pb-3">
-              <div>
-                <span className="text-[10px] font-black uppercase tracking-wider text-sky-800 block">Scope Breakdown</span>
-                <h3 className="text-xl font-black text-[#0a192f]">{activePackage.icon} {activePackage.name}</h3>
-              </div>
-              <button
-                type="button"
-                onClick={() => setShowBreakdownModal(false)}
-                className="h-8 w-8 rounded-full bg-white border border-sky-300 flex items-center justify-center text-xs font-black text-[#0a192f] hover:bg-slate-100 cursor-pointer"
-              >
-                ✕
-              </button>
-            </div>
-
-            <div className="space-y-3">
-              {breakdownDef.macroFeatures.map((macro) => {
-                const isOpen = expandedMacroInModal === macro.id;
-                return (
-                  <div
-                    key={macro.id}
-                    className="rounded-2xl border border-sky-200 bg-white overflow-hidden shadow-xs"
-                  >
-                    <button
-                      type="button"
-                      onClick={() => toggleMacroInModal(macro.id)}
-                      className="w-full p-3.5 flex items-center justify-between gap-3 text-left hover:bg-sky-50/50 transition cursor-pointer"
-                    >
-                      <div className="flex items-center gap-2.5">
-                        <span className="text-lg">{macro.icon}</span>
-                        <div>
-                          <span className="text-xs font-black text-[#0a192f] block">{macro.name}</span>
-                          <span className="text-[10px] text-slate-500">{macro.microFeatures.length} micro features</span>
-                        </div>
-                      </div>
-                      <span className="h-6 w-6 rounded-full bg-sky-100 flex items-center justify-center text-xs font-black text-sky-900">
-                        {isOpen ? "−" : "+"}
-                      </span>
-                    </button>
-
-                    {isOpen && (
-                      <div className="p-4 pt-0 border-t border-sky-100 bg-sky-50/30 space-y-2">
-                        <p className="text-[11px] text-slate-600 mt-2">{macro.description}</p>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-2">
-                          {macro.microFeatures.map((micro) => (
-                            <div key={micro.id} className="p-2 rounded-xl bg-white border border-sky-100">
-                              <span className="text-xs font-bold text-[#0a192f] block">• {micro.name}</span>
-                              <span className="text-[10px] text-slate-500 block">{micro.detail}</span>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-
-            <div className="pt-3 border-t border-sky-200 flex items-center justify-between">
-              <Link
-                href="/pricing/breakdown"
-                className="text-xs font-black text-sky-800 underline hover:text-sky-950"
-              >
-                Open Full Dedicated Breakdown Page ↗
-              </Link>
-              <button
-                type="button"
-                onClick={() => setShowBreakdownModal(false)}
-                className="px-6 py-2.5 rounded-full bg-[#0a192f] text-white text-xs font-bold hover:bg-slate-800 transition cursor-pointer"
-              >
-                Close View
               </button>
             </div>
           </div>
