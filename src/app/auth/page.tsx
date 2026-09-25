@@ -124,20 +124,6 @@ function AuthForm() {
       <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-cyan-600/10 rounded-full blur-3xl pointer-events-none" />
 
       <div className="w-full max-w-md relative z-10">
-        <Link href="/" className="mb-8 flex items-center justify-center gap-3 group">
-          <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-cyan-500 to-purple-600 flex items-center justify-center font-bold text-white shadow-lg shadow-purple-500/20 group-hover:scale-105 transition-transform duration-300">
-            TL
-          </div>
-          <div className="text-left">
-            <span className="block font-bold text-lg tracking-tight text-white">
-              Tanie Lalwani
-            </span>
-            <span className="block text-[11px] font-mono tracking-widest text-zinc-400 uppercase">
-              Client &amp; Studio Portal
-            </span>
-          </div>
-        </Link>
-
         <div className="rounded-3xl border border-white/10 bg-zinc-950/80 backdrop-blur-2xl p-7 shadow-2xl">
           {/* Feedback alert */}
           {feedback && (
