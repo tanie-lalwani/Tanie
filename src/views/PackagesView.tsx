@@ -285,21 +285,38 @@ export default function PackagesView() {
     const business = quoteData.businessName || quoteData.projectName || "Custom Web Project";
     setProjectName(business);
     setCompanyName(quoteData.socialAccount ? `${business} (${quoteData.socialAccount})` : business);
-    setFeaturesList(quoteData.bundles ? quoteData.bundles.map((b: any) => b.name) : quoteData.selectedBundles || []);
     
-    // Safely extract price with market support
-    const marketAmount = quoteData.finalTotalMarket ?? (tierConfig.currencyCode === "INR" ? quoteData.finalTotalInr : quoteData.finalTotalUsd) ?? 2899;
+    // Extract features/modules
+    const featureNames = quoteData.bundles
+      ? quoteData.bundles.map((b: any) => b.name)
+      : Array.isArray(quoteData.selectedAddons)
+      ? quoteData.selectedAddons.map((a: any) => (typeof a === "string" ? a : a.name))
+      : quoteData.selectedBundles || [];
+    setFeaturesList(featureNames);
+    
+    // Extract price accurately with market support
+    const marketAmount =
+      quoteData.finalTotalMarket ??
+      quoteData.total ??
+      quoteData.estimatedTotal ??
+      (tierConfig.currencyCode === "INR" ? quoteData.finalTotalInr : quoteData.finalTotalUsd) ??
+      0;
+
     setEstimatedPriceAmount(marketAmount);
     setEstimatedPriceCurrency(tierConfig.currencyCode);
     setEstimatedPriceSymbol(tierConfig.currencySymbol);
-    setEstimatedPriceInr(marketAmount);
-    setEstimatedPriceUsd(marketAmount);
+    setEstimatedPriceInr(quoteData.finalTotalInr ?? marketAmount);
+    setEstimatedPriceUsd(quoteData.finalTotalUsd ?? marketAmount);
 
-    const goalLabel = quoteData.goal || quoteData.industry || "Custom Bespoke Build";
-    setSelectedScopeTier(`Goal: ${goalLabel}`);
+    setSelectedAestheticForRequest(null);
+    const pkgName = quoteData.packageName || quoteData.goal || quoteData.packageId || "Custom Build";
+    setSelectedScopeTier(`${pkgName}`);
     setTargetDeadline(quoteData.timeline || "3–4 Weeks");
+
     if (quoteData.likedAesthetics && Array.isArray(quoteData.likedAesthetics) && quoteData.likedAesthetics.length > 0) {
       setLikedAesthetics(quoteData.likedAesthetics);
+    } else {
+      setLikedAesthetics([]);
     }
     setShowIntakeModal(true);
     setAuthStepRequired(false);

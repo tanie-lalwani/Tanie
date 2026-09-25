@@ -385,12 +385,17 @@ export default function WebsiteCostCalculatorFunnel({
       const quotePayload = {
         packageId: selectedPackageId,
         packageName: activePackage.name,
-        selectedAddons,
+        businessName,
+        socialAccount,
+        selectedAddons: calculation.selectedAddonsList,
+        bundles: calculation.moduleBreakdown,
         timeline,
-        budgetTier,
-        selectedAesthetic,
         currency: tierConfig.currencyCode,
+        finalTotalMarket: calculation.finalTotalMarket,
+        finalTotalInr: calculation.finalTotalInr,
+        finalTotalUsd: calculation.finalTotalUsd,
         estimatedTotal: calculation.finalTotalMarket,
+        total: calculation.finalTotalMarket,
         timestamp: new Date().toISOString()
       };
 

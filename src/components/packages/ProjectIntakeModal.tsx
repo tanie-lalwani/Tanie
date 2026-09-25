@@ -109,17 +109,19 @@ export default function ProjectIntakeModal({
                 <div>
                   <span className="text-[10px] font-bold uppercase tracking-wider text-sky-700">Selected Direction</span>
                   <div className="text-sm font-black text-[#0a192f]">
-                    {selectedAesthetic?.name || "Bespoke Web Design"}
+                    {selectedAesthetic?.name || selectedScopeTier || "Custom Project Scope"}
                   </div>
-                  <div className="text-[11px] text-slate-500 font-medium">
-                    Foundation: <span className="font-bold text-slate-800">{selectedScopeTier}</span>
-                  </div>
+                  {selectedAesthetic && selectedScopeTier && (
+                    <div className="text-[11px] text-slate-500 font-medium">
+                      Foundation: <span className="font-bold text-slate-800">{selectedScopeTier}</span>
+                    </div>
+                  )}
                 </div>
 
                 <div className="text-left sm:text-right">
                   <span className="text-[10px] font-bold uppercase tracking-wider text-sky-700">Estimated Investment</span>
                   <div className="text-xl sm:text-2xl font-black text-[#0a192f]">
-                    {estimatedPriceSymbol}{(estimatedPriceAmount ?? 2899).toLocaleString()} {estimatedPriceCurrency}
+                    {estimatedPriceSymbol}{(estimatedPriceAmount ?? 0).toLocaleString()} {estimatedPriceCurrency}
                   </div>
                   <div className="text-[10px] font-semibold text-emerald-700">
                     📍 {countryName} Market Pricing

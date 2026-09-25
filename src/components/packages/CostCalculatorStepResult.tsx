@@ -528,7 +528,15 @@ export default function CostCalculatorStepResult({
                     onProceedWithCustomQuote({
                       packageId: activePackage.id,
                       packageName: activePackage.name,
-                      selectedAddons: selectedBundles.slice(1),
+                      businessName,
+                      socialAccount,
+                      timeline,
+                      selectedAddons: calculation.selectedAddonsList,
+                      bundles: calculation.moduleBreakdown,
+                      finalTotalMarket: calculation.finalTotalMarket,
+                      finalTotalInr: calculation.finalTotalInr,
+                      finalTotalUsd: calculation.finalTotalUsd,
+                      estimatedTotal: calculation.finalTotalMarket,
                       total: calculation.finalTotalMarket,
                       currency: tierConfig.currencyCode
                     });
