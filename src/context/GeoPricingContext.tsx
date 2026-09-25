@@ -72,7 +72,20 @@ export function GeoPricingProvider({ children }: { children: React.ReactNode }) 
   const currentConfig = MARKET_TIERS[marketTier] || MARKET_TIERS.IN;
 
   const formatPackagePrice = (packageId: string) => {
-    const amount = currentConfig.packages[packageId as keyof typeof currentConfig.packages] ?? currentConfig.packages["luxury-landing-sprint"];
+    const normalizedId =
+      packageId === "landing" ? "luxury-landing-sprint"
+      : packageId === "ecommerce" ? "sales-website-engine"
+      : packageId === "saas" ? "fullstack-saas-app"
+      : packageId === "business_automation" ? "portals-dashboards-suite"
+      : packageId === "custom_app" ? "custom-bespoke-build"
+      : packageId;
+
+    const amount =
+      currentConfig.packages[normalizedId as keyof typeof currentConfig.packages] ??
+      currentConfig.packages[packageId as keyof typeof currentConfig.packages] ??
+      currentConfig.bundles[packageId] ??
+      currentConfig.packages["luxury-landing-sprint"] ??
+      4999;
     return {
       amount,
       formatted: `${currentConfig.currencySymbol}${amount.toLocaleString()}`,
@@ -82,7 +95,19 @@ export function GeoPricingProvider({ children }: { children: React.ReactNode }) 
   };
 
   const formatBundlePrice = (bundleId: string) => {
-    const amount = currentConfig.bundles[bundleId] ?? currentConfig.addons[bundleId] ?? 500;
+    const normalizedId =
+      bundleId === "landing" ? "essential_core"
+      : bundleId === "ecommerce" ? "sales_engine"
+      : bundleId === "saas" ? "fullstack_saas"
+      : bundleId === "business_automation" ? "portals_dashboards"
+      : bundleId;
+
+    const amount =
+      currentConfig.bundles[normalizedId] ??
+      currentConfig.bundles[bundleId] ??
+      currentConfig.packages[normalizedId as keyof typeof currentConfig.packages] ??
+      currentConfig.addons[bundleId] ??
+      500;
     return {
       amount,
       formatted: `${currentConfig.currencySymbol}${amount.toLocaleString()}`,
@@ -92,7 +117,11 @@ export function GeoPricingProvider({ children }: { children: React.ReactNode }) 
   };
 
   const formatAddonPrice = (addonId: string) => {
-    const amount = currentConfig.addons[addonId] ?? currentConfig.bundles[addonId] ?? 299;
+    const amount =
+      currentConfig.addons[addonId] ??
+      currentConfig.bundles[addonId] ??
+      currentConfig.packages[addonId as keyof typeof currentConfig.packages] ??
+      (currentConfig.currencyCode === "INR" ? 4999 : 99);
     return {
       amount,
       formatted: `${currentConfig.currencySymbol}${amount.toLocaleString()}`,

@@ -8,236 +8,197 @@ import type {
 
 export const DEFAULT_PACKAGES: WebsitePackage[] = [
   {
-    id: "luxury-landing-sprint",
-    name: "Luxury Brand Landing Page",
-    tagline: "Precision-crafted marketing landing page engineered to captivate and convert.",
+    id: "landing",
+    name: "Simple Landing Page Package",
+    tagline: "Ultra-fast modern landing presence with bespoke typography, lead intake & CMS.",
     price_usd: 99,
     price_inr: 4999,
-    turnaround_weeks: "1-2 weeks",
+    turnaround_weeks: "5–7 Days",
     badge: "Base Foundation",
     popular: false,
-    description: "Ideal for boutique agencies, product launches, founders, and creators seeking a razor-sharp, ultra-fast landing page with bespoke typography, smooth animations, and high-converting copy lockups.",
+    description: "Ideal for boutique founders, creators, and brands needing a crisp, ultra-fast online presence with Home/Hero, About, Services/Portfolio, Contact, and basic content controls.",
     features: [
-      "Bespoke layout tailored to your brand identity",
-      "Framer Motion smooth scroll and micro-interactions",
-      "Interactive lead capture & Formspree / CRM webhook integration",
-      "Lighthouse 95+ performance & accessibility score",
-      "Comprehensive meta tags & Open Graph visuals",
-      "Domain setup & CDN deployment on Vercel"
+      "Home / Hero narrative & value proposition",
+      "About brand story & founder positioning",
+      "Services / Portfolio / Catalog showcase",
+      "Contact inquiry form with instant notifications",
+      "Basic CMS / content management",
+      "Basic admin controls & speed optimization"
     ],
     deliverables: [
-      "Single-Page or Multi-Section Landing Experience",
-      "Configured Lead Capture & Notification flows",
-      "Complete design assets & typography license links",
-      "14-day post-launch support"
+      "Bespoke Single-Page or Multi-Section Landing Experience",
+      "Configured Lead Capture & Instant Email / WhatsApp Routing",
+      "Complete design assets & typography licenses",
+      "14-day post-launch hypercare & warranty"
     ],
     addons: [
-      { id: "copywriting", name: "Conversion Copywriting & Messaging", price_usd: 120 },
-      { id: "subpages", name: "2 Additional Content Subpages (Legal / About)", price_usd: 75 },
-      { id: "newsletter", name: "Newsletter / Waitlist Automation Sync", price_usd: 75 }
+      { id: "addon_mgmt", name: "Management Systems", price_usd: 199 },
+      { id: "addon_custom_site", name: "Custom Site", price_usd: 299 },
+      { id: "addon_3d", name: "3D Interactive Experience", price_usd: 399 },
+      { id: "addon_seo", name: "SEO & Search Visibility", price_usd: 99 },
+      { id: "addon_hosting", name: "Managed Hosting & Edge CDN", price_usd: 59 },
+      { id: "addon_security", name: "Security & Compliance", price_usd: 99 },
+      { id: "addon_cloud", name: "Cloud Integration & APIs", price_usd: 149 },
+      { id: "addon_custom", name: "Custom Add On", price_usd: 199 }
     ],
     is_active: true
   },
   {
-    id: "sales-website-engine",
-    name: "Sales Website & Smart Booking Engine",
-    tagline: "Direct e-commerce storefront, 1-click checkouts, appointment calendar & instant payment gateways.",
-    price_usd: 499,
-    price_inr: 19999,
-    turnaround_weeks: "2-3 weeks",
-    badge: "High Conversion",
-    popular: true,
-    description: "Engineered for direct revenue generation. Sell physical/digital products or lock calendar appointment slots. Includes product catalogs, slide-over carts, live calendar slot booking, automated WhatsApp/SMS reminders, and Stripe/Razorpay/UPI checkouts.",
-    features: [
-      "1-Click Express Checkout (Apple Pay, Google Pay, Razorpay, UPI)",
-      "Real-time interactive calendar slot picker with 2-way Google/Outlook sync",
-      "Product catalog with variants (Size, Color, SKU) & slide-over cart",
-      "Automated WhatsApp & Email confirmation/reminder sequences",
-      "Timezone auto-detection, meeting buffers & location routing",
-      "Stripe & Razorpay session deposit & pre-payment checkout",
-      "GST-compliant automated PDF invoices & receipts"
-    ],
-    deliverables: [
-      "Complete Sales & Booking Web Application",
-      "Payment Gateway Integration (Stripe, Razorpay, UPI)",
-      "Google & Outlook Calendar API Sync Setup",
-      "Twilio / WhatsApp Business Cloud API Integration",
-      "30-Day Post-Launch Hypercare & Operational Support"
-    ],
-    addons: [
-      { id: "sms-credits", name: "High-Volume SMS/WhatsApp Notification Bundle", price_usd: 75 },
-      { id: "multi-location-ext", name: "Additional 5 Branch Locations & Calendars", price_usd: 120 },
-      { id: "priority", name: "Priority Express Delivery (10 Days)", price_usd: 200 }
-    ],
-    is_active: true
-  },
-  {
-    id: "growth-marketing-campaigns",
-    name: "Marketing & BOFU Conversion Campaigns",
-    tagline: "High-converting ad traffic landing pages, urgency mechanics & multi-channel UTM attribution.",
-    price_usd: 499,
-    price_inr: 19999,
-    turnaround_weeks: "2-3 weeks",
-    badge: "Campaign Engine",
-    popular: true,
-    description: "The definitive on-website conversion architecture. Designed to receive traffic from your ad campaigns and social media, transforming cold visitors into revenue. Includes all 9 core BOFU on-site deliverables: 1-click checkout flow, countdown timers, offer-first banners, 4K product galleries, studio presentation layouts, UGC video reviews wall, price comparison matrix, FOMO scarcity popups, and freebie lead magnets — backed by full-spectrum UTM multi-source tracking and conversion pixel telemetry.",
-    features: [
-      "1-Click Express Checkout: Frictionless payment flow",
-      "Urgency Countdown Clocks: Dynamic drop timers and flash sale headers",
-      "Offer-First Banners: Sticky announcement bars with coupon codes",
-      "Product Gallery & 360 Viewer: Ultra-crisp 4K multi-angle viewer",
-      "UGC Testimonials Wall: Embedded vertical TikTok/Reel review player",
-      "Price Comparison Matrix: Interactive value-anchoring table",
-      "FOMO & Scarcity Notifiers: Real-time purchase popup toasts",
-      "Freebies & Lead Magnets: Opt-in capture forms with instant asset delivery",
-      "Multi-Channel UTM Tracking: On-site source & campaign attribution",
-      "Pixel Telemetry: Meta CAPI, Google Tag Manager, GA4 & TikTok Pixel"
-    ],
-    deliverables: [
-      "All 9 BOFU On-Website Pages & Interactive Modules",
-      "1-Click Frictionless Checkout & Payment Gateway Integration",
-      "Centralized Multi-Channel UTM Campaign Generator & Link Builder",
-      "Automated On-Site Source Attribution Logging",
-      "Meta CAPI, GA4 & GTM Conversion Pixel Integration",
-      "30-Day Post-Launch Conversion Rate Hypercare & Support"
-    ],
-    addons: [
-      { id: "ab-testing", name: "Dynamic A/B Testing & Split Landing Page Routing", price_usd: 120 },
-      { id: "retention-flows", name: "Automated Post-Purchase Email/SMS Sequence", price_usd: 90 },
-      { id: "influencer-portal", name: "Affiliate & Influencer Referral Source Tracking Portal", price_usd: 150 }
-    ],
-    is_active: true
-  },
-  {
-    id: "portals-dashboards-suite",
-    name: "Portals, Dashboards & Team Operations",
-    tagline: "Secure client hubs, staff rostering, geolocation punch clock, inventory/CRM & admin dashboards.",
+    id: "ecommerce",
+    name: "E-Commerce Package",
+    tagline: "Landing + Sales CRM + Marketing Funnels + Full Store Operations & Fulfillment.",
     price_usd: 599,
     price_inr: 24999,
-    turnaround_weeks: "3-4 weeks",
-    badge: "Operations Hub",
-    popular: false,
-    description: "Complete internal and client operations platform. Includes dedicated Client Hubs (file vaults, milestone tracking, invoices, e-signatures), Staff Rostering & Time-off workflows, Geolocation mobile punch clock, and an Executive Admin Control Dashboard.",
-    features: [
-      "Client Workspace & Portal with secure document vault & e-signatures",
-      "Searchable digital staff directory with department groupings",
-      "Interactive weekly shift roster with shift publishing & conflict detection",
-      "Self-serve time-off portal with automated manager approval workflow",
-      "Granular RBAC role security across Admin, Manager, Staff and Client",
-      "Digital mobile clock-in punch clock with GPS geolocation verification",
-      "Automated employee work-hour summaries & 1-click payroll CSV export",
-      "Executive business analytics & CRM pipeline dashboard"
-    ],
-    deliverables: [
-      "Client Hub & Staff Operations Web Application",
-      "PostgreSQL Database Schema & Row-Level Security",
-      "Role-Guarded Manager, Staff & Client Dashboards",
-      "Geolocation Punch Clock Timesheet System",
-      "Automated Payroll & Invoices Export Module",
-      "30-Day Post-Launch Support & Staff Training"
-    ],
-    addons: [
-      { id: "extra-seats", name: "Additional 50 Employee Account Licenses", price_usd: 90 },
-      { id: "payroll-api", name: "Direct QuickBooks / Gusto / Tally API Sync", price_usd: 150 },
-      { id: "priority", name: "Priority Express Delivery (2 Weeks)", price_usd: 250 }
-    ],
-    is_active: true
-  },
-  {
-    id: "interactive-3d-experience",
-    name: "3D Interactive & Experiential Design",
-    tagline: "Bespoke WebGL, Three.js & immersive storytelling that leaves lasting impressions.",
-    price_usd: 899,
-    price_inr: 39999,
-    turnaround_weeks: "3-5 weeks",
-    badge: "Signature Experience",
+    turnaround_weeks: "2–3 Weeks",
+    badge: "Direct Revenue",
     popular: true,
-    description: "Designed for visionary luxury brands, high-profile portfolios, and innovative tech products requiring top-tier creative engineering, custom Three.js shaders, reactive audio, and buttery-smooth micro-interactions.",
+    description: "The complete commercial store engine. Combines luxury Landing, full Sales CRM, high-converting Marketing funnels, Products catalog with variants, Cart, Checkout, Shipping, Taxes, Inventory, and Fulfillment operations.",
     features: [
-      "Custom Three.js / WebGL 3D interactive canvas",
-      "Tailored fluid physics, particles, or 3D model integration",
-      "Ultra high-performance 60fps rendering & mobile fallback",
-      "Sound design & ambient reactive audio integration",
-      "Bespoke typography, luxury glassmorphism & dark/light palettes",
-      "Full responsive optimization across iOS, Android & Desktop",
-      "Next.js / Vite high-speed modern frontend architecture",
-      "Full Technical SEO & rich social sharing cards"
+      "Landing: Home/Hero, About, Services/Catalog, Contact, Basic CMS & Admin",
+      "Sales: Lead capture, CRM database, Contact management, Customer accounts, Payments, Inquiries",
+      "Marketing: Campaign pages, Ad landing pages, Offer pages, Discount systems, Urgency timers, Funnels, Marketing dashboard",
+      "Products: Catalog, Variants (Size/Color/SKU), Pricing & Inventory levels",
+      "Cart, 1-Click Checkout, Stripe / Razorpay / UPI Payments & Orders",
+      "Customers, Dynamic Discounts, Taxes & GST Invoices",
+      "Shipping Methods, Order Tracking & Live Delivery Status",
+      "Inventory Management: Real-time stock, Updates & Availability alerts",
+      "Admin Control: Orders, Products, Customers & Financial Analytics",
+      "Operations: Fulfillment, Returns & Order lifecycle management"
     ],
     deliverables: [
-      "Custom Interactive Web Experience (Next.js/React + Three.js)",
-      "Source code on private GitHub repository",
-      "Optimized 3D assets & compressed textures",
-      "Vercel/Cloudflare production deployment setup",
-      "30-day post-launch hypercare & bug fix warranty"
+      "Complete E-Commerce Web Application & Storefront",
+      "Multi-Gateway Payment Integration (Stripe, Razorpay, UPI, Cards)",
+      "Shipping Methods, Order Tracking & Automated GST PDF Invoices",
+      "Admin Control Panel for Orders, Products, Customers & Inventory",
+      "30-Day Post-Launch Conversion & Operational Support"
     ],
     addons: [
-      { id: "cms", name: "Headless CMS (Sanity / Contentful)", price_usd: 120 },
-      { id: "multi-lang", name: "Multi-language Localization (i18n)", price_usd: 90 },
-      { id: "custom-audio", name: "Original Sound Effects & Audio Composition", price_usd: 90 },
-      { id: "priority", name: "Priority Express Delivery (2 weeks)", price_usd: 250 }
+      { id: "addon_mgmt", name: "Management Systems", price_usd: 199 },
+      { id: "addon_custom_site", name: "Custom Site", price_usd: 299 },
+      { id: "addon_3d", name: "3D Interactive Experience", price_usd: 399 },
+      { id: "addon_seo", name: "SEO & Search Visibility", price_usd: 99 },
+      { id: "addon_hosting", name: "Managed Hosting & Edge CDN", price_usd: 59 },
+      { id: "addon_security", name: "Security & Compliance", price_usd: 99 },
+      { id: "addon_cloud", name: "Cloud Integration & APIs", price_usd: 149 },
+      { id: "addon_custom", name: "Custom Add On", price_usd: 199 }
     ],
     is_active: true
   },
   {
-    id: "fullstack-saas-app",
-    name: "Custom SaaS & Full-Stack Web Application",
-    tagline: "Robust, scalable web applications & marketplace MVPs with Supabase DB, Auth, Payments & Admin portals.",
+    id: "saas",
+    name: "SaaS Product Package",
+    tagline: "Public Website + Auth + Subscriptions + Application Logic + User Dashboards + Admin System.",
     price_usd: 1499,
     price_inr: 69999,
-    turnaround_weeks: "4-6 weeks",
-    badge: "Full-Stack Software",
+    turnaround_weeks: "4–6 Weeks",
+    badge: "Software MVP",
     popular: false,
-    description: "Engineered for startups, digital platforms, marketplaces, and founders who need a production-ready web application with multi-role auth, PostgreSQL real-time database, subscription billing, and custom business logic.",
+    description: "Engineered for tech founders and startups. Includes Public Marketing/Sales Website, Multi-Provider Auth, User Accounts, Subscription Billing, Application Logic, User Dashboards, APIs, RBAC Roles, and Executive Admin System.",
     features: [
-      "Next.js App Router full-stack architecture",
-      "Supabase PostgreSQL database & Row-Level Security (RLS)",
-      "Secure Auth (Email, Google, Magic Link, GitHub)",
-      "Stripe / LemonSqueezy / Razorpay payment gateway integration",
-      "Comprehensive Admin Dashboard for business metrics & control",
-      "Client / User self-serve portal with dashboard views",
-      "Real-time updates, file uploads & notification streams",
-      "Automated CI/CD pipelines & Vercel deployment"
+      "Public Website: Landing, Sales CRM & Marketing conversion funnels",
+      "Authentication: Google OAuth, Magic Links, Passwords & Session tokens",
+      "User Accounts: Profiles, Settings, Team workspaces & Organization switcher",
+      "Subscription / Plans: Stripe & Razorpay recurring billing, proration & invoices",
+      "Application & Core Software Logic: Custom business algorithms & database architecture",
+      "User Dashboard: Real-time data visualization, workflows & interactive UI",
+      "Permissions & RBAC: Granular role-based security across admins, managers & members",
+      "APIs and Integrations: Webhooks, REST API endpoints & third-party connectors",
+      "Admin System: User management, subscription telemetry & global system controls"
     ],
     deliverables: [
-      "Full-Stack Production Web Application",
-      "Complete Database Schema & Supabase migrations",
-      "Admin and Client Management Dashboards",
-      "Payment Webhook integrations & automated receipts",
-      "45-day post-launch hypercare support"
+      "Full-Stack Production SaaS Application (Next.js App Router + Supabase)",
+      "Normalized PostgreSQL Schema & Row-Level Security (RLS) Migrations",
+      "Multi-Provider OAuth Authentication & Session Management",
+      "Stripe / Razorpay Subscription Billing & Cryptographic Webhooks",
+      "Tenant User Dashboard & Executive Master Admin Control Panel",
+      "45-Day Post-Launch Hypercare Support"
     ],
     addons: [
-      { id: "ai-copilot", name: "Gemini / OpenAI AI Assistant Integration", price_usd: 175 },
-      { id: "analytics-suite", name: "Advanced Analytics & Event Tracking", price_usd: 95 },
-      { id: "sms-email", name: "Transactional Email & SMS (Resend/Twilio)", price_usd: 75 }
+      { id: "addon_mgmt", name: "Management Systems", price_usd: 199 },
+      { id: "addon_custom_site", name: "Custom Site", price_usd: 299 },
+      { id: "addon_3d", name: "3D Interactive Experience", price_usd: 399 },
+      { id: "addon_seo", name: "SEO & Search Visibility", price_usd: 99 },
+      { id: "addon_hosting", name: "Managed Hosting & Edge CDN", price_usd: 59 },
+      { id: "addon_security", name: "Security & Compliance", price_usd: 99 },
+      { id: "addon_cloud", name: "Cloud Integration & APIs", price_usd: 149 },
+      { id: "addon_custom", name: "Custom Add On", price_usd: 199 }
     ],
     is_active: true
   },
   {
-    id: "custom-bespoke-build",
-    name: "Custom / Build Your Own (Make Your Own)",
-    tagline: "Tailor-made digital architecture, interactive feature selection, and bespoke modular engineering.",
-    price_usd: 599,
-    price_inr: 25000,
-    turnaround_weeks: "Bespoke Timeline",
-    badge: "Bespoke",
-    popular: false,
-    description: "Have unique requirements or multi-platform needs? Configure your exact feature modules, integrations, and aesthetics through our interactive calculator or schedule a custom scoping review.",
+    id: "business_automation",
+    name: "Business Automation Package",
+    tagline: "Leads + CRM + WhatsApp + Emails + Orders + Staff + AI Automation Workflows.",
+    price_usd: 699,
+    price_inr: 29999,
+    turnaround_weeks: "2–3 Weeks",
+    badge: "Efficiency Engine",
+    popular: true,
+    description: "Eliminate manual chaos. Connects your customer intake, CRM, WhatsApp notifications, email sequences, order processing, employee approvals, scheduled jobs, and AI workflows into an automated engine.",
     features: [
-      "Interactive 5-question custom scope builder",
-      "Selectable granular feature modules & bundles",
-      "Bespoke technical architecture tailored to your specifications",
-      "Dedicated aesthetic direction and design system pairing",
-      "Direct consultation & custom milestone agreement"
+      "Lead automation & Instant CRM qualification",
+      "CRM workflows & Pipeline status updates",
+      "Automated Email sequences & transactional notifications",
+      "WhatsApp Cloud API automated reminders & 2-way alerts",
+      "Order processing workflows & invoice generation",
+      "Employee workflows, shift scheduling & leave approvals",
+      "Multi-level approval systems with 1-click email/WhatsApp buttons",
+      "Bi-directional data synchronization across databases & sheets",
+      "API integrations with third-party SaaS & ERP systems",
+      "Scheduled background jobs & automated recurring tasks",
+      "AI automation & intelligent conversational lead handling"
+    ],
+    deliverables: [
+      "Automated Business Workflow Architecture & Orchestration",
+      "WhatsApp Cloud API & Twilio Transactional Messaging Setup",
+      "Two-Way Database & Google Sheets Synchronization Bridge",
+      "Staff Rostering, Timesheets & 1-Click Approval System",
+      "30-Day Post-Launch Hypercare & Operations Tuning"
+    ],
+    addons: [
+      { id: "addon_mgmt", name: "Management Systems", price_usd: 199 },
+      { id: "addon_custom_site", name: "Custom Site", price_usd: 299 },
+      { id: "addon_3d", name: "3D Interactive Experience", price_usd: 399 },
+      { id: "addon_seo", name: "SEO & Search Visibility", price_usd: 99 },
+      { id: "addon_hosting", name: "Managed Hosting & Edge CDN", price_usd: 59 },
+      { id: "addon_security", name: "Security & Compliance", price_usd: 99 },
+      { id: "addon_cloud", name: "Cloud Integration & APIs", price_usd: 149 },
+      { id: "addon_custom", name: "Custom Add On", price_usd: 199 }
+    ],
+    is_active: true
+  },
+  {
+    id: "custom_app",
+    name: "Custom Application Package",
+    tagline: "Tailor-made digital architecture, proprietary business logic & bespoke engineering.",
+    price_usd: 899,
+    price_inr: 39999,
+    turnaround_weeks: "Bespoke Timeline",
+    badge: "Bespoke Architecture",
+    popular: false,
+    description: "For bespoke projects, unique workflows, interactive 3D web apps, or specialized digital tools requiring dedicated architecture design.",
+    features: [
+      "Custom system architecture & technical specification",
+      "Tailor-made business logic & proprietary workflows",
+      "Dedicated PostgreSQL / Cloud database schema",
+      "Custom UI/UX component design system",
+      "Direct milestone reviews & bespoke hypercare"
     ],
     deliverables: [
       "Bespoke Architecture Blueprint & Specification",
-      "Custom Engineering & Development Execution",
-      "Tailored Milestone Review & QA Sign-off",
-      "Dedicated Post-Launch Warranty & Support"
+      "Custom Full-Stack Engineering & Development Execution",
+      "Tailored Milestone Reviews & Production Deployment",
+      "Dedicated Post-Launch Warranty & Hypercare Support"
     ],
     addons: [
-      { id: "priority", name: "Priority Express Acceleration", price_usd: 250 },
-      { id: "ai-copilot", name: "Custom AI Assistant Integration", price_usd: 175 }
+      { id: "addon_mgmt", name: "Management Systems", price_usd: 199 },
+      { id: "addon_custom_site", name: "Custom Site", price_usd: 299 },
+      { id: "addon_3d", name: "3D Interactive Experience", price_usd: 399 },
+      { id: "addon_seo", name: "SEO & Search Visibility", price_usd: 99 },
+      { id: "addon_hosting", name: "Managed Hosting & Edge CDN", price_usd: 59 },
+      { id: "addon_security", name: "Security & Compliance", price_usd: 99 },
+      { id: "addon_cloud", name: "Cloud Integration & APIs", price_usd: 149 },
+      { id: "addon_custom", name: "Custom Add On", price_usd: 199 }
     ],
     is_active: true
   }

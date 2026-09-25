@@ -1,10 +1,48 @@
+export interface MicroFeature {
+  id: string;
+  name: string;
+  detail?: string;
+  tag?: string;
+}
+
 export interface MacroFeature {
   id: string;
   name: string;
   icon?: string;
   description?: string;
-  microFeatures: string[];
+  isEssential?: boolean;
+  priceInr?: number;
+  priceUsd?: number;
+  microFeatures: (string | MicroFeature)[];
   weightPercent?: number;
+}
+
+export interface UniversalAddon {
+  id: string;
+  name: string;
+  icon: string;
+  tagline: string;
+  description: string;
+  priceInr: number;
+  priceUsd: number;
+  badge?: string;
+}
+
+export interface FeatureBundle {
+  id: string;
+  name: string;
+  icon: string;
+  priceInr: number;
+  priceUsd: number;
+  deltaPriceInr?: number;
+  deltaPriceUsd?: number;
+  badge?: string;
+  tagline: string;
+  description: string;
+  turnaround?: string;
+  includedFeatures: string[];
+  macroFeatures: MacroFeature[];
+  isEssential?: boolean;
 }
 
 /**
@@ -15,6 +53,7 @@ export function getMacroDistributedPrice(
   macro: MacroFeature,
   totalMacrosCount: number = 5
 ): number {
+  if (macro.priceInr) return macro.priceInr;
   const weight = macro.weightPercent ? macro.weightPercent / 100 : 1 / Math.max(1, totalMacrosCount);
   return Math.round(packageDeltaOrBasePrice * weight);
 }
@@ -30,569 +69,716 @@ export function getMicroDistributedPrice(
   return Math.round(macroPrice / microCount);
 }
 
-export interface FeatureBundle {
-  id: string;
-  name: string;
-  icon: string;
-  priceInr: number;
-  priceUsd: number;
-  deltaPriceInr?: number;
-  deltaPriceUsd?: number;
-  badge?: string;
-  tagline: string;
-  description: string;
-  includedFeatures: string[];
-  macroFeatures: MacroFeature[];
-  isEssential?: boolean;
-}
+// ════════════════════════════════════════════════════════════════════════════
+// 1. PRIMARY PACKAGES (Independent, Standalone, No Redundancy / Combination)
+// ════════════════════════════════════════════════════════════════════════════
 
 export const FEATURE_BUNDLES: FeatureBundle[] = [
+  // ─── 1. LANDING PAGE PACKAGE ───────────────────────────────────────────────
   {
-    id: "essential_core",
-    name: "Luxury Brand Landing Foundation",
-    icon: "🏛️",
+    id: "landing",
+    name: "Simple Landing Page Package",
+    icon: "🌐",
     priceInr: 4999,
     priceUsd: 99,
     deltaPriceInr: 4999,
     deltaPriceUsd: 99,
     isEssential: true,
-    badge: "Base Foundation",
-    tagline: "Ultra-fast modern responsive foundation with bespoke typography & lead intake.",
-    description: "Responsive layout across mobile/tablet/desktop, About story, Service sections, Contact form with instant email alerts, 95+ Lighthouse speed, SSL and Edge CDN hosting setup.",
+    badge: "Fast & Clean",
+    turnaround: "5–7 Days",
+    tagline: "Ultra-fast modern landing presence with bespoke typography, lead intake & CMS.",
+    description: "Ideal for founders, creators, and brands needing a crisp, ultra-fast online presence with Home/Hero, About, Services/Portfolio, Contact, and basic content controls.",
     includedFeatures: [
-      "Bespoke Responsive Layout (Mobile + Desktop)",
-      "Hero Narrative & Brand Positioning Lockup",
-      "Services & Offerings Directory Sections",
-      "Contact Inquiry Form with Instant Email Alerts",
-      "Speed Optimization (Lighthouse 95+ Score)"
+      "Home / Hero narrative & value proposition",
+      "About brand story & founder positioning",
+      "Services / Portfolio / Catalog showcase",
+      "Contact inquiry form with instant notifications",
+      "Basic CMS / content management",
+      "Basic admin controls & speed optimization"
     ],
     macroFeatures: [
       {
-        id: "ec_macro_arch",
-        name: "Core Responsive Architecture & Layout",
+        id: "lp_macro_hero",
+        name: "Home / Hero Section",
         icon: "🏛️",
-        description: "Mobile-first responsive layout with server-rendered Next.js App Router DOM, zero layout shift, and Vercel edge deployment.",
+        isEssential: true,
+        priceInr: 1200,
+        priceUsd: 25,
+        description: "Striking hero presentation with kinetic typography, brand positioning, and clear primary CTA.",
         microFeatures: [
-          "Bespoke Mobile, Tablet & 4K Breakpoints",
-          "Next.js App Router SSR DOM Hydration",
-          "Edge CDN Global Caching (Sub-100ms)",
-          "Strict SSL / TLS & Automated DNS Setup"
+          "High-Impact Brand Lockup & Tagline",
+          "Kinetic Typography & Staggered Reveal",
+          "Primary Conversion CTA Button",
+          "Social Proof & Trust Badges"
         ]
       },
       {
-        id: "ec_macro_motion",
-        name: "Typography, Fluid Motion & Aesthetics",
+        id: "lp_macro_about",
+        name: "About Section",
         icon: "✨",
-        description: "Kinetic typography, smooth momentum scrolling with Lenis, and subtle micro-interactions that communicate luxury.",
+        isEssential: true,
+        priceInr: 800,
+        priceUsd: 15,
+        description: "Engaging founder story, company mission, core values, and team introduction.",
         microFeatures: [
-          "Curated Google / Typekit Font Pairings",
-          "Smooth Lenis Momentum Scrolling",
-          "IntersectionObserver Reveal Animations",
-          "Magnetic Button Pull & Cursor Physics"
+          "Founder / Brand Narrative Layout",
+          "Core Values & Mission Statement",
+          "Interactive Credibility Milestones",
+          "Press Mentions & Media Features"
         ]
       },
       {
-        id: "ec_macro_conversion",
-        name: "Lead Capture & Conversion System",
+        id: "lp_macro_services",
+        name: "Services / Portfolio / Catalog",
+        icon: "📁",
+        isEssential: true,
+        priceInr: 1200,
+        priceUsd: 25,
+        description: "Structured showcase of services, past work case studies, or visual product catalog.",
+        microFeatures: [
+          "Services Grid with Feature Highlights",
+          "Portfolio Case Study Cards & Modals",
+          "Visual Catalog Previews",
+          "Client Testimonials & Outcomes"
+        ]
+      },
+      {
+        id: "lp_macro_contact",
+        name: "Contact & Lead Intake",
         icon: "🎯",
-        description: "High-converting inquiry forms with real-time validation, instant email alerts to your inbox, and direct WhatsApp routing.",
+        isEssential: true,
+        priceInr: 800,
+        priceUsd: 15,
+        description: "Zero-friction inquiry form with instant email alerts and direct WhatsApp routing.",
         microFeatures: [
-          "Asynchronous Contact Form with Client Validation",
-          "Instant Email Dispatcher to Owner Inbox",
-          "WhatsApp Direct Floating Action Button",
-          "Custom Thank-You State & Lead Confirmation"
+          "Async Contact Form with Live Validation",
+          "Instant Email Dispatcher to Owner",
+          "Direct WhatsApp Floating Action Link",
+          "Custom Confirmation & Thank-You State"
         ]
       },
       {
-        id: "ec_macro_seo",
-        name: "SEO, Meta Architecture & Social Sharing",
-        icon: "📊",
-        description: "Search engine optimization and high-resolution OpenGraph cards for WhatsApp, iMessage, and Twitter.",
+        id: "lp_macro_cms",
+        name: "Basic CMS & Content Management",
+        icon: "📝",
+        isEssential: false,
+        priceInr: 500,
+        priceUsd: 10,
+        description: "Simple content management allowing you to update text, announcements, and imagery easily.",
         microFeatures: [
-          "OpenGraph & Twitter Card Dynamic Previews",
-          "Automated XML Sitemap & Robots.txt",
-          "Organization JSON-LD Rich Schema",
-          "Semantic Heading H1-H6 Hierarchy"
+          "Lightweight CMS Schema Setup",
+          "Dynamic Text & Banner Updates",
+          "Image & Media Asset Management",
+          "Fast Edge Revalidation"
         ]
       },
       {
-        id: "ec_macro_accessibility",
-        name: "Accessibility & Visitor Utilities",
-        icon: "♿",
-        description: "Inclusive design with screen-reader compliance, dark/light theme options, and privacy consent banners.",
+        id: "lp_macro_admin",
+        name: "Basic Admin Controls",
+        icon: "🛡️",
+        isEssential: false,
+        priceInr: 499,
+        priceUsd: 9,
+        description: "Secure login to review submitted contact inquiries and view basic site performance.",
         microFeatures: [
-          "WCAG 2.1 AAA Screen Reader Landmarks",
-          "Dark / Light Mode Aesthetic Theme Switcher",
-          "Dynamic Fluid Typography Scaling",
-          "GDPR & CCPA Cookie Consent Banner"
+          "Password-Protected Inquiries View",
+          "Lead Export to CSV",
+          "Site Meta Tags & SEO Controls",
+          "Core Web Vitals Telemetry"
         ]
       }
     ]
   },
+
+  // ─── 2. E-COMMERCE PACKAGE ────────────────────────────────────────────────
   {
-    id: "sales_engine",
-    name: "Sales Website & Smart Booking Engine",
+    id: "ecommerce",
+    name: "E-Commerce Package",
     icon: "🛍️",
-    priceInr: 19999,
-    priceUsd: 499,
-    deltaPriceInr: 15000,
-    deltaPriceUsd: 400,
-    badge: "Revenue Engine",
-    tagline: "E-Commerce store, 1-click checkouts, appointment calendar & instant payment gateways.",
-    description: "Direct revenue engine: sell physical/digital products or book calendar appointments. Includes product catalogs, slide-over carts, live calendar slot booking, automated WhatsApp reminders, and Stripe/Razorpay/UPI checkout.",
-    includedFeatures: [
-      "1-Click Express Checkout (Apple Pay, Google Pay, Razorpay, UPI)",
-      "Interactive Real-Time Calendar Slot Picker & Sync",
-      "Product Catalog with Variants (Size, Color, SKU) & Cart",
-      "Automated WhatsApp & Email 24h/2h Confirmation Reminders",
-      "GST-Compliant Automated PDF Invoices & Receipts"
-    ],
-    macroFeatures: [
-      {
-        id: "se_macro_checkout",
-        name: "1-Click Express Checkout & Gateways",
-        icon: "💳",
-        description: "Zero-friction single-page checkout supporting Apple Pay, Google Pay, UPI, and credit cards with instant order fulfillment.",
-        microFeatures: [
-          "Apple Pay, Google Pay, Razorpay & UPI Checkout",
-          "Dynamic Tax & Promo Discount Engine",
-          "Abandoned Checkout Recovery Hook",
-          "Instant Digital Fulfillment Handshake"
-        ]
-      },
-      {
-        id: "se_macro_booking",
-        name: "Interactive Live Appointment Slot Picker",
-        icon: "📅",
-        description: "Real-time calendar slot blocking with timezone auto-detection, custom meeting buffers, and operational hours.",
-        microFeatures: [
-          "Real-Time Calendar Date & Slot Grid",
-          "Automatic Timezone Detection & Conversion",
-          "Custom Meeting Buffers & Operating Hours",
-          "Doctor / Specialist Selection per Branch"
-        ]
-      },
-      {
-        id: "se_macro_reminders",
-        name: "2-Way Calendar Sync & Reminders",
-        icon: "📱",
-        description: "Google Calendar & Outlook sync paired with automated WhatsApp reminders that eliminate appointment no-shows.",
-        microFeatures: [
-          "Google Calendar 2-Way API Sync",
-          "Microsoft Outlook / Office 365 Sync",
-          "Automated WhatsApp 24h & 2h Reminders",
-          "1-Click Client Reschedule & Cancel Links"
-        ]
-      },
-      {
-        id: "se_macro_catalog",
-        name: "Product Catalog & Cart Management",
-        icon: "🛍️",
-        description: "Comprehensive e-commerce catalog with variant selectors, slide-over cart, and live inventory indicators.",
-        microFeatures: [
-          "Product Catalog with Variants (Size, Color, SKU)",
-          "Interactive Slide-Over Shopping Cart",
-          "Dynamic Low-Stock Inventory Indicators",
-          "Live Variant & Material Switcher"
-        ]
-      },
-      {
-        id: "se_macro_invoicing",
-        name: "Pre-Payments & Automated Invoicing",
-        icon: "🧾",
-        description: "Mandatory booking deposits, verified webhooks, and automatic GST-compliant PDF invoices.",
-        microFeatures: [
-          "Mandatory Booking Deposit Checkout Step",
-          "Razorpay, UPI & Stripe Webhook Verification",
-          "Automated GST / Tax Invoice Receipts (PDF)",
-          "Multi-Branch & Location Routing"
-        ]
-      }
-    ]
-  },
-  {
-    id: "marketing_campaigns",
-    name: "Marketing & BOFU Conversion Campaigns",
-    icon: "📈",
-    priceInr: 19999,
-    priceUsd: 499,
-    deltaPriceInr: 15000,
-    deltaPriceUsd: 400,
-    badge: "High Conversion",
-    tagline: "Ad traffic landing pages, UGC review wall, urgency mechanics & UTM attribution.",
-    description: "Transform cold ad traffic into paying customers with high-converting BOFU pages, countdown drop timers, sticky announcement bars, video testimonials, comparison matrices, and Meta CAPI / GA4 pixel telemetry.",
-    includedFeatures: [
-      "High-Converting BOFU Ad Landing Architecture",
-      "Urgency Countdown Timers & Sticky Announcement Banners",
-      "UGC Video Reviews Wall & 4K Product Showcase",
-      "Multi-Channel UTM Attribution Tracking & Link Builder",
-      "Meta CAPI, Google Analytics 4 & TikTok Pixel Telemetry"
-    ],
-    macroFeatures: [
-      {
-        id: "mc_macro_landing",
-        name: "High-Converting BOFU Landing Architecture",
-        icon: "🚀",
-        description: "Direct response layouts engineered to convert cold ad traffic into paying customers.",
-        microFeatures: [
-          "Direct Response Hero & Value Proposition",
-          "Benefit Stacks & Objection Handling Sections",
-          "Sticky Mobile Conversion Call-to-Action Bar",
-          "High-Speed Edge Delivery & Asset Inlining"
-        ]
-      },
-      {
-        id: "mc_macro_urgency",
-        name: "Urgency & Scarcity Mechanics",
-        icon: "⚡",
-        description: "Dynamic countdown timers, top announcement bars, and stock meters that compel visitors to take action immediately.",
-        microFeatures: [
-          "Real-Time Flash Sale Countdown Clocks",
-          "Sticky Offer-First Announcement Banner",
-          "Dynamic Low-Stock Inventory Indicators",
-          "Live Social-Proof Purchase Toasts"
-        ]
-      },
-      {
-        id: "mc_macro_attribution",
-        name: "Full-Spectrum UTM & Telemetry Attribution",
-        icon: "📊",
-        description: "Captures source, medium, and campaign parameters with every order and passes server-side conversion pixels to Meta and Google.",
-        microFeatures: [
-          "URL Parameter Parser (UTM Source, Medium, Campaign)",
-          "Persistent 30-Day Cookie Source Binding",
-          "Meta Pixel & CAPI Server-Side Telemetry",
-          "GA4 & Google Tag Manager DataLayer Events"
-        ]
-      },
-      {
-        id: "mc_macro_ugc",
-        name: "Social Proof & UGC Video Review Wall",
-        icon: "📹",
-        description: "Mobile-optimized vertical TikTok / Reel video testimonials wall with customer star ratings and before/after comparisons.",
-        microFeatures: [
-          "Vertical Reel / TikTok Video Player",
-          "Verified Customer Star Rating Filters",
-          "Before & After Interactive Split Slider",
-          "Customer Video Testimonials Grid"
-        ]
-      },
-      {
-        id: "mc_macro_comparison",
-        name: "Interactive Comparison Matrix & 360 Viewer",
-        icon: "🔄",
-        description: "Interactive 4K multi-angle viewer and value-anchoring comparison table establishing your offering as superior to alternatives.",
-        microFeatures: [
-          "4K Multi-Angle Product Zoomer",
-          "Side-by-Side Value-Anchoring Matrix",
-          "Live Variant & Material Switcher",
-          "Competitor Comparison Breakdown"
-        ]
-      }
-    ]
-  },
-  {
-    id: "portals_dashboards",
-    name: "Portals, Dashboards & Team Operations",
-    icon: "👥",
     priceInr: 24999,
     priceUsd: 599,
-    deltaPriceInr: 20000,
-    deltaPriceUsd: 500,
-    badge: "Operations Hub",
-    tagline: "Client hubs, staff rostering, geolocation punch clock, inventory & admin dashboards.",
-    description: "Equip your business with dedicated Client Hubs (file vaults, milestone tracking, invoices, e-signatures), Staff Rostering & Time-off approval workflows, GPS Geolocation Punch Clock, and an Executive Admin Control Dashboard.",
+    deltaPriceInr: 24999,
+    deltaPriceUsd: 599,
+    badge: "Direct Revenue",
+    turnaround: "2–3 Weeks",
+    tagline: "Complete online storefront: Landing + Sales CRM + Marketing Funnels + E-Commerce Operations.",
+    description: "The complete commercial store engine. Combines luxury Landing, full Sales CRM, high-converting Marketing funnels, Products catalog with variants, Cart, Checkout, Shipping, Taxes, Inventory, and Fulfillment operations.",
     includedFeatures: [
-      "Dedicated Client Hub with Document Vault & E-Signatures",
-      "Searchable Staff Directory & Weekly Shift Rostering Calendar",
-      "Mobile Clock-in Punch Clock with GPS Geolocation Verification",
-      "Self-Serve Time-Off & Leave Approval Workflow",
-      "Executive Business Analytics & CRM Pipeline Dashboard"
+      "Landing: Home/Hero, About, Services/Catalog, Contact, Basic CMS & Admin",
+      "Sales: Lead capture, CRM database, Contact management, Customer accounts, Payments, Inquiries",
+      "Marketing: Campaign pages, Ad landing pages, Offer pages, Discount systems, Urgency timers, Funnels, Marketing dashboard",
+      "Products: Catalog, Variants (Size/Color/SKU), Pricing & Inventory levels",
+      "Cart, 1-Click Checkout, Stripe / Razorpay / UPI Payments & Orders",
+      "Customers, Dynamic Discounts, Taxes & GST Invoices",
+      "Shipping Methods, Order Tracking & Live Delivery Status",
+      "Inventory Management: Real-time stock, Updates & Availability alerts",
+      "Admin Control: Orders, Products, Customers & Financial Analytics",
+      "Operations: Fulfillment, Returns & Order lifecycle management"
     ],
     macroFeatures: [
       {
-        id: "pd_macro_client_hub",
-        name: "Dedicated Client Hub & Document Vault",
+        id: "ecom_macro_landing",
+        name: "Landing Foundation Module",
+        icon: "🌐",
+        isEssential: true,
+        priceInr: 4000,
+        priceUsd: 95,
+        description: "High-end brand presence including Home/Hero, About, Services/Catalog, Contact, Basic CMS & Admin controls.",
+        microFeatures: [
+          "Home / Hero Narrative & Visuals",
+          "About Story & Founder Credibility",
+          "Services & Catalog Showcase",
+          "Contact & Lead Capture Form",
+          "Basic CMS & Basic Admin Controls"
+        ]
+      },
+      {
+        id: "ecom_macro_sales",
+        name: "Sales & CRM System",
         icon: "💼",
-        description: "A secure digital space for your clients with file storage, digital contracts, and live project progress tracking.",
+        isEssential: true,
+        priceInr: 4500,
+        priceUsd: 110,
+        description: "Integrated sales database, contact management, customer profiles, booking/inquiry flows, and admin sales dashboard.",
         microFeatures: [
-          "Secure Client Project Dashboard",
-          "Proposal Agreements & E-Signatures",
-          "Automated PDF Invoices & Milestone Tracker",
-          "Encrypted Private Document Vault"
+          "Lead Capture & CRM Database",
+          "Contact & Customer Profile Management",
+          "Booking / Inquiry Qualification Flows",
+          "Customer Login & Client-Facing Account Hub",
+          "Admin Dashboard (Leads, Customers, Sales, Analytics)"
         ]
       },
       {
-        id: "pd_macro_directory",
-        name: "Digital Staff Directory & RBAC Security",
-        icon: "👥",
-        description: "Searchable employee directory with department categorization, individual profiles, and granular role permissions.",
+        id: "ecom_macro_marketing",
+        name: "Marketing & Conversion Funnels",
+        icon: "📈",
+        isEssential: true,
+        priceInr: 4500,
+        priceUsd: 110,
+        description: "Full conversion suite: Campaign pages, Ad landing pages, Offer pages, Discount systems, Urgency countdowns, and Marketing dashboard.",
         microFeatures: [
-          "Searchable Team Directory with Profiles",
-          "Granular RBAC Security Roles (Admin, Manager, Staff)",
-          "Encrypted Employee Profile Space",
-          "Team Member Invitation & Role Revocation"
+          "Ad Landing Pages & Campaign Pages",
+          "Offer Pages & Dynamic Discount Engine",
+          "Urgency / Scarcity Drop Countdown Timers",
+          "Multiple Conversion Funnels & Push Notifications",
+          "Marketing Dashboard (Campaigns, Leads, Analytics, Conversion Data)"
         ]
       },
       {
-        id: "pd_macro_roster",
-        name: "Interactive Weekly Shift Rostering",
-        icon: "🗓️",
-        description: "Drag-and-drop weekly shift calendar builder with automated conflict detection and 1-click roster broadcasting.",
+        id: "ecom_macro_products",
+        name: "Products & Variant Catalog",
+        icon: "📦",
+        isEssential: true,
+        priceInr: 3500,
+        priceUsd: 85,
+        description: "Rich product catalog with multi-dimensional variants (size, color, material, SKU), high-res galleries, and dynamic pricing.",
         microFeatures: [
-          "Weekly & Monthly Shift Calendar Builder",
-          "Automated Shift Conflict & Overtime Detection",
-          "1-Click Roster Publishing & SMS/WhatsApp Alerts",
-          "Multi-Department Coverage Views"
+          "Product Catalog & Multi-Category Hierarchy",
+          "Variants Management (Size, Color, Material, SKU)",
+          "Dynamic Pricing & Tiered Volume Discounts",
+          "Real-Time Stock Availability Indicators"
         ]
       },
       {
-        id: "pd_macro_leave",
-        name: "Time-Off & Leave Approval Engine",
-        icon: "🏖️",
-        description: "Self-serve leave requests with 1-click manager approvals and automated roster blocking on approved time off.",
+        id: "ecom_macro_checkout",
+        name: "Cart, Checkout & Payments",
+        icon: "💳",
+        isEssential: true,
+        priceInr: 3000,
+        priceUsd: 75,
+        description: "Slide-over cart, 1-click express checkout, UPI, Razorpay, Stripe, and Apple Pay payment processing.",
         microFeatures: [
-          "Staff Self-Serve Time-Off Request Portal",
-          "Manager 1-Click Approve / Decline Action",
-          "Automated Roster Blocking on Leave",
-          "Accrued Leave Balance Tracking"
+          "Interactive Slide-Over Shopping Cart",
+          "1-Click Express Checkout Flow",
+          "Razorpay, Stripe, UPI & Card Payment Gateways",
+          "Automated Order Confirmation & Digital Receipts"
         ]
       },
       {
-        id: "pd_macro_punchclock",
-        name: "Mobile GPS Punch Clock Timesheets",
-        icon: "⏱️",
-        description: "Mobile web punch clock with geofencing verification ensuring staff are physically on-site when clocking in.",
+        id: "ecom_macro_shipping",
+        name: "Shipping, Tracking & Taxes",
+        icon: "🚚",
+        isEssential: false,
+        priceInr: 2500,
+        priceUsd: 60,
+        description: "Automated shipping rate calculation, live order tracking, status webhooks, and GST/VAT tax compliance.",
         microFeatures: [
-          "Mobile Web Geofenced Clock-In Punch Clock",
-          "Branch Geofence 100m Radius Verification",
-          "Break Time & Meal Tracking",
-          "1-Click Work-Hour Summary & Payroll CSV Export"
+          "Configurable Shipping Methods & Flat Rates",
+          "Live Tracking Link & Courier Status",
+          "Automated GST / Tax Invoice PDF Generation",
+          "Postal Code / Pincode Delivery Checker"
+        ]
+      },
+      {
+        id: "ecom_macro_operations",
+        name: "Operations, Admin & Fulfillment",
+        icon: "⚙️",
+        isEssential: false,
+        priceInr: 2999,
+        priceUsd: 64,
+        description: "Comprehensive merchant admin for managing orders, stock updates, fulfillment tracking, returns, and sales analytics.",
+        microFeatures: [
+          "Admin Orders, Products & Customers Dashboard",
+          "Inventory Stock Updates & Low-Stock Alerts",
+          "Order Fulfillment & Dispatch Status Workflow",
+          "Returns, Refunds & Exchange Management"
         ]
       }
     ]
   },
+
+  // ─── 3. SAAS PACKAGE ──────────────────────────────────────────────────────
   {
-    id: "design_3d",
-    name: "3D Interactive & Experiential Design",
-    icon: "🎨",
-    priceInr: 39999,
-    priceUsd: 899,
-    deltaPriceInr: 35000,
-    deltaPriceUsd: 800,
-    badge: "Awwwards Tier",
-    tagline: "Interactive Three.js 3D viewport, spatial particles, reactive audio & 60fps rendering.",
-    description: "Give your brand a breathtaking digital presence with interactive 3D model orbiters, particle shaders, scroll-driven typography reveals, reactive audio, and silky smooth transitions.",
-    includedFeatures: [
-      "Three.js / WebGL Interactive 3D Model Canvas",
-      "Lenis Smooth Scrolling with Pinned Story Chapters",
-      "Kinetic Magnetic Buttons & Fluid Micro-Interactions",
-      "Ambient Reactive Sound Design & Audio Immersion",
-      "High-Performance 60fps Mobile-Optimized Rendering"
-    ],
-    macroFeatures: [
-      {
-        id: "d3_macro_webgl",
-        name: "High-Performance WebGL / Three.js 3D Canvas",
-        icon: "🎨",
-        description: "Three.js WebGL viewport with DRACO compression, studio HDRI lighting, and smooth dampening orbit controls.",
-        microFeatures: [
-          "Three.js / React Three Fiber Viewport",
-          "DRACO & KTX2 85% Asset Compression",
-          "Studio HDRI Environment Map Lighting",
-          "Smooth OrbitControls with Dampening"
-        ]
-      },
-      {
-        id: "d3_macro_choreography",
-        name: "Scroll-Driven 3D Camera Choreography",
-        icon: "🎬",
-        description: "Pinned camera trajectory along scroll position with cinematic keyframes and clickable annotation hotspots.",
-        microFeatures: [
-          "GSAP ScrollTrigger Pinned 3D Timeline",
-          "Cinematic Keyframe Camera Transitions",
-          "Interactive 3D Hotspot Annotation Pins",
-          "Exploded View Animations"
-        ]
-      },
-      {
-        id: "d3_macro_customizer",
-        name: "Real-Time Material & Color Switcher",
-        icon: "🔄",
-        description: "Interactive UI controls allowing visitors to swap model colors, textures, and metallic finishes in real-time.",
-        microFeatures: [
-          "Real-Time Mesh Material Color Switcher",
-          "Metallic & Roughness Finish Toggles (Matte, Gloss, Carbon)",
-          "Branded Canvas Loading Preloader",
-          "Dynamic Texture Swap Engine"
-        ]
-      },
-      {
-        id: "d3_macro_audio",
-        name: "Ambient Spatial Audio & Sound Design",
-        icon: "🎵",
-        description: "Interactive procedural sound design, click feedback, and spatial audio positioning engaging the visitor's senses.",
-        microFeatures: [
-          "Web Audio API Spatial Sound Synthesis",
-          "Tactile Haptic Click & Rotation Sound",
-          "Persistent Sound Toggle with Waveform",
-          "Ambient Sound Immersion"
-        ]
-      },
-      {
-        id: "d3_macro_mobile",
-        name: "Mobile Gyroscope Controls & 60fps Thermal Guard",
-        icon: "📱",
-        description: "Smartphone gyroscope tilt controls paired with dynamic resolution scaling maintaining solid 60fps without battery drain.",
-        microFeatures: [
-          "DeviceOrientation Gyroscope Tilt Navigation",
-          "Adaptive 60fps Thermal & Battery Guard",
-          "WebGL Context Loss Recovery Handler",
-          "Mobile Touch Gestures"
-        ]
-      }
-    ]
-  },
-  {
-    id: "fullstack_saas",
-    name: "Custom SaaS & Full-Stack Web Application",
+    id: "saas",
+    name: "SaaS Product Package",
     icon: "⚡",
     priceInr: 69999,
     priceUsd: 1499,
-    deltaPriceInr: 65000,
-    deltaPriceUsd: 1400,
+    deltaPriceInr: 69999,
+    deltaPriceUsd: 1499,
     badge: "Software MVP",
-    tagline: "Full-stack software with Supabase PostgreSQL, multi-role auth & billing webhooks.",
-    description: "Production-ready software platforms, SaaS MVPs, marketplaces, and custom web apps with Next.js App Router, Supabase PostgreSQL with Row-Level Security, multi-role authentication, and subscription billing.",
+    turnaround: "4–6 Weeks",
+    tagline: "Full-stack software platform: Public Website + Auth + Subscriptions + Core Engine + Dashboards.",
+    description: "Engineered for tech founders and startups. Includes Public Marketing/Sales Website, Multi-Provider Auth, User Accounts, Subscription Billing, Application Logic, User Dashboards, APIs, RBAC Roles, and Executive Admin System.",
     includedFeatures: [
-      "Next.js Full-Stack App Router Architecture",
-      "Supabase PostgreSQL Database & Row-Level Security (RLS)",
-      "Secure Multi-Provider Authentication (Google, Email, Magic Link)",
-      "Stripe / Razorpay Subscription & Payment Webhooks",
-      "Executive Admin and Client Management Dashboards"
+      "Public Website: Landing, Sales CRM & Marketing conversion funnels",
+      "Authentication: Google OAuth, Magic Links, Passwords & Session tokens",
+      "User Accounts: Profiles, Settings, Team workspaces & Organization switcher",
+      "Subscription / Plans: Stripe & Razorpay recurring billing, proration & invoices",
+      "Application & Core Software Logic: Custom business algorithms & database architecture",
+      "User Dashboard: Real-time data visualization, workflows & interactive UI",
+      "Permissions & RBAC: Granular role-based security across admins, managers & members",
+      "APIs and Integrations: Webhooks, REST API endpoints & third-party connectors",
+      "Admin System: User management, subscription telemetry & global system controls"
     ],
     macroFeatures: [
       {
-        id: "fs_macro_app",
-        name: "Next.js App Router Architecture",
-        icon: "⚡",
-        description: "Full-stack server-side rendered application with type-safe APIs, fast edge routes, and production caching.",
+        id: "saas_macro_public_web",
+        name: "Public Website (Landing, Sales, Marketing)",
+        icon: "🌐",
+        isEssential: true,
+        priceInr: 12000,
+        priceUsd: 260,
+        description: "High-converting public-facing web presence with Landing story, Sales CRM intake, and Marketing campaign funnels.",
         microFeatures: [
-          "Server Components & Server Actions",
-          "Type-Safe API Route Handlers",
-          "Edge Middleware & Route Guards",
-          "High-Performance Production Build Optimization"
+          "Public Landing & Brand Positioning",
+          "Sales Lead Capture & Demo Booking Flows",
+          "Marketing Campaign & Pricing Plans Comparison",
+          "SEO Optimization & Social OpenGraph Metadata"
         ]
       },
       {
-        id: "fs_macro_db",
-        name: "Supabase PostgreSQL Relational Database",
-        icon: "🗄️",
-        description: "Normalized relational schema with foreign key constraints, UUID primary keys, and automated timestamp triggers.",
-        microFeatures: [
-          "Normalized Relational PostgreSQL DDL Schema",
-          "B-Tree Indexes & Sub-20ms Queries",
-          "Automated Updated_at Database Triggers",
-          "Database Migrations & Seed Data"
-        ]
-      },
-      {
-        id: "fs_macro_auth",
-        name: "Zero-Trust Row-Level Security & Auth",
+        id: "saas_macro_auth",
+        name: "Authentication & User Accounts",
         icon: "🔐",
-        description: "Postgres RLS policies guaranteeing strict tenant isolation, paired with Google OAuth, Magic Links, and session tokens.",
+        isEssential: true,
+        priceInr: 12000,
+        priceUsd: 260,
+        description: "Zero-trust auth with Google OAuth, Magic Links, secure cookie sessions, user account profiles, and password resets.",
         microFeatures: [
-          "Postgres Row-Level Security (RLS) Policies",
-          "Multi-Provider OAuth 2.0 (Google, Magic Link, Email)",
-          "PKCE Auth Flow with HTTP-Only Cookies",
-          "Automated Password Reset Workflows"
+          "Multi-Provider OAuth (Google, Email, Magic Link)",
+          "Secure Cookie Sessions & PKCE Handshake",
+          "User Profile & Account Preferences Management",
+          "Team Workspaces & Organization Switcher"
         ]
       },
       {
-        id: "fs_macro_billing",
-        name: "Stripe & Razorpay Webhook Billing Engine",
+        id: "saas_macro_billing",
+        name: "Subscription, Plans & Billing",
         icon: "💳",
-        description: "Subscription and recurring billing engine with cryptographic signature verification and automated digital fulfillment.",
+        isEssential: true,
+        priceInr: 12000,
+        priceUsd: 260,
+        description: "Recurring SaaS billing engine with tiered pricing, Stripe / Razorpay webhooks, customer self-serve portal, and invoices.",
         microFeatures: [
-          "Recurring Subscriptions & One-Time Payments",
+          "Tiered Subscription Plans & Feature Gating",
+          "Stripe & Razorpay Recurring Billing Integration",
           "Cryptographic Webhook Signature Handlers",
-          "Automated Invoice Generation & Customer Portal",
-          "Plan Upgrade & Downgrade Proration"
+          "Automated Invoices & Self-Serve Billing Portal"
         ]
       },
       {
-        id: "fs_macro_operations",
-        name: "Role-Based Access Control & Operations",
-        icon: "🛡️",
-        description: "Multi-tier administrative roles with immutable audit logging and automated daily database snapshot backups.",
+        id: "saas_macro_core_app",
+        name: "Application & Core Software Logic",
+        icon: "⚙️",
+        isEssential: true,
+        priceInr: 15000,
+        priceUsd: 320,
+        description: "The proprietary application engine, server actions, backend data processing, and custom domain algorithms.",
         microFeatures: [
-          "Multi-Tier Role Permissions (Admin, Manager, Member)",
-          "Immutable Security Audit Logging",
-          "Outbound Webhooks to Zapier & Slack",
-          "Automated Daily Database Snapshots & CSV Export"
+          "Server-Side App Router Architecture",
+          "Proprietary Business Logic & Algorithms",
+          "PostgreSQL Normalized Relational Schema",
+          "Sub-20ms Indexed Queries & Data Validations"
+        ]
+      },
+      {
+        id: "saas_macro_user_dashboard",
+        name: "User Dashboard & Data Management",
+        icon: "📊",
+        isEssential: true,
+        priceInr: 10000,
+        priceUsd: 215,
+        description: "Interactive client dashboard with live data metrics, project management, file uploads, and notification streams.",
+        microFeatures: [
+          "Real-Time Data Visualization & Analytics",
+          "Interactive CRUD Tables & Filtering",
+          "File Storage Vault & Asset Uploads",
+          "Real-Time Activity Logs & Notifications"
+        ]
+      },
+      {
+        id: "saas_macro_admin_system",
+        name: "Permissions, APIs & Admin System",
+        icon: "🛡️",
+        isEssential: false,
+        priceInr: 8999,
+        priceUsd: 184,
+        description: "Executive control panel for platform admins: Manage tenant users, RBAC permissions, audit trails, and REST APIs.",
+        microFeatures: [
+          "Granular RBAC Security Roles (Admin, Manager, Member)",
+          "Platform Master Admin Dashboard",
+          "Outbound Webhooks & REST API Endpoints",
+          "Audit Logging & Data Export to CSV / JSON"
+        ]
+      }
+    ]
+  },
+
+  // ─── 4. BUSINESS AUTOMATION PACKAGE ───────────────────────────────────────
+  {
+    id: "business_automation",
+    name: "Business Automation Package",
+    icon: "🤖",
+    priceInr: 29999,
+    priceUsd: 699,
+    deltaPriceInr: 29999,
+    deltaPriceUsd: 699,
+    badge: "Efficiency Engine",
+    turnaround: "2–3 Weeks",
+    tagline: "Automate repetitive tasks: Leads + WhatsApp + Emails + Orders + Staff + AI.",
+    description: "Eliminate manual chaos. Connects your customer intake, CRM, WhatsApp notifications, email sequences, order processing, employee approvals, scheduled jobs, and AI workflows into an automated engine.",
+    includedFeatures: [
+      "Lead automation & Instant CRM qualification",
+      "CRM workflows & Pipeline status updates",
+      "Automated Email sequences & transactional notifications",
+      "WhatsApp Cloud API automated reminders & 2-way alerts",
+      "Order processing workflows & invoice generation",
+      "Employee workflows, shift scheduling & leave approvals",
+      "Multi-level approval systems with 1-click email/WhatsApp buttons",
+      "Bi-directional data synchronization across databases & sheets",
+      "API integrations with third-party SaaS & ERP systems",
+      "Scheduled background jobs & automated recurring tasks",
+      "AI automation & intelligent conversational lead handling"
+    ],
+    macroFeatures: [
+      {
+        id: "ba_macro_lead_crm",
+        name: "Lead & CRM Automation",
+        icon: "🎯",
+        isEssential: true,
+        priceInr: 7500,
+        priceUsd: 175,
+        description: "Automatic lead routing, instant CRM updates, prospect scoring, and pipeline stage progression.",
+        microFeatures: [
+          "Instant Lead Qualification & Scoring",
+          "Automated CRM Pipeline Stage Triggers",
+          "Lead Distribution & Team Assignment",
+          "Duplicate Contact Deduplication & Sync"
+        ]
+      },
+      {
+        id: "ba_macro_comms",
+        name: "WhatsApp & Email Communication Workflows",
+        icon: "📱",
+        isEssential: true,
+        priceInr: 7500,
+        priceUsd: 175,
+        description: "2-way WhatsApp Cloud API automation, appointment reminder sequences, and triggered transactional emails.",
+        microFeatures: [
+          "WhatsApp 24h & 2h Automated Reminders",
+          "Triggered Email Nurture Sequences",
+          "Instant Customer Confirmation Messages",
+          "Dynamic Template Variables & Personalization"
+        ]
+      },
+      {
+        id: "ba_macro_ops_staff",
+        name: "Order & Employee Workflows",
+        icon: "👥",
+        isEssential: true,
+        priceInr: 7500,
+        priceUsd: 175,
+        description: "Automated order fulfillment handoffs, digital invoice dispatch, staff shift notifications, and approval systems.",
+        microFeatures: [
+          "Order Status Progression & Dispatch Alerts",
+          "Employee Shift Publishing & Schedule Alerts",
+          "1-Click Manager Leave Approval System",
+          "Automated Work-Hour & Payroll Summary"
+        ]
+      },
+      {
+        id: "ba_macro_sync_ai",
+        name: "Data Synchronization, APIs & AI Automation",
+        icon: "🤖",
+        isEssential: false,
+        priceInr: 7499,
+        priceUsd: 174,
+        description: "Background cron jobs, multi-system database synchronization, custom API webhooks, and AI-powered intelligence.",
+        microFeatures: [
+          "Two-Way Database & Google Sheets Sync",
+          "Custom Webhook Ingestion & API Connectors",
+          "Scheduled Background Cron Jobs",
+          "Gemini / OpenAI AI Assistant Automation"
+        ]
+      }
+    ]
+  },
+
+  // ─── 5. CUSTOM APPLICATION PACKAGE ────────────────────────────────────────
+  {
+    id: "custom_app",
+    name: "Custom Application Package",
+    icon: "✨",
+    priceInr: 39999,
+    priceUsd: 899,
+    deltaPriceInr: 39999,
+    deltaPriceUsd: 899,
+    badge: "Bespoke Architecture",
+    turnaround: "Bespoke Timeline",
+    tagline: "Tailor-made digital architecture, proprietary business logic & bespoke engineering.",
+    description: "For bespoke projects, unique workflows, interactive 3D web apps, or specialized digital tools requiring dedicated architecture design.",
+    includedFeatures: [
+      "Custom system architecture & technical specification",
+      "Tailor-made business logic & proprietary workflows",
+      "Dedicated PostgreSQL / Cloud database schema",
+      "Custom UI/UX component design system",
+      "Direct milestone reviews & bespoke hypercare"
+    ],
+    macroFeatures: [
+      {
+        id: "ca_macro_arch",
+        name: "Bespoke Architecture & Engineering",
+        icon: "🏛️",
+        isEssential: true,
+        priceInr: 12000,
+        priceUsd: 270,
+        description: "Tailored full-stack technical foundation built specifically to your requirements.",
+        microFeatures: [
+          "Custom Frontend & Backend Architecture",
+          "High-Performance Edge Deployment",
+          "Security & Data Compliance Protocol",
+          "Comprehensive Technical Documentation"
+        ]
+      },
+      {
+        id: "ca_macro_logic",
+        name: "Proprietary Business Logic & APIs",
+        icon: "⚙️",
+        isEssential: true,
+        priceInr: 12000,
+        priceUsd: 270,
+        description: "Tailored business logic, calculation engines, and third-party API orchestrations.",
+        microFeatures: [
+          "Custom Algorithm & Calculation Engine",
+          "Third-Party Service API Connectors",
+          "Automated Data Ingestion & Exports",
+          "Type-Safe Internal API Endpoints"
+        ]
+      },
+      {
+        id: "ca_macro_db",
+        name: "Dedicated Data Schema & Security",
+        icon: "🗄️",
+        isEssential: true,
+        priceInr: 8000,
+        priceUsd: 180,
+        description: "Custom relational database design with role permissions and backup guarantees.",
+        microFeatures: [
+          "Custom Relational Schema & Indexes",
+          "Row-Level Security & Role Access",
+          "Automated Snapshot Backups",
+          "Data Migration Scripts"
+        ]
+      },
+      {
+        id: "ca_macro_design",
+        name: "Bespoke UX / UI Design System",
+        icon: "🎨",
+        isEssential: false,
+        priceInr: 7999,
+        priceUsd: 179,
+        description: "Distinct visual styling, custom micro-animations, and responsive component library.",
+        microFeatures: [
+          "Tailored Typography & Color Tokens",
+          "Framer Motion Micro-Interactions",
+          "Custom Modal & Navigation Components",
+          "Mobile-First Responsive Layouts"
         ]
       }
     ]
   }
 ];
 
-export interface WebsiteGoalOption {
+// ════════════════════════════════════════════════════════════════════════════
+// 2. UNIVERSAL ADD ONS
+// ════════════════════════════════════════════════════════════════════════════
+
+export const UNIVERSAL_ADDONS: UniversalAddon[] = [
+  {
+    id: "addon_mgmt",
+    name: "Management Systems",
+    icon: "👥",
+    tagline: "Internal operations, CRM & staff/client portals",
+    description: "Empower your operations with internal CRM dashboards, staff shift rostering, timesheet punch clocks, and dedicated client document vaults.",
+    priceInr: 9999,
+    priceUsd: 199,
+    badge: "Operations"
+  },
+  {
+    id: "addon_custom_site",
+    name: "Custom Site",
+    icon: "📄",
+    tagline: "Additional bespoke subpages & custom page builder",
+    description: "Expanded multi-page architecture, custom case study templates, dynamic blog/editorial modules, and tailored landing extensions.",
+    priceInr: 14999,
+    priceUsd: 299,
+    badge: "Content"
+  },
+  {
+    id: "addon_3d",
+    name: "3D Interactive Experience",
+    icon: "🎨",
+    tagline: "Three.js WebGL canvas, 3D viewport & 60fps animations",
+    description: "Award-winning interactive 3D model orbiters, particle shaders, scroll-driven camera choreography, and ambient reactive sound design.",
+    priceInr: 19999,
+    priceUsd: 399,
+    badge: "Luxury Motion"
+  },
+  {
+    id: "addon_seo",
+    name: "SEO & Search Visibility",
+    icon: "🔍",
+    tagline: "Full schema markup, OpenGraph cards & speed tuning",
+    description: "Complete technical search engine optimization, JSON-LD structured data, XML sitemaps, robots protocol, and top-tier Lighthouse scores.",
+    priceInr: 4999,
+    priceUsd: 99,
+    badge: "Growth"
+  },
+  {
+    id: "addon_hosting",
+    name: "Managed Hosting & Edge CDN",
+    icon: "☁️",
+    tagline: "Global edge CDN deployment & SSL certificates",
+    description: "Zero-maintenance edge hosting with sub-100ms global speeds, automated SSL certificates, custom DNS setup, and DDoS mitigation.",
+    priceInr: 2999,
+    priceUsd: 59,
+    badge: "Infrastructure"
+  },
+  {
+    id: "addon_security",
+    name: "Security & Compliance",
+    icon: "🛡️",
+    tagline: "GDPR consent, CSRF shields & enterprise protection",
+    description: "Hardened security posture including GDPR/CCPA consent banners, CSRF/XSS protection, rate limiting, and encrypted payload handling.",
+    priceInr: 4999,
+    priceUsd: 99,
+    badge: "Protection"
+  },
+  {
+    id: "addon_cloud",
+    name: "Cloud Integration & APIs",
+    icon: "🔗",
+    tagline: "AWS / GCP / Supabase cloud sync & third-party APIs",
+    description: "Seamless integration with AWS, Google Cloud, Supabase, Twilio, Zapier, and custom external REST API bridges.",
+    priceInr: 7999,
+    priceUsd: 149,
+    badge: "Integration"
+  },
+  {
+    id: "addon_custom",
+    name: "Custom Add On",
+    icon: "🧩",
+    tagline: "Tailored microservice or specialized feature request",
+    description: "Have a specific feature in mind? Dedicated engineering for custom calculators, AI integrations, or unique functional requirements.",
+    priceInr: 9999,
+    priceUsd: 199,
+    badge: "Bespoke"
+  }
+];
+
+// ════════════════════════════════════════════════════════════════════════════
+// 3. "WHAT ARE YOU BUILDING?" SELECTION (Maps Directly to Suggested Package)
+// ════════════════════════════════════════════════════════════════════════════
+
+export interface BuildingOption {
   id: string;
   title: string;
   tag: string;
   icon: string;
+  targetPackageId: string;
   symptom: string;
   outcome: string;
-  recommendedBundles: string[];
 }
 
-export const WEBSITE_GOALS: WebsiteGoalOption[] = [
+export const BUILDING_OPTIONS: BuildingOption[] = [
   {
-    id: "more_sales",
-    title: "Get Direct Revenue & Online Sales",
-    tag: "Sales & Checkout",
-    icon: "🎯",
-    symptom: "Need seamless 1-click checkouts, product storefronts, or automated appointment slot bookings.",
-    outcome: "Sales engine with e-commerce cart, calendar booking slots, instant payment gateways & WhatsApp alerts.",
-    recommendedBundles: ["essential_core", "sales_engine"]
+    id: "landing",
+    title: "A website / online presence",
+    tag: "Landing Presence",
+    icon: "🌐",
+    targetPackageId: "landing",
+    symptom: "Need an ultra-fast, modern website presence with bespoke typography, brand storytelling, and lead intake.",
+    outcome: "Simple Landing Page Package: Home/Hero, About, Services/Catalog, Contact, Basic CMS & Admin controls."
   },
   {
-    id: "bofu_conversion",
-    title: "Maximize Ad Traffic & Marketing ROI",
-    tag: "Campaigns & Growth",
-    icon: "🚀",
-    symptom: "Running ads on Meta/Google/TikTok but conversion rates and source tracking are low.",
-    outcome: "BOFU landing pages, urgency countdowns, UGC review walls & multi-channel UTM attribution.",
-    recommendedBundles: ["essential_core", "marketing_campaigns"]
-  },
-  {
-    id: "portals_operations",
-    title: "Streamline Client & Staff Operations",
-    tag: "Portals & Team",
-    icon: "👥",
-    symptom: "Scattered communication, manual shift management, and disorganized client file sharing.",
-    outcome: "Client Hub with e-signatures & invoices, staff shift rosters, GPS punch clock, and Admin dashboard.",
-    recommendedBundles: ["essential_core", "portals_dashboards"]
-  },
-  {
-    id: "brand_authority",
-    title: "Elevate Brand with 3D & Creative Experience",
-    tag: "Awwwards Luxury",
-    icon: "💎",
-    symptom: "Site looks generic. Need breathtaking spatial visuals and awards-level creative storytelling.",
-    outcome: "Three.js WebGL canvas, particle shaders, reactive audio & buttery 60fps motion choreography.",
-    recommendedBundles: ["essential_core", "design_3d"]
-  },
-  {
-    id: "saas_mvp",
-    title: "Launch a Custom SaaS / Web App MVP",
+    id: "saas",
+    title: "A SaaS product",
     tag: "Software & SaaS",
     icon: "⚡",
-    symptom: "Building a software product, marketplace, or custom platform requiring user accounts and databases.",
-    outcome: "Full-stack Next.js + Supabase database, secure auth, subscription billing & admin portals.",
-    recommendedBundles: ["essential_core", "fullstack_saas"]
+    targetPackageId: "saas",
+    symptom: "Building a software product with user accounts, subscriptions, core app logic, databases, and admin controls.",
+    outcome: "SaaS Product Package: Full-stack platform with Public Web, Auth, Billing Plans, User Dashboard & Admin System."
+  },
+  {
+    id: "ecommerce",
+    title: "An e-commerce store",
+    tag: "E-Commerce",
+    icon: "🛍️",
+    targetPackageId: "ecommerce",
+    symptom: "Need a complete direct-to-consumer store with product catalog, variants, 1-click cart, checkout, shipping & inventory.",
+    outcome: "E-Commerce Package: Landing + Sales CRM + Marketing Funnels + Products, Cart, Checkout, Shipping & Operations."
+  },
+  {
+    id: "business_automation",
+    title: "Business automation",
+    tag: "Automation Engine",
+    icon: "🤖",
+    targetPackageId: "business_automation",
+    symptom: "Eliminate manual repetitive work across leads, WhatsApp, emails, orders, employee workflows, and scheduled tasks.",
+    outcome: "Business Automation Package: Lead CRM automation, WhatsApp/Email flows, order routing, approvals & AI automation."
+  },
+  {
+    id: "custom_app",
+    title: "A custom application",
+    tag: "Custom Application",
+    icon: "✨",
+    targetPackageId: "custom_app",
+    symptom: "Have unique technical specifications, multi-platform requirements, or bespoke proprietary business logic.",
+    outcome: "Custom Application Package: Tailored system architecture, proprietary logic, custom data schema & bespoke design."
   }
 ];
+
+// Backward-compatible alias for existing imports
+export const WEBSITE_GOALS = BUILDING_OPTIONS.map(b => ({
+  id: b.id,
+  title: b.title,
+  tag: b.tag,
+  icon: b.icon,
+  symptom: b.symptom,
+  outcome: b.outcome,
+  recommendedBundles: [b.targetPackageId]
+}));
 
 export interface IndustryOption {
   id: string;
@@ -609,10 +795,10 @@ export const INDUSTRIES: IndustryOption[] = [
     id: "ecommerce_retail",
     name: "E-Commerce, Direct-to-Consumer & Retail",
     icon: "🛍️",
-    typicalNeeds: "Product catalog, variant picker, 1-click express checkout, GST tax invoices & UTM ad tracking.",
+    typicalNeeds: "Product catalog, variant picker, 1-click express checkout, GST tax invoices & shipping tracking.",
     sampleBusinessName: "Aura Haute Couture",
-    recommendedBundles: ["essential_core", "sales_engine", "marketing_campaigns"],
-    recommendedBundleIds: ["essential_core", "sales_engine", "marketing_campaigns"]
+    recommendedBundles: ["ecommerce"],
+    recommendedBundleIds: ["ecommerce"]
   },
   {
     id: "services_clinics",
@@ -620,26 +806,26 @@ export const INDUSTRIES: IndustryOption[] = [
     icon: "🩺",
     typicalNeeds: "Appointment slot picker, doctor/consultant selector, calendar sync & automated WhatsApp reminders.",
     sampleBusinessName: "Apex Dental & Aesthetics",
-    recommendedBundles: ["essential_core", "sales_engine", "portals_dashboards"],
-    recommendedBundleIds: ["essential_core", "sales_engine", "portals_dashboards"]
+    recommendedBundles: ["business_automation"],
+    recommendedBundleIds: ["business_automation"]
   },
   {
     id: "b2b_agencies",
     name: "B2B, Agencies & Growing Teams",
     icon: "🏢",
-    typicalNeeds: "Client project portal, staff scheduling, timesheets, proposal agreements & admin CRM.",
+    typicalNeeds: "Client project portal, staff scheduling, timesheets, proposal agreements & CRM pipelines.",
     sampleBusinessName: "Vanguard Growth Partners",
-    recommendedBundles: ["essential_core", "portals_dashboards", "marketing_campaigns"],
-    recommendedBundleIds: ["essential_core", "portals_dashboards", "marketing_campaigns"]
+    recommendedBundles: ["business_automation"],
+    recommendedBundleIds: ["business_automation"]
   },
   {
     id: "luxury_creative",
     name: "Luxury Brands, Fashion & Creative Studios",
     icon: "💎",
-    typicalNeeds: "Awwwards-level 3D WebGL visual canvas, smooth scroll, reactive sound design & spatial storytelling.",
+    typicalNeeds: "Award-winning 3D WebGL visual canvas, smooth scroll, reactive sound design & spatial storytelling.",
     sampleBusinessName: "Maison de L'Ombre",
-    recommendedBundles: ["essential_core", "design_3d"],
-    recommendedBundleIds: ["essential_core", "design_3d"]
+    recommendedBundles: ["landing"],
+    recommendedBundleIds: ["landing"]
   },
   {
     id: "saas_tech",
@@ -647,8 +833,8 @@ export const INDUSTRIES: IndustryOption[] = [
     icon: "⚡",
     typicalNeeds: "Full-stack application architecture, PostgreSQL database, user auth & subscription billing.",
     sampleBusinessName: "FlowMatrix Cloud",
-    recommendedBundles: ["essential_core", "fullstack_saas"],
-    recommendedBundleIds: ["essential_core", "fullstack_saas"]
+    recommendedBundles: ["saas"],
+    recommendedBundleIds: ["saas"]
   },
   {
     id: "hospitality_dining",
@@ -656,8 +842,8 @@ export const INDUSTRIES: IndustryOption[] = [
     icon: "🍽️",
     typicalNeeds: "Online table reservations, digital QR menu, event booking & customer reviews.",
     sampleBusinessName: "L'Osteria Privata",
-    recommendedBundles: ["essential_core", "sales_engine"],
-    recommendedBundleIds: ["essential_core", "sales_engine"]
+    recommendedBundles: ["landing"],
+    recommendedBundleIds: ["landing"]
   },
   {
     id: "creator_education",
@@ -665,8 +851,8 @@ export const INDUSTRIES: IndustryOption[] = [
     icon: "🎓",
     typicalNeeds: "Lead capture funnels, course/session checkout, video reviews & email automation.",
     sampleBusinessName: "Titan Mastery Academy",
-    recommendedBundles: ["essential_core", "sales_engine", "marketing_campaigns"],
-    recommendedBundleIds: ["essential_core", "sales_engine", "marketing_campaigns"]
+    recommendedBundles: ["landing"],
+    recommendedBundleIds: ["landing"]
   },
   {
     id: "realestate_architecture",
@@ -674,8 +860,7 @@ export const INDUSTRIES: IndustryOption[] = [
     icon: "🏛️",
     typicalNeeds: "High-resolution property galleries, 3D architectural showcase & inquiry intake.",
     sampleBusinessName: "Elysian Estate Holdings",
-    recommendedBundles: ["essential_core", "design_3d", "sales_engine"],
-    recommendedBundleIds: ["essential_core", "design_3d", "sales_engine"]
+    recommendedBundles: ["landing"],
+    recommendedBundleIds: ["landing"]
   }
 ];
-
