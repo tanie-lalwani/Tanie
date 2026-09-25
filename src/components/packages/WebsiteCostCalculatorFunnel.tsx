@@ -79,7 +79,7 @@ export default function WebsiteCostCalculatorFunnel({
   };
   const [websiteType, setWebsiteType] = useState<"business" | "portfolio" | "ecommerce" | "saas">("business");
   const [selectedIndustry, setSelectedIndustry] = useState<IndustryOption>(INDUSTRIES[0]);
-  const [selectedBundles, setSelectedBundles] = useState<string[]>(_draft?.selectedBundles || ["essential_core", "lead_crm", "growth_seo"]);
+  const [selectedBundles, setSelectedBundles] = useState<string[]>(_draft?.selectedBundles || ["essential_core", "sales_engine"]);
   const [budgetTier, setBudgetTier] = useState<string>(_draft?.budgetTier || "₹25,000 – ₹50,000 (Growth Suite)");
   const [timeline, setTimeline] = useState<string>(_draft?.timeline || "3–4 Weeks (Standard Launch)");
   const [currency, setCurrency] = useState<"INR" | "USD">("INR");

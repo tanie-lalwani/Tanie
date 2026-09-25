@@ -14,201 +14,105 @@ export interface FeatureBundle {
 export const FEATURE_BUNDLES: FeatureBundle[] = [
   {
     id: "essential_core",
-    name: "Essential Website Core Architecture",
+    name: "Luxury Brand Landing Foundation",
     icon: "🏛️",
     priceInr: 4999,
-    priceUsd: 175,
+    priceUsd: 99,
     isEssential: true,
     badge: "Base Included",
-    tagline: "Ultra-fast modern responsive foundation with pristine typography.",
-    description: "Responsive layout for mobile/tablet/desktop, About story, Service pages, Contact form with email notifications, 95+ Lighthouse speed, SSL and Edge CDN hosting setup.",
+    tagline: "Ultra-fast modern responsive foundation with bespoke typography & lead intake.",
+    description: "Responsive layout across mobile/tablet/desktop, About story, Service sections, Contact form with instant email alerts, 95+ Lighthouse speed, SSL and Edge CDN hosting setup.",
     includedFeatures: [
       "Bespoke Responsive Layout (Mobile + Desktop)",
-      "About Us & Services Directory Pages",
+      "Hero Narrative & Brand Positioning Lockup",
+      "Services & Offerings Directory Sections",
       "Contact Inquiry Form with Instant Email Alerts",
-      "Speed Optimization (Lighthouse 95+)",
-      "SSL Certificate & Domain DNS Configuration"
+      "Speed Optimization (Lighthouse 95+ Score)"
     ]
   },
   {
-    id: "ecommerce_ordering",
-    name: "E-Commerce & Online Storefront Suite",
+    id: "sales_engine",
+    name: "Sales Website & Smart Booking Engine",
     icon: "🛍️",
-    priceInr: 8999,
-    priceUsd: 295,
-    badge: "High-ROI",
-    tagline: "Product catalog, variants, cart, Razorpay/Stripe checkout & GST invoices.",
-    description: "Sell products seamlessly with inventory management, color/size variants, faceted search, discount coupon codes, automated tax invoice PDFs, and abandoned cart recovery.",
+    priceInr: 19999,
+    priceUsd: 499,
+    badge: "Revenue Engine",
+    tagline: "E-Commerce store, 1-click checkouts, appointment calendar & instant payment gateways.",
+    description: "Direct revenue engine: sell physical/digital products or book calendar appointments. Includes product catalogs, slide-over carts, live calendar slot booking, automated WhatsApp reminders, and Stripe/Razorpay/UPI checkout.",
     includedFeatures: [
-      "Product Catalog with Variants (Size, Color, SKU)",
-      "Slide-Over Cart & Frictionless One-Page Checkout",
-      "Razorpay, Stripe & UPI Payment Gateway Integration",
-      "Real-Time Stock Inventory & Low-Stock Alerts",
-      "GST Compliant Automated PDF Invoices"
+      "1-Click Express Checkout (Apple Pay, Google Pay, Razorpay, UPI)",
+      "Interactive Real-Time Calendar Slot Picker & Sync",
+      "Product Catalog with Variants (Size, Color, SKU) & Cart",
+      "Automated WhatsApp & Email 24h/2h Confirmation Reminders",
+      "GST-Compliant Automated PDF Invoices & Receipts"
     ]
   },
   {
-    id: "booking_appointments",
-    name: "Smart Appointment & Booking Engine",
-    icon: "📅",
-    priceInr: 6999,
-    priceUsd: 235,
-    badge: "Popular",
-    tagline: "Live slot picker, stylist/doctor selection & automated WhatsApp reminders.",
-    description: "Allow clients to book appointments 24/7 with real-time calendar slot blocking, staff availability schedules, deposit payments, and automated WhatsApp/SMS notifications.",
+    id: "marketing_campaigns",
+    name: "Marketing & BOFU Conversion Campaigns",
+    icon: "📈",
+    priceInr: 19999,
+    priceUsd: 499,
+    badge: "High Conversion",
+    tagline: "Ad traffic landing pages, UGC review wall, urgency mechanics & UTM attribution.",
+    description: "Transform cold ad traffic into paying customers with high-converting BOFU pages, countdown drop timers, sticky announcement bars, video testimonials, comparison matrices, and Meta CAPI / GA4 pixel telemetry.",
     includedFeatures: [
-      "Interactive Calendar Slot Availability Blocker",
-      "Staff, Stylist, or Doctor Specialist Selector",
-      "Booking Deposit & Prepayment Gateway Integration",
-      "Automated WhatsApp & Email 24h/2h Reminders",
-      "Self-Service Rescheduling & Cancellation Link"
+      "High-Converting BOFU Ad Landing Architecture",
+      "Urgency Countdown Timers & Sticky Announcement Banners",
+      "UGC Video Reviews Wall & 4K Product Showcase",
+      "Multi-Channel UTM Attribution Tracking & Link Builder",
+      "Meta CAPI, Google Analytics 4 & TikTok Pixel Telemetry"
     ]
   },
   {
-    id: "lead_crm",
-    name: "Lead Capture & Sales CRM Funnel",
-    icon: "🎯",
-    priceInr: 5499,
-    priceUsd: 185,
-    tagline: "Quote builders, lead database, instant WhatsApp pings & sales pipeline.",
-    description: "Turn casual visitors into paying clients with high-converting inquiry forms, centralized searchable lead database, instant WhatsApp alerts to owners, and follow-up reminders.",
+    id: "portals_dashboards",
+    name: "Portals, Dashboards & Team Operations",
+    icon: "👥",
+    priceInr: 24999,
+    priceUsd: 599,
+    badge: "Operations Hub",
+    tagline: "Client hubs, staff rostering, geolocation punch clock, inventory & admin dashboards.",
+    description: "Equip your business with dedicated Client Hubs (file vaults, milestone tracking, invoices, e-signatures), Staff Rostering & Time-off approval workflows, GPS Geolocation Punch Clock, and an Executive Admin Control Dashboard.",
     includedFeatures: [
-      "Multi-Step Consultation & Quote Request Modals",
-      "Centralized Searchable Lead Repository",
-      "Instant WhatsApp & Telegram Notification to Owner",
-      "Lead Status Pipeline (New, Contacted, Qualified, Won)",
-      "HubSpot / Zoho CRM Webhook Synchronization"
+      "Dedicated Client Hub with Document Vault & E-Signatures",
+      "Searchable Staff Directory & Weekly Shift Rostering Calendar",
+      "Mobile Clock-in Punch Clock with GPS Geolocation Verification",
+      "Self-Serve Time-Off & Leave Approval Workflow",
+      "Executive Business Analytics & CRM Pipeline Dashboard"
     ]
   },
   {
-    id: "ai_assistant",
-    name: "AI Copilot & Conversational Chatbot",
-    icon: "🧠",
-    priceInr: 6999,
-    priceUsd: 235,
-    badge: "AI Native",
-    tagline: "Context-aware AI assistant trained on your business docs, products & FAQs.",
-    description: "Empower visitors with a streaming AI assistant that answers questions accurately, recommends relevant services/products, and qualifies prospects before booking.",
-    includedFeatures: [
-      "Streaming Gemini / OpenAI Conversational Widget",
-      "Custom Knowledge Base Trained on Your Business",
-      "Smart 24/7 FAQ & Policy Resolution",
-      "AI Product & Service Recommendation Engine",
-      "Natural Language Lead Qualification Chat"
-    ]
-  },
-  {
-    id: "design_3d_gsap",
-    name: "Luxury 3D WebGL & GSAP Choreography",
+    id: "design_3d",
+    name: "3D Interactive & Experiential Design",
     icon: "🎨",
-    priceInr: 11999,
-    priceUsd: 395,
+    priceInr: 39999,
+    priceUsd: 899,
     badge: "Awwwards Tier",
-    tagline: "Interactive Three.js 3D viewport, Lenis smooth scroll & magnetic physics.",
-    description: "Give your brand a breathtaking digital presence with interactive 3D model orbiters, particle shaders, scroll-driven typography reveals, and silky smooth transitions.",
+    tagline: "Interactive Three.js 3D viewport, spatial particles, reactive audio & 60fps rendering.",
+    description: "Give your brand a breathtaking digital presence with interactive 3D model orbiters, particle shaders, scroll-driven typography reveals, reactive audio, and silky smooth transitions.",
     includedFeatures: [
       "Three.js / WebGL Interactive 3D Model Canvas",
       "Lenis Smooth Scrolling with Pinned Story Chapters",
       "Kinetic Magnetic Buttons & Fluid Micro-Interactions",
-      "Custom Dark / Light Mode Palette Engine",
-      "GSAP High-Performance Hardware-Accelerated Timelines"
+      "Ambient Reactive Sound Design & Audio Immersion",
+      "High-Performance 60fps Mobile-Optimized Rendering"
     ]
   },
   {
-    id: "staff_portal",
-    name: "Employee & Staff Management Portal",
-    icon: "👥",
-    priceInr: 6999,
-    priceUsd: 235,
-    tagline: "Staff logins, shift scheduling roster, attendance & commission tracking.",
-    description: "Equip your internal team with dedicated logins, daily appointment rosters, shift schedules, task checklists, and automated performance commission reports.",
+    id: "fullstack_saas",
+    name: "Custom SaaS & Full-Stack Web Application",
+    icon: "⚡",
+    priceInr: 69999,
+    priceUsd: 1499,
+    badge: "Software MVP",
+    tagline: "Full-stack software with Supabase PostgreSQL, multi-role auth & billing webhooks.",
+    description: "Production-ready software platforms, SaaS MVPs, marketplaces, and custom web apps with Next.js App Router, Supabase PostgreSQL with Row-Level Security, multi-role authentication, and subscription billing.",
     includedFeatures: [
-      "Dedicated Employee Login & Profile Space",
-      "Weekly Shift Scheduling & Availability Calendar",
-      "Digital Attendance & Timesheet Tracking",
-      "Lead & Booking Assignment per Specialist",
-      "Automated Sales Commission & Performance Reports"
-    ]
-  },
-  {
-    id: "multi_location",
-    name: "Multi-Location & Branch Network Hub",
-    icon: "🏢",
-    priceInr: 5999,
-    priceUsd: 195,
-    tagline: "Branch landing pages, geolocation store locator & local booking routing.",
-    description: "Engineered for growing businesses with multiple clinics, salons, restaurants, or offices across different cities with individual contact info and schedules.",
-    includedFeatures: [
-      "Dynamic Branch / Store City Landing Pages",
-      "Interactive Geolocation GPS Map Locator",
-      "City-Specific Contact Phones & Operating Hours",
-      "Auto-Routing Bookings to Closest Branch Manager",
-      "Multi-Branch Performance Comparison Dashboard"
-    ]
-  },
-  {
-    id: "growth_seo",
-    name: "Hyper-Growth SEO, Schema & Ad Telemetry",
-    icon: "📈",
-    priceInr: 4999,
-    priceUsd: 165,
-    tagline: "Google Rich Snippets, JSON-LD schema, GA4 funnels & Meta ad pixels.",
-    description: "Rank higher on Google searches and track ad performance accurately with JSON-LD organization schema, sitemap generator, Meta Pixel and GA4 conversion funnels.",
-    includedFeatures: [
-      "Automated XML Sitemap & Google Search Console Verification",
-      "Local Business & Organization JSON-LD Schema",
-      "Meta (Facebook/Instagram) Pixel with Event Tracking",
-      "Google Analytics 4 (GA4) Custom Funnel Setup",
-      "Core Web Vitals & Image Alt-Text Optimization"
-    ]
-  },
-  {
-    id: "devops_care",
-    name: "Cloud DevOps, Daily Backups & Care Retainer",
-    icon: "🛡️",
-    priceInr: 3499,
-    priceUsd: 120,
-    tagline: "Automated daily cloud backups, 60-day warranty & monthly maintenance.",
-    description: "Worry-free production stability with automated database snapshots, 24/7 uptime monitoring, security patches, and direct priority developer support.",
-    includedFeatures: [
-      "Vercel Edge CDN & Production Database Provisioning",
-      "Automated Daily Code & Data Cloud Backups",
-      "24/7 Uptime & Error Crash Monitoring (Sentry)",
-      "60-Day Extended Hypercare Bug Fix Warranty",
-      "3-Month Monthly Software & Content Maintenance Retainer"
-    ]
-  },
-  {
-    id: "copywriting",
-    name: "Conversion Copywriting & Strategic Messaging",
-    icon: "✍️",
-    priceInr: 3499,
-    priceUsd: 120,
-    badge: "High Impact",
-    tagline: "Audience-tailored headlines, value propositions & conversion-tested CTAs.",
-    description: "Engage visitors immediately with bespoke narrative copywriting, pain-point hooks, clear service descriptions, and punchy action buttons that drive conversions.",
-    includedFeatures: [
-      "Brand Narrative & Value Proposition Formulation",
-      "Conversion-Focused Hero Headline & Sub-Headline Crafting",
-      "Feature-Benefit Translation & Micro-Copy Polish",
-      "Persuasive Section Headers & Call-to-Action Buttons"
-    ]
-  },
-  {
-    id: "source_attribution_hub",
-    name: "Multi-Source UTM Campaign & Attribution Hub",
-    icon: "📊",
-    priceInr: 5499,
-    priceUsd: 185,
-    badge: "Tracking",
-    tagline: "UTM campaign generator, multi-channel source tracker & ad conversion pixels.",
-    description: "Track and attribute every lead and sale across Meta Ads, Google Ads, TikTok, YouTube, Newsletters, and Influencers with live tracking link generator.",
-    includedFeatures: [
-      "Interactive Multi-Channel UTM Campaign Generator",
-      "Meta Conversions API (CAPI) & TikTok Pixel Integration",
-      "Google Tag Manager & GA4 E-Commerce Event Telemetry",
-      "First-Touch & Last-Touch Source Tracking on Leads",
-      "Custom Campaign QR Codes & 1-Click Shortlinks"
+      "Next.js Full-Stack App Router Architecture",
+      "Supabase PostgreSQL Database & Row-Level Security (RLS)",
+      "Secure Multi-Provider Authentication (Google, Email, Magic Link)",
+      "Stripe / Razorpay Subscription & Payment Webhooks",
+      "Executive Admin and Client Management Dashboards"
     ]
   }
 ];
@@ -226,57 +130,48 @@ export interface WebsiteGoalOption {
 export const WEBSITE_GOALS: WebsiteGoalOption[] = [
   {
     id: "more_sales",
-    title: "Get More Inbound Leads & Sales",
-    tag: "Sales & Pipeline",
+    title: "Get Direct Revenue & Online Sales",
+    tag: "Sales & Checkout",
     icon: "🎯",
-    symptom: "Visitors browse but inquiries are low. Leads slip through the cracks without immediate follow-ups.",
-    outcome: "Interactive quote builders, centralized lead database & instant WhatsApp alerts to owner.",
-    recommendedBundles: ["essential_core", "lead_crm", "growth_seo"]
+    symptom: "Need seamless 1-click checkouts, product storefronts, or automated appointment slot bookings.",
+    outcome: "Sales engine with e-commerce cart, calendar booking slots, instant payment gateways & WhatsApp alerts.",
+    recommendedBundles: ["essential_core", "sales_engine"]
   },
   {
     id: "bofu_conversion",
-    title: "Turn Traffic into Immediate Buyers (E-Comm / Drop)",
-    tag: "Conversion & Orders",
+    title: "Maximize Ad Traffic & Marketing ROI",
+    tag: "Campaigns & Growth",
     icon: "🚀",
-    symptom: "High bounce rate and cart abandonment. Visitors leave without purchasing from ads or socials.",
-    outcome: "1-Click checkout, urgency countdowns, offer banners, UGC video reviews & UTM tracking.",
-    recommendedBundles: ["essential_core", "ecommerce_ordering", "source_attribution_hub", "copywriting"]
+    symptom: "Running ads on Meta/Google/TikTok but conversion rates and source tracking are low.",
+    outcome: "BOFU landing pages, urgency countdowns, UGC review walls & multi-channel UTM attribution.",
+    recommendedBundles: ["essential_core", "marketing_campaigns"]
   },
   {
-    id: "ai_assistant",
-    title: "24/7 AI Customer Concierge & Smart Chat",
-    tag: "AI Automation",
-    icon: "🧠",
-    symptom: "Tired of answering repetitive FAQs manually and losing customers outside business hours.",
-    outcome: "Context-aware AI concierge trained on your business to answer questions & qualify buyers 24/7.",
-    recommendedBundles: ["essential_core", "ai_assistant", "lead_crm"]
+    id: "portals_operations",
+    title: "Streamline Client & Staff Operations",
+    tag: "Portals & Team",
+    icon: "👥",
+    symptom: "Scattered communication, manual shift management, and disorganized client file sharing.",
+    outcome: "Client Hub with e-signatures & invoices, staff shift rosters, GPS punch clock, and Admin dashboard.",
+    recommendedBundles: ["essential_core", "portals_dashboards"]
   },
   {
     id: "brand_authority",
-    title: "Elevate Brand Presence to Luxury / Premium Tier",
-    tag: "High-Status Trust",
+    title: "Elevate Brand with 3D & Creative Experience",
+    tag: "Awwwards Luxury",
     icon: "💎",
-    symptom: "Site looks generic or outdated. Can't justify charging premium prices or closing enterprise deals.",
-    outcome: "Awwwards-tier 3D WebGL visuals, silky Lenis scroll, kinetic typography & luxury positioning.",
-    recommendedBundles: ["essential_core", "design_3d_gsap", "growth_seo"]
+    symptom: "Site looks generic. Need breathtaking spatial visuals and awards-level creative storytelling.",
+    outcome: "Three.js WebGL canvas, particle shaders, reactive audio & buttery 60fps motion choreography.",
+    recommendedBundles: ["essential_core", "design_3d"]
   },
   {
-    id: "automate_operations",
-    title: "Save Time & Automate Bookings / Operations",
-    tag: "Time-Saving Hub",
-    icon: "⚙️",
-    symptom: "Wasting hours scheduling calls, coordinating staff appointments, and chasing client updates.",
-    outcome: "Self-serve 24/7 calendar booking, staff rosters, deposit payments & client portal.",
-    recommendedBundles: ["essential_core", "booking_appointments", "staff_portal"]
-  },
-  {
-    id: "fast_launchpad",
-    title: "Clean, High-Speed Launchpad (Base)",
-    tag: "Fast Go-Live",
-    icon: "🟢",
-    symptom: "Just need a razor-sharp, ultra-fast modern frontend landing page to go live right away.",
-    outcome: "Next.js performance foundation, mobile responsiveness, contact form & edge hosting.",
-    recommendedBundles: ["essential_core"]
+    id: "saas_mvp",
+    title: "Launch a Custom SaaS / Web App MVP",
+    tag: "Software & SaaS",
+    icon: "⚡",
+    symptom: "Building a software product, marketplace, or custom platform requiring user accounts and databases.",
+    outcome: "Full-stack Next.js + Supabase database, secure auth, subscription billing & admin portals.",
+    recommendedBundles: ["essential_core", "fullstack_saas"]
   }
 ];
 
@@ -284,79 +179,84 @@ export interface IndustryOption {
   id: string;
   name: string;
   icon: string;
-  recommendedBundles: string[];
+  typicalNeeds: string;
   sampleBusinessName: string;
+  recommendedBundles: string[];
+  recommendedBundleIds?: string[];
 }
 
 export const INDUSTRIES: IndustryOption[] = [
   {
-    id: "salon",
-    name: "Salon, Spa & Aesthetics",
-    icon: "💇‍♀️",
-    sampleBusinessName: "Lumina Hair & Beauty Lounge",
-    recommendedBundles: ["essential_core", "booking_appointments", "growth_seo", "design_3d_gsap"]
+    id: "ecommerce_retail",
+    name: "E-Commerce, Direct-to-Consumer & Retail",
+    icon: "🛍️",
+    typicalNeeds: "Product catalog, variant picker, 1-click express checkout, GST tax invoices & UTM ad tracking.",
+    sampleBusinessName: "Aura Haute Couture",
+    recommendedBundles: ["essential_core", "sales_engine", "marketing_campaigns"],
+    recommendedBundleIds: ["essential_core", "sales_engine", "marketing_campaigns"]
   },
   {
-    id: "fashion",
-    name: "Fashion & E-Commerce D2C",
-    icon: "👗",
-    sampleBusinessName: "Velvet & Silk Apparel",
-    recommendedBundles: ["essential_core", "ecommerce_ordering", "growth_seo", "ai_assistant"]
-  },
-  {
-    id: "clinic",
-    name: "Doctor, Dental & Healthcare",
+    id: "services_clinics",
+    name: "Clinics, Consultancies & Professional Services",
     icon: "🩺",
-    sampleBusinessName: "Apex Dental & Wellness Care",
-    recommendedBundles: ["essential_core", "booking_appointments", "lead_crm", "growth_seo"]
+    typicalNeeds: "Appointment slot picker, doctor/consultant selector, calendar sync & automated WhatsApp reminders.",
+    sampleBusinessName: "Apex Dental & Aesthetics",
+    recommendedBundles: ["essential_core", "sales_engine", "portals_dashboards"],
+    recommendedBundleIds: ["essential_core", "sales_engine", "portals_dashboards"]
   },
   {
-    id: "restaurant",
-    name: "Restaurant, Bar & Cafe",
-    icon: "🍽️",
-    sampleBusinessName: "Artisan Bistro & Espresso",
-    recommendedBundles: ["essential_core", "ecommerce_ordering", "booking_appointments", "growth_seo"]
-  },
-  {
-    id: "real_estate",
-    name: "Real Estate & Builders",
+    id: "b2b_agencies",
+    name: "B2B, Agencies & Growing Teams",
     icon: "🏢",
-    sampleBusinessName: "Skyline Realty & Estates",
-    recommendedBundles: ["essential_core", "lead_crm", "design_3d_gsap", "growth_seo"]
+    typicalNeeds: "Client project portal, staff scheduling, timesheets, proposal agreements & admin CRM.",
+    sampleBusinessName: "Vanguard Growth Partners",
+    recommendedBundles: ["essential_core", "portals_dashboards", "marketing_campaigns"],
+    recommendedBundleIds: ["essential_core", "portals_dashboards", "marketing_campaigns"]
   },
   {
-    id: "b2b",
-    name: "B2B Manufacturer & Exporter",
-    icon: "🏭",
-    sampleBusinessName: "PrimeTech Industrial Goods",
-    recommendedBundles: ["essential_core", "lead_crm", "multi_location", "growth_seo"]
+    id: "luxury_creative",
+    name: "Luxury Brands, Fashion & Creative Studios",
+    icon: "💎",
+    typicalNeeds: "Awwwards-level 3D WebGL visual canvas, smooth scroll, reactive sound design & spatial storytelling.",
+    sampleBusinessName: "Maison de L'Ombre",
+    recommendedBundles: ["essential_core", "design_3d"],
+    recommendedBundleIds: ["essential_core", "design_3d"]
   },
   {
-    id: "portfolio",
-    name: "Creator, Studio & Freelancer",
-    icon: "🎨",
-    sampleBusinessName: "Kinetics Visual Design Studio",
-    recommendedBundles: ["essential_core", "design_3d_gsap", "lead_crm"]
-  },
-  {
-    id: "saas",
-    name: "SaaS App & Digital Platform",
+    id: "saas_tech",
+    name: "Tech Startups, Platforms & SaaS Founders",
     icon: "⚡",
-    sampleBusinessName: "FlowMetric AI Cloud Platform",
-    recommendedBundles: ["essential_core", "ai_assistant", "design_3d_gsap", "devops_care"]
+    typicalNeeds: "Full-stack application architecture, PostgreSQL database, user auth & subscription billing.",
+    sampleBusinessName: "FlowMatrix Cloud",
+    recommendedBundles: ["essential_core", "fullstack_saas"],
+    recommendedBundleIds: ["essential_core", "fullstack_saas"]
   },
   {
-    id: "education",
-    name: "Education, Coaching & Academy",
+    id: "hospitality_dining",
+    name: "Restaurants, Cafes & Hospitality",
+    icon: "🍽️",
+    typicalNeeds: "Online table reservations, digital QR menu, event booking & customer reviews.",
+    sampleBusinessName: "L'Osteria Privata",
+    recommendedBundles: ["essential_core", "sales_engine"],
+    recommendedBundleIds: ["essential_core", "sales_engine"]
+  },
+  {
+    id: "creator_education",
+    name: "Coaches, Creators & Digital Educators",
     icon: "🎓",
-    sampleBusinessName: "NextGen Learning Institute",
-    recommendedBundles: ["essential_core", "booking_appointments", "lead_crm", "ai_assistant"]
+    typicalNeeds: "Lead capture funnels, course/session checkout, video reviews & email automation.",
+    sampleBusinessName: "Titan Mastery Academy",
+    recommendedBundles: ["essential_core", "sales_engine", "marketing_campaigns"],
+    recommendedBundleIds: ["essential_core", "sales_engine", "marketing_campaigns"]
   },
   {
-    id: "custom",
-    name: "Custom Bespoke Business",
-    icon: "🛠️",
-    sampleBusinessName: "Signature Enterprise Project",
-    recommendedBundles: ["essential_core", "lead_crm", "design_3d_gsap"]
+    id: "realestate_architecture",
+    name: "Real Estate & Architecture",
+    icon: "🏛️",
+    typicalNeeds: "High-resolution property galleries, 3D architectural showcase & inquiry intake.",
+    sampleBusinessName: "Elysian Estate Holdings",
+    recommendedBundles: ["essential_core", "design_3d", "sales_engine"],
+    recommendedBundleIds: ["essential_core", "design_3d", "sales_engine"]
   }
 ];
+
