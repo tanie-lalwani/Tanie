@@ -7,6 +7,7 @@ import { saveClientCustomQuote } from "@/lib/portalServices";
 import { getSavedLeadProfile, saveLeadProfile } from "@/features/lead-capture/lib/cookieHelper";
 import { useGeoPricing } from "@/context/GeoPricingContext";
 import CostCalculatorStepResult from "./CostCalculatorStepResult";
+import SiteDiagnosisModal from "./SiteDiagnosisModal";
 
 import {
   type FeatureBundle,
@@ -79,6 +80,7 @@ export default function WebsiteCostCalculatorFunnel({
     }
   }, [user, isAuthenticated]);
 
+  const [showDiagnosisModal, setShowDiagnosisModal] = useState<boolean>(false);
   const [saveToast, setSaveToast] = useState<string | null>(null);
   const [expandedMacro, setExpandedMacro] = useState<string | null>(null);
 
@@ -514,8 +516,31 @@ Let's discuss getting started!`;
               </button>
             </div>
           </form>
+
+          {/* ALREADY HAVE A WEBSITE? DIAGNOSIS CTA */}
+          <div className="mt-5 flex items-center justify-center">
+            <button
+              type="button"
+              onClick={() => setShowDiagnosisModal(true)}
+              className="inline-flex items-center gap-2 text-xs sm:text-sm font-bold text-sky-950 hover:text-sky-900 bg-sky-100/80 hover:bg-sky-200/90 px-5 py-2.5 rounded-full border border-sky-300/90 transition-all cursor-pointer shadow-2xs group"
+            >
+              <span className="text-base group-hover:scale-110 transition-transform">🩺</span>
+              <span>
+                {locale === "hi"
+                  ? "Already have a website? Free diagnosis ke liye click karein →"
+                  : "Already have a website? Click for diagnosis →"}
+              </span>
+            </button>
+          </div>
         </div>
       )}
+
+      {/* SITE DIAGNOSIS MODAL */}
+      <SiteDiagnosisModal
+        isOpen={showDiagnosisModal}
+        onClose={() => setShowDiagnosisModal(false)}
+        initialWebsite={socialAccount || businessName}
+      />
 
       {/* ========================================================================= */}
       {/* 2. FUNNEL STEPS (1: Building? -> 2: Addons -> 3: Aesthetics -> 4: Time -> 5: Result) */}
