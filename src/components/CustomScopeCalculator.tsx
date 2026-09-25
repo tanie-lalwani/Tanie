@@ -106,7 +106,7 @@ export default function CustomScopeCalculator({
   // Base price overrides
   const basePriceInr = selectedIndustry.recommendedBasePriceInr;
   const basePriceUsd = selectedIndustry.recommendedBasePriceUsd;
-  const discountPercent = selectedIndustry.discountPercent;
+  const discountPercent = 0;
 
   // Real-time calculation summary
   const quoteSummary: CalculationResult = useMemo(() => {
@@ -321,7 +321,7 @@ export default function CustomScopeCalculator({
 
     const text = `Hi Tanie! I just configured my custom website scope on your website:
 🏢 *Project:* ${projectName} (${selectedIndustry.name})
-💰 *Estimated Total:* ${activeCurrency === "INR" ? `₹${quoteSummary.finalTotalInr.toLocaleString()}` : `$${quoteSummary.finalTotalUsd.toLocaleString()}`} (includes ${quoteSummary.discountPercent}% package bundle discount)
+💰 *Estimated Total:* ${activeCurrency === "INR" ? `₹${quoteSummary.finalTotalInr.toLocaleString()}` : `$${quoteSummary.finalTotalUsd.toLocaleString()}`}
 ✨ *Selected Features (${quoteSummary.totalSelectedItemsCount}):*
 ${selectedNames.join("\n")}
 ${selectedNames.length >= 20 ? "...and more" : ""}

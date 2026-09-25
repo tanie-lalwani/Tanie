@@ -322,9 +322,6 @@ export default function CostCalculatorStepResult({
                 {tierConfig.currencySymbol}
                 {calculation.finalTotalMarket.toLocaleString()} {tierConfig.currencyCode}
               </div>
-              <div className="text-xs text-sky-700 font-bold mt-1">
-                {t.funnel.bundleDiscount} ({calculation.discountPercent}%)
-              </div>
             </div>
           </div>
 

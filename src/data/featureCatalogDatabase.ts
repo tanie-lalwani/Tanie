@@ -727,7 +727,7 @@ export const INDUSTRY_PRESETS: IndustryPreset[] = [
     recommendedBasePriceInr: 5000,
     recommendedBasePriceUsd: 75,
     targetAudience: "Hair Salons, Spas, Nail Bars, Aesthetics Clinics",
-    discountPercent: 20,
+    discountPercent: 0,
     defaultFeatureIds: [
       "homepage",
       "about_us",
@@ -762,7 +762,7 @@ export const INDUSTRY_PRESETS: IndustryPreset[] = [
     recommendedBasePriceInr: 6000,
     recommendedBasePriceUsd: 90,
     targetAudience: "Apparel, Jewelry, Footwear, D2C Lifestyle Brands",
-    discountPercent: 25,
+    discountPercent: 0,
     defaultFeatureIds: [
       "homepage",
       "product_catalog",
@@ -797,7 +797,7 @@ export const INDUSTRY_PRESETS: IndustryPreset[] = [
     recommendedBasePriceInr: 5500,
     recommendedBasePriceUsd: 80,
     targetAudience: "Dentists, Dermatologists, Pediatricians, Diagnostics",
-    discountPercent: 20,
+    discountPercent: 0,
     defaultFeatureIds: [
       "homepage",
       "about_us",
@@ -831,7 +831,7 @@ export const INDUSTRY_PRESETS: IndustryPreset[] = [
     recommendedBasePriceInr: 5000,
     recommendedBasePriceUsd: 75,
     targetAudience: "Bistros, Fine Dining, Cloud Kitchens, Cafes, Bakeries",
-    discountPercent: 20,
+    discountPercent: 0,
     defaultFeatureIds: [
       "homepage",
       "about_us",
@@ -864,7 +864,7 @@ export const INDUSTRY_PRESETS: IndustryPreset[] = [
     recommendedBasePriceInr: 6000,
     recommendedBasePriceUsd: 90,
     targetAudience: "Builders, Realtors, B2B Exporters, Industrial Manufacturers",
-    discountPercent: 22,
+    discountPercent: 0,
     defaultFeatureIds: [
       "homepage",
       "about_us",
@@ -898,7 +898,7 @@ export const INDUSTRY_PRESETS: IndustryPreset[] = [
     recommendedBasePriceInr: 4500,
     recommendedBasePriceUsd: 65,
     targetAudience: "Designers, Photographers, Copywriters, Consultants",
-    discountPercent: 15,
+    discountPercent: 0,
     defaultFeatureIds: [
       "homepage",
       "about_us",
@@ -928,7 +928,7 @@ export const INDUSTRY_PRESETS: IndustryPreset[] = [
     recommendedBasePriceInr: 8000,
     recommendedBasePriceUsd: 120,
     targetAudience: "Software Companies, Digital Tools, Marketplaces, EdTech",
-    discountPercent: 25,
+    discountPercent: 0,
     defaultFeatureIds: [
       "homepage",
       "pricing_packages",
@@ -960,7 +960,7 @@ export const INDUSTRY_PRESETS: IndustryPreset[] = [
     recommendedBasePriceInr: 4000,
     recommendedBasePriceUsd: 60,
     targetAudience: "Any unique or hybrid business model",
-    discountPercent: 15,
+    discountPercent: 0,
     defaultFeatureIds: [
       "homepage",
       "about_us",
@@ -1082,14 +1082,13 @@ export function calculateQuoteSummary(
   const subtotalInr = basePriceInr + itemizedTotalInr;
   const subtotalUsd = basePriceUsd + itemizedTotalUsd;
 
-  // Apply bundle discount (minimum 5 items for discount to trigger)
-  const effectiveDiscount =
-    totalSelectedItemsCount >= 4 ? bundleDiscountPercent : 0;
-  const discountAmountInr = Math.round((subtotalInr * effectiveDiscount) / 100);
-  const discountAmountUsd = Math.round((subtotalUsd * effectiveDiscount) / 100);
+  // No discounts applied
+  const effectiveDiscount = 0;
+  const discountAmountInr = 0;
+  const discountAmountUsd = 0;
 
-  const finalTotalInr = subtotalInr - discountAmountInr;
-  const finalTotalUsd = subtotalUsd - discountAmountUsd;
+  const finalTotalInr = subtotalInr;
+  const finalTotalUsd = subtotalUsd;
 
   return {
     basePriceInr,

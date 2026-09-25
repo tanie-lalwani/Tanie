@@ -204,19 +204,15 @@ export default function WebsiteCostCalculatorFunnel({
       }
     });
 
-    // Package discount (20% for 3+ bundles, 25% for 5+ bundles)
-    let discountPercent = 0;
-    if (selectedBundles.length >= 5) discountPercent = 25;
-    else if (selectedBundles.length >= 3) discountPercent = 20;
-    else if (selectedBundles.length >= 2) discountPercent = 15;
+    // No discounts applied
+    const discountPercent = 0;
+    const discountAmountInr = 0;
+    const discountAmountUsd = 0;
+    const discountAmountMarket = 0;
 
-    const discountAmountInr = Math.round((subtotalInr * discountPercent) / 100);
-    const discountAmountUsd = Math.round((subtotalUsd * discountPercent) / 100);
-    const discountAmountMarket = Math.round((subtotalMarket * discountPercent) / 100);
-
-    const finalTotalInr = subtotalInr - discountAmountInr;
-    const finalTotalUsd = subtotalUsd - discountAmountUsd;
-    const finalTotalMarket = subtotalMarket - discountAmountMarket;
+    const finalTotalInr = subtotalInr;
+    const finalTotalUsd = subtotalUsd;
+    const finalTotalMarket = subtotalMarket;
 
     return {
       subtotalInr,
@@ -392,7 +388,7 @@ ${selectedBundles
     return `• ${b?.name}`;
   })
   .join("\n")}
-💰 *Calculated Price:* ${tierConfig.currencySymbol}${calculation.finalTotalMarket.toLocaleString()} ${tierConfig.currencyCode} (includes ${calculation.discountPercent}% bundle discount)
+💰 *Calculated Price:* ${tierConfig.currencySymbol}${calculation.finalTotalMarket.toLocaleString()} ${tierConfig.currencyCode}
 ⏱️ *Timeline:* ${timeline}
 
 Let's discuss getting started!`;

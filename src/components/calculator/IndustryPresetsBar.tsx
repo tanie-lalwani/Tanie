@@ -17,7 +17,7 @@ export default function IndustryPresetsBar({
       <div className="text-xs font-mono text-slate-400 mb-3 uppercase tracking-wider flex items-center justify-between">
         <span>1. Select Industry Preset (Loads Recommended Core Stack)</span>
         <span className="text-cyan-400 font-sans normal-case text-xs">
-          {selectedIndustry.name} • {selectedIndustry.discountPercent}% Bundle Savings
+          {selectedIndustry.name}
         </span>
       </div>
 
@@ -41,9 +41,6 @@ export default function IndustryPresetsBar({
               <div>
                 <div className="text-xs font-medium text-white line-clamp-1">
                   {preset.name.split("/")[0]}
-                </div>
-                <div className="text-[10px] text-cyan-400 font-mono mt-0.5">
-                  {preset.discountPercent}% OFF
                 </div>
               </div>
             </button>
