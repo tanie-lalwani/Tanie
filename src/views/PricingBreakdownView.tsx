@@ -327,7 +327,7 @@ Let's discuss getting started!`;
 
           <div className="text-center md:text-right shrink-0 bg-sky-50/80 p-5 rounded-2xl border border-sky-200 min-w-[220px]">
             <div className="text-xs uppercase tracking-wider font-bold text-sky-800 mb-1">
-              {currentPackage.isCustomQuoteOnly ? "Investment Model" : "Package Investment"}
+              {currentPackage.isCustomQuoteOnly ? "Investment Model" : "Estimated Package Investment"}
             </div>
             <div className="text-2xl sm:text-3xl font-black text-[#0a192f] tracking-tight">
               {currentPackage.isCustomQuoteOnly ? (
@@ -341,6 +341,9 @@ Let's discuss getting started!`;
             </div>
             <div className="text-[11px] text-emerald-800 font-bold mt-1">
               {currentPackage.isCustomQuoteOnly ? "✨ Scope quotation on request" : "✓ Standalone Independent Package"}
+            </div>
+            <div className="text-[10px] text-slate-500 font-medium mt-1.5 max-w-[220px] md:ml-auto leading-tight">
+              *Final pricing may vary based on scope of work. This is an initial estimate, not final pricing.
             </div>
           </div>
         </div>
@@ -533,12 +536,15 @@ Let's discuss getting started!`;
         <div className="p-6 rounded-3xl bg-white/90 border border-sky-300 shadow-md flex flex-col sm:flex-row items-center justify-between gap-4">
           <div>
             <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500 block">
-              {currentPackage.isCustomQuoteOnly ? "Custom Scope Quotation" : "Ready to execute this scope?"}
+              {currentPackage.isCustomQuoteOnly ? "Custom Scope Quotation" : "Estimated Investment"}
             </span>
             <span className="text-lg font-black text-[#0a192f]">
               {currentPackage.isCustomQuoteOnly
                 ? "Quotation on Request"
                 : `${tierConfig.currencySymbol}${calculation.finalTotalMarket.toLocaleString()} ${tierConfig.currencyCode}`}
+            </span>
+            <span className="text-[10px] text-slate-500 font-medium block mt-0.5">
+              *Final pricing may vary based on scope of work. Not final pricing.
             </span>
           </div>
 

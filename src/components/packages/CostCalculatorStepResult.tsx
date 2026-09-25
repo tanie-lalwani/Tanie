@@ -348,7 +348,7 @@ export default function CostCalculatorStepResult({
 
             <div className="text-center md:text-right">
               <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 block">
-                {activePackage.isCustomQuoteOnly ? "Investment Model" : "Total Investment"}
+                {activePackage.isCustomQuoteOnly ? "Investment Model" : "Estimated Total Investment"}
               </span>
               <div className="text-2xl sm:text-3xl font-black !text-[#0a192f] tracking-tight mt-0.5">
                 {activePackage.isCustomQuoteOnly ? (
@@ -360,9 +360,13 @@ export default function CostCalculatorStepResult({
                   </>
                 )}
               </div>
-              {activePackage.isCustomQuoteOnly && (
+              {activePackage.isCustomQuoteOnly ? (
                 <span className="text-[10px] font-bold text-indigo-900 bg-indigo-50 px-2.5 py-0.5 rounded-full border border-indigo-200 inline-block mt-1.5">
                   ✨ Custom scope quotation on request
+                </span>
+              ) : (
+                <span className="text-[10px] text-slate-500 font-medium block mt-1 max-w-[240px] md:ml-auto">
+                  *Final pricing may vary based on scope of work. This is an initial estimate, not final pricing.
                 </span>
               )}
             </div>
