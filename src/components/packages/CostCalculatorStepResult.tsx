@@ -8,7 +8,8 @@ interface CostCalculatorStepResultProps {
   t: any;
   goToStep: (step: number) => void;
   isUnlocked: boolean;
-  setIsUnlocked: (val: boolean) => void;
+  setIsUnlocked?: (val: boolean) => void;
+  authLoading?: boolean;
   authError: string;
   setAuthError: (val: string) => void;
   isAuthSubmitting: boolean;
@@ -31,7 +32,7 @@ interface CostCalculatorStepResultProps {
   selectedGoal: string;
   selectedGoals?: string[];
   currency: "USD" | "INR";
-  signInWithGoogle: () => Promise<any>;
+  signInWithGoogle: (redirectTo?: string) => Promise<any>;
   dispatchLeadCapture: (params: any) => Promise<any>;
   saveLeadProfile: (profile: any) => void;
   onProceedWithCustomQuote?: (quoteData: any) => void;
@@ -45,6 +46,7 @@ export default function CostCalculatorStepResult({
   goToStep,
   isUnlocked,
   setIsUnlocked,
+  authLoading,
   authError,
   setAuthError,
   isAuthSubmitting,
@@ -87,7 +89,12 @@ export default function CostCalculatorStepResult({
         </button>
       </div>
 
-      {!isUnlocked ? (
+      {authLoading ? (
+        <div className="rounded-3xl bg-[#c8ecff]/30 border border-sky-300/90 p-12 text-center backdrop-blur-md flex flex-col items-center justify-center gap-3">
+          <div className="h-7 w-7 animate-spin rounded-full border-2 border-sky-600 border-t-transparent" />
+          <span className="text-xs font-bold text-sky-900">Verifying session...</span>
+        </div>
+      ) : !isUnlocked ? (
         /* ================= LOCKED RESULT GATE ================= */
         <div className="relative rounded-3xl bg-[#c8ecff]/30 border border-sky-300/90 p-6 sm:p-10 shadow-lg text-center overflow-hidden backdrop-blur-md">
           <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-sky-100 text-[#0a192f] text-2xl mb-4 border border-sky-200">
@@ -109,34 +116,28 @@ export default function CostCalculatorStepResult({
             {/* Google OAuth Button */}
             <button
               type="button"
+              disabled={isAuthSubmitting}
               onClick={async () => {
                 setAuthError("");
                 setIsAuthSubmitting(true);
                 try {
-                  const res = await signInWithGoogle();
-                  if (res?.error) {
-                    setAuthError(res.error.message);
-                  } else {
-                    setIsUnlocked(true);
-                    await dispatchLeadCapture({
-                      clientEmail: authEmail || "google.user@gmail.com",
-                      clientName: authName || businessName,
-                      step: "Result Unlocked (Google)",
-                      status: "unlocked",
-                      estimatedCostInr: calculation.finalTotalInr,
-                      estimatedCostUsd: calculation.finalTotalUsd,
-                      discountPercent: calculation.discountPercent,
-                    });
-                  }
+                  const target = typeof window !== "undefined" ? window.location.pathname + window.location.search : "/pricing";
+                  await signInWithGoogle(target);
                 } catch (err: any) {
                   setAuthError(err.message || "Failed to sign in with Google");
-                } finally {
                   setIsAuthSubmitting(false);
                 }
               }}
-              className="w-full py-3 px-4 rounded-full bg-white hover:bg-slate-50 text-[#0a192f] border border-sky-300 font-bold text-xs uppercase tracking-wider shadow-xs transition-all flex items-center justify-center gap-2.5 cursor-pointer mb-3.5"
+              className="w-full py-3 px-4 rounded-full bg-white hover:bg-slate-50 text-[#0a192f] border border-sky-300 font-bold text-xs uppercase tracking-wider shadow-xs transition-all flex items-center justify-center gap-2.5 cursor-pointer mb-3.5 disabled:opacity-60"
             >
-              <svg className="w-4 h-4" viewBox="0 0 24 24">
+              {isAuthSubmitting ? (
+                <div className="flex items-center gap-2">
+                  <div className="h-4 w-4 border-2 border-sky-600 border-t-transparent rounded-full animate-spin" />
+                  <span>Connecting to Google...</span>
+                </div>
+              ) : (
+                <>
+                  <svg className="w-4 h-4" viewBox="0 0 24 24">
                 <path
                   fill="#4285F4"
                   d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
@@ -169,6 +170,8 @@ export default function CostCalculatorStepResult({
                   ? "通过 Google / Gmail 继续"
                   : "Continue with Google / Gmail"}
               </span>
+            </>
+          )}
             </button>
 
             <div className="flex items-center gap-3 my-3">

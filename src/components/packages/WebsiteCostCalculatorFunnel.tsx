@@ -28,7 +28,7 @@ export default function WebsiteCostCalculatorFunnel({
   onProceedWithCustomQuote,
   onStepChange
 }: WebsiteCostCalculatorFunnelProps) {
-  const { user, isAuthenticated, signInWithPassword, signUp, signInWithGoogle } = useAuth();
+  const { user, isAuthenticated, loading: authLoading, signInWithPassword, signUp, signInWithGoogle } = useAuth();
   const { locale } = useLanguage();
   const t = packagesTranslations[locale] || packagesTranslations.en;
   const { marketTier, tierConfig, formatBundlePrice } = useGeoPricing();
@@ -84,7 +84,14 @@ export default function WebsiteCostCalculatorFunnel({
   const [authMode, setAuthMode] = useState<"signup" | "signin">("signup");
   const [authError, setAuthError] = useState("");
   const [isAuthSubmitting, setIsAuthSubmitting] = useState(false);
-  const [isUnlocked, setIsUnlocked] = useState(false);
+  const [localAuthenticated, setLocalAuthenticated] = useState(false);
+  const isUnlocked = Boolean(user) || localAuthenticated;
+
+  useEffect(() => {
+    if (!user && !isAuthenticated) {
+      setLocalAuthenticated(false);
+    }
+  }, [user, isAuthenticated]);
   const [saveToast, setSaveToast] = useState<string | null>(null);
 
   const funnelContainerRef = useRef<HTMLDivElement>(null);
@@ -180,13 +187,6 @@ export default function WebsiteCostCalculatorFunnel({
 
     return () => clearTimeout(timer);
   }, [socialAccount, businessName]);
-
-  // If already authenticated, automatically unlock results
-  useEffect(() => {
-    if (isAuthenticated) {
-      setIsUnlocked(true);
-    }
-  }, [isAuthenticated]);
 
   // Math Calculations
   const calculation = useMemo(() => {
@@ -318,6 +318,11 @@ export default function WebsiteCostCalculatorFunnel({
           setIsAuthSubmitting(false);
           return;
         }
+        if (!res?.data?.session && !res?.data?.user) {
+          setAuthError("Account created! Please check your email inbox to verify your account and view your custom estimate.");
+          setIsAuthSubmitting(false);
+          return;
+        }
       } else {
         const res = await signInWithPassword(authEmail.trim().toLowerCase(), authPassword);
         if (res?.error) {
@@ -327,8 +332,8 @@ export default function WebsiteCostCalculatorFunnel({
         }
       }
 
-      // Lead unlocked
-      setIsUnlocked(true);
+      // Lead unlocked on verified authentication
+      setLocalAuthenticated(true);
       await dispatchLeadCapture({
         clientEmail: authEmail.trim().toLowerCase(),
         clientName: authName.trim() || businessName.trim(),
@@ -768,7 +773,8 @@ Let's discuss getting started!`;
               t={t}
               goToStep={goToStep}
               isUnlocked={isUnlocked}
-              setIsUnlocked={setIsUnlocked}
+              setIsUnlocked={setLocalAuthenticated}
+              authLoading={authLoading}
               authError={authError}
               setAuthError={setAuthError}
               isAuthSubmitting={isAuthSubmitting}
