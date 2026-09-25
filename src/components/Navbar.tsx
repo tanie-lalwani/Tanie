@@ -200,23 +200,8 @@ export default function Navbar({ phase }: NavbarProps) {
                 isRtl ? 'left-0' : 'right-0'
               }`}
             >
-              {/* Menu Header */}
-              <div className="flex items-center justify-between border-b border-white/10 pb-2.5 mb-2.5">
-                <span className="text-[11px] font-black uppercase tracking-widest text-sky-400">
-                  Navigation
-                </span>
-                <button
-                  type="button"
-                  onClick={() => setIsMobileNavOpen(false)}
-                  className="rounded-full p-1 text-slate-400 hover:text-white transition cursor-pointer"
-                  aria-label="Close menu"
-                >
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                    <line x1="18" y1="6" x2="6" y2="18" />
-                    <line x1="6" y1="6" x2="18" y2="18" />
-                  </svg>
-                </button>
-              </div>
+              {/* spacer so first link isn't flush against top */}
+              <div className="mb-1" />
 
               {/* Compact Navigation Links */}
               <div className="space-y-1">

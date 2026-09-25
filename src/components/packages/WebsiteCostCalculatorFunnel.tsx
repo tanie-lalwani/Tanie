@@ -498,19 +498,9 @@ Let's discuss getting started!`;
           {/* ------------------------------------------------------------- */}
           {currentStep === 1 && (
             <div className="space-y-6">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                <div className="text-xs text-sky-950 font-medium">
-                  {t.funnel.step1Subtitle || "Select your primary challenges (multiple allowed) — we'll automatically combine and pre-configure the ideal package modules:"}
-                </div>
-                {selectedGoals.length > 0 && (
-                  <span className="inline-flex items-center gap-1 rounded-full bg-sky-100 border border-sky-300 px-3 py-1 text-[11px] font-bold text-sky-900 shrink-0">
-                    <span>🎯</span>
-                    <span>{selectedGoals.length} {selectedGoals.length === 1 ? "Goal" : "Goals"} Selected</span>
-                  </span>
-                )}
-              </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {WEBSITE_GOALS.map((goal) => {
                   const isSelected = selectedGoals.includes(goal.id);
                   return (
@@ -518,40 +508,25 @@ Let's discuss getting started!`;
                       key={goal.id}
                       type="button"
                       onClick={() => handleToggleGoal(goal.id)}
-                      className={`p-5 rounded-2xl border text-left transition-all cursor-pointer flex items-start gap-4 ${
+                      className={`p-4 rounded-2xl border text-left transition-all cursor-pointer flex items-center gap-3.5 ${
                         isSelected
-                          ? "bg-sky-50/90 border-2 border-sky-600 shadow-md ring-2 ring-sky-500/15"
+                          ? "bg-sky-50/90 border-2 border-sky-600 shadow-md"
                           : "bg-white/70 hover:bg-white border-sky-200/80 hover:border-sky-400 shadow-xs"
                       }`}
                     >
-                      <div className="text-2xl p-2.5 rounded-xl bg-sky-100/80 shrink-0 text-[#0a192f]">
-                        {goal.icon}
-                      </div>
-                      <div className="space-y-1 flex-1">
-                        <div className="flex items-center justify-between">
-                          <span className="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-sky-100 text-sky-900 border border-sky-200">
-                            {goal.tag}
-                          </span>
-                          <div className="flex items-center gap-2">
-                            <span className="text-[10px] text-sky-700 font-bold">
-                              {goal.recommendedBundles.length} Modules Pre-set
-                            </span>
-                            <span
-                              className={`h-4 w-4 rounded flex items-center justify-center text-[10px] font-black border transition ${
-                                isSelected
-                                  ? "bg-sky-600 text-white border-sky-600"
-                                  : "border-slate-300 bg-white text-transparent"
-                              }`}
-                            >
-                              ✓
-                            </span>
-                          </div>
-                        </div>
-                        <h3 className="text-sm sm:text-base font-black text-[#0a192f]">{goal.title}</h3>
-                        <p className="text-xs text-slate-600 font-medium leading-relaxed">
-                          <strong className="text-slate-800">Symptom:</strong> {goal.symptom}
-                        </p>
-                      </div>
+                      <span className="text-xl shrink-0">{goal.icon}</span>
+                      <span className="text-sm font-semibold text-[#0a192f] leading-snug">
+                        {goal.title}
+                      </span>
+                      <span
+                        className={`ml-auto h-4 w-4 rounded shrink-0 flex items-center justify-center text-[10px] font-black border transition ${
+                          isSelected
+                            ? "bg-sky-600 text-white border-sky-600"
+                            : "border-slate-300 bg-white text-transparent"
+                        }`}
+                      >
+                        ✓
+                      </span>
                     </button>
                   );
                 })}
