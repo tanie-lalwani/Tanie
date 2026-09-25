@@ -93,6 +93,8 @@ export default function WebsiteCostCalculatorFunnel({
     }
   }, [user, isAuthenticated]);
   const [saveToast, setSaveToast] = useState<string | null>(null);
+  const [expandedBundle, setExpandedBundle] = useState<string | null>(null);
+  const [featIndex, setFeatIndex] = useState<Record<string, number>>({});
 
   const funnelContainerRef = useRef<HTMLDivElement>(null);
 
@@ -555,82 +557,111 @@ Let's discuss getting started!`;
           {/* STEP 2: FEATURE BUNDLES (CURATED 10 MODULES)                  */}
           {/* ------------------------------------------------------------- */}
           {currentStep === 2 && (
-            <div className="space-y-6">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs text-sky-950 bg-[#c8ecff]/30 border border-sky-300/80 rounded-xl p-3.5">
-                <span className="font-semibold text-slate-800" style={{ color: '#0a192f' }}>
-                  🎯 Pre-configured for: <strong className="text-sky-950 underline">{selectedGoals.map(id => WEBSITE_GOALS.find(g => g.id === id)?.title).filter(Boolean).join(" + ") || "Your Goals"}</strong>
-                </span>
-                <span className="font-black !text-[#0a192f] shrink-0" style={{ color: '#0a192f' }}>
-                  {selectedBundles.length} {locale === "ur" ? "ماڈیولز منتخب شدہ" : "Modules Selected"}
-                </span>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+            <div className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 {FEATURE_BUNDLES.map((bundle) => {
                   const isSelected = selectedBundles.includes(bundle.id);
                   const isEssential = bundle.isEssential;
+                  const isExpanded = expandedBundle === bundle.id;
+                  const currentFeatIdx = featIndex[bundle.id] ?? 0;
+                  const totalFeats = bundle.includedFeatures.length;
+                  const currentFeat = bundle.includedFeatures[currentFeatIdx];
 
                   return (
                     <div
                       key={bundle.id}
-                      onClick={() => handleToggleBundle(bundle.id)}
-                      className={`p-5 rounded-2xl border transition-all cursor-pointer flex flex-col justify-between ${
+                      className={`rounded-2xl border transition-all ${
                         isSelected
-                          ? "bg-sky-50/90 border-2 border-sky-600 shadow-md ring-2 ring-sky-500/20"
-                          : "bg-[#c8ecff]/20 hover:bg-[#c8ecff]/40 border-sky-200/80 hover:border-sky-400"
+                          ? "bg-sky-50/90 border-2 border-sky-600 shadow-md"
+                          : "bg-white/70 hover:bg-white border-sky-200/80 hover:border-sky-400 shadow-xs"
                       }`}
                     >
-                      <div>
-                        <div className="flex items-start justify-between gap-3 mb-2">
-                          <div className="flex items-center gap-3">
-                            <span className="text-2xl p-1.5 rounded-lg bg-sky-100/80 shrink-0 text-[#0a192f]">
-                              {bundle.icon}
+                      {/* Main row — clicking this toggles selection */}
+                      <div
+                        onClick={() => handleToggleBundle(bundle.id)}
+                        className="flex items-center gap-3.5 p-4 cursor-pointer"
+                      >
+                        <span className="text-xl shrink-0">{bundle.icon}</span>
+                        <div className="flex-1 min-w-0">
+                          <span className="text-sm font-semibold text-[#0a192f] leading-snug">
+                            {bundle.name}
+                          </span>
+                          {bundle.badge && (
+                            <span className="ml-2 px-1.5 py-0.5 rounded text-[9px] font-bold bg-sky-100 text-sky-900 border border-sky-200 align-middle">
+                              {bundle.badge}
                             </span>
-                            <div>
-                              <div className="flex items-center gap-2">
-                                <h3 className="text-sm font-black !text-[#0a192f]" style={{ color: '#0a192f' }}>{bundle.name}</h3>
-                                {bundle.badge && (
-                                   <span className="px-2 py-0.5 rounded text-[9px] font-bold bg-sky-100 text-sky-950 border border-sky-200">
-                                    {bundle.badge}
-                                  </span>
-                                )}
-                              </div>
-                              <p className="text-[11px] text-sky-900/80 mt-0.5 font-medium" style={{ color: '#0c4a6e' }}>{bundle.tagline}</p>
-                            </div>
-                          </div>
-
-                          {/* Checkbox */}
-                          <div
-                            className={`w-5 h-5 rounded flex items-center justify-center shrink-0 text-xs font-bold transition-colors ${
-                              isSelected
-                                ? "bg-[#0a192f] text-white"
-                                : "border border-sky-300 bg-white/60"
-                            }`}
-                          >
-                            {isSelected ? "✓" : ""}
-                          </div>
+                          )}
+                          <p className="text-[11px] text-sky-900/70 mt-0.5 truncate">{bundle.tagline}</p>
                         </div>
-
-                        {/* Deliverable Bullets */}
-                        <div className="space-y-1 pt-2 border-t border-sky-200/60">
-                          {bundle.includedFeatures.map((feat, i) => (
-                            <div key={i} className="text-[11px] text-sky-950 flex items-center gap-1.5 font-medium">
-                              <span className="text-sky-600 font-bold">✓</span>
-                              <span className="!text-[#0a192f]" style={{ color: '#0a192f' }}>{feat}</span>
-                            </div>
-                          ))}
-                        </div>
+                        <span
+                          className={`h-4 w-4 rounded shrink-0 flex items-center justify-center text-[10px] font-black border transition ${
+                            isSelected
+                              ? "bg-sky-600 text-white border-sky-600"
+                              : "border-slate-300 bg-white text-transparent"
+                          }`}
+                        >
+                          ✓
+                        </span>
                       </div>
 
-                      <div className="mt-4 pt-2.5 border-t border-sky-200/60 flex items-center justify-between text-xs font-semibold">
-                        <span className="text-[11px] text-sky-800 font-medium">
-                          {isEssential
-                            ? (locale === "ur" ? "بنیادی خصوصیت" : "Core Architecture")
-                            : (locale === "ur" ? "کسٹم ماڈیول" : "Custom Scope")}
-                        </span>
-                        <span className={`text-[11px] font-bold ${isSelected ? "text-sky-950 font-black" : "text-sky-600"}`}>
-                          {isSelected ? (locale === "ur" ? "✓ شامل ہے" : "✓ Included") : (locale === "ur" ? "+ منتخب کریں" : "+ Select Module")}
-                        </span>
+                      {/* Feature peek row */}
+                      <div className="px-4 pb-3 flex items-center gap-2">
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setExpandedBundle(isExpanded ? null : bundle.id);
+                          }}
+                          className="shrink-0 w-5 h-5 rounded-full border border-sky-300 bg-sky-50 text-sky-700 text-[11px] font-bold flex items-center justify-center hover:bg-sky-100 transition cursor-pointer"
+                          aria-label={isExpanded ? "Hide features" : "Show features"}
+                        >
+                          {isExpanded ? "−" : "+"}
+                        </button>
+
+                        {isExpanded ? (
+                          <div className="flex items-center gap-1.5 flex-1 min-w-0">
+                            <span className="text-[11px] text-[#0a192f] font-medium leading-snug flex-1 truncate">
+                              {currentFeat}
+                            </span>
+                            {totalFeats > 1 && (
+                              <div className="flex items-center gap-1 shrink-0">
+                                <button
+                                  type="button"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setFeatIndex((prev) => ({
+                                      ...prev,
+                                      [bundle.id]: (currentFeatIdx - 1 + totalFeats) % totalFeats,
+                                    }));
+                                  }}
+                                  className="w-5 h-5 rounded border border-sky-200 bg-white text-sky-600 text-[10px] flex items-center justify-center hover:bg-sky-50 cursor-pointer transition"
+                                >
+                                  ‹
+                                </button>
+                                <span className="text-[9px] text-sky-500 font-medium">
+                                  {currentFeatIdx + 1}/{totalFeats}
+                                </span>
+                                <button
+                                  type="button"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setFeatIndex((prev) => ({
+                                      ...prev,
+                                      [bundle.id]: (currentFeatIdx + 1) % totalFeats,
+                                    }));
+                                  }}
+                                  className="w-5 h-5 rounded border border-sky-200 bg-white text-sky-600 text-[10px] flex items-center justify-center hover:bg-sky-50 cursor-pointer transition"
+                                >
+                                  ›
+                                </button>
+                              </div>
+                            )}
+                          </div>
+                        ) : (
+                          <span className="text-[10px] text-sky-500 font-medium">
+                            {isEssential ? "Core Architecture" : "Custom Scope"} · {totalFeats} features
+                          </span>
+                        )}
                       </div>
                     </div>
                   );
