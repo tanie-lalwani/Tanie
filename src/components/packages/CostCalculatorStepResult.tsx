@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Link from "next/link";
 import { FEATURE_BUNDLES, WEBSITE_GOALS } from "./calculatorData";
 import MarketRegionSelector from "@/components/ui/MarketRegionSelector";
 
@@ -470,14 +471,23 @@ export default function CostCalculatorStepResult({
                 </p>
               </div>
 
-              <button
-                type="button"
-                onClick={() => setShowBreakdownModal(true)}
-                className="self-start sm:self-auto px-3.5 py-1.5 rounded-full bg-white hover:bg-sky-50 text-sky-900 border border-sky-300 text-xs font-bold shadow-xs transition flex items-center gap-1.5 cursor-pointer"
-              >
-                <span>🔍</span>
-                <span>View Full Feature Breakdown & Scope</span>
-              </button>
+              <div className="flex flex-wrap items-center gap-2 self-start sm:self-auto">
+                <button
+                  type="button"
+                  onClick={() => setShowBreakdownModal(true)}
+                  className="px-3.5 py-1.5 rounded-full bg-white hover:bg-sky-50 text-sky-900 border border-sky-300 text-xs font-bold shadow-xs transition flex items-center gap-1.5 cursor-pointer"
+                >
+                  <span>🔍</span>
+                  <span>Inspect Scope (Quick View)</span>
+                </button>
+                <Link
+                  href="/pricing/breakdown"
+                  className="px-3.5 py-1.5 rounded-full bg-[#0a192f] hover:bg-slate-800 text-white text-xs font-bold shadow-xs transition flex items-center gap-1.5 cursor-pointer"
+                >
+                  <span>📋</span>
+                  <span>Full Breakdown Page ↗</span>
+                </Link>
+              </div>
             </div>
 
             <div className="divide-y divide-sky-200/50">
@@ -819,13 +829,21 @@ export default function CostCalculatorStepResult({
                       <span>Full Comprehensive Scope Included • Base ₹5k Deducted</span>
                     )}
                   </div>
-                  <button
-                    type="button"
-                    onClick={() => setShowBreakdownModal(false)}
-                    className="w-full sm:w-auto px-6 py-2.5 rounded-full bg-[#0a192f] hover:bg-slate-800 text-white font-bold text-xs uppercase tracking-wider shadow-md transition cursor-pointer"
-                  >
-                    Done / Return to Estimate
-                  </button>
+                  <div className="flex items-center gap-2.5 w-full sm:w-auto">
+                    <Link
+                      href="/pricing/breakdown"
+                      className="w-full sm:w-auto px-5 py-2.5 rounded-full bg-white hover:bg-sky-50 text-sky-900 border border-sky-300 font-bold text-xs uppercase tracking-wider transition text-center cursor-pointer"
+                    >
+                      Open Full Page ↗
+                    </Link>
+                    <button
+                      type="button"
+                      onClick={() => setShowBreakdownModal(false)}
+                      className="w-full sm:w-auto px-6 py-2.5 rounded-full bg-[#0a192f] hover:bg-slate-800 text-white font-bold text-xs uppercase tracking-wider shadow-md transition cursor-pointer"
+                    >
+                      Done / Close
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>

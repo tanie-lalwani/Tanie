@@ -220,6 +220,28 @@ export default function WebsiteCostCalculatorFunnel({
     }
   }, [selectedBundles, timeline]);
 
+  // Persist full calculator state to localStorage so the dedicated breakdown page can load it
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    try {
+      const payload = {
+        businessName: businessName.trim() || socialAccount.trim() || "My Project",
+        socialAccount: socialAccount.trim() || undefined,
+        selectedGoals,
+        selectedBundles,
+        timeline,
+        budgetTier,
+        authName,
+        authEmail,
+        leadId,
+        timestamp: Date.now()
+      };
+      localStorage.setItem("tanie_calculator_state", JSON.stringify(payload));
+    } catch (e) {
+      console.warn("Storage sync error:", e);
+    }
+  }, [businessName, socialAccount, selectedGoals, selectedBundles, timeline, budgetTier, authName, authEmail, leadId]);
+
   // Math Calculations (Delta Modular Pricing - Base ₹5k charged once, subsequent modules add delta)
   const calculation = useMemo(() => {
     let subtotalInr = 0;
