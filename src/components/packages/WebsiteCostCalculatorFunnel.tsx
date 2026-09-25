@@ -428,7 +428,7 @@ ${selectedBundles
 
 Let's discuss getting started!`;
 
-    window.open(`https://wa.me/919326048128?text=${encodeURIComponent(text)}`, "_blank");
+    window.open(`https://wa.me/916351515091?text=${encodeURIComponent(text)}`, "_blank");
   };
 
   return (

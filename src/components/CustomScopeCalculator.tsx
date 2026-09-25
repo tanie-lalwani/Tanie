@@ -328,7 +328,7 @@ ${selectedNames.length >= 20 ? "...and more" : ""}
 
 I'd love to discuss starting this project with you!`;
 
-    window.open(`https://wa.me/919326048128?text=${encodeURIComponent(text)}`, "_blank");
+    window.open(`https://wa.me/916351515091?text=${encodeURIComponent(text)}`, "_blank");
   };
 
   // Proceed with current scope into Project Intake
