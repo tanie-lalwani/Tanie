@@ -3,7 +3,13 @@
 import React, { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { FEATURE_BUNDLES, WEBSITE_GOALS, type FeatureBundle } from "@/components/packages/calculatorData";
+import {
+  FEATURE_BUNDLES,
+  WEBSITE_GOALS,
+  getMacroDistributedPrice,
+  getMicroDistributedPrice,
+  type FeatureBundle
+} from "@/components/packages/calculatorData";
 import { useGeoPricing } from "@/context/GeoPricingContext";
 import { useLanguage } from "@/context/LanguageContext";
 import MarketRegionSelector from "@/components/ui/MarketRegionSelector";
@@ -199,11 +205,12 @@ export default function PricingBreakdownView() {
     saveProgress(updated);
   };
 
-  // Calculations
+  // Calculations (with granular macro/micro distributed pricing and dynamic deductions)
   const calculation = useMemo(() => {
     let subtotalInr = 0;
     let subtotalUsd = 0;
     let subtotalMarket = 0;
+    let omittedDeductionsMarket = 0;
 
     const baseInr = 4999;
     const baseUsd = 99;
@@ -232,8 +239,19 @@ export default function PricingBreakdownView() {
         subtotalInr += deltaInr;
         subtotalUsd += deltaUsd;
         subtotalMarket += deltaMarket;
+
+        // Check omitted optional macros
+        const macros = bundle?.macroFeatures || [];
+        macros.forEach((macro) => {
+          if (disabledMacros.includes(macro.id)) {
+            const macroPrice = getMacroDistributedPrice(deltaMarket, macro, macros.length);
+            omittedDeductionsMarket += macroPrice;
+          }
+        });
       });
     }
+
+    const subtotalAfterCustomization = Math.max(baseMarket, subtotalMarket - omittedDeductionsMarket);
 
     // Urgency surcharge
     let urgencyPercent = 0;
@@ -265,18 +283,20 @@ export default function PricingBreakdownView() {
       }
     }
 
-    const urgencyAmountMarket = Math.round((subtotalMarket * urgencyPercent) / 100);
-    const finalTotalMarket = subtotalMarket + urgencyAmountMarket;
+    const urgencyAmountMarket = Math.round((subtotalAfterCustomization * urgencyPercent) / 100);
+    const finalTotalMarket = subtotalAfterCustomization + urgencyAmountMarket;
 
     return {
       subtotalMarket,
+      omittedDeductionsMarket,
+      subtotalAfterCustomization,
       urgencyPercent,
       urgencyReason,
       urgencyAmountMarket,
       finalTotalMarket,
       bundleCount: selectedBundles.length
     };
-  }, [selectedBundles, tierConfig, timeline]);
+  }, [selectedBundles, tierConfig, timeline, disabledMacros]);
 
   // WhatsApp Quote Share
   const handleWhatsAppQuote = () => {
@@ -304,7 +324,7 @@ export default function PricingBreakdownView() {
 
     const omittedText =
       disabledMacros.length > 0
-        ? `\n✂️ *Custom Scope Modifications:* ${disabledMacros.length} optional sub-modules excluded.`
+        ? `\n✂️ *Custom Scope Modifications:* ${disabledMacros.length} optional sub-modules excluded (−${tierConfig.currencySymbol}${calculation.omittedDeductionsMarket.toLocaleString()} saved).`
         : "";
 
     const urgencyLine =
@@ -319,7 +339,7 @@ export default function PricingBreakdownView() {
 ${lines.join("\n")}
 ${omittedText}
 
-📊 *Modules Subtotal:* ${tierConfig.currencySymbol}${calculation.subtotalMarket.toLocaleString()} ${tierConfig.currencyCode}
+📊 *Modules Subtotal:* ${tierConfig.currencySymbol}${calculation.subtotalAfterCustomization.toLocaleString()} ${tierConfig.currencyCode}
 ${urgencyLine}💰 *Total Investment:* ${tierConfig.currencySymbol}${calculation.finalTotalMarket.toLocaleString()} ${tierConfig.currencyCode}
 ⏱️ *Timeline:* ${timeline}
 
@@ -373,7 +393,7 @@ Let's discuss getting started!`;
               {businessName || "Your Website"} Scope Breakdown
             </h1>
             <p className="text-xs sm:text-sm text-sky-950/80 mt-1 max-w-xl font-medium leading-relaxed">
-              Transparent macro and micro-feature specifications. Overlapping redundant features across selected packages are automatically deduplicated with strikethrough.
+              Transparent macro and micro-feature specifications with granular price distributions. Overlapping redundant features across selected packages are deduplicated with strikethrough.
             </p>
             <div className="mt-3 flex flex-wrap items-center gap-2 text-xs text-sky-900 font-semibold">
               <span className="bg-sky-50 px-2.5 py-1 rounded-lg border border-sky-200">
@@ -382,6 +402,11 @@ Let's discuss getting started!`;
               <span className="bg-sky-50 px-2.5 py-1 rounded-lg border border-sky-200">
                 💼 {budgetTier}
               </span>
+              {disabledMacros.length > 0 && (
+                <span className="bg-amber-50 text-amber-900 px-2.5 py-1 rounded-lg border border-amber-200">
+                  ✂️ {disabledMacros.length} Omitted Modules (−{tierConfig.currencySymbol}{calculation.omittedDeductionsMarket.toLocaleString()})
+                </span>
+              )}
             </div>
           </div>
 
@@ -467,7 +492,7 @@ Let's discuss getting started!`;
                       </div>
                       {!isBase && (
                         <div className="text-[10px] text-slate-500">
-                          (from {tierConfig.currencySymbol}{standalonePrice.toLocaleString()})
+                          (Standalone {tierConfig.currencySymbol}{standalonePrice.toLocaleString()})
                         </div>
                       )}
                     </div>
@@ -483,7 +508,7 @@ Let's discuss getting started!`;
                     <div className="text-xs font-bold uppercase tracking-wider text-sky-900 flex items-center justify-between">
                       <span>Macro Feature Modules ({macros.length})</span>
                       <span className="text-[11px] font-normal text-slate-500">
-                        Uncheck optional modules to customize your scope
+                        Uncheck optional modules to deduct their distributed price
                       </span>
                     </div>
 
@@ -492,6 +517,9 @@ Let's discuss getting started!`;
                         const isMacroOpen = expandedMacro === macro.id;
                         const isMandatory = idx === 0 || bundle.isEssential;
                         const isOmitted = disabledMacros.includes(macro.id);
+                        const macroPrice = getMacroDistributedPrice(deltaPrice, macro, macros.length);
+                        const microCount = macro.microFeatures.length || 4;
+                        const microPrice = getMicroDistributedPrice(macroPrice, microCount);
 
                         return (
                           <div
@@ -516,7 +544,7 @@ Let's discuss getting started!`;
                                 />
                                 <span className="text-lg shrink-0">{macro.icon || "⚙️"}</span>
                                 <div className="min-w-0">
-                                  <div className="flex items-center gap-2">
+                                  <div className="flex flex-wrap items-center gap-2">
                                     <span
                                       className={`text-xs sm:text-sm font-bold ${
                                         isOmitted ? "line-through text-slate-400" : "text-[#0a192f]"
@@ -529,12 +557,12 @@ Let's discuss getting started!`;
                                         Core
                                       </span>
                                     ) : isOmitted ? (
-                                      <span className="px-1.5 py-0.2 rounded text-[9px] font-bold bg-slate-200 text-slate-600">
-                                        Omitted
+                                      <span className="px-1.5 py-0.2 rounded text-[9px] font-bold bg-rose-100 text-rose-700">
+                                        −{tierConfig.currencySymbol}{macroPrice.toLocaleString()} Omitted
                                       </span>
                                     ) : (
                                       <span className="px-1.5 py-0.2 rounded text-[9px] font-bold bg-emerald-50 text-emerald-700">
-                                        Active
+                                        +{tierConfig.currencySymbol}{macroPrice.toLocaleString()} Active
                                       </span>
                                     )}
                                   </div>
@@ -546,21 +574,29 @@ Let's discuss getting started!`;
                                 </div>
                               </div>
 
-                              {/* Macro Accordion Toggle (Only 1 macro open at a time) */}
-                              <button
-                                type="button"
-                                onClick={() => toggleMacro(macro.id)}
-                                className="px-2.5 py-1 rounded-lg bg-sky-50 hover:bg-sky-100 text-sky-800 text-xs font-bold transition cursor-pointer shrink-0 border border-sky-200"
-                              >
-                                {isMacroOpen ? "− Hide Micro Specs" : "+ Micro Specs"}
-                              </button>
+                              <div className="flex items-center gap-2 shrink-0">
+                                <span className={`text-xs font-black hidden sm:inline ${isOmitted ? "line-through text-slate-400" : "text-[#0a192f]"}`}>
+                                  {tierConfig.currencySymbol}{macroPrice.toLocaleString()}
+                                </span>
+                                {/* Macro Accordion Toggle (Only 1 macro open at a time) */}
+                                <button
+                                  type="button"
+                                  onClick={() => toggleMacro(macro.id)}
+                                  className="px-2.5 py-1 rounded-lg bg-sky-50 hover:bg-sky-100 text-sky-800 text-xs font-bold transition cursor-pointer shrink-0 border border-sky-200"
+                                >
+                                  {isMacroOpen ? "− Hide Micro Specs" : "+ Micro Specs"}
+                                </button>
+                              </div>
                             </div>
 
                             {/* Expanded Micro Features List */}
                             {isMacroOpen && (
                               <div className="px-4 pb-4 pt-2 border-t border-sky-100 bg-sky-50/40 rounded-b-xl space-y-2 animate-in fade-in duration-100">
-                                <div className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider mb-1">
-                                  Micro-Features Specifications:
+                                <div className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider mb-1 flex items-center justify-between">
+                                  <span>Micro-Features Specifications:</span>
+                                  <span className="text-[10px] font-normal text-sky-800">
+                                    Each micro-feature: ~{tierConfig.currencySymbol}{microPrice.toLocaleString()} value
+                                  </span>
                                 </div>
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                                   {macro.microFeatures.map((micro, mIdx) => {
@@ -575,17 +611,22 @@ Let's discuss getting started!`;
                                       return (
                                         <div
                                           key={mIdx}
-                                          className="p-2.5 rounded-lg bg-slate-100 border border-slate-200 flex items-start gap-2 text-xs text-slate-400"
+                                          className="p-2.5 rounded-lg bg-slate-100 border border-slate-200 flex items-start justify-between gap-2 text-xs text-slate-400"
                                         >
-                                          <span className="text-slate-400 shrink-0 mt-0.5">✕</span>
-                                          <div className="min-w-0">
-                                            <span className="line-through block font-medium">
-                                              {micro}
-                                            </span>
-                                            <span className="text-[10px] text-amber-800 font-bold block mt-0.5">
-                                              Deduplicated: {redundancy.reason}
-                                            </span>
+                                          <div className="flex items-start gap-2 min-w-0">
+                                            <span className="text-slate-400 shrink-0 mt-0.5">✕</span>
+                                            <div className="min-w-0">
+                                              <span className="line-through block font-medium">
+                                                {micro}
+                                              </span>
+                                              <span className="text-[10px] text-amber-800 font-bold block mt-0.5">
+                                                Deduplicated: {redundancy.reason}
+                                              </span>
+                                            </div>
                                           </div>
+                                          <span className="text-[10px] font-bold text-slate-400 shrink-0">
+                                            Included ($0)
+                                          </span>
                                         </div>
                                       );
                                     }
@@ -593,14 +634,21 @@ Let's discuss getting started!`;
                                     return (
                                       <div
                                         key={mIdx}
-                                        className={`p-2.5 rounded-lg border flex items-center gap-2 text-xs font-medium ${
+                                        className={`p-2.5 rounded-lg border flex items-center justify-between gap-2 text-xs font-medium ${
                                           isOmitted
                                             ? "bg-slate-50 text-slate-400 border-slate-200 line-through"
                                             : "bg-white text-slate-800 border-sky-100 shadow-2xs"
                                         }`}
                                       >
-                                        <span className="text-emerald-600 font-bold shrink-0">✓</span>
-                                        <span className="truncate">{micro}</span>
+                                        <div className="flex items-center gap-2 min-w-0">
+                                          <span className="text-emerald-600 font-bold shrink-0">✓</span>
+                                          <span className="truncate">{micro}</span>
+                                        </div>
+                                        <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded shrink-0 ${
+                                          isOmitted ? "text-slate-400 bg-slate-100" : "text-sky-800 bg-sky-50 border border-sky-100"
+                                        }`}>
+                                          +{tierConfig.currencySymbol}{microPrice.toLocaleString()}
+                                        </span>
                                       </div>
                                     );
                                   })}

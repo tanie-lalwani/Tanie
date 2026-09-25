@@ -2,7 +2,12 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { FEATURE_BUNDLES, WEBSITE_GOALS } from "./calculatorData";
+import {
+  FEATURE_BUNDLES,
+  WEBSITE_GOALS,
+  getMacroDistributedPrice,
+  getMicroDistributedPrice
+} from "./calculatorData";
 import MarketRegionSelector from "@/components/ui/MarketRegionSelector";
 
 /**
@@ -195,9 +200,22 @@ export default function CostCalculatorStepResult({
   };
 
   const toggleMacroDisabled = (id: string) => {
-    setDisabledMacros((prev) =>
-      prev.includes(id) ? prev.filter((m) => m !== id) : [...prev, id]
-    );
+    setDisabledMacros((prev) => {
+      const updated = prev.includes(id) ? prev.filter((m) => m !== id) : [...prev, id];
+      if (typeof window !== "undefined") {
+        try {
+          const raw = localStorage.getItem("tanie_calculator_state");
+          const existing = raw ? JSON.parse(raw) : {};
+          localStorage.setItem(
+            "tanie_calculator_state",
+            JSON.stringify({ ...existing, disabledMacros: updated })
+          );
+        } catch (e) {
+          // ignore error
+        }
+      }
+      return updated;
+    });
   };
 
   // Base Foundation price
@@ -692,6 +710,9 @@ export default function CostCalculatorStepResult({
                                 const isMacroOpen = expandedMacro === macro.id;
                                 const isMandatory = idx === 0 || bundle.isEssential;
                                 const isOmitted = disabledMacros.includes(macro.id);
+                                const macroPrice = getMacroDistributedPrice(deltaPrice, macro, macros.length);
+                                const microCount = macro.microFeatures.length || 4;
+                                const microPrice = getMicroDistributedPrice(macroPrice, microCount);
 
                                 return (
                                   <div
@@ -716,7 +737,7 @@ export default function CostCalculatorStepResult({
                                         />
                                         <span className="text-base shrink-0">{macro.icon || "⚙️"}</span>
                                         <div className="min-w-0">
-                                          <div className="flex items-center gap-2">
+                                          <div className="flex flex-wrap items-center gap-2">
                                             <span
                                               className={`text-xs font-bold ${
                                                 isOmitted ? "line-through text-slate-400" : "text-[#0a192f]"
@@ -729,12 +750,12 @@ export default function CostCalculatorStepResult({
                                                 Core
                                               </span>
                                             ) : isOmitted ? (
-                                              <span className="px-1.5 py-0.2 rounded text-[9px] font-bold bg-slate-200 text-slate-600">
-                                                Omitted
+                                              <span className="px-1.5 py-0.2 rounded text-[9px] font-bold bg-rose-100 text-rose-700">
+                                                −{tierConfig.currencySymbol}{macroPrice.toLocaleString()} Omitted
                                               </span>
                                             ) : (
                                               <span className="px-1.5 py-0.2 rounded text-[9px] font-bold bg-emerald-50 text-emerald-700">
-                                                Active
+                                                +{tierConfig.currencySymbol}{macroPrice.toLocaleString()} Active
                                               </span>
                                             )}
                                           </div>
@@ -746,21 +767,29 @@ export default function CostCalculatorStepResult({
                                         </div>
                                       </div>
 
-                                      {/* Macro Accordion Toggle (Only 1 macro open at a time) */}
-                                      <button
-                                        type="button"
-                                        onClick={() => toggleMacro(macro.id)}
-                                        className="px-2 py-1 rounded bg-sky-50 hover:bg-sky-100 text-sky-800 text-[11px] font-bold transition cursor-pointer shrink-0"
-                                      >
-                                        {isMacroOpen ? "− Hide Micro Features" : "+ Micro Features"}
-                                      </button>
+                                      <div className="flex items-center gap-2 shrink-0">
+                                        <span className={`text-xs font-black hidden sm:inline ${isOmitted ? "line-through text-slate-400" : "text-[#0a192f]"}`}>
+                                          {tierConfig.currencySymbol}{macroPrice.toLocaleString()}
+                                        </span>
+                                        {/* Macro Accordion Toggle (Only 1 macro open at a time) */}
+                                        <button
+                                          type="button"
+                                          onClick={() => toggleMacro(macro.id)}
+                                          className="px-2 py-1 rounded bg-sky-50 hover:bg-sky-100 text-sky-800 text-[11px] font-bold transition cursor-pointer shrink-0 border border-sky-200"
+                                        >
+                                          {isMacroOpen ? "− Hide Micro Features" : "+ Micro Features"}
+                                        </button>
+                                      </div>
                                     </div>
 
                                     {/* Expanded Micro Features List */}
                                     {isMacroOpen && (
                                       <div className="px-3.5 pb-3.5 pt-1 border-t border-sky-100 bg-sky-50/30 rounded-b-xl space-y-1.5 animate-in fade-in duration-100">
-                                        <div className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider mb-1">
-                                          Micro Architecture Specifications:
+                                        <div className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider mb-1 flex items-center justify-between">
+                                          <span>Micro Architecture Specifications:</span>
+                                          <span className="text-[10px] font-normal text-sky-800">
+                                            Each micro-feature: ~{tierConfig.currencySymbol}{microPrice.toLocaleString()} value
+                                          </span>
                                         </div>
                                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
                                           {macro.microFeatures.map((micro, mIdx) => {
@@ -775,17 +804,22 @@ export default function CostCalculatorStepResult({
                                               return (
                                                 <div
                                                   key={mIdx}
-                                                  className="p-2 rounded-lg bg-slate-100 border border-slate-200 flex items-start gap-2 text-[11px] text-slate-400"
+                                                  className="p-2 rounded-lg bg-slate-100 border border-slate-200 flex items-start justify-between gap-2 text-[11px] text-slate-400"
                                                 >
-                                                  <span className="text-slate-400 shrink-0">✕</span>
-                                                  <div className="min-w-0">
-                                                    <span className="line-through block font-medium">
-                                                      {micro}
-                                                    </span>
-                                                    <span className="text-[9px] text-amber-700 font-bold block mt-0.5">
-                                                      Deduplicated: {redundancy.reason}
-                                                    </span>
+                                                  <div className="flex items-start gap-2 min-w-0">
+                                                    <span className="text-slate-400 shrink-0 mt-0.5">✕</span>
+                                                    <div className="min-w-0">
+                                                      <span className="line-through block font-medium">
+                                                        {micro}
+                                                      </span>
+                                                      <span className="text-[9px] text-amber-700 font-bold block mt-0.5">
+                                                        Deduplicated: {redundancy.reason}
+                                                      </span>
+                                                    </div>
                                                   </div>
+                                                  <span className="text-[9px] font-bold text-slate-400 shrink-0">
+                                                    Included ($0)
+                                                  </span>
                                                 </div>
                                               );
                                             }
@@ -793,14 +827,21 @@ export default function CostCalculatorStepResult({
                                             return (
                                               <div
                                                 key={mIdx}
-                                                className={`p-2 rounded-lg border flex items-center gap-2 text-[11px] font-medium ${
+                                                className={`p-2 rounded-lg border flex items-center justify-between gap-2 text-[11px] font-medium ${
                                                   isOmitted
                                                     ? "bg-slate-50 text-slate-400 border-slate-200 line-through"
                                                     : "bg-white text-slate-800 border-sky-100 shadow-2xs"
                                                 }`}
                                               >
-                                                <span className="text-emerald-600 font-bold shrink-0">✓</span>
-                                                <span className="truncate">{micro}</span>
+                                                <div className="flex items-center gap-2 min-w-0">
+                                                  <span className="text-emerald-600 font-bold shrink-0">✓</span>
+                                                  <span className="truncate">{micro}</span>
+                                                </div>
+                                                <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded shrink-0 ${
+                                                  isOmitted ? "text-slate-400 bg-slate-100" : "text-sky-800 bg-sky-50 border border-sky-100"
+                                                }`}>
+                                                  +{tierConfig.currencySymbol}{microPrice.toLocaleString()}
+                                                </span>
                                               </div>
                                             );
                                           })}
@@ -826,7 +867,7 @@ export default function CostCalculatorStepResult({
                         Customized Scope: <strong>{disabledMacros.length} optional modules omitted</strong>
                       </span>
                     ) : (
-                      <span>Full Comprehensive Scope Included • Base ₹5k Deducted</span>
+                      <span>Full Comprehensive Scope Included • Base {tierConfig.currencySymbol}{basePrice.toLocaleString()} Deducted from Add-ons</span>
                     )}
                   </div>
                   <div className="flex items-center gap-2.5 w-full sm:w-auto">

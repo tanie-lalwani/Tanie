@@ -4,6 +4,30 @@ export interface MacroFeature {
   icon?: string;
   description?: string;
   microFeatures: string[];
+  weightPercent?: number;
+}
+
+/**
+ * Calculates distributed price for a macro feature from its package's delta/base price
+ */
+export function getMacroDistributedPrice(
+  packageDeltaOrBasePrice: number,
+  macro: MacroFeature,
+  totalMacrosCount: number = 5
+): number {
+  const weight = macro.weightPercent ? macro.weightPercent / 100 : 1 / Math.max(1, totalMacrosCount);
+  return Math.round(packageDeltaOrBasePrice * weight);
+}
+
+/**
+ * Calculates distributed price for a micro feature from its macro feature price
+ */
+export function getMicroDistributedPrice(
+  macroPrice: number,
+  microCount: number = 4
+): number {
+  if (microCount <= 0) return 0;
+  return Math.round(macroPrice / microCount);
 }
 
 export interface FeatureBundle {
