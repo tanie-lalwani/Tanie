@@ -763,27 +763,6 @@ Let's discuss getting started!`;
             </div>
           </form>
 
-          {/* QUICK CHOICE GOAL SUGGESTIONS PILLS */}
-          <div className="mt-4 flex flex-wrap items-center justify-center gap-2 max-w-3xl mx-auto">
-            <span className="text-xs font-semibold text-sky-950/70 mr-1">
-              Select your goal:
-            </span>
-            {WEBSITE_GOALS.map((goal) => (
-              <button
-                key={goal.id}
-                type="button"
-                onClick={() => {
-                  setSelectedGoal(goal.id);
-                  setSelectedBundles(goal.recommendedBundles);
-                  goToStep(1);
-                }}
-                className="px-3.5 py-1.5 rounded-full bg-white/70 hover:bg-white border border-sky-200/80 hover:border-sky-400 text-xs font-semibold text-[#0a192f] hover:text-sky-900 shadow-xs transition-all cursor-pointer flex items-center gap-1.5"
-              >
-                <span>{goal.icon}</span>
-                <span>{goal.title.split("(")[0]}</span>
-              </button>
-            ))}
-          </div>
         </div>
       )}
 

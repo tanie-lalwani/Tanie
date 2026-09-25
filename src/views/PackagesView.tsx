@@ -661,27 +661,9 @@ ${companyName.trim() ? `🏢 Company / Brand: ${companyName.trim()}` : ""}
                 </p>
               </div>
 
-              {/* Category Filter Pills */}
-              <div className="flex flex-wrap items-center justify-center gap-2 pt-2">
-                {categories.map((cat) => (
-                  <button
-                    key={cat}
-                    type="button"
-                    onClick={() => setActiveCategory(cat)}
-                    className={`rounded-full px-4 py-2 text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
-                      activeCategory === cat
-                        ? "bg-[#0a192f] text-white shadow-sm"
-                        : "bg-[#c8ecff]/30 text-sky-950 hover:bg-[#c8ecff]/50 border border-sky-300/80"
-                    }`}
-                  >
-                    {categoryKeys[cat] ? pkgCopy.categories[categoryKeys[cat]] : cat}
-                  </button>
-                ))}
-              </div>
-
               {/* DIRECT AESTHETICS CARDS GRID */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {filteredStyles.map((style) => (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 pt-4">
+                {AESTHETIC_STYLES.map((style) => (
                   <div
                     key={style.id}
                     className="flex flex-col justify-between rounded-[2.2rem] border border-sky-300/80 bg-[#c8ecff]/30 hover:bg-[#c8ecff]/50 p-6 shadow-md backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl"
