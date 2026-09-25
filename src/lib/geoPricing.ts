@@ -12,6 +12,8 @@ export interface MarketPricingTier {
   packages: {
     "luxury-landing-sprint": number;
     "growth-marketing-campaigns": number;
+    "booking-appointments-engine": number;
+    "staff-team-management-portal": number;
     "interactive-3d-experience": number;
     "fullstack-web-app": number;
   };
@@ -30,10 +32,12 @@ export const MARKET_TIERS: Record<string, MarketPricingTier> = {
     currencyCode: "INR",
     currencySymbol: "₹",
     packages: {
-      "luxury-landing-sprint": 14999,
-      "growth-marketing-campaigns": 29999,
-      "interactive-3d-experience": 49999,
-      "fullstack-web-app": 79999
+      "luxury-landing-sprint": 4999,
+      "growth-marketing-campaigns": 19999,
+      "booking-appointments-engine": 19999,
+      "staff-team-management-portal": 24999,
+      "interactive-3d-experience": 39999,
+      "fullstack-web-app": 69999
     },
     bundles: {
       essential_core: 4999,
@@ -69,10 +73,12 @@ export const MARKET_TIERS: Record<string, MarketPricingTier> = {
     currencyCode: "USD",
     currencySymbol: "$",
     packages: {
-      "luxury-landing-sprint": 499,
-      "growth-marketing-campaigns": 899,
-      "interactive-3d-experience": 1299,
-      "fullstack-web-app": 1899
+      "luxury-landing-sprint": 99,
+      "growth-marketing-campaigns": 499,
+      "booking-appointments-engine": 499,
+      "staff-team-management-portal": 599,
+      "interactive-3d-experience": 899,
+      "fullstack-web-app": 1499
     },
     bundles: {
       essential_core: 175,
@@ -108,10 +114,12 @@ export const MARKET_TIERS: Record<string, MarketPricingTier> = {
     currencyCode: "GBP",
     currencySymbol: "£",
     packages: {
-      "luxury-landing-sprint": 399,
-      "growth-marketing-campaigns": 720,
-      "interactive-3d-experience": 1050,
-      "fullstack-web-app": 1520
+      "luxury-landing-sprint": 79,
+      "growth-marketing-campaigns": 399,
+      "booking-appointments-engine": 399,
+      "staff-team-management-portal": 479,
+      "interactive-3d-experience": 729,
+      "fullstack-web-app": 1199
     },
     bundles: {
       essential_core: 140,
@@ -147,10 +155,12 @@ export const MARKET_TIERS: Record<string, MarketPricingTier> = {
     currencyCode: "EUR",
     currencySymbol: "€",
     packages: {
-      "luxury-landing-sprint": 460,
-      "growth-marketing-campaigns": 830,
-      "interactive-3d-experience": 1190,
-      "fullstack-web-app": 1750
+      "luxury-landing-sprint": 89,
+      "growth-marketing-campaigns": 459,
+      "booking-appointments-engine": 459,
+      "staff-team-management-portal": 549,
+      "interactive-3d-experience": 819,
+      "fullstack-web-app": 1379
     },
     bundles: {
       essential_core: 160,
@@ -186,10 +196,12 @@ export const MARKET_TIERS: Record<string, MarketPricingTier> = {
     currencyCode: "AED",
     currencySymbol: "AED ",
     packages: {
-      "luxury-landing-sprint": 1850,
-      "growth-marketing-campaigns": 3300,
-      "interactive-3d-experience": 4750,
-      "fullstack-web-app": 6950
+      "luxury-landing-sprint": 370,
+      "growth-marketing-campaigns": 1820,
+      "booking-appointments-engine": 1820,
+      "staff-team-management-portal": 2170,
+      "interactive-3d-experience": 3270,
+      "fullstack-web-app": 5470
     },
     bundles: {
       essential_core: 650,
@@ -225,10 +237,12 @@ export const MARKET_TIERS: Record<string, MarketPricingTier> = {
     currencyCode: "CAD",
     currencySymbol: "C$",
     packages: {
-      "luxury-landing-sprint": 675,
-      "growth-marketing-campaigns": 1220,
-      "interactive-3d-experience": 1760,
-      "fullstack-web-app": 2580
+      "luxury-landing-sprint": 135,
+      "growth-marketing-campaigns": 680,
+      "booking-appointments-engine": 680,
+      "staff-team-management-portal": 810,
+      "interactive-3d-experience": 1220,
+      "fullstack-web-app": 2040
     },
     bundles: {
       essential_core: 240,
@@ -264,10 +278,12 @@ export const MARKET_TIERS: Record<string, MarketPricingTier> = {
     currencyCode: "AUD",
     currencySymbol: "A$",
     packages: {
-      "luxury-landing-sprint": 750,
-      "growth-marketing-campaigns": 1360,
-      "interactive-3d-experience": 1960,
-      "fullstack-web-app": 2870
+      "luxury-landing-sprint": 150,
+      "growth-marketing-campaigns": 760,
+      "booking-appointments-engine": 760,
+      "staff-team-management-portal": 910,
+      "interactive-3d-experience": 1360,
+      "fullstack-web-app": 2270
     },
     bundles: {
       essential_core: 265,
@@ -303,10 +319,12 @@ export const MARKET_TIERS: Record<string, MarketPricingTier> = {
     currencyCode: "SGD",
     currencySymbol: "S$",
     packages: {
-      "luxury-landing-sprint": 665,
-      "growth-marketing-campaigns": 1190,
-      "interactive-3d-experience": 1720,
-      "fullstack-web-app": 2520
+      "luxury-landing-sprint": 130,
+      "growth-marketing-campaigns": 655,
+      "booking-appointments-engine": 655,
+      "staff-team-management-portal": 785,
+      "interactive-3d-experience": 1185,
+      "fullstack-web-app": 1985
     },
     bundles: {
       essential_core: 235,

@@ -154,6 +154,32 @@ export const BOFU_PAGE_MODULES: BofuPageModule[] = [
       personal_brand: "Free proprietary 35-page growth playbook PDF sent automatically upon email entry."
     },
     conversionMetric: "Captures 15–25% of visitors who aren't ready to buy today"
+  },
+  {
+    id: "multilingual_i18n",
+    title: "Multi-Lingual & Global Currency i18n",
+    badge: "Global Reach",
+    icon: "🌐",
+    shortDesc: "Seamless language selector and automated multi-currency pricing localization for worldwide buyers.",
+    websiteScope: {
+      ecommerce: "Instant currency conversion (USD, EUR, GBP, INR, AED) with localized product copy and tax rules.",
+      single_product: "Geo-targeted language auto-detection with country-specific payment checkout gateways.",
+      personal_brand: "Dual/multi-language toggle (e.g. English, Spanish, Arabic, Hindi) expanding global audience reach."
+    },
+    conversionMetric: "Boosts international conversion rates by up to 70%"
+  },
+  {
+    id: "ai_sales_concierge",
+    title: "AI Sales Concierge Bot & Closer",
+    badge: "24/7 Closer",
+    icon: "🤖",
+    shortDesc: "Intelligent on-site AI chatbot answering buyer objections, recommending products & launching checkout.",
+    websiteScope: {
+      ecommerce: "Recommends complementary products, answers sizing/shipping questions, and provides personalized discount codes.",
+      single_product: "Deep technical Q&A on specs, warranties, compatibility, and ordering timeline.",
+      personal_brand: "Qualifies high-ticket leads and collects project budgets before routing to founder calendar."
+    },
+    conversionMetric: "Recovers 20-30% of abandoning shoppers by answering doubts in real time"
   }
 ];
 

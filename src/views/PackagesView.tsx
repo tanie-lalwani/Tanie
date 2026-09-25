@@ -21,6 +21,7 @@ import {
 import CustomScopeCalculator from "@/components/CustomScopeCalculator";
 import WebsiteCostCalculatorFunnel from "@/components/packages/WebsiteCostCalculatorFunnel";
 import MarketingFunnelSuite from "@/components/packages/MarketingFunnelSuite";
+import PackagePricingBreakdown from "@/components/packages/PackagePricingBreakdown";
 import { useLanguage } from "@/context/LanguageContext";
 import { packagesTranslations } from "@/data/packagesTranslations";
 import { useGeoPricing } from "@/context/GeoPricingContext";
@@ -34,8 +35,8 @@ export default function PackagesView() {
   const pkgCopy = packagesTranslations[locale] || packagesTranslations.en;
   const { formatAddonPrice, formatPackagePrice, tierConfig } = useGeoPricing();
 
-  // Active View Tab: "home" (Overview & Scope), "marketing" (Full-Funnel Campaign Engine), "calculator" (Interactive Estimator), "gallery" (Browse Aesthetics), "wizard" (Make Your Website Questionnaire), "results" (Curated Suggestions)
-  const [activeTab, setActiveTab] = useState<"home" | "marketing" | "calculator" | "gallery" | "wizard" | "results">("home");
+  // Active View Tab: "home" (Overview & Scope), "marketing" (Full-Funnel Campaign Engine), "calculator" (Interactive Estimator), "breakdown" (Granular Scope Breakdown), "gallery" (Browse Aesthetics), "wizard" (Make Your Website Questionnaire), "results" (Curated Suggestions)
+  const [activeTab, setActiveTab] = useState<"home" | "marketing" | "calculator" | "breakdown" | "gallery" | "wizard" | "results">("home");
 
   // Currency toggle: USD or INR
   const [currency, setCurrency] = useState<"USD" | "INR">("USD");
@@ -269,6 +270,36 @@ export default function PackagesView() {
     const goalLabel = quoteData.goal || quoteData.industry || "Custom Bespoke Build";
     setSelectedScopeTier(`Goal: ${goalLabel}`);
     setTargetDeadline(quoteData.timeline || "3–4 Weeks");
+    setShowIntakeModal(true);
+    setAuthStepRequired(false);
+  };
+
+  // Handle custom scope proceeding from PackagePricingBreakdown
+  const handleProceedWithCustomScopeFromBreakdown = (scopeData: {
+    packageId: string;
+    packageName: string;
+    originalPriceInr: number;
+    originalPriceUsd: number;
+    customPriceInr: number;
+    customPriceUsd: number;
+    currency: "INR" | "USD";
+    includedMacroFeatures: string[];
+    removedMacroFeatures: string[];
+  }) => {
+    setProjectName(scopeData.packageName);
+    setCompanyName(scopeData.packageName);
+    setFeaturesList(scopeData.includedMacroFeatures);
+    setMustHaves(scopeData.includedMacroFeatures.join(", "));
+    setDealbreakers(scopeData.removedMacroFeatures.length > 0 ? `Excluded optional modules: ${scopeData.removedMacroFeatures.join(", ")}` : "");
+    const amount = tierConfig.currencyCode === "INR" ? scopeData.customPriceInr : scopeData.customPriceUsd;
+    setEstimatedPriceAmount(amount);
+    setEstimatedPriceCurrency(tierConfig.currencyCode);
+    setEstimatedPriceSymbol(tierConfig.currencySymbol);
+    setEstimatedPriceInr(scopeData.customPriceInr);
+    setEstimatedPriceUsd(scopeData.customPriceUsd);
+    setCurrency(scopeData.currency);
+    setSelectedScopeTier(`Custom Package Scope: ${scopeData.packageName}`);
+    setTargetDeadline("2–4 Weeks");
     setShowIntakeModal(true);
     setAuthStepRequired(false);
   };
@@ -646,6 +677,19 @@ ${companyName.trim() ? `🏢 Company / Brand: ${companyName.trim()}` : ""}
               <div className="flex flex-wrap items-center gap-2">
                 <button
                   type="button"
+                  onClick={() => setActiveTab(activeTab === "breakdown" ? "home" : "breakdown")}
+                  className={`rounded-full px-4 py-2 text-xs font-bold uppercase tracking-wider transition-all cursor-pointer border flex items-center gap-1.5 ${
+                    activeTab === "breakdown"
+                      ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white border-blue-500 font-black shadow-md scale-105"
+                      : "bg-sky-100/90 text-sky-950 hover:bg-sky-200 border-sky-300 font-black"
+                  }`}
+                >
+                  <span>📋</span>
+                  <span>Macro & Micro Breakdown</span>
+                </button>
+
+                <button
+                  type="button"
                   onClick={() => setActiveTab(activeTab === "marketing" ? "home" : "marketing")}
                   className={`rounded-full px-4 py-2 text-xs font-bold uppercase tracking-wider transition-all cursor-pointer border flex items-center gap-1.5 ${
                     activeTab === "marketing"
@@ -691,6 +735,46 @@ ${companyName.trim() ? `🏢 Company / Brand: ${companyName.trim()}` : ""}
                   onCurrencyChange={setCurrency}
                   onProceedWithScope={handleProceedWithScope}
                 />
+              </div>
+            )}
+
+            {/* VIEW: GRANULAR PACKAGE & FEATURE BREAKDOWN (BREAKDOWN TAB) */}
+            {activeTab === "breakdown" && (
+              <div className="space-y-8 animate-fadeIn">
+                <PackagePricingBreakdown
+                  onProceedWithCustomScope={handleProceedWithCustomScopeFromBreakdown}
+                />
+              </div>
+            )}
+
+            {/* PROMO BANNER FOR DETAILED SCOPE BREAKDOWN (SHOWN ON HOME) */}
+            {activeTab === "home" && (
+              <div className="relative overflow-hidden rounded-3xl border border-sky-300/80 bg-gradient-to-r from-sky-100/90 via-blue-50/90 to-indigo-100/90 p-5 sm:p-6 shadow-sm flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div className="flex items-center gap-3.5">
+                  <div className="h-11 w-11 shrink-0 rounded-2xl bg-[#0a192f] text-white flex items-center justify-center text-xl font-bold shadow-sm">
+                    📋
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-[10px] font-black uppercase tracking-wider text-sky-800 bg-sky-200/80 px-2 py-0.5 rounded-full">
+                        Transparent Scope
+                      </span>
+                      <span className="text-xs font-black text-slate-900">
+                        Granular Macro & Micro Feature Pricing Breakdown
+                      </span>
+                    </div>
+                    <p className="text-xs text-slate-700 font-medium mt-0.5">
+                      Inspect every single macro-module and expandable micro-feature across all 6 packages. Customize optional features to tailor scope and reduce pricing.
+                    </p>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setActiveTab("breakdown")}
+                  className="shrink-0 rounded-xl bg-[#0a192f] px-4 py-2.5 text-xs font-black text-white hover:bg-slate-800 transition cursor-pointer shadow-sm"
+                >
+                  Open Scope Breakdown →
+                </button>
               </div>
             )}
 
