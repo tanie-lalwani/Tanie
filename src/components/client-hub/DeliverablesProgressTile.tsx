@@ -67,18 +67,10 @@ export default function DeliverablesProgressTile({
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <div className="flex items-center gap-2">
-            <span className="text-[11px] font-black uppercase tracking-wider text-emerald-900 bg-emerald-100 border border-emerald-200 px-3 py-1 rounded-full shadow-2xs">
-              ✓ Active Sprint Telemetry
-            </span>
-            <span className="text-xs font-mono text-slate-500">
-              Target: {project.target_launch_date || "3-4 Weeks"}
-            </span>
-          </div>
-          <h2 className="mt-2 text-2xl sm:text-3xl font-black text-[#0a192f]">
+          <h2 className="text-2xl sm:text-3xl font-black text-[#0a192f]">
             Package Deliverables & Live Progress Tracking
           </h2>
-          <p className="mt-0.5 text-xs text-slate-600 max-w-2xl">
+          <p className="mt-1 text-xs text-slate-600 max-w-2xl">
             Real-time status of your commissioned website sprint. Inspect milestones, deliverables, and preview links.
           </p>
         </div>

@@ -141,17 +141,14 @@ export default function BookingContractTile({
       {/* Top Banner */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <div>
-          <div className="flex items-center gap-2">
-            <span className="text-[11px] font-black uppercase tracking-wider text-sky-900 bg-sky-100 border border-sky-200 px-3 py-1 rounded-full">
-              Contract & Booking Authority
-            </span>
-            {isAdvancePaid && (
+          {isAdvancePaid && (
+            <div className="mb-2">
               <span className="text-[11px] font-extrabold text-emerald-800 bg-emerald-100 px-3 py-1 rounded-full border border-emerald-200">
                 ✓ Booking Confirmed & Advance Paid
               </span>
-            )}
-          </div>
-          <h2 className="mt-2 text-2xl sm:text-3xl font-black text-[#0a192f]">
+            </div>
+          )}
+          <h2 className="text-2xl sm:text-3xl font-black text-[#0a192f]">
             {isAdvancePaid
               ? "Executed Contract & Booking Status"
               : isContractReady

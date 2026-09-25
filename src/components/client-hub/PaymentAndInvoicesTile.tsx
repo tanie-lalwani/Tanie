@@ -77,15 +77,7 @@ export default function PaymentAndInvoicesTile({
     >
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <div className="flex items-center gap-2">
-            <span className="text-[11px] font-black uppercase tracking-wider text-sky-900 bg-sky-100 border border-sky-200 px-3 py-1 rounded-full">
-              Financial Accounting & Invoices
-            </span>
-            <span className="text-xs text-slate-500 font-mono">
-              Dual-Invoice Protection
-            </span>
-          </div>
-          <h2 className="mt-2 text-2xl sm:text-3xl font-black text-[#0a192f]">
+          <h2 className="text-2xl sm:text-3xl font-black text-[#0a192f]">
             Payments, Balances & Official Invoices
           </h2>
           <p className="mt-0.5 text-xs text-slate-600 max-w-2xl">

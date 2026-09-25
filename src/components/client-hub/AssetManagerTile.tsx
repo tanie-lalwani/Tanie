@@ -224,18 +224,10 @@ export default function AssetManagerTile({
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <div>
-          <div className="flex items-center gap-2">
-            <span className="text-[11px] font-black uppercase tracking-wider text-sky-900 bg-sky-100 border border-sky-200 px-3 py-1 rounded-full">
-              Asset & Reference Manager
-            </span>
-            <span className="text-[11px] font-bold text-slate-500 bg-slate-100 px-2.5 py-0.5 rounded-full">
-              🔒 Permanent Retention
-            </span>
-          </div>
-          <h2 className="mt-2 text-2xl sm:text-3xl font-black text-[#0a192f]">
+          <h2 className="text-2xl sm:text-3xl font-black text-[#0a192f]">
             Drop Assets, Links & Moodboards
           </h2>
-          <p className="mt-0.5 text-xs text-slate-600 max-w-2xl">
+          <p className="mt-1 text-xs text-slate-600 max-w-2xl">
             Upload files in any format, attach Figma or Google Drive links, or paste brand copywriting.
           </p>
         </div>
