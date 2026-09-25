@@ -528,18 +528,20 @@ ${companyName.trim() ? `🏢 Company / Brand: ${companyName.trim()}` : ""}
               <span className="text-[10px] font-semibold">{pkgCopy.nav.pricing}</span>
             </Link>
 
-            <Link
-              href="/client"
-              className={`flex w-14 flex-col items-center rounded-[1.35rem] px-2 py-3 !no-underline transition-all ${
-                pathname === "/client" ? "bg-[#c8ecff] !text-black shadow-xs" : "!text-black hover:bg-white/55 hover:!text-black"
-              }`}
-              title={pkgCopy.nav.clientHub}
-            >
-              <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.8" className="mb-1">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-              </svg>
-              <span className="text-[10px] font-semibold">{pkgCopy.nav.clientHub}</span>
-            </Link>
+            {user && (
+              <Link
+                href="/client"
+                className={`flex w-14 flex-col items-center rounded-[1.35rem] px-2 py-3 !no-underline transition-all ${
+                  pathname === "/client" ? "bg-[#c8ecff] !text-black shadow-xs" : "!text-black hover:bg-white/55 hover:!text-black"
+                }`}
+                title={pkgCopy.nav.clientHub}
+              >
+                <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.8" className="mb-1">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                </svg>
+                <span className="text-[10px] font-semibold">{pkgCopy.nav.clientHub}</span>
+              </Link>
+            )}
 
             <Link
               href="/qna"

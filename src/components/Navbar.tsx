@@ -118,7 +118,7 @@ export default function Navbar({ phase }: NavbarProps) {
   const NAV_PAGES = [
     { href: '/', label: copy.nav.homeLabel || 'Home', icon: '🏠' },
     { href: '/pricing', label: currentLabels.pricing, icon: '💎' },
-    { href: '/client', label: currentLabels.client, icon: '💼' },
+    ...(user ? [{ href: '/client', label: currentLabels.client, icon: '💼' }] : []),
     { href: '/projects', label: currentLabels.projects, icon: '🛠️' },
     { href: '/faq', label: currentLabels.faq, icon: '💡' },
     { href: '/qna', label: copy.nav.qna || currentLabels.qna, icon: '❓' },
