@@ -6,7 +6,6 @@ import { packagesTranslations } from "@/data/packagesTranslations";
 import { saveClientCustomQuote } from "@/lib/portalServices";
 import { getSavedLeadProfile, saveLeadProfile } from "@/features/lead-capture/lib/cookieHelper";
 import { useGeoPricing } from "@/context/GeoPricingContext";
-import MarketRegionSelector from "@/components/ui/MarketRegionSelector";
 import CostCalculatorStepResult from "./CostCalculatorStepResult";
 
 import {
@@ -373,11 +372,6 @@ Let's discuss getting started!`;
       {/* ========================================================================= */}
       {currentStep === 0 && (
         <div className="max-w-4xl mx-auto text-center pt-4 pb-8 sm:pb-12">
-          {/* REGION & MARKET SELECTOR BY THE SIDE */}
-          <div className="flex items-center justify-center mb-4">
-            <MarketRegionSelector />
-          </div>
-
           <h1 className="text-4xl sm:text-6xl font-black tracking-tight !text-[#0a192f] leading-tight">
             {t.hero.titlePrefix}<span className="text-sky-700">{t.hero.titleHighlight}</span>
           </h1>
@@ -444,10 +438,8 @@ Let's discuss getting started!`;
               </p>
             </div>
 
-            <div className="flex flex-col sm:flex-row items-end sm:items-center gap-2 shrink-0">
-              <MarketRegionSelector compact={true} />
-              <div className="flex items-center gap-1.5">
-                {[1, 2, 3, 4].map((s) => (
+            <div className="flex items-center gap-1.5 shrink-0">
+              {[1, 2, 3, 4].map((s) => (
                   <div
                     key={s}
                     className={`h-2 rounded-full transition-all ${
@@ -461,7 +453,6 @@ Let's discuss getting started!`;
                 ))}
               </div>
             </div>
-          </div>
 
           {/* ------------------------------------------------------------- */}
           {/* STEP 1: WHAT IS YOUR MAIN GOAL / PROBLEM?                     */}

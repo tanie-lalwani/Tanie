@@ -1,7 +1,7 @@
 "use client";
 
-import React from "react";
 import { FEATURE_BUNDLES, WEBSITE_GOALS } from "./calculatorData";
+import MarketRegionSelector from "@/components/ui/MarketRegionSelector";
 
 interface CostCalculatorStepResultProps {
   locale: string;
@@ -298,9 +298,12 @@ export default function CostCalculatorStepResult({
           {/* QUOTATION SUMMARY CARD */}
           <div className="p-6 sm:p-8 rounded-3xl bg-[#c8ecff]/35 border border-sky-300/90 backdrop-blur-md shadow-md flex flex-col md:flex-row items-center justify-between gap-6">
             <div>
-              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-sky-100 text-sky-950 text-xs font-bold mb-2 border border-sky-200">
-                ✓ {businessName || (locale === "ur" ? "آپ کا پروجیکٹ" : "Your Project")}
-              </span>
+              <div className="flex flex-wrap items-center gap-2 mb-2">
+                <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-sky-100 text-sky-950 text-xs font-bold border border-sky-200">
+                  ✓ {businessName || (locale === "ur" ? "آپ کا پروجیکٹ" : "Your Project")}
+                </span>
+                <MarketRegionSelector />
+              </div>
               <h3 className="text-2xl font-black !text-[#0a192f]">{t.funnel.totalInvestment}</h3>
               <p className="text-xs text-sky-950/80 mt-1 font-medium">
                 {locale === "ur"

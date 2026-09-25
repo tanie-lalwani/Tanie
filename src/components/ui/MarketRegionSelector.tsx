@@ -2,6 +2,7 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import { useGeoPricing } from "@/context/GeoPricingContext";
+import { MARKET_TIERS, resolveMarketTier } from "@/lib/geoPricing";
 
 interface MarketRegionSelectorProps {
   className?: string;
@@ -12,7 +13,7 @@ export default function MarketRegionSelector({
   className = "",
   compact = false
 }: MarketRegionSelectorProps) {
-  const { marketTier, tierConfig, setMarketTier, isAutoDetected, allMarkets } = useGeoPricing();
+  const { marketTier, tierConfig, setMarketTier, isAutoDetected, detectedCountry } = useGeoPricing();
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -27,16 +28,46 @@ export default function MarketRegionSelector({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  // 1. Identify user's detected country tier and the standard USD tier
+  const detectedTierCode = resolveMarketTier(detectedCountry || "IN");
+  const localTier = MARKET_TIERS[detectedTierCode] || MARKET_TIERS.IN;
+  const usTier = MARKET_TIERS.US;
+
+  // 2. Is user detected in the USA?
+  const isUsa = detectedTierCode === "US" || localTier.countryCode === "US";
+
+  // For USA visitors: Show ONLY USD, no other countries allowed (prevents posing as cheaper country)
+  if (isUsa) {
+    return (
+      <div
+        className={`inline-flex items-center gap-2 rounded-full border border-sky-300/80 bg-white/90 backdrop-blur-md px-3 py-1 text-xs font-bold text-slate-800 shadow-2xs ${className}`}
+      >
+        <span className="text-sm leading-none">🇺🇸</span>
+        <span className="font-semibold text-slate-800">
+          United States ($USD)
+        </span>
+        <span className="flex items-center gap-1 rounded-full bg-emerald-100 text-emerald-800 px-1.5 py-0.2 text-[9px] font-extrabold uppercase tracking-wide">
+          <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+          Auto
+        </span>
+      </div>
+    );
+  }
+
+  // For international visitors: Only show their detected local country and USD!
+  // Prevents visitors from posing as being from other cheaper countries.
+  const allowedMarkets = [localTier, usTier];
+
   return (
     <div ref={containerRef} className={`relative inline-block text-left ${className}`}>
       {/* Selector Button */}
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className={`flex items-center gap-2 rounded-full border border-sky-300/80 bg-white/80 backdrop-blur-md px-3.5 py-1.5 text-xs font-bold text-slate-800 shadow-sm transition hover:bg-white hover:border-sky-400 hover:shadow-md cursor-pointer ${
+        className={`flex items-center gap-2 rounded-full border border-sky-300/80 bg-white/90 backdrop-blur-md px-3 py-1 text-xs font-bold text-slate-800 shadow-2xs transition hover:bg-white hover:border-sky-400 hover:shadow-xs cursor-pointer ${
           compact ? "text-[11px] py-1 px-2.5" : ""
         }`}
-        title="Change Country & Market Pricing"
+        title="Toggle Local Country or USD Pricing"
       >
         <span className="text-base leading-none">{tierConfig.flag}</span>
         <span className="font-semibold text-slate-700">
@@ -63,20 +94,20 @@ export default function MarketRegionSelector({
         </svg>
       </button>
 
-      {/* Dropdown Menu */}
+      {/* Dropdown Menu (Only detected country and USD) */}
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-72 origin-top-right rounded-2xl border border-sky-200 bg-white/95 p-2 shadow-xl backdrop-blur-xl z-50 animate-in fade-in zoom-in-95 duration-150">
-          <div className="px-3 py-2 border-b border-sky-100 mb-1">
+        <div className="absolute left-0 sm:right-0 sm:left-auto mt-2 w-64 origin-top rounded-2xl border border-sky-200 bg-white/95 p-2 shadow-xl backdrop-blur-xl z-50 animate-in fade-in zoom-in-95 duration-150">
+          <div className="px-3 py-1.5 border-b border-sky-100 mb-1">
             <p className="text-[10px] font-extrabold uppercase tracking-wider text-sky-700">
-              Country & Market Pricing
+              Currency &amp; Billing Format
             </p>
             <p className="text-[11px] text-slate-500">
-              Pricing is calibrated specifically for each country&apos;s local market.
+              Select your local currency or standard global USD.
             </p>
           </div>
 
-          <div className="max-h-64 overflow-y-auto space-y-1">
-            {allMarkets.map((tier) => {
+          <div className="space-y-1">
+            {allowedMarkets.map((tier) => {
               const isSelected = tier.countryCode === marketTier;
               return (
                 <button
@@ -97,7 +128,7 @@ export default function MarketRegionSelector({
                     <div>
                       <div className="leading-tight">{tier.countryName}</div>
                       <div className={`text-[10px] ${isSelected ? "text-sky-200" : "text-slate-400"}`}>
-                        Base Sprint: {tier.currencySymbol}{tier.packages["luxury-landing-sprint"].toLocaleString()} {tier.currencyCode}
+                        {tier.currencyCode === "USD" ? "Standard USD Billing" : "Local Market Pricing"} ({tier.currencySymbol}{tier.currencyCode})
                       </div>
                     </div>
                   </div>
@@ -113,7 +144,7 @@ export default function MarketRegionSelector({
           </div>
 
           <div className="mt-1 pt-2 border-t border-sky-100 px-3 py-1 text-[10px] text-slate-400 text-center">
-            Auto-detected via your IP address
+            {isAutoDetected ? "Auto-detected via your IP address" : "Billing preference active"}
           </div>
         </div>
       )}
