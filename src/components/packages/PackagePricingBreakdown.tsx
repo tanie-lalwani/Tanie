@@ -150,7 +150,7 @@ export default function PackagePricingBreakdown({
               Package Scope & Transparent Pricing Decomposition
             </h2>
             <p className="text-xs sm:text-sm text-sky-950/80 font-medium mt-1 max-w-2xl">
-              Every package includes a complete, battle-tested functional architecture. Click the <span className="font-bold text-sky-900">+</span> icon on any macro feature to slide open its granular micro-features. Remove optional modules to trim your investment without sacrificing foundational performance.
+              Every package includes a complete, battle-tested functional architecture. Click the <span className="font-bold text-sky-900">+</span> icon on any macro feature to inspect its granular micro-features and engineering deliverables.
             </p>
           </div>
 
