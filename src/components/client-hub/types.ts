@@ -67,6 +67,7 @@ export interface ClientHubProject {
   figma_url?: string;
   github_repo?: string;
   calculated_quote: CalculatedQuote | null;
+  saved_aesthetics?: string[];
   admin_agreed_price: number | null;
   admin_advance_required: number | null;
   admin_completion_balance: number | null;

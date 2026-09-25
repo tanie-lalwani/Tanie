@@ -1,24 +1,141 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { AESTHETIC_STYLES, type AestheticStyle } from "@/data/aestheticDatabase";
+import { getAestheticImages } from "@/data/aestheticCarousels";
 
 interface AestheticsGridSectionProps {
   likedAesthetics: string[];
   onToggleLike: (styleName: string) => void;
-  onSelectPreview: (style: AestheticStyle) => void;
-  pkgCopy: any;
+  onSelectPreview?: (style: AestheticStyle) => void;
+  pkgCopy?: any;
+}
+
+interface AestheticCardCarouselProps {
+  style: AestheticStyle;
+  isLiked: boolean;
+  onToggleLike: (styleName: string) => void;
+}
+
+function AestheticCardCarousel({
+  style,
+  isLiked,
+  onToggleLike,
+}: AestheticCardCarouselProps) {
+  const images = getAestheticImages(style.id);
+  const [currentIdx, setCurrentIdx] = useState(0);
+
+  const prevImage = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setCurrentIdx((prev) => (prev === 0 ? images.length - 1 : prev - 1));
+  };
+
+  const nextImage = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setCurrentIdx((prev) => (prev === images.length - 1 ? 0 : prev + 1));
+  };
+
+  const goToImage = (e: React.MouseEvent, idx: number) => {
+    e.stopPropagation();
+    setCurrentIdx(idx);
+  };
+
+  return (
+    <div
+      className={`group relative overflow-hidden rounded-[2rem] border transition-all duration-300 shadow-md hover:shadow-2xl ${
+        isLiked
+          ? "border-rose-400 ring-2 ring-rose-400/50"
+          : "border-sky-300/80 hover:border-sky-400"
+      }`}
+    >
+      {/* Aspect Ratio Container for Pure Image */}
+      <div className="relative aspect-[16/11] w-full overflow-hidden bg-slate-950">
+        <img
+          src={images[currentIdx]}
+          alt={style.name}
+          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+          loading="lazy"
+        />
+
+        {/* Subtle gradient vignette at top and bottom for controls visibility */}
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/30 opacity-70 group-hover:opacity-90 transition-opacity" />
+
+        {/* Floating Like Icon on Top */}
+        <div className="absolute top-3.5 right-3.5 z-20">
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              onToggleLike(style.name);
+            }}
+            aria-label={isLiked ? "Unlike design aesthetic" : "Like design aesthetic"}
+            className={`flex h-10 w-10 items-center justify-center rounded-full transition-all duration-200 cursor-pointer shadow-lg backdrop-blur-md ${
+              isLiked
+                ? "bg-rose-500 text-white scale-110 shadow-rose-500/40 ring-2 ring-white/60"
+                : "bg-black/40 hover:bg-black/70 text-white/90 hover:text-white border border-white/25 hover:scale-105"
+            }`}
+            title={isLiked ? "Saved! Click to remove" : "Like to save this design aesthetic"}
+          >
+            <span className="text-lg leading-none select-none">
+              {isLiked ? "❤️" : "🤍"}
+            </span>
+          </button>
+        </div>
+
+        {/* Previous Image Chevron */}
+        {images.length > 1 && (
+          <button
+            type="button"
+            onClick={prevImage}
+            aria-label="Previous aesthetic example"
+            className="absolute left-2.5 top-1/2 -translate-y-1/2 z-20 flex h-8 w-8 items-center justify-center rounded-full bg-black/40 text-white/90 backdrop-blur-md border border-white/20 opacity-0 group-hover:opacity-100 hover:bg-black/70 transition-all cursor-pointer shadow-md"
+          >
+            <span className="text-sm font-bold">‹</span>
+          </button>
+        )}
+
+        {/* Next Image Chevron */}
+        {images.length > 1 && (
+          <button
+            type="button"
+            onClick={nextImage}
+            aria-label="Next aesthetic example"
+            className="absolute right-2.5 top-1/2 -translate-y-1/2 z-20 flex h-8 w-8 items-center justify-center rounded-full bg-black/40 text-white/90 backdrop-blur-md border border-white/20 opacity-0 group-hover:opacity-100 hover:bg-black/70 transition-all cursor-pointer shadow-md"
+          >
+            <span className="text-sm font-bold">›</span>
+          </button>
+        )}
+
+        {/* Slide Indicator Dots at Bottom */}
+        {images.length > 1 && (
+          <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-20 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-black/40 backdrop-blur-md border border-white/10">
+            {images.map((_, idx) => (
+              <button
+                key={idx}
+                type="button"
+                onClick={(e) => goToImage(e, idx)}
+                aria-label={`Jump to slide ${idx + 1}`}
+                className={`h-1.5 rounded-full transition-all cursor-pointer ${
+                  idx === currentIdx
+                    ? "w-4 bg-white shadow-xs"
+                    : "w-1.5 bg-white/40 hover:bg-white/70"
+                }`}
+              />
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
 }
 
 export default function AestheticsGridSection({
   likedAesthetics,
   onToggleLike,
-  onSelectPreview,
-  pkgCopy,
 }: AestheticsGridSectionProps) {
   return (
-    <div className="space-y-8">
-      {/* Section 2 Header: Pure Design Aesthetics & Inspirations */}
+    <div className="space-y-8" id="design-aesthetics">
+      {/* Section Header: Choose Your Design Aesthetic */}
       <div className="text-center max-w-2xl mx-auto pt-4">
         <h2 className="text-3xl sm:text-4xl font-black text-[#0a192f] tracking-tight">
           Choose Your Design Aesthetic
@@ -51,149 +168,17 @@ export default function AestheticsGridSection({
         )}
       </div>
 
-      {/* DIRECT AESTHETICS CARDS GRID */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 pt-4">
+      {/* PURE IMAGE CAROUSEL CARDS GRID */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 pt-2">
         {AESTHETIC_STYLES.map((style) => {
           const isLiked = likedAesthetics.includes(style.name);
           return (
-            <div
+            <AestheticCardCarousel
               key={style.id}
-              onClick={() => onSelectPreview(style)}
-              className={`flex flex-col justify-between rounded-[2.2rem] border p-6 shadow-md backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl cursor-pointer ${
-                isLiked
-                  ? "border-rose-300/90 bg-rose-50/30 hover:bg-rose-50/50 ring-2 ring-rose-400/40"
-                  : "border-sky-300/80 bg-[#c8ecff]/30 hover:bg-[#c8ecff]/50"
-              }`}
-            >
-              <div>
-                {/* Badge, Category & Direct Like Button */}
-                <div className="flex items-center justify-between mb-3 gap-2">
-                  <span className="rounded-full bg-sky-100 border border-sky-200 px-3 py-1 text-[10px] font-extrabold uppercase tracking-wider text-sky-950">
-                    {style.category}
-                  </span>
-                  <div className="flex items-center gap-2">
-                    <span className="text-[11px] font-bold text-sky-800/80 hidden sm:inline">
-                      {style.badge}
-                    </span>
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onToggleLike(style.name);
-                      }}
-                      className={`flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-bold transition shadow-2xs cursor-pointer border ${
-                        isLiked
-                          ? "bg-rose-500 hover:bg-rose-600 text-white border-rose-600 shadow-rose-200"
-                          : "bg-white/85 hover:bg-white text-slate-700 border-black/10 hover:text-rose-600"
-                      }`}
-                      title={isLiked ? "Unlike this design aesthetic" : "Like this design aesthetic"}
-                    >
-                      <span>{isLiked ? "❤️" : "🤍"}</span>
-                      <span>{isLiked ? "Liked" : "Like"}</span>
-                    </button>
-                  </div>
-                </div>
-
-                {/* Mock Mini Wireframe Preview */}
-                <div
-                  className="rounded-2xl p-4 mb-5 border border-black/10 overflow-hidden"
-                  style={{ backgroundColor: style.mockWireframe.bgColor, color: style.mockWireframe.textColor }}
-                >
-                  <div className="flex items-center justify-between mb-3">
-                    <span className="h-2 w-12 rounded-full" style={{ backgroundColor: style.mockWireframe.accentColor }} />
-                    <span className="text-[9px] font-mono opacity-60">{style.mockWireframe.badgeText}</span>
-                  </div>
-                  <h4 className="text-xs font-bold line-clamp-1 mb-1" style={{ color: style.mockWireframe.textColor }}>
-                    {style.mockWireframe.heroHeading}
-                  </h4>
-                  <p className="text-[10px] opacity-70 line-clamp-2 leading-relaxed mb-3">
-                    {style.mockWireframe.heroSubheading}
-                  </p>
-                  <div className="flex items-center gap-2">
-                    <div
-                      className="rounded-md px-2.5 py-1 text-[9px] font-bold"
-                      style={{
-                        backgroundColor: style.mockWireframe.accentColor,
-                        color:
-                          style.mockWireframe.bgColor === "#02040a" || style.mockWireframe.bgColor.includes("#0")
-                            ? "#fff"
-                            : "#000",
-                      }}
-                    >
-                      {style.mockWireframe.ctaText}
-                    </div>
-                  </div>
-                </div>
-
-                {/* Title & Tagline */}
-                <h3 className="text-xl font-bold mb-1 text-[#0a192f] flex items-center justify-between">
-                  <span>{style.name}</span>
-                  {isLiked && <span className="text-sm text-rose-500 font-normal">❤️</span>}
-                </h3>
-                <p className="text-xs mb-4 leading-relaxed text-sky-950/80 line-clamp-2">
-                  {style.tagline}
-                </p>
-
-                {/* Color Palette Swatches */}
-                <div className="mb-4">
-                  <span className="block text-[10px] font-bold uppercase tracking-wider text-sky-800 mb-1.5">
-                    {pkgCopy.aesthetics.colorDna}
-                  </span>
-                  <div className="flex items-center gap-2">
-                    {style.defaultPalette.map((swatch) => (
-                      <div
-                        key={swatch.name}
-                        className="h-6 w-6 rounded-full border border-black/15 shadow-2xs"
-                        style={{ backgroundColor: swatch.hex }}
-                        title={`${swatch.name} (${swatch.hex})`}
-                      />
-                    ))}
-                  </div>
-                </div>
-
-                {/* Tech Stack Badges */}
-                <div className="mb-6 flex flex-wrap gap-1.5">
-                  {style.techStack.slice(0, 3).map((tech) => (
-                    <span
-                      key={tech}
-                      className="rounded-md border border-sky-200/60 bg-sky-100/70 px-2 py-0.5 text-[10px] font-semibold text-sky-900"
-                    >
-                      {tech}
-                    </span>
-                  ))}
-                </div>
-              </div>
-
-              {/* Action Buttons: Inspect & Like */}
-              <div className="pt-4 border-t border-sky-200/80 flex items-center gap-2">
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onSelectPreview(style);
-                  }}
-                  className="flex-1 flex items-center justify-center gap-2 rounded-xl bg-[#0a192f] py-2.5 text-xs font-bold text-white hover:bg-slate-800 transition cursor-pointer shadow-xs"
-                >
-                  <span>Inspect Design Vibe</span>
-                  <span>👁️</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onToggleLike(style.name);
-                  }}
-                  className={`flex items-center justify-center gap-1.5 rounded-xl px-3.5 py-2.5 text-xs font-bold transition cursor-pointer border shadow-xs ${
-                    isLiked
-                      ? "bg-rose-500 hover:bg-rose-600 text-white border-rose-600"
-                      : "bg-white hover:bg-rose-50 text-slate-800 border-sky-300 hover:text-rose-600"
-                  }`}
-                >
-                  <span>{isLiked ? "❤️" : "🤍"}</span>
-                  <span>{isLiked ? "Liked" : "Like"}</span>
-                </button>
-              </div>
-            </div>
+              style={style}
+              isLiked={isLiked}
+              onToggleLike={onToggleLike}
+            />
           );
         })}
       </div>

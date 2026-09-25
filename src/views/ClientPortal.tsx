@@ -15,6 +15,7 @@ import { ClientHubProject } from "@/components/client-hub/types";
 // Modular Actionable Tiles
 import ClientHubHero from "@/components/client-hub/ClientHubHero";
 import CalculatedPricesTile from "@/components/client-hub/CalculatedPricesTile";
+import SavedAestheticsTile from "@/components/client-hub/SavedAestheticsTile";
 import BookingContractTile from "@/components/client-hub/BookingContractTile";
 import AssetManagerTile from "@/components/client-hub/AssetManagerTile";
 import DeliverablesProgressTile from "@/components/client-hub/DeliverablesProgressTile";
@@ -347,6 +348,12 @@ export default function ClientPortal() {
                 <CalculatedPricesTile
                   quote={project.calculated_quote}
                   onProceedToBooking={() => scrollToSection("booking-contract-tile")}
+                />
+
+                {/* TILE: SAVED DESIGN AESTHETICS */}
+                <SavedAestheticsTile
+                  project={project}
+                  onUpdateProject={handleUpdateProject}
                 />
 
                 {/* TILE 2: BOOKING & ADMIN-UPLOADED CONTRACT & ADVANCE PAYMENT */}
