@@ -101,7 +101,16 @@ export default function WebsiteCostCalculatorFunnel({
   }, [user, isAuthenticated]);
   const [saveToast, setSaveToast] = useState<string | null>(null);
   const [expandedBundle, setExpandedBundle] = useState<string | null>(null);
-  const [featIndex, setFeatIndex] = useState<Record<string, number>>({});
+  const [expandedMacro, setExpandedMacro] = useState<string | null>(null);
+
+  const toggleBundleAccordion = (bundleId: string) => {
+    setExpandedBundle((prev) => (prev === bundleId ? null : bundleId));
+    setExpandedMacro(null); // Reset active macro when switching packages
+  };
+
+  const toggleMacroAccordion = (macroId: string) => {
+    setExpandedMacro((prev) => (prev === macroId ? null : macroId));
+  };
 
   const funnelContainerRef = useRef<HTMLDivElement>(null);
 
@@ -578,18 +587,16 @@ Let's discuss getting started!`;
           )}
 
           {/* ------------------------------------------------------------- */}
-          {/* STEP 2: FEATURE BUNDLES (CURATED 10 MODULES)                  */}
+          {/* STEP 2: FEATURE BUNDLES (EXACT 6 PACKAGES & MODULES)          */}
           {/* ------------------------------------------------------------- */}
           {currentStep === 2 && (
             <div className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
                 {FEATURE_BUNDLES.map((bundle) => {
                   const isSelected = selectedBundles.includes(bundle.id);
                   const isEssential = bundle.isEssential;
                   const isExpanded = expandedBundle === bundle.id;
-                  const currentFeatIdx = featIndex[bundle.id] ?? 0;
-                  const totalFeats = bundle.includedFeatures.length;
-                  const currentFeat = bundle.includedFeatures[currentFeatIdx];
+                  const macros = bundle.macroFeatures || [];
 
                   return (
                     <div
@@ -628,65 +635,86 @@ Let's discuss getting started!`;
                         </span>
                       </div>
 
-                      {/* Feature peek row */}
-                      <div className="px-4 pb-3 flex items-center gap-2">
+                      {/* Accordion trigger row */}
+                      <div className="px-4 pb-3 flex items-center justify-between">
                         <button
                           type="button"
                           onClick={(e) => {
                             e.stopPropagation();
-                            setExpandedBundle(isExpanded ? null : bundle.id);
+                            toggleBundleAccordion(bundle.id);
                           }}
-                          className="shrink-0 w-5 h-5 rounded-full border border-sky-300 bg-sky-50 text-sky-700 text-[11px] font-bold flex items-center justify-center hover:bg-sky-100 transition cursor-pointer"
-                          aria-label={isExpanded ? "Hide features" : "Show features"}
+                          className="flex items-center gap-2 text-[11px] font-semibold text-sky-700 hover:text-sky-900 transition cursor-pointer"
                         >
-                          {isExpanded ? "−" : "+"}
-                        </button>
-
-                        {isExpanded ? (
-                          <div className="flex items-center gap-1.5 flex-1 min-w-0">
-                            <span className="text-[11px] text-[#0a192f] font-medium leading-snug flex-1 truncate">
-                              {currentFeat}
-                            </span>
-                            {totalFeats > 1 && (
-                              <div className="flex items-center gap-1 shrink-0">
-                                <button
-                                  type="button"
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    setFeatIndex((prev) => ({
-                                      ...prev,
-                                      [bundle.id]: (currentFeatIdx - 1 + totalFeats) % totalFeats,
-                                    }));
-                                  }}
-                                  className="w-5 h-5 rounded border border-sky-200 bg-white text-sky-600 text-[10px] flex items-center justify-center hover:bg-sky-50 cursor-pointer transition"
-                                >
-                                  ‹
-                                </button>
-                                <span className="text-[9px] text-sky-500 font-medium">
-                                  {currentFeatIdx + 1}/{totalFeats}
-                                </span>
-                                <button
-                                  type="button"
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    setFeatIndex((prev) => ({
-                                      ...prev,
-                                      [bundle.id]: (currentFeatIdx + 1) % totalFeats,
-                                    }));
-                                  }}
-                                  className="w-5 h-5 rounded border border-sky-200 bg-white text-sky-600 text-[10px] flex items-center justify-center hover:bg-sky-50 cursor-pointer transition"
-                                >
-                                  ›
-                                </button>
-                              </div>
-                            )}
-                          </div>
-                        ) : (
-                          <span className="text-[10px] text-sky-500 font-medium">
-                            {isEssential ? "Core Architecture" : "Custom Scope"} · {totalFeats} features
+                          <span className="w-4 h-4 rounded-full border border-sky-300 bg-sky-50 flex items-center justify-center text-[11px] font-bold">
+                            {isExpanded ? "−" : "+"}
                           </span>
-                        )}
+                          <span>
+                            {isExpanded
+                              ? "Hide Macro Features"
+                              : `${macros.length} Macro Modules (${isEssential ? "Core Included" : "Expandable"})`}
+                          </span>
+                        </button>
                       </div>
+
+                      {/* Expanded Macro Features Downwards Drawer */}
+                      {isExpanded && (
+                        <div className="px-3.5 pb-3.5 pt-2 border-t border-sky-200/80 space-y-2 animate-in fade-in duration-150">
+                          <div className="max-h-64 overflow-y-auto space-y-1.5 pr-1 scrollbar-thin">
+                            {macros.map((macro) => {
+                              const isMacroExpanded = expandedMacro === macro.id;
+                              return (
+                                <div
+                                  key={macro.id}
+                                  className={`rounded-xl border transition-all ${
+                                    isMacroExpanded
+                                      ? "bg-white border-sky-300 shadow-xs"
+                                      : "bg-white/60 hover:bg-white/90 border-sky-100"
+                                  }`}
+                                >
+                                  {/* Macro Header */}
+                                  <button
+                                    type="button"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      toggleMacroAccordion(macro.id);
+                                    }}
+                                    className="w-full flex items-center justify-between p-2.5 text-left cursor-pointer"
+                                  >
+                                    <div className="flex items-center gap-2 min-w-0 pr-2">
+                                      {macro.icon && <span className="text-sm shrink-0">{macro.icon}</span>}
+                                      <span className="text-xs font-semibold text-[#0a192f] truncate">
+                                        {macro.name}
+                                      </span>
+                                    </div>
+                                    <span className="shrink-0 w-4 h-4 rounded-full border border-sky-200 bg-sky-50 text-sky-600 text-[10px] font-bold flex items-center justify-center">
+                                      {isMacroExpanded ? "−" : "+"}
+                                    </span>
+                                  </button>
+
+                                  {/* Micro Features Drawer */}
+                                  {isMacroExpanded && (
+                                    <div className="px-3 pb-3 pt-1 border-t border-sky-100/80 space-y-1.5 text-[11px]">
+                                      {macro.description && (
+                                        <p className="text-[11px] text-slate-600 leading-snug mb-2 font-normal">
+                                          {macro.description}
+                                        </p>
+                                      )}
+                                      <div className="space-y-1 pl-1">
+                                        {macro.microFeatures.map((micro, idx) => (
+                                          <div key={idx} className="flex items-start gap-1.5 text-slate-700">
+                                            <span className="text-sky-500 font-bold mt-0.5">•</span>
+                                            <span className="leading-tight">{micro}</span>
+                                          </div>
+                                        ))}
+                                      </div>
+                                    </div>
+                                  )}
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      )}
                     </div>
                   );
                 })}
