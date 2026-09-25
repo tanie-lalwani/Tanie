@@ -39,28 +39,6 @@ export default function BookingContractTile({
     setRequestSent(true);
   };
 
-  // Admin simulation shortcut for immediate testing
-  const handleSimulateAdminUploadContract = (customPrice = 2800) => {
-    const advanceAmount = Math.round(customPrice * 0.5);
-    const balanceAmount = customPrice - advanceAmount;
-
-    const updated: ClientHubProject = {
-      ...project,
-      contract_uploaded: true,
-      contract_title: `Master Web Engineering Agreement: ${project.title}`,
-      admin_agreed_price: customPrice,
-      admin_advance_required: advanceAmount,
-      admin_completion_balance: balanceAmount,
-      booking_status: "contract_ready",
-      contract_terms: `1. PARTIES: Agreement between Tanie Lalwani ("Studio") and ${project.client_name} ("Client").
-2. BESPOKE PRICE: Studio agreed project fee is ${project.symbol}${customPrice.toLocaleString()} ${project.currency}.
-3. ADVANCE MILESTONE: 50% upfront deposit (${project.symbol}${advanceAmount.toLocaleString()}) locks calendar dates & commences Figma architecture.
-4. COMPLETION MILESTONE: Remaining 50% (${project.symbol}${balanceAmount.toLocaleString()}) due upon staging approval before production code handover.
-5. INTELLECTUAL PROPERTY: Upon final payment, 100% intellectual property, domain configuration, and source code transfer to Client.`,
-    };
-    onUpdateProject(updated);
-  };
-
   // Handle client signing contract and paying advance
   const handlePayAdvance = async () => {
     if (!tncAccepted) {
@@ -237,23 +215,6 @@ export default function BookingContractTile({
                 </div>
               </div>
             )}
-          </div>
-
-          {/* Quick Admin Simulator for Testing */}
-          <div className="rounded-2xl border border-dashed border-sky-300 bg-sky-50/50 p-4 text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <div>
-              <span className="font-extrabold text-sky-950">⚡ Admin Testing Helper:</span>
-              <p className="text-slate-600 text-[11px] mt-0.5">
-                Simulate Tanie uploading the contract & agreed custom price ($2,800 total / $1,400 advance).
-              </p>
-            </div>
-            <button
-              type="button"
-              onClick={() => handleSimulateAdminUploadContract(2800)}
-              className="shrink-0 rounded-xl bg-sky-700 px-4 py-2 font-bold text-white hover:bg-sky-800 transition cursor-pointer shadow-2xs"
-            >
-              Simulate Admin Upload Contract 📝
-            </button>
           </div>
         </div>
       )}
