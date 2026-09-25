@@ -13,7 +13,7 @@ export default function MarketRegionSelector({
   className = "",
   compact = false
 }: MarketRegionSelectorProps) {
-  const { marketTier, tierConfig, setMarketTier, isAutoDetected, detectedCountry } = useGeoPricing();
+  const { marketTier, tierConfig, setMarketTier, detectedCountry } = useGeoPricing();
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -36,26 +36,19 @@ export default function MarketRegionSelector({
   // 2. Is user detected in the USA?
   const isUsa = detectedTierCode === "US" || localTier.countryCode === "US";
 
-  // For USA visitors: Show ONLY USD, no other countries allowed (prevents posing as cheaper country)
+  // For USA visitors: Show standard USD
   if (isUsa) {
     return (
       <div
-        className={`inline-flex items-center gap-2 rounded-full border border-sky-300/80 bg-white/90 backdrop-blur-md px-3 py-1 text-xs font-bold text-slate-800 shadow-2xs ${className}`}
+        className={`inline-flex items-center gap-1.5 rounded-full border border-sky-300/80 bg-white/90 px-3 py-1 text-xs font-semibold text-slate-800 ${className}`}
       >
         <span className="text-sm leading-none">🇺🇸</span>
-        <span className="font-semibold text-slate-800">
-          United States ($USD)
-        </span>
-        <span className="flex items-center gap-1 rounded-full bg-emerald-100 text-emerald-800 px-1.5 py-0.2 text-[9px] font-extrabold uppercase tracking-wide">
-          <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
-          Auto
-        </span>
+        <span>United States ($USD)</span>
       </div>
     );
   }
 
-  // For international visitors: Only show their detected local country and USD!
-  // Prevents visitors from posing as being from other cheaper countries.
+  // For international visitors: Show local country & USD
   const allowedMarkets = [localTier, usTier];
 
   return (
@@ -64,22 +57,14 @@ export default function MarketRegionSelector({
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className={`flex items-center gap-2 rounded-full border border-sky-300/80 bg-white/90 backdrop-blur-md px-3 py-1 text-xs font-bold text-slate-800 shadow-2xs transition hover:bg-white hover:border-sky-400 hover:shadow-xs cursor-pointer ${
-          compact ? "text-[11px] py-1 px-2.5" : ""
+        className={`flex items-center gap-1.5 rounded-full border border-sky-300/80 bg-white/90 px-3 py-1 text-xs font-semibold text-slate-800 transition hover:bg-white hover:border-sky-400 cursor-pointer ${
+          compact ? "text-[11px] py-0.5 px-2" : ""
         }`}
-        title="Toggle Local Country or USD Pricing"
       >
-        <span className="text-base leading-none">{tierConfig.flag}</span>
-        <span className="font-semibold text-slate-700">
-          {compact ? tierConfig.currencyCode : `${tierConfig.countryName} (${tierConfig.currencySymbol}${tierConfig.currencyCode})`}
+        <span className="text-sm leading-none">{tierConfig.flag}</span>
+        <span>
+          {tierConfig.countryName} ({tierConfig.currencySymbol}{tierConfig.currencyCode})
         </span>
-
-        {isAutoDetected && (
-          <span className="flex items-center gap-1 rounded-full bg-emerald-100 text-emerald-700 px-1.5 py-0.2 text-[9px] font-extrabold uppercase tracking-wide">
-            <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
-            Auto
-          </span>
-        )}
 
         <svg
           width="12"
@@ -94,19 +79,10 @@ export default function MarketRegionSelector({
         </svg>
       </button>
 
-      {/* Dropdown Menu (Only detected country and USD) */}
+      {/* Dropdown Menu (Only the two options, no meta text) */}
       {isOpen && (
-        <div className="absolute left-0 sm:right-0 sm:left-auto mt-2 w-64 origin-top rounded-2xl border border-sky-200 bg-white/95 p-2 shadow-xl backdrop-blur-xl z-50 animate-in fade-in zoom-in-95 duration-150">
-          <div className="px-3 py-1.5 border-b border-sky-100 mb-1">
-            <p className="text-[10px] font-extrabold uppercase tracking-wider text-sky-700">
-              Currency &amp; Billing Format
-            </p>
-            <p className="text-[11px] text-slate-500">
-              Select your local currency or standard global USD.
-            </p>
-          </div>
-
-          <div className="space-y-1">
+        <div className="absolute left-0 sm:right-0 sm:left-auto mt-1.5 w-52 origin-top rounded-xl border border-sky-200 bg-white p-1 shadow-lg z-50 animate-in fade-in zoom-in-95 duration-150">
+          <div className="space-y-0.5">
             {allowedMarkets.map((tier) => {
               const isSelected = tier.countryCode === marketTier;
               return (
@@ -117,34 +93,25 @@ export default function MarketRegionSelector({
                     setMarketTier(tier.countryCode);
                     setIsOpen(false);
                   }}
-                  className={`w-full flex items-center justify-between rounded-xl px-3 py-2 text-left text-xs transition cursor-pointer ${
+                  className={`w-full flex items-center justify-between rounded-lg px-2.5 py-2 text-left text-xs transition cursor-pointer ${
                     isSelected
-                      ? "bg-[#0a192f] text-white font-bold shadow-xs"
+                      ? "bg-[#0a192f] text-white font-bold"
                       : "text-slate-700 hover:bg-sky-50 font-medium"
                   }`}
                 >
-                  <div className="flex items-center gap-2.5">
-                    <span className="text-lg leading-none">{tier.flag}</span>
-                    <div>
-                      <div className="leading-tight">{tier.countryName}</div>
-                      <div className={`text-[10px] ${isSelected ? "text-sky-200" : "text-slate-400"}`}>
-                        {tier.currencyCode === "USD" ? "Standard USD Billing" : "Local Market Pricing"} ({tier.currencySymbol}{tier.currencyCode})
-                      </div>
-                    </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm leading-none">{tier.flag}</span>
+                    <span>{tier.countryName} ({tier.currencySymbol}{tier.currencyCode})</span>
                   </div>
 
                   {isSelected && (
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" className="text-white">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" className="text-white">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                     </svg>
                   )}
                 </button>
               );
             })}
-          </div>
-
-          <div className="mt-1 pt-2 border-t border-sky-100 px-3 py-1 text-[10px] text-slate-400 text-center">
-            {isAutoDetected ? "Auto-detected via your IP address" : "Billing preference active"}
           </div>
         </div>
       )}
