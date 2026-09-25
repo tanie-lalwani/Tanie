@@ -679,31 +679,44 @@ ${companyName.trim() ? `🏢 Company / Brand: ${companyName.trim()}` : ""}
       {/* ------------------------------------------------------------- */}
       {/* 3. MAIN PAGE CONTAINER                                        */}
       {/* ------------------------------------------------------------- */}
-      <div className={`${funnelStep === 0 ? "pl-0 md:pl-20" : "pl-0 flex items-center justify-center"} min-h-screen`}>
-        <div className={`mx-auto max-w-7xl px-4 ${funnelStep === 0 ? "pt-20 pb-16 sm:px-8 sm:pt-14 sm:pb-24" : "py-8 sm:py-16 w-full"}`}>
-          
-          {/* ------------------------------------------------------------- */}
-          {/* SECTION 1: HERO & 4-QUESTION COST CALCULATOR FUNNEL          */}
-          {/* ------------------------------------------------------------- */}
-          <div className={funnelStep === 0 ? "mb-16" : "w-full"}>
+      <div className={`${funnelStep === 0 ? "pl-0 md:pl-20" : "pl-0 flex items-center justify-center"} min-h-screen flex flex-col`}>
+        {/* SECTION 1: HERO & 4-QUESTION COST CALCULATOR FUNNEL (COVERS WHOLE SCREEN) */}
+        <section
+          className={
+            funnelStep === 0
+              ? "min-h-screen flex flex-col justify-center items-center px-4 sm:px-8 relative w-full pt-16 md:pt-0"
+              : "w-full py-8 sm:py-16 mx-auto max-w-7xl px-4"
+          }
+        >
+          <div className="w-full max-w-7xl mx-auto flex-1 flex flex-col justify-center items-center">
             <WebsiteCostCalculatorFunnel
               onStepChange={setFunnelStep}
               onProceedWithCustomQuote={handleProceedWithCostCalculatorFunnel}
             />
           </div>
 
-          {/* ------------------------------------------------------------- */}
-          {/* SECTION 2: DIRECT AESTHETICS LISTING & FILTER BAR (Step 0)    */}
-          {/* ------------------------------------------------------------- */}
+          {/* Visual indicator showing Section 2 starts later below */}
           {funnelStep === 0 && (
+            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 opacity-70 hover:opacity-100 transition-opacity pointer-events-none">
+              <span className="text-[10px] font-mono uppercase tracking-widest text-[#0a192f] font-bold">
+                Scroll for Design Aesthetics
+              </span>
+              <span className="animate-bounce text-sm text-[#0a192f]">↓</span>
+            </div>
+          )}
+        </section>
+
+        {/* SECTION 2: DIRECT AESTHETICS LISTING & FILTER BAR (Starts later below the fold) */}
+        {funnelStep === 0 && (
+          <section className="mx-auto max-w-7xl px-4 sm:px-8 pt-20 pb-28 border-t border-sky-300/40 w-full">
             <AestheticsGridSection
               likedAesthetics={likedAesthetics}
               onToggleLike={toggleLikeAesthetic}
               onSelectPreview={setPreviewStyleModal}
               pkgCopy={pkgCopy}
             />
-          )}
-        </div>
+          </section>
+        )}
       </div>
 
       {/* ------------------------------------------------------------- */}
