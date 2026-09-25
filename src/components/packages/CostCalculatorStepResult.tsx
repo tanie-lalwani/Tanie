@@ -347,7 +347,7 @@ export default function CostCalculatorStepResult({
                 {activePackage.icon} {activePackage.name}
               </h3>
               <p className="text-xs text-sky-950/80 mt-1 font-medium">
-                {`Timeline: ${timeline || activePackage.turnaround || "Standard"} • Budget: ${budgetTier || "Standard"}`}
+                {`Target Timeline: ${timeline || activePackage.turnaround || "Standard"}`}
               </p>
             </div>
 

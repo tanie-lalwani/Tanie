@@ -553,7 +553,7 @@ Let's discuss getting started!`;
               <h2 className="text-2xl sm:text-3xl font-black !text-[#0a192f] tracking-tight" style={{ color: '#0a192f' }}>
                 {currentStep === 1 && (locale === "hi" ? "Aap kya bana rahe hain?" : "What are you building?")}
                 {currentStep === 2 && (locale === "hi" ? "Universal Add-Ons Chunein (Optional)" : "Select Universal Add-Ons (Optional)")}
-                {currentStep === 3 && (locale === "hi" ? "Launch Timeline & Budget" : "Launch Timing & Budget Preferences")}
+                {currentStep === 3 && (locale === "hi" ? "Target Launch Timeline" : "Target Launch Timeline")}
                 {currentStep === 4 && (locale === "hi" ? "Aapka Suggested Package & Estimate" : "Your Suggested Package & Custom Estimate")}
               </h2>
               <p className="text-xs text-sky-950/80 mt-1 font-medium" style={{ color: '#0a192f' }}>
@@ -723,22 +723,24 @@ Let's discuss getting started!`;
                   onClick={() => goToStep(3)}
                   className="px-8 py-3 rounded-full font-bold text-xs uppercase tracking-wider transition-all shadow-md bg-[#0a192f] hover:bg-slate-800 text-white cursor-pointer"
                 >
-                  Next: Timeline & Budget →
+                  Next: Launch Timeline →
                 </button>
               </div>
             </div>
           )}
 
           {/* ───────────────────────────────────────────────────────────────────── */}
-          {/* STEP 3: TIMELINE & BUDGET PREFERENCES                                */}
+          {/* STEP 3: LAUNCH TIMELINE                                               */}
           {/* ───────────────────────────────────────────────────────────────────── */}
           {currentStep === 3 && (
             <div className="space-y-6">
               {/* TIMELINE */}
               <div className="space-y-3">
-                <label className="text-xs font-black text-[#0a192f] uppercase tracking-wider">
-                  1. Target Launch Timeline
-                </label>
+                <p className="text-xs sm:text-sm text-sky-950/80 font-medium">
+                  {locale === "hi"
+                    ? "Apne project ke live hone ka target timeline chunein:"
+                    : "Select your desired target launch timeframe:"}
+                </p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {[
                     { label: "⚡ Express Sprint (1–2 Weeks)", value: "⚡ Express Sprint (1–2 Weeks)", isSaaSDisabled: true },
@@ -777,37 +779,6 @@ Let's discuss getting started!`;
                       </button>
                     );
                   })}
-                </div>
-              </div>
-
-              {/* BUDGET TIER */}
-              <div className="space-y-3">
-                <label className="text-xs font-black text-[#0a192f] uppercase tracking-wider">
-                  2. Approximate Investment Comfort
-                </label>
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
-                  {[
-                    "Standard Foundation",
-                    "Growth Tier",
-                    "Scale & Automation",
-                    "Enterprise Bespoke"
-                  ].map((b) => (
-                    <button
-                      key={b}
-                      type="button"
-                      onClick={() => {
-                        setBudgetTier(b);
-                        dispatchLeadCapture({ budgetTier: b });
-                      }}
-                      className={`p-3 rounded-xl border text-center text-xs font-black transition cursor-pointer ${
-                        budgetTier === b
-                          ? "bg-[#0a192f] text-white border-[#0a192f]"
-                          : "bg-white/70 hover:bg-white border-sky-200/80 text-slate-800"
-                      }`}
-                    >
-                      {b}
-                    </button>
-                  ))}
                 </div>
               </div>
 
