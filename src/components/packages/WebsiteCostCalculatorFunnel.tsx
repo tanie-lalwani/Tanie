@@ -223,18 +223,30 @@ export default function WebsiteCostCalculatorFunnel({
     let addonsUsd = 0;
     let addonsMarket = 0;
 
+    const isBonusFreeAddon = (addonId: string) =>
+      selectedPackageId !== "landing" && ["addon_seo", "addon_security", "addon_hosting"].includes(addonId);
+
     const selectedAddonsList = selectedAddons.map((addonId) => {
       const addon = UNIVERSAL_ADDONS.find((a) => a.id === addonId);
-      const inr = addon?.priceInr ?? 0;
-      const usd = addon?.priceUsd ?? 0;
-      const market = formatAddonPrice(addonId).amount;
+      const isFreeBonus = isBonusFreeAddon(addonId);
+      const originalInr = addon?.priceInr ?? 0;
+      const originalUsd = addon?.priceUsd ?? 0;
+      const originalMarket = formatAddonPrice(addonId).amount;
+
+      const inr = isFreeBonus ? 0 : originalInr;
+      const usd = isFreeBonus ? 0 : originalUsd;
+      const market = isFreeBonus ? 0 : originalMarket;
+
       addonsInr += inr;
       addonsUsd += usd;
       addonsMarket += market;
+
       return {
         id: addonId,
         name: addon?.name || addonId,
         icon: addon?.icon || "🧩",
+        isFreeBonus,
+        originalPriceMarket: originalMarket,
         priceInr: inr,
         priceUsd: usd,
         priceMarket: market
@@ -439,9 +451,15 @@ export default function WebsiteCostCalculatorFunnel({
     ];
 
     calculation.selectedAddonsList.forEach((addon) => {
-      lines.push(
-        `  • ${addon.icon} ${addon.name} (Add-on): +${tierConfig.currencySymbol}${addon.priceMarket.toLocaleString()} ${tierConfig.currencyCode}`
-      );
+      if (addon.isFreeBonus) {
+        lines.push(
+          `  • ${addon.icon} ${addon.name} (Add-on): *FREE* (Limited time offer, was ${tierConfig.currencySymbol}${addon.originalPriceMarket.toLocaleString()} ${tierConfig.currencyCode})`
+        );
+      } else {
+        lines.push(
+          `  • ${addon.icon} ${addon.name} (Add-on): +${tierConfig.currencySymbol}${addon.priceMarket.toLocaleString()} ${tierConfig.currencyCode}`
+        );
+      }
     });
 
     const urgencyLine =
@@ -673,6 +691,9 @@ Let's discuss getting started!`;
                 {UNIVERSAL_ADDONS.map((addon) => {
                   const isSelected = selectedAddons.includes(addon.id);
                   const addonPrice = formatAddonPrice(addon.id);
+                  const isFreeBonus =
+                    selectedPackageId !== "landing" &&
+                    ["addon_seo", "addon_security", "addon_hosting"].includes(addon.id);
 
                   return (
                     <button
@@ -693,9 +714,25 @@ Let's discuss getting started!`;
                           <h4 className="text-xs font-black text-[#0a192f] truncate">
                             {addon.name}
                           </h4>
-                          <span className="text-xs font-black text-sky-900 shrink-0">
-                            +{addonPrice.formatted}
-                          </span>
+                          {isFreeBonus ? (
+                            <div className="text-right shrink-0">
+                              <div className="flex items-center gap-1.5 justify-end">
+                                <span className="text-[11px] text-slate-400 line-through font-bold">
+                                  +{addonPrice.formatted}
+                                </span>
+                                <span className="text-xs font-black text-emerald-800 bg-emerald-100/90 px-1.5 py-0.5 rounded border border-emerald-300">
+                                  FREE with package
+                                </span>
+                              </div>
+                              <span className="text-[9px] text-amber-900 font-semibold tracking-tight block mt-0.5">
+                                ⏳ Limited time offer
+                              </span>
+                            </div>
+                          ) : (
+                            <span className="text-xs font-black text-sky-900 shrink-0">
+                              +{addonPrice.formatted}
+                            </span>
+                          )}
                         </div>
                         <p className="text-[11px] text-slate-600 mt-1 leading-snug">
                           {addon.tagline}

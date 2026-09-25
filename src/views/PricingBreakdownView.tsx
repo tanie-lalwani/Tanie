@@ -119,14 +119,21 @@ export default function PricingBreakdownView() {
     });
 
     let addonsMarket = 0;
+    const isBonusFreeAddon = (addonId: string) =>
+      selectedPackageId !== "landing" && ["addon_seo", "addon_security", "addon_hosting"].includes(addonId);
+
     const addonsList = selectedAddons.map((addonId) => {
       const addon = UNIVERSAL_ADDONS.find((a) => a.id === addonId);
-      const price = formatAddonPrice(addonId).amount;
+      const isFreeBonus = isBonusFreeAddon(addonId);
+      const originalPrice = formatAddonPrice(addonId).amount;
+      const price = isFreeBonus ? 0 : originalPrice;
       addonsMarket += price;
       return {
         id: addonId,
         name: addon?.name || addonId,
         icon: addon?.icon || "🧩",
+        isFreeBonus,
+        originalPriceMarket: originalPrice,
         priceMarket: price
       };
     });
@@ -459,11 +466,29 @@ Let's discuss getting started!`;
                 <div key={addon.id} className="p-3.5 rounded-2xl border border-sky-200 bg-sky-50/50 flex items-center justify-between">
                   <div className="flex items-center gap-2.5">
                     <span className="text-xl">{addon.icon}</span>
-                    <span className="text-xs font-bold text-[#0a192f]">{addon.name}</span>
+                    <div>
+                      <span className="text-xs font-bold text-[#0a192f] block">{addon.name}</span>
+                      {addon.isFreeBonus && (
+                        <span className="text-[9px] text-amber-900 font-semibold block">
+                          ⏳ Limited time offer
+                        </span>
+                      )}
+                    </div>
                   </div>
-                  <span className="text-xs font-black text-sky-900">
-                    +{tierConfig.currencySymbol}{addon.priceMarket.toLocaleString()}
-                  </span>
+                  {addon.isFreeBonus ? (
+                    <div className="text-right">
+                      <span className="text-[11px] text-slate-400 line-through font-bold block">
+                        +{tierConfig.currencySymbol}{addon.originalPriceMarket.toLocaleString()}
+                      </span>
+                      <span className="text-xs font-black text-emerald-800 bg-emerald-100/90 px-1.5 py-0.5 rounded border border-emerald-300 inline-block">
+                        FREE
+                      </span>
+                    </div>
+                  ) : (
+                    <span className="text-xs font-black text-sky-900">
+                      +{tierConfig.currencySymbol}{addon.priceMarket.toLocaleString()}
+                    </span>
+                  )}
                 </div>
               ))}
             </div>

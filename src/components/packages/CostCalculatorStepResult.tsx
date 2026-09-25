@@ -407,16 +407,38 @@ export default function CostCalculatorStepResult({
                     <div className="min-w-0">
                       <div className="flex items-center gap-2">
                         <span className="font-bold !text-[#0a192f]">{addon.name}</span>
-                        <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-200">
-                          Universal Add-on
-                        </span>
+                        {addon.isFreeBonus ? (
+                          <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-emerald-100 text-emerald-900 border border-emerald-300">
+                            FREE Promo Bonus
+                          </span>
+                        ) : (
+                          <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-200">
+                            Universal Add-on
+                          </span>
+                        )}
                       </div>
                     </div>
                   </div>
-                  <span className="font-extrabold text-[#0a192f] shrink-0">
-                    +{tierConfig.currencySymbol}
-                    {addon.priceMarket.toLocaleString()} {tierConfig.currencyCode}
-                  </span>
+                  {addon.isFreeBonus ? (
+                    <div className="text-right shrink-0">
+                      <div className="flex items-center gap-1.5 justify-end">
+                        <span className="text-[11px] text-slate-400 line-through font-bold">
+                          +{tierConfig.currencySymbol}{addon.originalPriceMarket?.toLocaleString()}
+                        </span>
+                        <span className="font-black text-emerald-800 text-xs">
+                          FREE (Included)
+                        </span>
+                      </div>
+                      <span className="text-[9px] text-amber-900 font-semibold tracking-tight block">
+                        ⏳ Limited time offer
+                      </span>
+                    </div>
+                  ) : (
+                    <span className="font-extrabold text-[#0a192f] shrink-0">
+                      +{tierConfig.currencySymbol}
+                      {addon.priceMarket.toLocaleString()} {tierConfig.currencyCode}
+                    </span>
+                  )}
                 </div>
               ))}
 
