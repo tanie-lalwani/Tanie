@@ -20,9 +20,12 @@ import { useLanguage } from "@/context/LanguageContext";
 import MarketRegionSelector from "@/components/ui/MarketRegionSelector";
 import { saveCalculatedQuote } from "@/components/client-hub/clientHubStorage";
 import { saveLeadProfile } from "@/features/lead-capture/lib/cookieHelper";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function PricingBreakdownView() {
   const router = useRouter();
+  const { user, isAuthenticated } = useAuth();
+  const isUnlocked = Boolean(user) || isAuthenticated;
   const { tierConfig, formatPackagePrice, formatAddonPrice } = useGeoPricing();
   const { locale } = useLanguage();
 
@@ -377,10 +380,17 @@ Let's discuss getting started!`;
               {currentPackage.isCustomQuoteOnly ? (
                 <span className="text-indigo-950">Quotation on Request</span>
               ) : (
-                <>
-                  {tierConfig.currencySymbol}
-                  {calculation.finalTotalMarket.toLocaleString()} {tierConfig.currencyCode}
-                </>
+                <div className="flex items-center justify-center md:justify-end gap-1.5">
+                  <span className={`transition-all ${!isUnlocked ? "filter blur-[6px] select-none pointer-events-none" : ""}`}>
+                    {tierConfig.currencySymbol}
+                    {calculation.finalTotalMarket.toLocaleString()} {tierConfig.currencyCode}
+                  </span>
+                  {!isUnlocked && (
+                    <span className="text-[10px] font-bold text-sky-800 bg-sky-200/80 px-1.5 py-0.5 rounded">
+                      🔒 Login
+                    </span>
+                  )}
+                </div>
               )}
             </div>
             <div className="text-[11px] text-emerald-800 font-bold mt-1">
@@ -465,7 +475,7 @@ Let's discuss getting started!`;
                             {macro.priceLabel || "Quote on Request"}
                           </span>
                         ) : (
-                          <div className={`font-black text-sm ${isOmitted ? "line-through text-slate-400" : "text-[#0a192f]"}`}>
+                          <div className={`font-black text-sm ${isOmitted ? "line-through text-slate-400" : "text-[#0a192f]"} ${!isUnlocked ? "filter blur-[5px] select-none pointer-events-none" : ""}`}>
                             {tierConfig.currencySymbol}{macroPriceMarket.toLocaleString()}
                           </div>
                         )}
@@ -521,7 +531,7 @@ Let's discuss getting started!`;
                                   {micro.detail}
                                 </span>
                               </div>
-                              <span className="text-[10px] font-extrabold text-sky-900 shrink-0">
+                              <span className={`text-[10px] font-extrabold text-sky-900 shrink-0 ${!isUnlocked ? "filter blur-[4px] select-none" : ""}`}>
                                 {tierConfig.currencySymbol}{microPrice.toLocaleString()}
                               </span>
                             </div>
@@ -558,7 +568,7 @@ Let's discuss getting started!`;
                   </div>
                   {addon.isFreeBonus ? (
                     <div className="text-right">
-                      <span className="text-[11px] text-slate-400 line-through font-bold block">
+                      <span className={`text-[11px] text-slate-400 line-through font-bold block ${!isUnlocked ? "filter blur-[4px] select-none" : ""}`}>
                         +{tierConfig.currencySymbol}{addon.originalPriceMarket.toLocaleString()}
                       </span>
                       <span className="text-xs font-black text-emerald-800 bg-emerald-100/90 px-1.5 py-0.5 rounded border border-emerald-300 inline-block">
@@ -566,7 +576,7 @@ Let's discuss getting started!`;
                       </span>
                     </div>
                   ) : (
-                    <span className="text-xs font-black text-sky-900">
+                    <span className={`text-xs font-black text-sky-900 ${!isUnlocked ? "filter blur-[5px] select-none" : ""}`}>
                       +{tierConfig.currencySymbol}{addon.priceMarket.toLocaleString()}
                     </span>
                   )}
@@ -583,9 +593,13 @@ Let's discuss getting started!`;
               {currentPackage.isCustomQuoteOnly ? "Custom Scope Quotation" : "Estimated Investment"}
             </span>
             <span className="text-lg font-black text-[#0a192f]">
-              {currentPackage.isCustomQuoteOnly
-                ? "Quotation on Request"
-                : `${tierConfig.currencySymbol}${calculation.finalTotalMarket.toLocaleString()} ${tierConfig.currencyCode}`}
+              {currentPackage.isCustomQuoteOnly ? (
+                "Quotation on Request"
+              ) : (
+                <span className={`inline-block ${!isUnlocked ? "filter blur-[5px] select-none pointer-events-none" : ""}`}>
+                  {tierConfig.currencySymbol}{calculation.finalTotalMarket.toLocaleString()} ${tierConfig.currencyCode}
+                </span>
+              )}
             </span>
             <span className="text-[10px] text-slate-500 font-medium block mt-0.5">
               *Final pricing may vary based on scope of work. Not final pricing.

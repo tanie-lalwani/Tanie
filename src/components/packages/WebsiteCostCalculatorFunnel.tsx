@@ -672,7 +672,16 @@ Let's discuss getting started!`;
                 </div>
                 <div className="text-right">
                   <span className="text-[10px] font-bold uppercase text-slate-500 block">Base Investment</span>
-                  <span className="text-sm font-black text-[#0a192f]">{formatPackagePrice(activePackage.id).formatted} {tierConfig.currencyCode}</span>
+                  <div className="flex items-center justify-end gap-1.5">
+                    <span className={`text-sm font-black text-[#0a192f] transition-all ${!isUnlocked ? "filter blur-[6px] select-none pointer-events-none" : ""}`}>
+                      {formatPackagePrice(activePackage.id).formatted} {tierConfig.currencyCode}
+                    </span>
+                    {!isUnlocked && (
+                      <span className="text-[10px] font-bold text-sky-800 bg-sky-200/80 px-1.5 py-0.5 rounded inline-flex items-center gap-1">
+                        🔒 Login to view
+                      </span>
+                    )}
+                  </div>
                 </div>
               </div>
 
@@ -717,7 +726,7 @@ Let's discuss getting started!`;
                           {isFreeBonus ? (
                             <div className="text-right shrink-0">
                               <div className="flex items-center gap-1.5 justify-end">
-                                <span className="text-[11px] text-slate-400 line-through font-bold">
+                                <span className={`text-[11px] text-slate-400 line-through font-bold transition-all ${!isUnlocked ? "filter blur-[5px] select-none" : ""}`}>
                                   +{addonPrice.formatted}
                                 </span>
                                 <span className="text-xs font-black text-emerald-800 bg-emerald-100/90 px-1.5 py-0.5 rounded border border-emerald-300">
@@ -729,9 +738,14 @@ Let's discuss getting started!`;
                               </span>
                             </div>
                           ) : (
-                            <span className="text-xs font-black text-sky-900 shrink-0">
-                              +{addonPrice.formatted}
-                            </span>
+                            <div className="flex items-center gap-1 shrink-0">
+                              <span className={`text-xs font-black text-sky-900 transition-all ${!isUnlocked ? "filter blur-[6px] select-none" : ""}`}>
+                                +{addonPrice.formatted}
+                              </span>
+                              {!isUnlocked && (
+                                <span className="text-[10px] text-slate-400">🔒</span>
+                              )}
+                            </div>
                           )}
                         </div>
                         <p className="text-[11px] text-slate-600 mt-1 leading-snug">
