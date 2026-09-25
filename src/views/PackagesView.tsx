@@ -700,16 +700,6 @@ ${companyName.trim() ? `🏢 Company / Brand: ${companyName.trim()}` : ""}
               onProceedWithCustomQuote={handleProceedWithCostCalculatorFunnel}
             />
           </div>
-
-          {/* Visual indicator showing Section 2 starts later below */}
-          {funnelStep === 0 && (
-            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 opacity-70 hover:opacity-100 transition-opacity pointer-events-none">
-              <span className="text-[10px] font-mono uppercase tracking-widest text-[#0a192f] font-bold">
-                Scroll for Design Aesthetics
-              </span>
-              <span className="animate-bounce text-sm text-[#0a192f]">↓</span>
-            </div>
-          )}
         </section>
 
         {/* SECTION 2: DIRECT AESTHETICS LISTING & FILTER BAR (Starts later below the fold) */}
