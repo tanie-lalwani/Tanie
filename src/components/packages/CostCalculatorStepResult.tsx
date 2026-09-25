@@ -348,16 +348,21 @@ export default function CostCalculatorStepResult({
 
             <div className="text-center md:text-right">
               <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 block">
-                {activePackage.isCustomQuoteOnly ? "Starting Investment" : "Total Investment"}
+                {activePackage.isCustomQuoteOnly ? "Investment Model" : "Total Investment"}
               </span>
-              <div className="text-4xl sm:text-5xl font-black !text-[#0a192f] tracking-tight">
-                {activePackage.isCustomQuoteOnly ? "From " : ""}
-                {tierConfig.currencySymbol}
-                {calculation.finalTotalMarket.toLocaleString()} {tierConfig.currencyCode}
+              <div className="text-2xl sm:text-3xl font-black !text-[#0a192f] tracking-tight mt-0.5">
+                {activePackage.isCustomQuoteOnly ? (
+                  <span className="text-indigo-950 font-black">Quotation on Request</span>
+                ) : (
+                  <>
+                    {tierConfig.currencySymbol}
+                    {calculation.finalTotalMarket.toLocaleString()} {tierConfig.currencyCode}
+                  </>
+                )}
               </div>
               {activePackage.isCustomQuoteOnly && (
-                <span className="text-[10px] font-bold text-sky-900 bg-sky-100/90 px-2 py-0.5 rounded-full border border-sky-300 inline-block mt-1">
-                  Scope quotation on request
+                <span className="text-[10px] font-bold text-indigo-900 bg-indigo-50 px-2.5 py-0.5 rounded-full border border-indigo-200 inline-block mt-1.5">
+                  ✨ Custom scope quotation on request
                 </span>
               )}
             </div>
@@ -407,9 +412,16 @@ export default function CostCalculatorStepResult({
                   </div>
                 </div>
                 <span className="font-extrabold text-[#0a192f] shrink-0 text-sm">
-                  {activePackage.isCustomQuoteOnly ? "From " : ""}
-                  {tierConfig.currencySymbol}
-                  {calculation.pkgMarket.toLocaleString()} {tierConfig.currencyCode}
+                  {activePackage.isCustomQuoteOnly ? (
+                    <span className="text-indigo-900 bg-indigo-50 border border-indigo-200 px-2 py-0.5 rounded text-xs">
+                      Quotation on Request
+                    </span>
+                  ) : (
+                    <>
+                      {tierConfig.currencySymbol}
+                      {calculation.pkgMarket.toLocaleString()} {tierConfig.currencyCode}
+                    </>
+                  )}
                 </span>
               </div>
 

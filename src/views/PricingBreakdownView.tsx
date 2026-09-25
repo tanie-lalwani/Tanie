@@ -280,7 +280,7 @@ Let's discuss getting started!`;
                     {pkg.name}
                   </span>
                   <span className={`text-[11px] font-bold mt-1 block ${isSelected ? "text-sky-300" : "text-sky-900"}`}>
-                    Starting {displayPrice.formatted} {displayPrice.currency}
+                    {pkg.isCustomQuoteOnly ? "Quote on Request" : `Starting ${displayPrice.formatted} ${displayPrice.currency}`}
                   </span>
                   {rangeText && (
                     <span className={`text-[10px] font-medium block truncate mt-0.5 ${isSelected ? "text-sky-200/70" : "text-slate-500"}`}>
@@ -327,11 +327,17 @@ Let's discuss getting started!`;
 
           <div className="text-center md:text-right shrink-0 bg-sky-50/80 p-5 rounded-2xl border border-sky-200 min-w-[220px]">
             <div className="text-xs uppercase tracking-wider font-bold text-sky-800 mb-1">
-              {currentPackage.isCustomQuoteOnly ? "Starting Investment" : "Package Investment"}
+              {currentPackage.isCustomQuoteOnly ? "Investment Model" : "Package Investment"}
             </div>
-            <div className="text-3xl sm:text-4xl font-black text-[#0a192f] tracking-tight">
-              {tierConfig.currencySymbol}
-              {calculation.finalTotalMarket.toLocaleString()} {tierConfig.currencyCode}
+            <div className="text-2xl sm:text-3xl font-black text-[#0a192f] tracking-tight">
+              {currentPackage.isCustomQuoteOnly ? (
+                <span className="text-indigo-950">Quotation on Request</span>
+              ) : (
+                <>
+                  {tierConfig.currencySymbol}
+                  {calculation.finalTotalMarket.toLocaleString()} {tierConfig.currencyCode}
+                </>
+              )}
             </div>
             <div className="text-[11px] text-emerald-800 font-bold mt-1">
               {currentPackage.isCustomQuoteOnly ? "✨ Scope quotation on request" : "✓ Standalone Independent Package"}
@@ -527,10 +533,12 @@ Let's discuss getting started!`;
         <div className="p-6 rounded-3xl bg-white/90 border border-sky-300 shadow-md flex flex-col sm:flex-row items-center justify-between gap-4">
           <div>
             <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500 block">
-              Ready to execute this scope?
+              {currentPackage.isCustomQuoteOnly ? "Custom Scope Quotation" : "Ready to execute this scope?"}
             </span>
             <span className="text-lg font-black text-[#0a192f]">
-              {tierConfig.currencySymbol}{calculation.finalTotalMarket.toLocaleString()} {tierConfig.currencyCode}
+              {currentPackage.isCustomQuoteOnly
+                ? "Quotation on Request"
+                : `${tierConfig.currencySymbol}${calculation.finalTotalMarket.toLocaleString()} ${tierConfig.currencyCode}`}
             </span>
           </div>
 
@@ -548,7 +556,11 @@ Let's discuss getting started!`;
               href="/contact"
               className="flex-1 sm:flex-none px-8 py-3 rounded-full bg-[#0a192f] hover:bg-slate-800 text-white font-bold text-xs uppercase tracking-wider transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer text-center"
             >
-              <span>{locale === "hi" ? "Project Booking Confirm Karein →" : "Confirm Project Scope →"}</span>
+              <span>
+                {currentPackage.isCustomQuoteOnly
+                  ? (locale === "hi" ? "Custom Quotation Request Karein ✨" : "Request Custom Quotation ✨")
+                  : (locale === "hi" ? "Project Booking Confirm Karein →" : "Confirm Project Scope →")}
+              </span>
             </Link>
           </div>
         </div>

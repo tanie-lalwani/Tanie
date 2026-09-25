@@ -192,7 +192,7 @@ export default function PackagePricingBreakdown({
                     {pkg.name}
                   </span>
                   <span className={`text-[11px] font-bold mt-1 ${isSelected ? "text-sky-300" : "text-sky-900"}`}>
-                    Starting {displayPrice.formatted} {displayPrice.currency}
+                    {pkg.isCustomQuoteOnly ? "Quote on Request" : `Starting ${displayPrice.formatted} ${displayPrice.currency}`}
                   </span>
                   {rangeText && (
                     <span className={`text-[10px] font-medium block truncate mt-0.5 ${isSelected ? "text-sky-200/70" : "text-slate-500"}`}>
@@ -233,10 +233,16 @@ export default function PackagePricingBreakdown({
         {/* LIVE PRICING SUMMARY TILE */}
         <div className="shrink-0 bg-white/80 border border-sky-200/80 rounded-2xl p-4 sm:p-5 shadow-sm text-center md:text-right min-w-[220px]">
           <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 block">
-            {currentPackage.isCustomQuoteOnly ? "Starting Investment" : calculation.deductionMarket > 0 ? "Custom Tailored Investment" : "Full Suite Package Investment"}
+            {currentPackage.isCustomQuoteOnly ? "Investment Model" : calculation.deductionMarket > 0 ? "Custom Tailored Investment" : "Full Suite Package Investment"}
           </span>
           <div className="text-2xl sm:text-3xl font-black text-[#0a192f] mt-0.5">
-            {tierConfig.currencySymbol}{calculation.customMarket.toLocaleString()} <span className="text-xs font-bold text-slate-600">{tierConfig.currencyCode}</span>
+            {currentPackage.isCustomQuoteOnly ? (
+              <span className="text-indigo-950">Quotation on Request</span>
+            ) : (
+              <>
+                {tierConfig.currencySymbol}{calculation.customMarket.toLocaleString()} <span className="text-xs font-bold text-slate-600">{tierConfig.currencyCode}</span>
+              </>
+            )}
           </div>
           {currentPackage.isCustomQuoteOnly ? (
             <div className="text-[11px] text-indigo-800 font-bold mt-1">
@@ -455,10 +461,12 @@ export default function PackagePricingBreakdown({
         <div className="flex flex-col sm:flex-row items-center gap-3.5 w-full md:w-auto">
           <div className="text-center sm:text-right w-full sm:w-auto">
             <span className="text-[10px] font-bold text-slate-500 uppercase block">
-              {currentPackage.isCustomQuoteOnly ? "Starting Investment" : "Total Custom Investment"}
+              {currentPackage.isCustomQuoteOnly ? "Investment Model" : "Total Custom Investment"}
             </span>
             <span className="text-2xl sm:text-3xl font-black text-[#0a192f]">
-              {tierConfig.currencySymbol}{calculation.customMarket.toLocaleString()} {tierConfig.currencyCode}
+              {currentPackage.isCustomQuoteOnly
+                ? "Quotation on Request"
+                : `${tierConfig.currencySymbol}${calculation.customMarket.toLocaleString()} ${tierConfig.currencyCode}`}
             </span>
           </div>
 

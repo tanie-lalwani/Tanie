@@ -166,12 +166,12 @@ export const PACKAGE_BREAKDOWN_DATA: PackageBreakdownDef[] = [
     name: "E-Commerce Package",
     badge: "Direct Revenue",
     tagline: "Landing + Sales CRM + Marketing Funnels + Full E-Commerce Store Engine & Operations.",
-    basePriceInr: 29999,
-    basePriceUsd: 599,
-    startingPriceInr: 29999,
-    startingPriceUsd: 599,
-    typicalRangeInr: "₹30k–₹1.5L+",
-    typicalRangeUsd: "$599–$2,999+",
+    basePriceInr: 49999,
+    basePriceUsd: 999,
+    startingPriceInr: 49999,
+    startingPriceUsd: 999,
+    typicalRangeInr: "₹50k–₹1.5L+",
+    typicalRangeUsd: "$999–$2,999+",
     turnaround: "2–3 Weeks",
     accentGradient: "from-emerald-500/20 via-teal-500/10 to-sky-500/20",
     macroFeatures: [
@@ -233,13 +233,13 @@ export const PACKAGE_BREAKDOWN_DATA: PackageBreakdownDef[] = [
         icon: "📦",
         description: "Products catalog with multi-dimensional variants (size, color, SKU), pricing, and real-time inventory.",
         isEssential: true,
-        priceInr: 4999,
-        priceUsd: 99,
+        priceInr: 5000,
+        priceUsd: 100,
         microFeatures: [
           { id: "ecom_micro_p1", name: "Product Catalog & Hierarchy", detail: "Category filters, search, sorting, and rich product presentation.", tag: "Products", priceInr: 1250, priceUsd: 25 },
           { id: "ecom_micro_p2", name: "Variants Management", detail: "Size, color, material, and SKU variant matrix with dynamic image switching.", tag: "Variants", priceInr: 1250, priceUsd: 25 },
           { id: "ecom_micro_p3", name: "Dynamic Pricing & Discounts", detail: "Original vs sale pricing strikethrough and tiered bulk volume rules.", tag: "Pricing", priceInr: 1250, priceUsd: 25 },
-          { id: "ecom_micro_p4", name: "Real-Time Stock Availability", detail: "Live stock counts with automatic 'Sold Out' status and restock alerts.", tag: "Inventory", priceInr: 1249, priceUsd: 24 }
+          { id: "ecom_micro_p4", name: "Real-Time Stock Availability", detail: "Live stock counts with automatic 'Sold Out' status and restock alerts.", tag: "Inventory", priceInr: 1250, priceUsd: 25 }
         ]
       },
       {
@@ -249,13 +249,13 @@ export const PACKAGE_BREAKDOWN_DATA: PackageBreakdownDef[] = [
         icon: "💳",
         description: "Slide-over cart, 1-click express checkout, UPI, Razorpay, Stripe, and Apple Pay payment processing.",
         isEssential: true,
-        priceInr: 4999,
-        priceUsd: 99,
+        priceInr: 5000,
+        priceUsd: 100,
         microFeatures: [
           { id: "ecom_micro_c1", name: "Slide-Over Shopping Cart", detail: "Quick-access cart drawer with quantity adjustments and free-shipping meter.", tag: "Cart", priceInr: 1250, priceUsd: 25 },
           { id: "ecom_micro_c2", name: "1-Click Express Checkout", detail: "Streamlined single-page checkout minimizing form fields and dropoffs.", tag: "Checkout", priceInr: 1250, priceUsd: 25 },
           { id: "ecom_micro_c3", name: "Multi-Gateway Payments", detail: "Razorpay, Stripe, UPI, Apple Pay, Google Pay & Credit Cards.", tag: "Payments", priceInr: 1250, priceUsd: 25 },
-          { id: "ecom_micro_c4", name: "Orders & Confirmation Webhooks", detail: "Secure transaction verification with instant digital receipts.", tag: "Orders", priceInr: 1249, priceUsd: 24 }
+          { id: "ecom_micro_c4", name: "Orders & Confirmation Webhooks", detail: "Secure transaction verification with instant digital receipts.", tag: "Orders", priceInr: 1250, priceUsd: 25 }
         ]
       },
       {
@@ -265,13 +265,13 @@ export const PACKAGE_BREAKDOWN_DATA: PackageBreakdownDef[] = [
         icon: "⚙️",
         description: "Merchant admin dashboard for managing orders, stock updates, fulfillment tracking, returns, and sales analytics.",
         isEssential: false,
-        priceInr: 5002,
-        priceUsd: 103,
+        priceInr: 5000,
+        priceUsd: 102,
         microFeatures: [
           { id: "ecom_micro_op1", name: "Admin Orders & Customer Management", detail: "Centralized view to update order statuses, client notes, and shipping tags.", tag: "Admin", priceInr: 1250, priceUsd: 26 },
           { id: "ecom_micro_op2", name: "Inventory Stock Updates", detail: "Bulk stock editing, low-stock threshold warnings, and inventory logs.", tag: "Inventory", priceInr: 1250, priceUsd: 26 },
           { id: "ecom_micro_op3", name: "Order Fulfillment Workflow", detail: "Pick, pack, ship lifecycle management with printable packing slips.", tag: "Fulfillment", priceInr: 1250, priceUsd: 26 },
-          { id: "ecom_micro_op4", name: "Returns & Refund Handling", detail: "Customer return requests and one-click payment refund processing.", tag: "Returns", priceInr: 1252, priceUsd: 25 }
+          { id: "ecom_micro_op4", name: "Returns & Refund Handling", detail: "Customer return requests and one-click payment refund processing.", tag: "Returns", priceInr: 1250, priceUsd: 24 }
         ]
       }
     ]
@@ -284,7 +284,7 @@ export const PACKAGE_BREAKDOWN_DATA: PackageBreakdownDef[] = [
     id: "saas",
     name: "SaaS Product Package",
     badge: "Software MVP",
-    tagline: "Public Website + Auth + Subscriptions + Application Logic + User Dashboards + Admin System.",
+    tagline: "Public Website + Sales CRM + Marketing + Auth + Subscriptions + Core Engine + Dashboards.",
     basePriceInr: 49999,
     basePriceUsd: 999,
     startingPriceInr: 49999,
@@ -299,7 +299,7 @@ export const PACKAGE_BREAKDOWN_DATA: PackageBreakdownDef[] = [
         name: "Public Landing Foundation",
         category: "Acquisition & Marketing",
         icon: "🌐",
-        description: "Public marketing website: Brand Landing, Sales CRM demo intake, and high-converting Marketing funnels.",
+        description: "Public marketing website: Brand Landing story and interactive demo showcase.",
         isEssential: true,
         priceInr: 4999,
         priceUsd: 99,
@@ -349,77 +349,46 @@ export const PACKAGE_BREAKDOWN_DATA: PackageBreakdownDef[] = [
         icon: "🔐",
         description: "Google OAuth, Magic Links, Passwords, secure session cookies, user profiles, and organization switcher.",
         isEssential: true,
-        priceInr: 15000,
-        priceUsd: 299,
+        priceInr: 5000,
+        priceUsd: 100,
         microFeatures: [
-          { id: "saas_micro_au1", name: "Multi-Provider OAuth", detail: "Google OAuth 2.0, GitHub, Magic Links & Email passwords.", tag: "Auth", priceInr: 3750, priceUsd: 75 },
-          { id: "saas_micro_au2", name: "Secure Sessions & PKCE Handshake", detail: "HTTP-only cookie tokens with CSRF protection and token refreshes.", tag: "Security", priceInr: 3750, priceUsd: 75 },
-          { id: "saas_micro_au3", name: "User Profile & Account Preferences", detail: "Avatar uploads, password changes, notification preferences, and 2FA.", tag: "Accounts", priceInr: 3750, priceUsd: 75 },
-          { id: "saas_micro_au4", name: "Team Workspaces & Organization Switcher", detail: "Multi-tenant workspace isolation with invitation links.", tag: "Workspaces", priceInr: 3750, priceUsd: 74 }
+          { id: "saas_micro_au1", name: "Multi-Provider OAuth", detail: "Google OAuth 2.0, GitHub, Magic Links & Email passwords.", tag: "Auth", priceInr: 1250, priceUsd: 25 },
+          { id: "saas_micro_au2", name: "Secure Sessions & PKCE Handshake", detail: "HTTP-only cookie tokens with CSRF protection and token refreshes.", tag: "Security", priceInr: 1250, priceUsd: 25 },
+          { id: "saas_micro_au3", name: "User Profile & Account Preferences", detail: "Avatar uploads, password changes, notification preferences, and 2FA.", tag: "Accounts", priceInr: 1250, priceUsd: 25 },
+          { id: "saas_micro_au4", name: "Team Workspaces & Organization Switcher", detail: "Multi-tenant workspace isolation with invitation links.", tag: "Workspaces", priceInr: 1250, priceUsd: 25 }
         ]
       },
       {
         id: "saas_macro_billing",
-        name: "Subscription / Plans & Invoicing",
+        name: "Subscription, Plans & Billing",
         category: "Monetization & Billing",
         icon: "💳",
         description: "Recurring SaaS billing engine with tiered pricing, Stripe / Razorpay webhooks, customer self-serve portal, and invoices.",
         isEssential: true,
-        priceInr: 15000,
-        priceUsd: 299,
+        priceInr: 5000,
+        priceUsd: 100,
         microFeatures: [
-          { id: "saas_micro_bi1", name: "Tiered Subscription Plans", detail: "Feature-gating per tier (Free, Pro, Enterprise) with upgrade prompts.", tag: "Billing", priceInr: 3750, priceUsd: 75 },
-          { id: "saas_micro_bi2", name: "Stripe & Razorpay Recurring Billing", detail: "Automated recurring charge schedules, proration, and dunning logic.", tag: "Gateways", priceInr: 3750, priceUsd: 75 },
-          { id: "saas_micro_bi3", name: "Cryptographic Webhook Handlers", detail: "Verified event signatures for payment success, renewals, and cancellations.", tag: "Webhooks", priceInr: 3750, priceUsd: 75 },
-          { id: "saas_micro_bi4", name: "Self-Serve Billing Portal & Invoices", detail: "Customer portal to manage payment methods, upgrade plans, and download PDFs.", tag: "Invoices", priceInr: 3750, priceUsd: 74 }
+          { id: "saas_micro_bi1", name: "Tiered Subscription Plans", detail: "Feature-gating per tier (Free, Pro, Enterprise) with upgrade prompts.", tag: "Billing", priceInr: 1250, priceUsd: 25 },
+          { id: "saas_micro_bi2", name: "Stripe & Razorpay Recurring Billing", detail: "Automated recurring charge schedules, proration, and dunning logic.", tag: "Gateways", priceInr: 1250, priceUsd: 25 },
+          { id: "saas_micro_bi3", name: "Cryptographic Webhook Handlers", detail: "Verified event signatures for payment success, renewals, and cancellations.", tag: "Webhooks", priceInr: 1250, priceUsd: 25 },
+          { id: "saas_micro_bi4", name: "Self-Serve Billing Portal & Invoices", detail: "Customer portal to manage payment methods, upgrade plans, and download PDFs.", tag: "Invoices", priceInr: 1250, priceUsd: 25 }
         ]
       },
       {
         id: "saas_macro_core_app",
-        name: "Application & Core Software Logic",
+        name: "Application Logic & Dashboards",
         category: "Software Engineering",
         icon: "⚙️",
-        description: "The proprietary application engine, database architecture, server actions, and core domain algorithms.",
+        description: "The proprietary application engine, database architecture, user dashboard, workflows, and admin system.",
         isEssential: true,
-        priceInr: 20000,
-        priceUsd: 399,
-        microFeatures: [
-          { id: "saas_micro_ca1", name: "Next.js App Router Architecture", detail: "Server components, streaming hydration, and sub-100ms edge routing.", tag: "Engine", priceInr: 5000, priceUsd: 100 },
-          { id: "saas_micro_ca2", name: "Proprietary Core Logic & Algorithms", detail: "Custom data transformation, scoring engines, or generative workflows.", tag: "Logic", priceInr: 5000, priceUsd: 100 },
-          { id: "saas_micro_ca3", name: "PostgreSQL Relational Schema", detail: "Normalized relational DDL, foreign keys, triggers, and automated migrations.", tag: "Database", priceInr: 5000, priceUsd: 100 },
-          { id: "saas_micro_ca4", name: "APIs & Third-Party Integrations", detail: "Type-safe REST API endpoints and outbound webhook dispatchers.", tag: "APIs", priceInr: 5000, priceUsd: 99 }
-        ]
-      },
-      {
-        id: "saas_macro_user_dashboard",
-        name: "User Dashboard & Data Management",
-        category: "User Experience",
-        icon: "📊",
-        description: "Interactive client dashboard with live data metrics, project management, file uploads, and notification streams.",
-        isEssential: true,
-        priceInr: 10000,
-        priceUsd: 199,
-        microFeatures: [
-          { id: "saas_micro_ud1", name: "Real-Time Data Visualization", detail: "Interactive metrics charts, KPIs, and status summaries.", tag: "Analytics", priceInr: 2500, priceUsd: 50 },
-          { id: "saas_micro_ud2", name: "CRUD Data Tables & Filters", detail: "Paginated, searchable data tables with multi-column filtering and sorting.", tag: "Data", priceInr: 2500, priceUsd: 50 },
-          { id: "saas_micro_ud3", name: "File Vault & Asset Storage", detail: "Secure encrypted cloud file uploads with direct pre-signed URLs.", tag: "Storage", priceInr: 2500, priceUsd: 50 },
-          { id: "saas_micro_ud4", name: "Real-Time Notifications & Activity Logs", detail: "In-app notification bell and audit log of tenant actions.", tag: "Notifications", priceInr: 2500, priceUsd: 49 }
-        ]
-      },
-      {
-        id: "saas_macro_admin_system",
-        name: "Permissions, Roles & Admin System",
-        category: "Platform Administration",
-        icon: "🛡️",
-        description: "Executive control panel for platform admins: Manage tenant users, RBAC permissions, audit trails, and system controls.",
-        isEssential: false,
         priceInr: 5000,
-        priceUsd: 104,
+        priceUsd: 102,
         microFeatures: [
-          { id: "saas_micro_ad1", name: "Granular RBAC Roles & Permissions", detail: "Admin, Manager, Member, and Guest security policies.", tag: "RBAC", priceInr: 1250, priceUsd: 26 },
-          { id: "saas_micro_ad2", name: "Master Admin Control Panel", detail: "Global tenant overview, user impersonation, and subscription telemetry.", tag: "Admin", priceInr: 1250, priceUsd: 26 },
-          { id: "saas_micro_ad3", name: "Security Audit Logging", detail: "Immutable event logs recording logins, config updates, and data exports.", tag: "Security", priceInr: 1250, priceUsd: 26 },
-          { id: "saas_micro_ad4", name: "CSV / JSON Data Export Engine", detail: "Full tenant data export complying with GDPR and business intelligence needs.", tag: "Export", priceInr: 1250, priceUsd: 26 }
+          { id: "saas_micro_ca1", name: "Next.js App Router Architecture", detail: "Server components, streaming hydration, and sub-100ms edge routing.", tag: "Engine", priceInr: 1000, priceUsd: 20 },
+          { id: "saas_micro_ca2", name: "Proprietary Core Logic & Algorithms", detail: "Custom data transformation, scoring engines, or generative workflows.", tag: "Logic", priceInr: 1000, priceUsd: 20 },
+          { id: "saas_micro_ca3", name: "PostgreSQL Relational Schema", detail: "Normalized relational DDL, foreign keys, triggers, and automated migrations.", tag: "Database", priceInr: 1000, priceUsd: 20 },
+          { id: "saas_micro_ca4", name: "Real-Time Data Visualization Dashboard", detail: "Interactive metrics charts, KPIs, and status summaries.", tag: "Dashboard", priceInr: 1000, priceUsd: 20 },
+          { id: "saas_micro_ca5", name: "Role-Based Access Control & Admin Controls", detail: "Admin, manager, member role security and system audit logs.", tag: "RBAC", priceInr: 1000, priceUsd: 22 }
         ]
       }
     ]
@@ -433,10 +402,8 @@ export const PACKAGE_BREAKDOWN_DATA: PackageBreakdownDef[] = [
     name: "Business Automation Package",
     badge: "Efficiency Engine",
     tagline: "Leads + CRM + WhatsApp + Emails + Orders + Staff + AI Automation Workflows.",
-    basePriceInr: 24999,
-    basePriceUsd: 499,
-    startingPriceInr: 24999,
-    startingPriceUsd: 499,
+    basePriceInr: 0,
+    basePriceUsd: 0,
     typicalRangeInr: "₹25k–₹2L+",
     typicalRangeUsd: "$499–$3,999+",
     isCustomQuoteOnly: true,
@@ -482,9 +449,9 @@ export const PACKAGE_BREAKDOWN_DATA: PackageBreakdownDef[] = [
         category: "Messaging Automation",
         icon: "📱",
         description: "2-way WhatsApp Cloud API automation, appointment reminder sequences, and triggered transactional notifications.",
-        isEssential: true,
+        isEssential: false,
         isCustomQuoteOnly: true,
-        priceLabel: "Quotation on Request",
+        priceLabel: "Quote on Request (Typ: ₹5k–₹25k)",
         priceInr: 0,
         priceUsd: 0,
         microFeatures: [
@@ -500,9 +467,9 @@ export const PACKAGE_BREAKDOWN_DATA: PackageBreakdownDef[] = [
         category: "Operations & Approvals",
         icon: "👥",
         description: "Automated order fulfillment handoffs, digital invoice dispatch, staff shift notifications, and approval systems.",
-        isEssential: true,
+        isEssential: false,
         isCustomQuoteOnly: true,
-        priceLabel: "Quotation on Request",
+        priceLabel: "Quote on Request (Typ: ₹10k–₹50k)",
         priceInr: 0,
         priceUsd: 0,
         microFeatures: [
@@ -520,7 +487,7 @@ export const PACKAGE_BREAKDOWN_DATA: PackageBreakdownDef[] = [
         description: "Background cron jobs, multi-system database synchronization, custom API webhooks, and AI-powered intelligence.",
         isEssential: false,
         isCustomQuoteOnly: true,
-        priceLabel: "Quotation on Request",
+        priceLabel: "Quote on Request (Typ: ₹15k–₹1L+)",
         priceInr: 0,
         priceUsd: 0,
         microFeatures: [
@@ -541,10 +508,8 @@ export const PACKAGE_BREAKDOWN_DATA: PackageBreakdownDef[] = [
     name: "Custom Application Package",
     badge: "Bespoke Architecture",
     tagline: "Tailor-made digital architecture, proprietary business logic & bespoke engineering.",
-    basePriceInr: 59999,
-    basePriceUsd: 1199,
-    startingPriceInr: 59999,
-    startingPriceUsd: 1199,
+    basePriceInr: 0,
+    basePriceUsd: 0,
     typicalRangeInr: "₹60k–₹5L+",
     typicalRangeUsd: "$1,199–$9,999+",
     isCustomQuoteOnly: true,
@@ -590,9 +555,9 @@ export const PACKAGE_BREAKDOWN_DATA: PackageBreakdownDef[] = [
         category: "Engineering",
         icon: "🏛️",
         description: "Tailored full-stack technical foundation built specifically to your requirements.",
-        isEssential: true,
+        isEssential: false,
         isCustomQuoteOnly: true,
-        priceLabel: "Quotation on Request",
+        priceLabel: "Quote on Request (Typ: ₹20k–₹1L+)",
         priceInr: 0,
         priceUsd: 0,
         microFeatures: [
@@ -608,9 +573,9 @@ export const PACKAGE_BREAKDOWN_DATA: PackageBreakdownDef[] = [
         category: "Algorithms & Logic",
         icon: "⚙️",
         description: "Tailored business logic, calculation engines, and third-party API orchestrations.",
-        isEssential: true,
+        isEssential: false,
         isCustomQuoteOnly: true,
-        priceLabel: "Quotation on Request",
+        priceLabel: "Quote on Request (Typ: ₹30k–₹2L+)",
         priceInr: 0,
         priceUsd: 0,
         microFeatures: [
@@ -621,24 +586,6 @@ export const PACKAGE_BREAKDOWN_DATA: PackageBreakdownDef[] = [
         ]
       },
       {
-        id: "ca_macro_db",
-        name: "Dedicated Data Schema & Security",
-        category: "Data & Storage",
-        icon: "🗄️",
-        description: "Custom relational database design with role permissions and backup guarantees.",
-        isEssential: true,
-        isCustomQuoteOnly: true,
-        priceLabel: "Quotation on Request",
-        priceInr: 0,
-        priceUsd: 0,
-        microFeatures: [
-          { id: "ca_micro_9", name: "Custom Relational Schema & Indexes", detail: "Optimized database design for rapid query execution.", tag: "Database" },
-          { id: "ca_micro_10", name: "Row-Level Security & Role Access", detail: "Strict isolation of sensitive records per tenant and role.", tag: "Security" },
-          { id: "ca_micro_11", name: "Automated Snapshot Backups", detail: "Daily encrypted point-in-time recovery archives.", tag: "Backups" },
-          { id: "ca_micro_12", name: "Data Migration Scripts", detail: "Safe schema evolution scripts with zero-downtime guarantees.", tag: "Migrations" }
-        ]
-      },
-      {
         id: "ca_macro_design",
         name: "Bespoke UX / UI Design System",
         category: "Design System",
@@ -646,7 +593,7 @@ export const PACKAGE_BREAKDOWN_DATA: PackageBreakdownDef[] = [
         description: "Distinct visual styling, custom micro-animations, and responsive component library.",
         isEssential: false,
         isCustomQuoteOnly: true,
-        priceLabel: "Quotation on Request",
+        priceLabel: "Quote on Request (Typ: ₹15k–₹80k)",
         priceInr: 0,
         priceUsd: 0,
         microFeatures: [
