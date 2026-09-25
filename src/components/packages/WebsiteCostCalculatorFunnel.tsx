@@ -49,29 +49,25 @@ export default function WebsiteCostCalculatorFunnel({
   // User input states
   const [businessName, setBusinessName] = useState(_draft?.businessName || "");
   const [socialAccount, setSocialAccount] = useState(_draft?.socialAccount || "");
-  const [selectedGoals, setSelectedGoals] = useState<string[]>(_draft?.selectedGoals || ["more_sales"]);
-  const selectedGoal = selectedGoals[0] || "more_sales";
+  const [selectedGoals, setSelectedGoals] = useState<string[]>(_draft?.selectedGoals || []);
+  const selectedGoal = selectedGoals[0] || "";
 
   const handleToggleGoal = (goalId: string) => {
     setSelectedGoals((prev) => {
       const isAlreadySelected = prev.includes(goalId);
-      let nextGoals: string[];
-      if (isAlreadySelected) {
-        if (prev.length <= 1) {
-          return prev; // keep at least one goal selected
-        }
-        nextGoals = prev.filter((id) => id !== goalId);
-      } else {
-        nextGoals = [...prev, goalId];
-      }
+      const nextGoals = isAlreadySelected
+        ? prev.filter((id) => id !== goalId)
+        : [...prev, goalId];
 
       // Re-aggregate recommended modules from all active goals
       const merged = new Set<string>();
-      merged.add("essential_core");
-      nextGoals.forEach((gId) => {
-        const g = WEBSITE_GOALS.find((item) => item.id === gId);
-        g?.recommendedBundles.forEach((b) => merged.add(b));
-      });
+      if (nextGoals.length > 0) {
+        merged.add("essential_core");
+        nextGoals.forEach((gId) => {
+          const g = WEBSITE_GOALS.find((item) => item.id === gId);
+          g?.recommendedBundles.forEach((b) => merged.add(b));
+        });
+      }
       setSelectedBundles(Array.from(merged));
 
       return nextGoals;
@@ -79,9 +75,9 @@ export default function WebsiteCostCalculatorFunnel({
   };
   const [websiteType, setWebsiteType] = useState<"business" | "portfolio" | "ecommerce" | "saas">("business");
   const [selectedIndustry, setSelectedIndustry] = useState<IndustryOption>(INDUSTRIES[0]);
-  const [selectedBundles, setSelectedBundles] = useState<string[]>(_draft?.selectedBundles || ["essential_core", "sales_engine"]);
-  const [budgetTier, setBudgetTier] = useState<string>(_draft?.budgetTier || "₹25,000 – ₹50,000 (Growth Suite)");
-  const [timeline, setTimeline] = useState<string>(_draft?.timeline || "3–4 Weeks (Standard Launch)");
+  const [selectedBundles, setSelectedBundles] = useState<string[]>(_draft?.selectedBundles || []);
+  const [budgetTier, setBudgetTier] = useState<string>(_draft?.budgetTier || "");
+  const [timeline, setTimeline] = useState<string>(_draft?.timeline || "");
   const [currency, setCurrency] = useState<"INR" | "USD">("INR");
 
   // Auth unlock gate state
@@ -575,13 +571,25 @@ Let's discuss getting started!`;
                 >
                   ← Back
                 </button>
-                <button
-                  type="button"
-                  onClick={() => goToStep(2)}
-                  className="px-8 py-3 rounded-full bg-[#0a192f] hover:bg-slate-800 text-white font-bold text-xs uppercase tracking-wider transition-all shadow-md cursor-pointer"
-                >
-                  Next: Review Modules →
-                </button>
+                <div className="flex items-center gap-3">
+                  {selectedGoals.length === 0 && (
+                    <span className="text-[11px] font-semibold text-rose-500 hidden sm:inline">
+                      Select at least 1 goal to proceed
+                    </span>
+                  )}
+                  <button
+                    type="button"
+                    disabled={selectedGoals.length === 0}
+                    onClick={() => goToStep(2)}
+                    className={`px-8 py-3 rounded-full font-bold text-xs uppercase tracking-wider transition-all shadow-md ${
+                      selectedGoals.length > 0
+                        ? "bg-[#0a192f] hover:bg-slate-800 text-white cursor-pointer"
+                        : "bg-slate-200 text-slate-400 cursor-not-allowed shadow-none"
+                    }`}
+                  >
+                    Next: Review Modules →
+                  </button>
+                </div>
               </div>
             </div>
           )}
@@ -728,13 +736,25 @@ Let's discuss getting started!`;
                 >
                   ← Back to Goals
                 </button>
-                <button
-                  type="button"
-                  onClick={() => goToStep(3)}
-                  className="px-8 py-3 rounded-full bg-[#0a192f] hover:bg-slate-800 text-white font-bold text-xs uppercase tracking-wider transition-all shadow-md cursor-pointer"
-                >
-                  Next: Budget & Timing →
-                </button>
+                <div className="flex items-center gap-3">
+                  {selectedBundles.length === 0 && (
+                    <span className="text-[11px] font-semibold text-rose-500 hidden sm:inline">
+                      Select at least 1 package to proceed
+                    </span>
+                  )}
+                  <button
+                    type="button"
+                    disabled={selectedBundles.length === 0}
+                    onClick={() => goToStep(3)}
+                    className={`px-8 py-3 rounded-full font-bold text-xs uppercase tracking-wider transition-all shadow-md ${
+                      selectedBundles.length > 0
+                        ? "bg-[#0a192f] hover:bg-slate-800 text-white cursor-pointer"
+                        : "bg-slate-200 text-slate-400 cursor-not-allowed shadow-none"
+                    }`}
+                  >
+                    Next: Budget & Timing →
+                  </button>
+                </div>
               </div>
             </div>
           )}
@@ -747,7 +767,7 @@ Let's discuss getting started!`;
               {/* Budget Range */}
               <div>
                 <label className="block text-xs font-black !text-[#0a192f] uppercase tracking-wider mb-3">
-                  {locale === "ur" ? "ہدف کا بجٹ (اختیاری)" : locale === "hi" ? "लक्ष्य बजट (वैकल्पिक)" : locale === "es" ? "Presupuesto objetivo (opcional)" : locale === "fr" ? "Fourchette de budget (optionnel)" : locale === "ja" ? "目標予算（任意）" : locale === "zh" ? "目标预算（可选）" : "Target Budget Bracket (Optional)"}
+                  {locale === "ur" ? "ہدف کا بجٹ *" : locale === "hi" ? "लक्ष्य बजट *" : locale === "es" ? "Presupuesto objetivo *" : locale === "fr" ? "Fourchette de budget *" : locale === "ja" ? "目標予算 *" : locale === "zh" ? "目标预算 *" : "Target Budget Bracket *"}
                 </label>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
                   {[
@@ -775,7 +795,7 @@ Let's discuss getting started!`;
               {/* Timeline */}
               <div>
                 <label className="block text-xs font-black !text-[#0a192f] uppercase tracking-wider mb-3">
-                  {locale === "ur" ? "ہدف کی رفتار" : locale === "hi" ? "लॉन्च की समय सीमा" : locale === "es" ? "Plazo de lanzamiento" : locale === "fr" ? "Vitesse de lancement ciblée" : locale === "ja" ? "公開希望時期" : locale === "zh" ? "目标上线周期" : "Target Launch Speed"}
+                  {locale === "ur" ? "ہدف کی رفتار *" : locale === "hi" ? "लॉन्च की समय सीमा *" : locale === "es" ? "Plazo de lanzamiento *" : locale === "fr" ? "Vitesse de lancement ciblée *" : locale === "ja" ? "公開希望時期 *" : locale === "zh" ? "目标上线周期 *" : "Target Launch Speed *"}
                 </label>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                   {[
@@ -807,13 +827,25 @@ Let's discuss getting started!`;
                 >
                   ← Back to Modules
                 </button>
-                <button
-                  type="button"
-                  onClick={() => goToStep(4)}
-                  className="px-8 py-3.5 rounded-full bg-[#0a192f] hover:bg-slate-800 text-white font-bold text-xs uppercase tracking-wider shadow-lg transition-all cursor-pointer"
-                >
-                  {t.funnel.calculateBtn}
-                </button>
+                <div className="flex items-center gap-3">
+                  {(!budgetTier || !timeline) && (
+                    <span className="text-[11px] font-semibold text-rose-500 hidden sm:inline">
+                      Please select both a budget and launch speed
+                    </span>
+                  )}
+                  <button
+                    type="button"
+                    disabled={!budgetTier || !timeline}
+                    onClick={() => goToStep(4)}
+                    className={`px-8 py-3.5 rounded-full font-bold text-xs uppercase tracking-wider transition-all shadow-lg ${
+                      budgetTier && timeline
+                        ? "bg-[#0a192f] hover:bg-slate-800 text-white cursor-pointer shadow-md"
+                        : "bg-slate-200 text-slate-400 cursor-not-allowed shadow-none"
+                    }`}
+                  >
+                    {t.funnel.calculateBtn}
+                  </button>
+                </div>
               </div>
             </div>
           )}
