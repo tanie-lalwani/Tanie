@@ -33,16 +33,23 @@ export default function WebsiteCostCalculatorFunnel({
   const t = packagesTranslations[locale] || packagesTranslations.en;
   const { marketTier, tierConfig, formatBundlePrice } = useGeoPricing();
 
-  // Lead ID for deduplication across steps
-  const [leadId, setLeadId] = useState<string>("");
+  // ─── Funnel draft key ─────────────────────────────────────────────────────
+  const DRAFT_KEY = "tanie_funnel_draft";
+  const readDraft = () => {
+    try { return JSON.parse(sessionStorage.getItem(DRAFT_KEY) || "null"); } catch { return null; }
+  };
+  const _draft = typeof window !== "undefined" ? readDraft() : null;
 
-  // Current Funnel Step: "hero" (0) -> "step1" (Foundation) -> "step2" (Industry) -> "step3" (Bundles) -> "step4" (Budget & Timeline) -> "result" (Estimated Breakdown)
-  const [currentStep, setCurrentStep] = useState<number>(0);
+  // Lead ID for deduplication across steps
+  const [leadId, setLeadId] = useState<string>(_draft?.leadId || "");
+
+  // Current Funnel Step
+  const [currentStep, setCurrentStep] = useState<number>(_draft?.currentStep ?? 0);
 
   // User input states
-  const [businessName, setBusinessName] = useState("");
-  const [socialAccount, setSocialAccount] = useState("");
-  const [selectedGoals, setSelectedGoals] = useState<string[]>(["more_sales"]);
+  const [businessName, setBusinessName] = useState(_draft?.businessName || "");
+  const [socialAccount, setSocialAccount] = useState(_draft?.socialAccount || "");
+  const [selectedGoals, setSelectedGoals] = useState<string[]>(_draft?.selectedGoals || ["more_sales"]);
   const selectedGoal = selectedGoals[0] || "more_sales";
 
   const handleToggleGoal = (goalId: string) => {
@@ -72,9 +79,9 @@ export default function WebsiteCostCalculatorFunnel({
   };
   const [websiteType, setWebsiteType] = useState<"business" | "portfolio" | "ecommerce" | "saas">("business");
   const [selectedIndustry, setSelectedIndustry] = useState<IndustryOption>(INDUSTRIES[0]);
-  const [selectedBundles, setSelectedBundles] = useState<string[]>(["essential_core", "lead_crm", "growth_seo"]);
-  const [budgetTier, setBudgetTier] = useState<string>("₹25,000 – ₹50,000 (Growth Suite)");
-  const [timeline, setTimeline] = useState<string>("3–4 Weeks (Standard Launch)");
+  const [selectedBundles, setSelectedBundles] = useState<string[]>(_draft?.selectedBundles || ["essential_core", "lead_crm", "growth_seo"]);
+  const [budgetTier, setBudgetTier] = useState<string>(_draft?.budgetTier || "₹25,000 – ₹50,000 (Growth Suite)");
+  const [timeline, setTimeline] = useState<string>(_draft?.timeline || "3–4 Weeks (Standard Launch)");
   const [currency, setCurrency] = useState<"INR" | "USD">("INR");
 
   // Auth unlock gate state
@@ -98,8 +105,19 @@ export default function WebsiteCostCalculatorFunnel({
 
   const funnelContainerRef = useRef<HTMLDivElement>(null);
 
-  // Prepopulate from cookies/localStorage on mount
+  // ─── Persist funnel draft to sessionStorage on every state change ─────────
   useEffect(() => {
+    try {
+      sessionStorage.setItem(DRAFT_KEY, JSON.stringify({
+        leadId, currentStep, businessName, socialAccount,
+        selectedGoals, selectedBundles, budgetTier, timeline
+      }));
+    } catch (_) {}
+  }, [leadId, currentStep, businessName, socialAccount, selectedGoals, selectedBundles, budgetTier, timeline]);
+
+  // ─── Prepopulate from cookies/localStorage on mount (only if no draft) ────
+  useEffect(() => {
+    if (_draft) return; // draft already hydrated above — don't overwrite
     const saved = getSavedLeadProfile();
     try {
       const savedSocial = localStorage.getItem("tanie_client_social");
@@ -295,6 +313,10 @@ export default function WebsiteCostCalculatorFunnel({
   const goToStep = (step: number) => {
     setCurrentStep(step);
     onStepChange?.(step);
+    // Going back to hero = user wants a fresh start; clear saved draft
+    if (step === 0) {
+      try { sessionStorage.removeItem(DRAFT_KEY); } catch (_) {}
+    }
     dispatchLeadCapture({
       step: `Step ${step}`,
       status: step === 4 ? "unlocked" : "in_progress"
@@ -332,6 +354,8 @@ export default function WebsiteCostCalculatorFunnel({
 
       // Lead unlocked on verified authentication
       setLocalAuthenticated(true);
+      // Clear draft so a return visit starts fresh
+      try { sessionStorage.removeItem(DRAFT_KEY); } catch (_) {}
       await dispatchLeadCapture({
         clientEmail: authEmail.trim().toLowerCase(),
         clientName: authName.trim() || businessName.trim(),
