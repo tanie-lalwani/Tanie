@@ -46,7 +46,7 @@ export default function WebsiteCostCalculatorFunnel({
   // Lead ID for deduplication across steps
   const [leadId, setLeadId] = useState<string>(_draft?.leadId || "");
 
-  // Current Funnel Step: 0 = Hero, 1 = What are you building, 2 = Universal Addons, 3 = Aesthetics, 4 = Timeline & Budget, 5 = Result
+  // Current Funnel Step: 0 = Hero, 1 = What are you building, 2 = Universal Addons, 3 = Timeline & Budget, 4 = Result
   const [currentStep, setCurrentStep] = useState<number>(_draft?.currentStep ?? 0);
 
   // Selected standalone package (Single selection, direct suggestion)
@@ -311,7 +311,7 @@ export default function WebsiteCostCalculatorFunnel({
     }
     dispatchLeadCapture({
       step: `Step ${step}`,
-      status: step === 5 ? "unlocked" : "in_progress"
+      status: step === 4 ? "unlocked" : "in_progress"
     });
     scrollToFunnel();
   };
@@ -543,7 +543,7 @@ Let's discuss getting started!`;
       />
 
       {/* ========================================================================= */}
-      {/* 2. FUNNEL STEPS (1: Building? -> 2: Addons -> 3: Aesthetics -> 4: Time -> 5: Result) */}
+      {/* 2. FUNNEL STEPS (1: Building? -> 2: Addons -> 3: Time -> 4: Result)       */}
       {/* ========================================================================= */}
       {currentStep > 0 && (
         <div className="max-w-3xl mx-auto py-2 sm:py-6 space-y-8 animate-fadeIn">
@@ -553,18 +553,17 @@ Let's discuss getting started!`;
               <h2 className="text-2xl sm:text-3xl font-black !text-[#0a192f] tracking-tight" style={{ color: '#0a192f' }}>
                 {currentStep === 1 && (locale === "hi" ? "Aap kya bana rahe hain?" : "What are you building?")}
                 {currentStep === 2 && (locale === "hi" ? "Universal Add-Ons Chunein (Optional)" : "Select Universal Add-Ons (Optional)")}
-                {currentStep === 3 && (locale === "hi" ? "Aesthetic & Motion Style Chunein" : "Select Aesthetic Direction & Motion")}
-                {currentStep === 4 && (locale === "hi" ? "Launch Timeline & Budget" : "Launch Timing & Budget Preferences")}
-                {currentStep === 5 && (locale === "hi" ? "Aapka Suggested Package & Estimate" : "Your Suggested Package & Custom Estimate")}
+                {currentStep === 3 && (locale === "hi" ? "Launch Timeline & Budget" : "Launch Timing & Budget Preferences")}
+                {currentStep === 4 && (locale === "hi" ? "Aapka Suggested Package & Estimate" : "Your Suggested Package & Custom Estimate")}
               </h2>
               <p className="text-xs text-sky-950/80 mt-1 font-medium" style={{ color: '#0a192f' }}>
-                {`Step ${currentStep} of 5 • Project: `}
+                {`Step ${currentStep} of 4 • Project: `}
                 <span className="font-bold !text-[#0a192f]" style={{ color: '#0a192f' }}>{socialAccount || businessName || "My Project"}</span>
               </p>
             </div>
 
             <div className="flex items-center gap-1.5 shrink-0">
-              {[1, 2, 3, 4, 5].map((s) => (
+              {[1, 2, 3, 4].map((s) => (
                 <div
                   key={s}
                   className={`h-2 rounded-full transition-all ${
@@ -724,85 +723,6 @@ Let's discuss getting started!`;
                   onClick={() => goToStep(3)}
                   className="px-8 py-3 rounded-full font-bold text-xs uppercase tracking-wider transition-all shadow-md bg-[#0a192f] hover:bg-slate-800 text-white cursor-pointer"
                 >
-                  Next: Aesthetics & Style →
-                </button>
-              </div>
-            </div>
-          )}
-
-          {/* ───────────────────────────────────────────────────────────────────── */}
-          {/* STEP 3: AESTHETICS DIRECTION                                         */}
-          {/* ───────────────────────────────────────────────────────────────────── */}
-          {currentStep === 3 && (
-            <div className="space-y-6">
-              <p className="text-xs sm:text-sm text-sky-950/80 font-medium">
-                {locale === "hi"
-                  ? "Apne brand ke visual feel aur typography ke liye pasandeeda design system chunein:"
-                  : "Select the aesthetic design system that matches your brand tone and visual identity:"}
-              </p>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-                {[
-                  { name: "Luxury Minimalist", icon: "🏛️", desc: "Monochrome, ultra-clean whitespace, high-fashion serif typography." },
-                  { name: "Dark Modern SaaS / Bento", icon: "⚡", desc: "Sleek dark mode, bento-grid cards, subtle borders & glow badges." },
-                  { name: "Glassmorphism & Gradients", icon: "💎", desc: "Frosted glass blur, fluid pastel gradients, soft ambient shadows." },
-                  { name: "Awwwards 3D & Spatial", icon: "🎨", desc: "Three.js WebGL canvas, particle shaders & smooth kinetic motion." },
-                  { name: "Swiss Graphic Brutalism", icon: "📐", desc: "High-contrast bold typography, sharp structural borders & editorial grid." },
-                  { name: "Tactile Organic & Earthy", icon: "🌿", desc: "Warm natural tones, textured backgrounds & crafted luxury feel." }
-                ].map((style) => {
-                  const isSelected = selectedAesthetic === style.name;
-                  return (
-                    <button
-                      key={style.name}
-                      type="button"
-                      onClick={() => {
-                        setSelectedAesthetic(style.name);
-                        dispatchLeadCapture({ selectedAesthetic: style.name });
-                      }}
-                      className={`p-4 rounded-2xl border text-left transition-all cursor-pointer flex items-start gap-3.5 ${
-                        isSelected
-                          ? "bg-sky-50/95 border-2 border-sky-600 shadow-md"
-                          : "bg-white/70 hover:bg-white border-sky-200/80 hover:border-sky-400 shadow-xs"
-                      }`}
-                    >
-                      <span className="text-2xl shrink-0 p-2 rounded-xl bg-sky-100 border border-sky-200">
-                        {style.icon}
-                      </span>
-                      <div className="flex-1">
-                        <h4 className="text-xs font-black text-[#0a192f]">
-                          {style.name}
-                        </h4>
-                        <p className="text-[11px] text-slate-600 mt-1 leading-snug">
-                          {style.desc}
-                        </p>
-                      </div>
-                      <span
-                        className={`h-4 w-4 rounded-full shrink-0 flex items-center justify-center text-[10px] font-black border transition ${
-                          isSelected
-                            ? "bg-sky-600 text-white border-sky-600"
-                            : "border-slate-300 bg-white text-transparent"
-                        }`}
-                      >
-                        ✓
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
-
-              <div className="flex items-center justify-between pt-4 border-t border-sky-200/60">
-                <button
-                  type="button"
-                  onClick={() => goToStep(2)}
-                  className="px-6 py-2.5 rounded-full border border-sky-300 text-[#0a192f] font-bold text-xs hover:bg-white transition cursor-pointer"
-                >
-                  ← Back
-                </button>
-                <button
-                  type="button"
-                  onClick={() => goToStep(4)}
-                  className="px-8 py-3 rounded-full font-bold text-xs uppercase tracking-wider transition-all shadow-md bg-[#0a192f] hover:bg-slate-800 text-white cursor-pointer"
-                >
                   Next: Timeline & Budget →
                 </button>
               </div>
@@ -810,9 +730,9 @@ Let's discuss getting started!`;
           )}
 
           {/* ───────────────────────────────────────────────────────────────────── */}
-          {/* STEP 4: TIMELINE & BUDGET PREFERENCES                                */}
+          {/* STEP 3: TIMELINE & BUDGET PREFERENCES                                */}
           {/* ───────────────────────────────────────────────────────────────────── */}
-          {currentStep === 4 && (
+          {currentStep === 3 && (
             <div className="space-y-6">
               {/* TIMELINE */}
               <div className="space-y-3">
@@ -894,14 +814,14 @@ Let's discuss getting started!`;
               <div className="flex items-center justify-between pt-4 border-t border-sky-200/60">
                 <button
                   type="button"
-                  onClick={() => goToStep(3)}
+                  onClick={() => goToStep(2)}
                   className="px-6 py-2.5 rounded-full border border-sky-300 text-[#0a192f] font-bold text-xs hover:bg-white transition cursor-pointer"
                 >
                   ← Back
                 </button>
                 <button
                   type="button"
-                  onClick={() => goToStep(5)}
+                  onClick={() => goToStep(4)}
                   className="px-8 py-3 rounded-full font-bold text-xs uppercase tracking-wider transition-all shadow-md bg-[#0a192f] hover:bg-slate-800 text-white cursor-pointer"
                 >
                   Calculate Final Quote ✨
@@ -911,9 +831,9 @@ Let's discuss getting started!`;
           )}
 
           {/* ───────────────────────────────────────────────────────────────────── */}
-          {/* STEP 5: RESULTS & TRANSPARENT BREAKDOWN                               */}
+          {/* STEP 4: RESULTS & TRANSPARENT BREAKDOWN                               */}
           {/* ───────────────────────────────────────────────────────────────────── */}
-          {currentStep === 5 && (
+          {currentStep === 4 && (
             <CostCalculatorStepResult
               locale={locale}
               t={t}
