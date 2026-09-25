@@ -350,12 +350,6 @@ export default function ClientPortal() {
                   onProceedToBooking={() => scrollToSection("booking-contract-tile")}
                 />
 
-                {/* TILE: SAVED DESIGN AESTHETICS */}
-                <SavedAestheticsTile
-                  project={project}
-                  onUpdateProject={handleUpdateProject}
-                />
-
                 {/* TILE 2: BOOKING & ADMIN-UPLOADED CONTRACT & ADVANCE PAYMENT */}
                 <BookingContractTile
                   project={project}
@@ -387,6 +381,12 @@ export default function ClientPortal() {
                   project={project}
                   onUpdateProject={handleUpdateProject}
                   onScrollToSection={scrollToSection}
+                />
+
+                {/* TILE 7: LIKED DESIGN AESTHETICS CAROUSEL GRID (MOODBOARD) */}
+                <SavedAestheticsTile
+                  project={project}
+                  onUpdateProject={handleUpdateProject}
                 />
               </div>
             )

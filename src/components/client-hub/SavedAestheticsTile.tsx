@@ -190,6 +190,10 @@ export default function SavedAestheticsTile({
     }
   };
 
+  if (savedList.length === 0) {
+    return null;
+  }
+
   return (
     <div
       id="saved-aesthetics-tile"
@@ -202,14 +206,14 @@ export default function SavedAestheticsTile({
               ❤️ Moodboard & Design Direction
             </span>
             <span className="text-xs text-slate-500 font-mono">
-              {savedList.length} Saved {savedList.length === 1 ? "Vibe" : "Vibes"}
+              {savedList.length} Liked {savedList.length === 1 ? "Vibe" : "Vibes"}
             </span>
           </div>
           <h2 className="mt-2 text-2xl sm:text-3xl font-black text-[#0a192f]">
-            Saved Design Aesthetics
+            Liked Design Aesthetics
           </h2>
           <p className="mt-0.5 text-xs text-slate-600">
-            Aesthetics you liked while exploring our pricing engine. These guide the UI styling and creative direction of your build.
+            Aesthetics you liked while exploring design directions. These guide the UI styling and creative atmosphere of your build.
           </p>
         </div>
 
@@ -221,27 +225,7 @@ export default function SavedAestheticsTile({
         </Link>
       </div>
 
-      {savedList.length === 0 ? (
-        <div className="rounded-2xl border border-dashed border-sky-300/80 bg-white/60 p-8 text-center">
-          <div className="h-12 w-12 rounded-2xl bg-rose-50 text-rose-500 border border-rose-200 flex items-center justify-center text-xl mx-auto mb-3">
-            ❤️
-          </div>
-          <h3 className="text-base font-bold text-slate-800">
-            No Saved Aesthetics Yet
-          </h3>
-          <p className="text-xs text-slate-500 max-w-md mx-auto mt-1 mb-4 leading-relaxed">
-            Browse our curated aesthetic carousels on the pricing page and tap ❤️ on your favorite visual vibes (Glassmorphism, 3D Spatial, Bento Grid, etc.) to save them to your project hub!
-          </p>
-          <Link
-            href="/pricing#design-aesthetics"
-            className="inline-flex items-center gap-1.5 rounded-xl bg-sky-600 hover:bg-sky-700 px-4 py-2 text-xs font-bold text-white transition shadow-sm"
-          >
-            <span>Browse Design Aesthetics</span>
-            <span>→</span>
-          </Link>
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {savedList.map((name) => {
             const styleObj = AESTHETIC_STYLES.find(
               (s) => s.name === name || s.id === name
@@ -256,7 +240,6 @@ export default function SavedAestheticsTile({
             );
           })}
         </div>
-      )}
     </div>
   );
 }

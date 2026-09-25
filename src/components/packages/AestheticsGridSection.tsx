@@ -140,32 +140,6 @@ export default function AestheticsGridSection({
         <h2 className="text-3xl sm:text-4xl font-black text-[#0a192f] tracking-tight">
           Choose Your Design Aesthetic
         </h2>
-        {likedAesthetics.length > 0 && (
-          <div className="mt-3 inline-flex flex-wrap items-center justify-center gap-2 rounded-2xl bg-rose-50/90 border border-rose-200/90 px-4 py-1.5 text-xs text-rose-900 shadow-2xs">
-            <span className="font-bold flex items-center gap-1.5 text-rose-700">
-              <span>❤️</span>
-              <span>Liked Aesthetics ({likedAesthetics.length}):</span>
-            </span>
-            <div className="flex flex-wrap gap-1.5">
-              {likedAesthetics.map((name) => (
-                <span
-                  key={name}
-                  className="inline-flex items-center gap-1 rounded-lg bg-white border border-rose-200 px-2 py-0.5 text-[11px] font-bold text-rose-800 shadow-2xs"
-                >
-                  <span>{name}</span>
-                  <button
-                    type="button"
-                    onClick={() => onToggleLike(name)}
-                    className="text-rose-400 hover:text-rose-700 ml-0.5 text-xs font-black cursor-pointer"
-                    title="Remove like"
-                  >
-                    ×
-                  </button>
-                </span>
-              ))}
-            </div>
-          </div>
-        )}
       </div>
 
       {/* PURE IMAGE CAROUSEL CARDS GRID */}
