@@ -8,15 +8,151 @@ import type {
 
 export const DEFAULT_PACKAGES: WebsitePackage[] = [
   {
+    id: "luxury-landing-sprint",
+    name: "Luxury Brand Landing Page",
+    tagline: "Precision-crafted marketing landing page engineered to captivate and convert.",
+    price_usd: 99,
+    price_inr: 4999,
+    turnaround_weeks: "1-2 weeks",
+    badge: "Base Foundation",
+    popular: false,
+    description: "Ideal for boutique agencies, product launches, founders, and creators seeking a razor-sharp, ultra-fast landing page with bespoke typography, smooth animations, and high-converting copy lockups.",
+    features: [
+      "Bespoke layout tailored to your brand identity",
+      "Framer Motion smooth scroll and micro-interactions",
+      "Interactive lead capture & Formspree / CRM webhook integration",
+      "Lighthouse 95+ performance & accessibility score",
+      "Comprehensive meta tags & Open Graph visuals",
+      "Domain setup & CDN deployment on Vercel"
+    ],
+    deliverables: [
+      "Single-Page or Multi-Section Landing Experience",
+      "Configured Lead Capture & Notification flows",
+      "Complete design assets & typography license links",
+      "14-day post-launch support"
+    ],
+    addons: [
+      { id: "copywriting", name: "Conversion Copywriting & Messaging", price_usd: 120 },
+      { id: "subpages", name: "2 Additional Content Subpages (Legal / About)", price_usd: 75 },
+      { id: "newsletter", name: "Newsletter / Waitlist Automation Sync", price_usd: 75 }
+    ],
+    is_active: true
+  },
+  {
+    id: "sales-website-engine",
+    name: "Sales Website & Smart Booking Engine",
+    tagline: "Direct e-commerce storefront, 1-click checkouts, appointment calendar & instant payment gateways.",
+    price_usd: 499,
+    price_inr: 19999,
+    turnaround_weeks: "2-3 weeks",
+    badge: "High Conversion",
+    popular: true,
+    description: "Engineered for direct revenue generation. Sell physical/digital products or lock calendar appointment slots. Includes product catalogs, slide-over carts, live calendar slot booking, automated WhatsApp/SMS reminders, and Stripe/Razorpay/UPI checkouts.",
+    features: [
+      "1-Click Express Checkout (Apple Pay, Google Pay, Razorpay, UPI)",
+      "Real-time interactive calendar slot picker with 2-way Google/Outlook sync",
+      "Product catalog with variants (Size, Color, SKU) & slide-over cart",
+      "Automated WhatsApp & Email confirmation/reminder sequences",
+      "Timezone auto-detection, meeting buffers & location routing",
+      "Stripe & Razorpay session deposit & pre-payment checkout",
+      "GST-compliant automated PDF invoices & receipts"
+    ],
+    deliverables: [
+      "Complete Sales & Booking Web Application",
+      "Payment Gateway Integration (Stripe, Razorpay, UPI)",
+      "Google & Outlook Calendar API Sync Setup",
+      "Twilio / WhatsApp Business Cloud API Integration",
+      "30-Day Post-Launch Hypercare & Operational Support"
+    ],
+    addons: [
+      { id: "sms-credits", name: "High-Volume SMS/WhatsApp Notification Bundle", price_usd: 75 },
+      { id: "multi-location-ext", name: "Additional 5 Branch Locations & Calendars", price_usd: 120 },
+      { id: "priority", name: "Priority Express Delivery (10 Days)", price_usd: 200 }
+    ],
+    is_active: true
+  },
+  {
+    id: "growth-marketing-campaigns",
+    name: "Marketing & BOFU Conversion Campaigns",
+    tagline: "High-converting ad traffic landing pages, urgency mechanics & multi-channel UTM attribution.",
+    price_usd: 499,
+    price_inr: 19999,
+    turnaround_weeks: "2-3 weeks",
+    badge: "Campaign Engine",
+    popular: true,
+    description: "The definitive on-website conversion architecture. Designed to receive traffic from your ad campaigns and social media, transforming cold visitors into revenue. Includes all 9 core BOFU on-site deliverables: 1-click checkout flow, countdown timers, offer-first banners, 4K product galleries, studio presentation layouts, UGC video reviews wall, price comparison matrix, FOMO scarcity popups, and freebie lead magnets — backed by full-spectrum UTM multi-source tracking and conversion pixel telemetry.",
+    features: [
+      "1-Click Express Checkout: Frictionless payment flow",
+      "Urgency Countdown Clocks: Dynamic drop timers and flash sale headers",
+      "Offer-First Banners: Sticky announcement bars with coupon codes",
+      "Product Gallery & 360 Viewer: Ultra-crisp 4K multi-angle viewer",
+      "UGC Testimonials Wall: Embedded vertical TikTok/Reel review player",
+      "Price Comparison Matrix: Interactive value-anchoring table",
+      "FOMO & Scarcity Notifiers: Real-time purchase popup toasts",
+      "Freebies & Lead Magnets: Opt-in capture forms with instant asset delivery",
+      "Multi-Channel UTM Tracking: On-site source & campaign attribution",
+      "Pixel Telemetry: Meta CAPI, Google Tag Manager, GA4 & TikTok Pixel"
+    ],
+    deliverables: [
+      "All 9 BOFU On-Website Pages & Interactive Modules",
+      "1-Click Frictionless Checkout & Payment Gateway Integration",
+      "Centralized Multi-Channel UTM Campaign Generator & Link Builder",
+      "Automated On-Site Source Attribution Logging",
+      "Meta CAPI, GA4 & GTM Conversion Pixel Integration",
+      "30-Day Post-Launch Conversion Rate Hypercare & Support"
+    ],
+    addons: [
+      { id: "ab-testing", name: "Dynamic A/B Testing & Split Landing Page Routing", price_usd: 120 },
+      { id: "retention-flows", name: "Automated Post-Purchase Email/SMS Sequence", price_usd: 90 },
+      { id: "influencer-portal", name: "Affiliate & Influencer Referral Source Tracking Portal", price_usd: 150 }
+    ],
+    is_active: true
+  },
+  {
+    id: "portals-dashboards-suite",
+    name: "Portals, Dashboards & Team Operations",
+    tagline: "Secure client hubs, staff rostering, geolocation punch clock, inventory/CRM & admin dashboards.",
+    price_usd: 599,
+    price_inr: 24999,
+    turnaround_weeks: "3-4 weeks",
+    badge: "Operations Hub",
+    popular: false,
+    description: "Complete internal and client operations platform. Includes dedicated Client Hubs (file vaults, milestone tracking, invoices, e-signatures), Staff Rostering & Time-off workflows, Geolocation mobile punch clock, and an Executive Admin Control Dashboard.",
+    features: [
+      "Client Workspace & Portal with secure document vault & e-signatures",
+      "Searchable digital staff directory with department groupings",
+      "Interactive weekly shift roster with shift publishing & conflict detection",
+      "Self-serve time-off portal with automated manager approval workflow",
+      "Granular RBAC role security across Admin, Manager, Staff and Client",
+      "Digital mobile clock-in punch clock with GPS geolocation verification",
+      "Automated employee work-hour summaries & 1-click payroll CSV export",
+      "Executive business analytics & CRM pipeline dashboard"
+    ],
+    deliverables: [
+      "Client Hub & Staff Operations Web Application",
+      "PostgreSQL Database Schema & Row-Level Security",
+      "Role-Guarded Manager, Staff & Client Dashboards",
+      "Geolocation Punch Clock Timesheet System",
+      "Automated Payroll & Invoices Export Module",
+      "30-Day Post-Launch Support & Staff Training"
+    ],
+    addons: [
+      { id: "extra-seats", name: "Additional 50 Employee Account Licenses", price_usd: 90 },
+      { id: "payroll-api", name: "Direct QuickBooks / Gusto / Tally API Sync", price_usd: 150 },
+      { id: "priority", name: "Priority Express Delivery (2 Weeks)", price_usd: 250 }
+    ],
+    is_active: true
+  },
+  {
     id: "interactive-3d-experience",
-    name: "3D Interactive & Brand Experience",
+    name: "3D Interactive & Experiential Design",
     tagline: "Bespoke WebGL, Three.js & immersive storytelling that leaves lasting impressions.",
     price_usd: 899,
     price_inr: 39999,
     turnaround_weeks: "3-5 weeks",
-    badge: "Signature",
+    badge: "Signature Experience",
     popular: true,
-    description: "Designed for visionary brands, high-profile portfolios, and innovative tech products requiring top-tier creative engineering, custom Three.js shaders, and buttery-smooth micro-interactions.",
+    description: "Designed for visionary luxury brands, high-profile portfolios, and innovative tech products requiring top-tier creative engineering, custom Three.js shaders, reactive audio, and buttery-smooth micro-interactions.",
     features: [
       "Custom Three.js / WebGL 3D interactive canvas",
       "Tailored fluid physics, particles, or 3D model integration",
@@ -43,126 +179,15 @@ export const DEFAULT_PACKAGES: WebsitePackage[] = [
     is_active: true
   },
   {
-    id: "growth-marketing-campaigns",
-    name: "BOFU Website Marketing & Sources Management Package",
-    tagline: "High-converting on-site BOFU pages, 1-click checkouts, urgency mechanics & multi-channel UTM attribution.",
-    price_usd: 499,
-    price_inr: 19999,
-    turnaround_weeks: "2-3 weeks",
-    badge: "High Conversion",
-    popular: true,
-    description: "The definitive on-website conversion architecture. Designed to receive traffic from your ad campaigns and social media, transforming cold visitors into revenue. Includes all 9 core BOFU on-site deliverables: 1-click checkout flow, countdown timers, offer-first banners, 4K product galleries, studio presentation layouts, UGC video reviews wall, price comparison matrix, FOMO scarcity popups, and freebie lead magnets — backed by full-spectrum UTM multi-source tracking and conversion pixel telemetry.",
-    features: [
-      "1-Click Express Checkout: Apple Pay, Google Pay, Razorpay, UPI & credit card frictionless flow",
-      "Urgency Countdown Clocks: Dynamic drop timers and flash sale headers driving immediate orders",
-      "Offer-First Banners: Sticky top announcement bars with coupon codes and free gift thresholds",
-      "Product Gallery & 360 Viewer: Ultra-crisp 4K multi-angle viewer with zoom and variant switchers",
-      "Studio Shoots Layout: Web-optimized presentation of studio photography and 3D exploded views",
-      "UGC Testimonials Wall: Embedded vertical TikTok/Reel customer review player with star ratings",
-      "Price Comparison Matrix: Interactive side-by-side value-anchoring table against alternatives",
-      "FOMO & Scarcity Notifiers: Real-time purchase popup toasts and remaining inventory stock meters",
-      "Freebies & Lead Magnets: On-site email/WhatsApp opt-in capture forms with instant asset delivery",
-      "AI Sales Concierge Bot: 24/7 automated objection handling, FAQ answers & direct checkout guidance",
-      "Multi-Lingual Localization (i18n): Language switcher supporting up to 3 languages for international buyers",
-      "Multi-Channel UTM Tracking: On-site ingestion capturing source, medium & campaign with every order/lead",
-      "Pixel Telemetry: Meta Pixel & CAPI, Google Tag Manager, GA4 e-commerce events & TikTok Pixel",
-      "Adaptive Website Scope: Configured for E-Commerce Stores, Single Product Drops, or Personal Brand Sites"
-    ],
-    deliverables: [
-      "All 9 BOFU On-Website Pages & Interactive Modules",
-      "1-Click Frictionless Checkout & Payment Gateway Integration",
-      "Centralized Multi-Channel UTM Campaign Generator & Link Builder",
-      "Automated On-Site Source Attribution Logging to Supabase Database",
-      "Meta CAPI, GA4 & GTM Conversion Pixel Integration",
-      "30-Day Post-Launch Conversion Rate Hypercare & Support"
-    ],
-    addons: [
-      { id: "ab-testing", name: "Dynamic A/B Testing & Split Landing Page Routing", price_usd: 120 },
-      { id: "retention-flows", name: "Automated Post-Purchase Email/SMS Sequence (Klaviyo/Resend)", price_usd: 90 },
-      { id: "influencer-portal", name: "Affiliate & Influencer Referral Source Tracking Portal", price_usd: 150 }
-    ],
-    is_active: true
-  },
-  {
-    id: "booking-appointments-engine",
-    name: "Smart Appointment & Booking Engine",
-    tagline: "Live slot picker, calendar sync, staff assignment, automated WhatsApp reminders, multi-branch routing & pre-payments.",
-    price_usd: 499,
-    price_inr: 19999,
-    turnaround_weeks: "2-3 weeks",
-    badge: "High Conversion",
-    popular: false,
-    description: "Turnkey appointment and consultation booking infrastructure. Includes the complete Luxury Landing Foundation (₹4,999 value) plus real-time calendar slot engine, 2-way Google/Outlook sync, automated WhatsApp/email reminders, multi-branch location routing, and Stripe/Razorpay session pre-payments.",
-    features: [
-      "Real-time interactive calendar slot picker with instant booking",
-      "Bidirectional Google Calendar & Outlook 2-way sync",
-      "Automated WhatsApp & Email confirmation and reminder sequences",
-      "Timezone auto-detection, custom meeting buffers & operational hours",
-      "Pre-appointment qualification questionnaire with file uploads",
-      "Stripe & Razorpay session deposit & pre-payment checkout",
-      "Multi-Branch & Location Routing (up to 3 physical or virtual clinics/branches)",
-      "Automated cancellation & 1-click client reschedule links"
-    ],
-    deliverables: [
-      "Turnkey Booking & Appointment Web Application",
-      "Google & Outlook Calendar API Sync Setup",
-      "Twilio / WhatsApp Business Cloud API Integration",
-      "Payment Gateway Integration for Booking Deposits",
-      "Multi-Branch Location Routing & Staff Mapping",
-      "30-Day Post-Launch Hypercare & Operational Support"
-    ],
-    addons: [
-      { id: "sms-credits", name: "High-Volume SMS/WhatsApp Notification Bundle", price_usd: 75 },
-      { id: "multi-location-ext", name: "Additional 5 Branch Locations & Calendars", price_usd: 120 },
-      { id: "priority", name: "Priority Express Delivery (10 Days)", price_usd: 200 }
-    ],
-    is_active: true
-  },
-  {
-    id: "staff-team-management-portal",
-    name: "Staff & Team Management Portal",
-    tagline: "Digital staff directory, weekly shift scheduling, leave approvals, RBAC & payroll summaries.",
-    price_usd: 599,
-    price_inr: 24999,
-    turnaround_weeks: "3-4 weeks",
-    badge: "Operations",
-    popular: false,
-    description: "Complete internal team management and operational portal. Includes the complete Luxury Landing Foundation (₹4,999 value) plus secure employee logins, shift rostering, time-off approval workflows, geolocation clock-in timesheets, role-based access, and 1-click payroll CSV export.",
-    features: [
-      "Searchable digital staff directory with department grouping",
-      "Interactive weekly shift roster with shift publishing & conflict detection",
-      "Self-serve time-off portal with automated manager approval workflow",
-      "Granular RBAC role security across Admin, Manager, Staff and Contractor",
-      "Company notice board with read-receipt tracking & priority broadcasts",
-      "Digital mobile clock-in punch clock with GPS geolocation verification",
-      "Automated employee work-hour summaries & 1-click payroll CSV export",
-      "Encrypted staff profile documents & emergency contact registry"
-    ],
-    deliverables: [
-      "Staff & Team Operations Portal Application",
-      "Complete PostgreSQL Staff & Shift Database Schema",
-      "Role-Guarded Manager & Employee Dashboards",
-      "Geolocation Punch Clock Timesheet System",
-      "Automated Payroll CSV Export Module",
-      "30-Day Post-Launch Support & Staff Training"
-    ],
-    addons: [
-      { id: "extra-seats", name: "Additional 50 Employee Account Licenses", price_usd: 90 },
-      { id: "payroll-api", name: "Direct QuickBooks / Gusto / Tally API Sync", price_usd: 150 },
-      { id: "priority", name: "Priority Express Delivery (2 Weeks)", price_usd: 250 }
-    ],
-    is_active: true
-  },
-  {
-    id: "fullstack-web-app",
-    name: "Full-Stack Web App / SaaS MVP",
-    tagline: "Robust, scalable web applications with Supabase DB, Auth, Payments & Admin portals.",
+    id: "fullstack-saas-app",
+    name: "Custom SaaS & Full-Stack Web Application",
+    tagline: "Robust, scalable web applications & marketplace MVPs with Supabase DB, Auth, Payments & Admin portals.",
     price_usd: 1499,
     price_inr: 69999,
     turnaround_weeks: "4-6 weeks",
-    badge: "Full-Stack",
+    badge: "Full-Stack Software",
     popular: false,
-    description: "Engineered for startups, digital products, and founders who need a production-ready web application with user auth, real-time database, role permissions, payment gateway, and an executive admin dashboard.",
+    description: "Engineered for startups, digital platforms, marketplaces, and founders who need a production-ready web application with multi-role auth, PostgreSQL real-time database, subscription billing, and custom business logic.",
     features: [
       "Next.js App Router full-stack architecture",
       "Supabase PostgreSQL database & Row-Level Security (RLS)",
@@ -188,34 +213,31 @@ export const DEFAULT_PACKAGES: WebsitePackage[] = [
     is_active: true
   },
   {
-    id: "luxury-landing-sprint",
-    name: "High-Converting Luxury Landing Page",
-    tagline: "Precision-crafted marketing landing page engineered to captivate and convert.",
-    price_usd: 99,
-    price_inr: 4999,
-    turnaround_weeks: "1-2 weeks",
-    badge: "Fast Sprint",
+    id: "custom-bespoke-build",
+    name: "Custom / Build Your Own (Make Your Own)",
+    tagline: "Tailor-made digital architecture, interactive feature selection, and bespoke modular engineering.",
+    price_usd: 599,
+    price_inr: 25000,
+    turnaround_weeks: "Bespoke Timeline",
+    badge: "Bespoke",
     popular: false,
-    description: "Ideal for boutique agencies, product launches, founders, and creators seeking a razor-sharp, ultra-fast landing page with bespoke animations and high-converting copy lockups.",
+    description: "Have unique requirements or multi-platform needs? Configure your exact feature modules, integrations, and aesthetics through our interactive calculator or schedule a custom scoping review.",
     features: [
-      "Bespoke layout tailored to your brand identity",
-      "Framer Motion smooth scroll and micro-interactions",
-      "Interactive pricing calculator / feature matrix",
-      "Lead capture & Formspree / CRM webhook integration",
-      "Lighthouse 95+ performance & accessibility score",
-      "Comprehensive meta tags & Open Graph visuals",
-      "Domain setup & CDN deployment on Vercel"
+      "Interactive 5-question custom scope builder",
+      "Selectable granular feature modules & bundles",
+      "Bespoke technical architecture tailored to your specifications",
+      "Dedicated aesthetic direction and design system pairing",
+      "Direct consultation & custom milestone agreement"
     ],
     deliverables: [
-      "Single-Page or Multi-Section Landing Experience",
-      "Configured Lead Capture & Notification flows",
-      "Complete design assets & typography license links",
-      "14-day post-launch support"
+      "Bespoke Architecture Blueprint & Specification",
+      "Custom Engineering & Development Execution",
+      "Tailored Milestone Review & QA Sign-off",
+      "Dedicated Post-Launch Warranty & Support"
     ],
     addons: [
-      { id: "copywriting", name: "Conversion Copywriting & Messaging", price_usd: 120 },
-      { id: "subpages", name: "2 Additional Content Subpages (Legal / About)", price_usd: 75 },
-      { id: "newsletter", name: "Newsletter / Waitlist Automation Sync", price_usd: 75 }
+      { id: "priority", name: "Priority Express Acceleration", price_usd: 250 },
+      { id: "ai-copilot", name: "Custom AI Assistant Integration", price_usd: 175 }
     ],
     is_active: true
   }
@@ -1433,4 +1455,10 @@ export const DEFAULT_GRANULAR_FEATURES: Record<string, PackageGranularFeature[]>
     }
   ]
 };
+
+// Map package aliases for granular features
+DEFAULT_GRANULAR_FEATURES["sales-website-engine"] = DEFAULT_GRANULAR_FEATURES["booking-appointments-engine"] || [];
+DEFAULT_GRANULAR_FEATURES["portals-dashboards-suite"] = DEFAULT_GRANULAR_FEATURES["staff-team-management-portal"] || [];
+DEFAULT_GRANULAR_FEATURES["fullstack-saas-app"] = DEFAULT_GRANULAR_FEATURES["fullstack-web-app"] || [];
+DEFAULT_GRANULAR_FEATURES["custom-bespoke-build"] = DEFAULT_GRANULAR_FEATURES["luxury-landing-sprint"] || [];
 

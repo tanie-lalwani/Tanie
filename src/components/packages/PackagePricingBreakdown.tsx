@@ -108,12 +108,13 @@ export default function PackagePricingBreakdown({
     const customUsd = Math.max(99, origUsd - deductionUsd);
 
     // Market pricing calculation
-    const marketRatio = tierConfig.packages[selectedPackageId as keyof typeof tierConfig.packages]
-      ? tierConfig.packages[selectedPackageId as keyof typeof tierConfig.packages] / (isINR ? origInr : origUsd)
+    const pkgMarketPrice = tierConfig.packages[selectedPackageId as keyof typeof tierConfig.packages];
+    const marketRatio = typeof pkgMarketPrice === "number"
+      ? pkgMarketPrice / (isINR ? origInr : origUsd)
       : 1;
 
     const customMarket = Math.round((isINR ? customInr : customUsd) * marketRatio);
-    const origMarket = tierConfig.packages[selectedPackageId as keyof typeof tierConfig.packages] ?? (isINR ? origInr : origUsd);
+    const origMarket = typeof pkgMarketPrice === "number" ? pkgMarketPrice : (isINR ? origInr : origUsd);
     const deductionMarket = Math.max(0, origMarket - customMarket);
 
     return {

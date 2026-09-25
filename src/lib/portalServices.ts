@@ -61,16 +61,21 @@ export function getPackageFeatureTableName(packageId: string): string {
   switch (packageId) {
     case "luxury-landing-sprint":
       return "package_landing_sprint_features";
+    case "sales-website-engine":
+    case "booking-appointments-engine":
+      return "package_sales_engine_features";
     case "growth-marketing-campaigns":
       return "package_bofu_marketing_features";
-    case "booking-appointments-engine":
-      return "package_booking_engine_features";
+    case "portals-dashboards-suite":
     case "staff-team-management-portal":
-      return "package_staff_portal_features";
+      return "package_portals_dashboards_features";
     case "interactive-3d-experience":
       return "package_3d_experience_features";
+    case "fullstack-saas-app":
     case "fullstack-web-app":
       return "package_fullstack_backend_features";
+    case "custom-bespoke-build":
+      return "package_custom_bespoke_features";
     default:
       return "package_landing_sprint_features";
   }

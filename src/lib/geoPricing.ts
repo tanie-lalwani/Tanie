@@ -11,11 +11,17 @@ export interface MarketPricingTier {
   // Specific market pricing per package
   packages: {
     "luxury-landing-sprint": number;
+    "sales-website-engine": number;
     "growth-marketing-campaigns": number;
-    "booking-appointments-engine": number;
-    "staff-team-management-portal": number;
+    "portals-dashboards-suite": number;
     "interactive-3d-experience": number;
-    "fullstack-web-app": number;
+    "fullstack-saas-app": number;
+    "custom-bespoke-build": number;
+    // Legacy aliases for backward compatibility
+    "booking-appointments-engine"?: number;
+    "staff-team-management-portal"?: number;
+    "fullstack-web-app"?: number;
+    [key: string]: number | undefined;
   };
   // Specific market pricing for calculator bundles
   bundles: Record<string, number>;
@@ -33,11 +39,15 @@ export const MARKET_TIERS: Record<string, MarketPricingTier> = {
     currencySymbol: "₹",
     packages: {
       "luxury-landing-sprint": 4999,
+      "sales-website-engine": 19999,
       "growth-marketing-campaigns": 19999,
+      "portals-dashboards-suite": 24999,
+      "interactive-3d-experience": 39999,
+      "fullstack-saas-app": 69999,
+      "custom-bespoke-build": 25000,
       "booking-appointments-engine": 19999,
       "staff-team-management-portal": 24999,
-      "interactive-3d-experience": 39999,
-      "fullstack-web-app": 69999
+      "fullstack-web-app": 69999,
     },
     bundles: {
       essential_core: 4999,
@@ -74,11 +84,15 @@ export const MARKET_TIERS: Record<string, MarketPricingTier> = {
     currencySymbol: "$",
     packages: {
       "luxury-landing-sprint": 99,
+      "sales-website-engine": 499,
       "growth-marketing-campaigns": 499,
+      "portals-dashboards-suite": 599,
+      "interactive-3d-experience": 899,
+      "fullstack-saas-app": 1499,
+      "custom-bespoke-build": 599,
       "booking-appointments-engine": 499,
       "staff-team-management-portal": 599,
-      "interactive-3d-experience": 899,
-      "fullstack-web-app": 1499
+      "fullstack-web-app": 1499,
     },
     bundles: {
       essential_core: 175,
@@ -115,11 +129,15 @@ export const MARKET_TIERS: Record<string, MarketPricingTier> = {
     currencySymbol: "£",
     packages: {
       "luxury-landing-sprint": 79,
+      "sales-website-engine": 399,
       "growth-marketing-campaigns": 399,
+      "portals-dashboards-suite": 479,
+      "interactive-3d-experience": 729,
+      "fullstack-saas-app": 1199,
+      "custom-bespoke-build": 479,
       "booking-appointments-engine": 399,
       "staff-team-management-portal": 479,
-      "interactive-3d-experience": 729,
-      "fullstack-web-app": 1199
+      "fullstack-web-app": 1199,
     },
     bundles: {
       essential_core: 140,
@@ -156,11 +174,15 @@ export const MARKET_TIERS: Record<string, MarketPricingTier> = {
     currencySymbol: "€",
     packages: {
       "luxury-landing-sprint": 89,
+      "sales-website-engine": 459,
       "growth-marketing-campaigns": 459,
+      "portals-dashboards-suite": 549,
+      "interactive-3d-experience": 819,
+      "fullstack-saas-app": 1379,
+      "custom-bespoke-build": 549,
       "booking-appointments-engine": 459,
       "staff-team-management-portal": 549,
-      "interactive-3d-experience": 819,
-      "fullstack-web-app": 1379
+      "fullstack-web-app": 1379,
     },
     bundles: {
       essential_core: 160,
@@ -197,11 +219,15 @@ export const MARKET_TIERS: Record<string, MarketPricingTier> = {
     currencySymbol: "AED ",
     packages: {
       "luxury-landing-sprint": 370,
+      "sales-website-engine": 1820,
       "growth-marketing-campaigns": 1820,
+      "portals-dashboards-suite": 2170,
+      "interactive-3d-experience": 3270,
+      "fullstack-saas-app": 5470,
+      "custom-bespoke-build": 2170,
       "booking-appointments-engine": 1820,
       "staff-team-management-portal": 2170,
-      "interactive-3d-experience": 3270,
-      "fullstack-web-app": 5470
+      "fullstack-web-app": 5470,
     },
     bundles: {
       essential_core: 650,
@@ -238,11 +264,15 @@ export const MARKET_TIERS: Record<string, MarketPricingTier> = {
     currencySymbol: "C$",
     packages: {
       "luxury-landing-sprint": 135,
+      "sales-website-engine": 680,
       "growth-marketing-campaigns": 680,
+      "portals-dashboards-suite": 810,
+      "interactive-3d-experience": 1220,
+      "fullstack-saas-app": 2040,
+      "custom-bespoke-build": 810,
       "booking-appointments-engine": 680,
       "staff-team-management-portal": 810,
-      "interactive-3d-experience": 1220,
-      "fullstack-web-app": 2040
+      "fullstack-web-app": 2040,
     },
     bundles: {
       essential_core: 240,
@@ -279,11 +309,15 @@ export const MARKET_TIERS: Record<string, MarketPricingTier> = {
     currencySymbol: "A$",
     packages: {
       "luxury-landing-sprint": 150,
+      "sales-website-engine": 760,
       "growth-marketing-campaigns": 760,
+      "portals-dashboards-suite": 910,
+      "interactive-3d-experience": 1360,
+      "fullstack-saas-app": 2270,
+      "custom-bespoke-build": 910,
       "booking-appointments-engine": 760,
       "staff-team-management-portal": 910,
-      "interactive-3d-experience": 1360,
-      "fullstack-web-app": 2270
+      "fullstack-web-app": 2270,
     },
     bundles: {
       essential_core: 265,
@@ -320,11 +354,15 @@ export const MARKET_TIERS: Record<string, MarketPricingTier> = {
     currencySymbol: "S$",
     packages: {
       "luxury-landing-sprint": 130,
+      "sales-website-engine": 655,
       "growth-marketing-campaigns": 655,
+      "portals-dashboards-suite": 785,
+      "interactive-3d-experience": 1185,
+      "fullstack-saas-app": 1985,
+      "custom-bespoke-build": 785,
       "booking-appointments-engine": 655,
       "staff-team-management-portal": 785,
-      "interactive-3d-experience": 1185,
-      "fullstack-web-app": 1985
+      "fullstack-web-app": 1985,
     },
     bundles: {
       essential_core: 235,
@@ -397,7 +435,7 @@ export function formatPackageMarketPrice(
   marketTierKey: string = "IN"
 ): { amount: number; formatted: string; symbol: string; currency: string } {
   const tier = MARKET_TIERS[marketTierKey] || MARKET_TIERS.IN;
-  const amount = tier.packages[packageId as keyof typeof tier.packages] ?? tier.packages["luxury-landing-sprint"];
+  const amount = tier.packages[packageId as keyof typeof tier.packages] ?? tier.packages["luxury-landing-sprint"] ?? 4999;
   return {
     amount,
     formatted: `${tier.currencySymbol}${amount.toLocaleString()}`,

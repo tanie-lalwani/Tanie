@@ -218,17 +218,23 @@ export default function PackagesView() {
     setFeaturesList(["Lead Capture & Contact System", "Interactive Micro-Animations", "SEO & Performance Architecture"]);
 
     // Calculate clear estimated pricing based on scope tier and active country market tier
-    const sprintBase = tierConfig?.packages["luxury-landing-sprint"] ?? 1999;
-    const bofuBase = tierConfig?.packages["growth-marketing-campaigns"] ?? 2899;
-    const customBase = tierConfig?.packages["interactive-3d-experience"] ?? 3499;
-    const fullstackBase = tierConfig?.packages["fullstack-web-app"] ?? 4299;
+    const sprintBase = tierConfig?.packages["luxury-landing-sprint"] ?? 4999;
+    const salesBase = tierConfig?.packages["sales-website-engine"] ?? 19999;
+    const bofuBase = tierConfig?.packages["growth-marketing-campaigns"] ?? 19999;
+    const portalsBase = tierConfig?.packages["portals-dashboards-suite"] ?? 24999;
+    const customBase = tierConfig?.packages["interactive-3d-experience"] ?? 39999;
+    const fullstackBase = tierConfig?.packages["fullstack-saas-app"] ?? 69999;
 
     let marketAmount = bofuBase;
-    if (defaultScope.toLowerCase().includes("starter") || defaultScope.toLowerCase().includes("1–3")) {
+    if (defaultScope.toLowerCase().includes("starter") || defaultScope.toLowerCase().includes("1–3") || defaultScope.toLowerCase().includes("landing")) {
       marketAmount = sprintBase;
+    } else if (defaultScope.toLowerCase().includes("sales") || defaultScope.toLowerCase().includes("booking") || defaultScope.toLowerCase().includes("ecommerce")) {
+      marketAmount = salesBase;
+    } else if (defaultScope.toLowerCase().includes("portal") || defaultScope.toLowerCase().includes("dashboard") || defaultScope.toLowerCase().includes("operations")) {
+      marketAmount = portalsBase;
     } else if (defaultScope.toLowerCase().includes("flagship") || defaultScope.toLowerCase().includes("custom") || defaultScope.toLowerCase().includes("3d")) {
       marketAmount = customBase;
-    } else if (defaultScope.toLowerCase().includes("fullstack") || defaultScope.toLowerCase().includes("app")) {
+    } else if (defaultScope.toLowerCase().includes("fullstack") || defaultScope.toLowerCase().includes("saas") || defaultScope.toLowerCase().includes("app")) {
       marketAmount = fullstackBase;
     }
 
