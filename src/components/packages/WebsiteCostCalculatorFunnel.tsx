@@ -213,6 +213,13 @@ export default function WebsiteCostCalculatorFunnel({
     return () => clearTimeout(timer);
   }, [socialAccount, businessName]);
 
+  // If SaaS is selected, ensure 1 Month fast sprint is not active
+  useEffect(() => {
+    if (selectedBundles.includes("fullstack_saas") && timeline.includes("1 Month")) {
+      setTimeline("🚀 1–3 Months (Standard Single-Module)");
+    }
+  }, [selectedBundles, timeline]);
+
   // Math Calculations (Delta Modular Pricing - Base ₹5k charged once, subsequent modules add delta)
   const calculation = useMemo(() => {
     let subtotalInr = 0;
@@ -938,7 +945,9 @@ Let's discuss getting started!`;
                   {[
                     {
                       title: "⚡ 1 Month (Fast Sprint)",
-                      note: "Realistic for Base Foundation only. Express acceleration surcharge applies for multi-module scopes."
+                      note: selectedBundles.includes("fullstack_saas")
+                        ? "🚫 Unavailable for SaaS platforms (Database, auth & backend architecture requires minimum 1–3 months)."
+                        : "Realistic for Base Foundation only. Express acceleration surcharge applies for multi-module scopes."
                     },
                     {
                       title: "🚀 1–3 Months (Standard Single-Module)",
@@ -952,21 +961,42 @@ Let's discuss getting started!`;
                       title: "🏛️ 5–8+ Months (Custom SaaS & Full-Stack Platform)",
                       note: "Standard delivery for custom SaaS platforms, PostgreSQL database, auth & billing."
                     }
-                  ].map((timeObj) => (
-                    <button
-                      key={timeObj.title}
-                      type="button"
-                      onClick={() => setTimeline(timeObj.title)}
-                      className={`p-3.5 rounded-xl border text-left transition-all cursor-pointer ${
-                        timeline === timeObj.title
-                          ? "bg-sky-50/90 border-2 border-sky-600 shadow-md !text-[#0a192f] font-black ring-2 ring-sky-500/15"
-                          : "bg-[#c8ecff]/20 hover:bg-[#c8ecff]/40 border-sky-200/80 !text-[#0a192f] font-medium"
-                      }`}
-                    >
-                      <div className="text-xs font-bold">{timeObj.title}</div>
-                      <div className="text-[10px] text-sky-900/70 mt-1 leading-tight font-normal">{timeObj.note}</div>
-                    </button>
-                  ))}
+                  ].map((timeObj) => {
+                    const isSaaS = selectedBundles.includes("fullstack_saas");
+                    const isOptionDisabled = isSaaS && timeObj.title.includes("1 Month");
+
+                    return (
+                      <button
+                        key={timeObj.title}
+                        type="button"
+                        disabled={isOptionDisabled}
+                        onClick={() => {
+                          if (!isOptionDisabled) {
+                            setTimeline(timeObj.title);
+                          }
+                        }}
+                        className={`p-3.5 rounded-xl border text-left transition-all ${
+                          isOptionDisabled
+                            ? "opacity-40 cursor-not-allowed bg-slate-100 border-slate-300 text-slate-400 select-none"
+                            : timeline === timeObj.title
+                            ? "bg-sky-50/90 border-2 border-sky-600 shadow-md !text-[#0a192f] font-black ring-2 ring-sky-500/15 cursor-pointer"
+                            : "bg-[#c8ecff]/20 hover:bg-[#c8ecff]/40 border-sky-200/80 !text-[#0a192f] font-medium cursor-pointer"
+                        }`}
+                      >
+                        <div className="text-xs font-bold flex items-center justify-between">
+                          <span>{timeObj.title}</span>
+                          {isOptionDisabled && (
+                            <span className="text-[9px] font-bold text-rose-600 bg-rose-50 px-1.5 py-0.5 rounded border border-rose-200">
+                              Disabled for SaaS
+                            </span>
+                          )}
+                        </div>
+                        <div className="text-[10px] text-sky-900/70 mt-1 leading-tight font-normal">
+                          {timeObj.note}
+                        </div>
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
 
