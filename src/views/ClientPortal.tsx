@@ -12,15 +12,8 @@ import {
 } from "@/components/client-hub/clientHubStorage";
 import { ClientHubProject } from "@/components/client-hub/types";
 
-// Modular Actionable Tiles
-import ClientHubHero from "@/components/client-hub/ClientHubHero";
-import CalculatedPricesTile from "@/components/client-hub/CalculatedPricesTile";
-import SavedAestheticsTile from "@/components/client-hub/SavedAestheticsTile";
-import BookingContractTile from "@/components/client-hub/BookingContractTile";
-import AssetManagerTile from "@/components/client-hub/AssetManagerTile";
-import DeliverablesProgressTile from "@/components/client-hub/DeliverablesProgressTile";
-import PaymentAndInvoicesTile from "@/components/client-hub/PaymentAndInvoicesTile";
-import HandoverAndAddonsTile from "@/components/client-hub/HandoverAndAddonsTile";
+// Tabbed workspace (contains all tiles internally)
+import TabbedWorkspace from "@/components/client-hub/TabbedWorkspace";
 
 export default function ClientPortal() {
   const pathname = usePathname();
@@ -330,65 +323,15 @@ export default function ClientPortal() {
             </div>
           ) : (
             /* ------------------------------------------------------------- */
-            /* B. SIGNED-IN STATE: PURE ACTIONABLE TILES WORKSPACE           */
+            /* B. SIGNED-IN STATE: TABBED WORKSPACE                          */
             /* ------------------------------------------------------------- */
             project && (
-              <div className="space-y-10 animate-fadeIn">
-                {/* HERO SECTION */}
-                <ClientHubHero
-                  project={project}
-                  onScrollToSection={scrollToSection}
-                  onSignOut={async () => {
-                    await signOut();
-                    window.location.href = "/";
-                  }}
-                />
-
-                {/* TILE 1: VIEW YOUR CALCULATED PRICES */}
-                <CalculatedPricesTile
-                  quote={project.calculated_quote}
-                  onProceedToBooking={() => scrollToSection("booking-contract-tile")}
-                />
-
-                {/* TILE 2: BOOKING & ADMIN-UPLOADED CONTRACT & ADVANCE PAYMENT */}
-                <BookingContractTile
-                  project={project}
-                  onUpdateProject={handleUpdateProject}
-                  onScrollToSection={scrollToSection}
-                />
-
-                {/* TILE 3: ASSET & REFERENCE MANAGER (SOFT-DELETE PERMANENT RETENTION) */}
-                <AssetManagerTile
-                  project={project}
-                  onUpdateProject={handleUpdateProject}
-                />
-
-                {/* TILE 4: DELIVERABLES BREAKDOWN & LIVE PROGRESS TRACKING */}
-                <DeliverablesProgressTile
-                  project={project}
-                  onScrollToSection={scrollToSection}
-                />
-
-                {/* TILE 5: COMPLETION PAYMENT & AUTOMATED DUAL INVOICES */}
-                <PaymentAndInvoicesTile
-                  project={project}
-                  onUpdateProject={handleUpdateProject}
-                  onScrollToSection={scrollToSection}
-                />
-
-                {/* TILE 6: PRODUCTION HANDOVER & ASK FOR CHANGES / ADD-ONS */}
-                <HandoverAndAddonsTile
-                  project={project}
-                  onUpdateProject={handleUpdateProject}
-                  onScrollToSection={scrollToSection}
-                />
-
-                {/* TILE 7: LIKED DESIGN AESTHETICS CAROUSEL GRID (MOODBOARD) */}
-                <SavedAestheticsTile
-                  project={project}
-                  onUpdateProject={handleUpdateProject}
-                />
-              </div>
+              <TabbedWorkspace
+                project={project}
+                onUpdateProject={handleUpdateProject}
+                onSignOut={async () => { await signOut(); window.location.href = "/"; }}
+                scrollToSection={scrollToSection}
+              />
             )
           )}
         </div>
