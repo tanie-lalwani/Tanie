@@ -325,39 +325,85 @@ export default function CostCalculatorStepResult({
             </div>
           </div>
 
-          {/* ITEMISED BREAKDOWN */}
-          <div className="p-6 rounded-2xl bg-[#c8ecff]/25 border border-sky-200/80 shadow-xs space-y-3">
-            <h4 className="text-xs font-black uppercase tracking-wider text-sky-800">
-              {locale === "ur"
-                ? `شامل ماڈیولز (${calculation.bundleCount})`
-                : `Included Scope Modules (${calculation.bundleCount})`}
-            </h4>
+          {/* ITEMISED PRICING & SCOPE BREAKDOWN */}
+          <div className="p-6 rounded-3xl bg-[#c8ecff]/25 border border-sky-200/80 shadow-xs space-y-4">
+            <div className="flex items-center justify-between border-b border-sky-200/60 pb-3">
+              <h4 className="text-xs font-black uppercase tracking-wider text-sky-900">
+                {locale === "ur"
+                  ? `تفصیلی ماڈیول اور لاگت بریک ڈاؤن (${calculation.bundleCount})`
+                  : `Scope & Pricing Breakdown (${calculation.bundleCount} Modules)`}
+              </h4>
+              <span className="text-[11px] font-semibold text-sky-800">
+                {timeline}
+              </span>
+            </div>
 
             <div className="divide-y divide-sky-200/50">
               {selectedBundles.map((bundleId) => {
                 const bundle = FEATURE_BUNDLES.find((b) => b.id === bundleId);
                 if (!bundle) return null;
+                const price =
+                  tierConfig.bundles[bundleId] ??
+                  (tierConfig.currencyCode === "INR" ? bundle.priceInr : bundle.priceUsd);
 
                 return (
                   <div
                     key={bundle.id}
                     className="py-3 flex items-center justify-between gap-3 text-xs"
                   >
-                    <div className="flex items-center gap-2.5">
-                      <span className="text-lg">{bundle.icon}</span>
-                      <div>
-                        <span className="font-black !text-[#0a192f]">{bundle.name}</span>
+                    <div className="flex items-center gap-2.5 min-w-0 pr-2">
+                      <span className="text-lg shrink-0">{bundle.icon}</span>
+                      <div className="min-w-0">
+                        <span className="font-bold !text-[#0a192f] block sm:inline">{bundle.name}</span>
                         <span className="text-sky-800/80 hidden sm:inline ml-2 font-medium">
                           • {bundle.tagline}
                         </span>
                       </div>
                     </div>
-                    <span className="font-bold text-sky-900 shrink-0">
-                      {locale === "ur" ? "اسکوپ میں شامل" : "Included in Scope"}
+                    <span className="font-extrabold text-[#0a192f] shrink-0">
+                      {tierConfig.currencySymbol}
+                      {price.toLocaleString()} {tierConfig.currencyCode}
                     </span>
                   </div>
                 );
               })}
+
+              {/* Express Urgency / Timeline Acceleration Surcharge */}
+              {calculation.urgencyPercent > 0 && (
+                <div className="py-3 flex items-center justify-between gap-3 text-xs bg-amber-50/80 -mx-6 px-6 border-y border-amber-200/80">
+                  <div className="flex items-center gap-2.5 min-w-0 pr-2">
+                    <span className="text-lg shrink-0">⚡</span>
+                    <div className="min-w-0">
+                      <span className="font-black text-amber-950 block sm:inline">
+                        Timeline Acceleration Surcharge (+{calculation.urgencyPercent}%)
+                      </span>
+                      <span className="text-amber-800 text-[11px] block mt-0.5">
+                        {calculation.urgencyReason}
+                      </span>
+                    </div>
+                  </div>
+                  <span className="font-black text-amber-900 shrink-0">
+                    +{tierConfig.currencySymbol}
+                    {calculation.urgencyAmountMarket.toLocaleString()} {tierConfig.currencyCode}
+                  </span>
+                </div>
+              )}
+            </div>
+
+            {/* Subtotal & Final Summary Bar */}
+            <div className="pt-3 border-t border-sky-200/80 flex flex-col sm:flex-row items-end sm:items-center justify-between gap-2 text-xs">
+              <div className="text-sky-800 font-medium">
+                {calculation.urgencyPercent > 0 ? (
+                  <span>
+                    Modules Subtotal: <strong>{tierConfig.currencySymbol}{calculation.subtotalMarket.toLocaleString()} {tierConfig.currencyCode}</strong> + Acceleration Surcharge: <strong>{tierConfig.currencySymbol}{calculation.urgencyAmountMarket.toLocaleString()} {tierConfig.currencyCode}</strong>
+                  </span>
+                ) : (
+                  <span>Standard Delivery Pace • No rush surcharge</span>
+                )}
+              </div>
+              <div className="text-sm font-black text-[#0a192f]">
+                Total Investment: {tierConfig.currencySymbol}{calculation.finalTotalMarket.toLocaleString()} {tierConfig.currencyCode}
+              </div>
             </div>
           </div>
 

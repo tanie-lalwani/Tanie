@@ -213,7 +213,7 @@ export default function WebsiteCostCalculatorFunnel({
     return () => clearTimeout(timer);
   }, [socialAccount, businessName]);
 
-  // Math Calculations
+  // Math Calculations (including realistic timeline acceleration surcharges)
   const calculation = useMemo(() => {
     let subtotalInr = 0;
     let subtotalUsd = 0;
@@ -229,30 +229,86 @@ export default function WebsiteCostCalculatorFunnel({
       }
     });
 
-    // No discounts applied
-    const discountPercent = 0;
-    const discountAmountInr = 0;
-    const discountAmountUsd = 0;
-    const discountAmountMarket = 0;
+    // Urgency surcharge computation
+    let urgencyPercent = 0;
+    let urgencyReason = "";
 
-    const finalTotalInr = subtotalInr;
-    const finalTotalUsd = subtotalUsd;
-    const finalTotalMarket = subtotalMarket;
+    const hasHeavyModule = selectedBundles.includes("fullstack_saas") || selectedBundles.includes("design_3d");
+    const moduleCount = selectedBundles.length;
+
+    if (timeline.includes("1 Month")) {
+      if (hasHeavyModule || moduleCount >= 3) {
+        urgencyPercent = 35; // Extreme rush for heavy multi-module scope
+        urgencyReason = "Express Acceleration (+35% for compressing 4–8 mo scope into 1 mo sprint)";
+      } else if (moduleCount >= 2) {
+        urgencyPercent = 25; // Rush for 2 modules
+        urgencyReason = "Sprint Acceleration (+25% for compressing 2–3 mo scope into 1 mo sprint)";
+      } else {
+        urgencyPercent = 0; // 1 month is standard for Base Foundation alone
+      }
+    } else if (timeline.includes("1–3 Months")) {
+      if (selectedBundles.includes("fullstack_saas") || moduleCount >= 4) {
+        urgencyPercent = 25; // High rush for SaaS / 4+ modules
+        urgencyReason = "Fast-Track Acceleration (+25% for delivering 5–8 mo platform in 1–3 mos)";
+      } else if (hasHeavyModule || moduleCount >= 3) {
+        urgencyPercent = 15; // Moderate rush
+        urgencyReason = "Priority Acceleration (+15% for delivering 3–5 mo scope in 1–3 mos)";
+      } else {
+        urgencyPercent = 0; // Standard for 1-2 modules
+      }
+    } else if (timeline.includes("3–5 Months")) {
+      if (selectedBundles.includes("fullstack_saas") && moduleCount >= 3) {
+        urgencyPercent = 15;
+        urgencyReason = "Platform Fast-Track (+15% for delivering 6–8 mo ecosystem in 3–5 mos)";
+      } else {
+        urgencyPercent = 0;
+      }
+    } else {
+      urgencyPercent = 0;
+    }
+
+    const urgencyAmountInr = Math.round((subtotalInr * urgencyPercent) / 100);
+    const urgencyAmountUsd = Math.round((subtotalUsd * urgencyPercent) / 100);
+    const urgencyAmountMarket = Math.round((subtotalMarket * urgencyPercent) / 100);
+
+    const finalTotalInr = subtotalInr + urgencyAmountInr;
+    const finalTotalUsd = subtotalUsd + urgencyAmountUsd;
+    const finalTotalMarket = subtotalMarket + urgencyAmountMarket;
 
     return {
       subtotalInr,
       subtotalUsd,
       subtotalMarket,
-      discountPercent,
-      discountAmountInr,
-      discountAmountUsd,
-      discountAmountMarket,
+      discountPercent: 0,
+      discountAmountInr: 0,
+      discountAmountUsd: 0,
+      discountAmountMarket: 0,
+      urgencyPercent,
+      urgencyReason,
+      urgencyAmountInr,
+      urgencyAmountUsd,
+      urgencyAmountMarket,
       finalTotalInr,
       finalTotalUsd,
       finalTotalMarket,
-      bundleCount: selectedBundles.length
+      bundleCount: selectedBundles.length,
+      moduleBreakdown: selectedBundles.map((bundleId) => {
+        const bundle = FEATURE_BUNDLES.find((b) => b.id === bundleId);
+        const inr = bundle?.priceInr ?? 0;
+        const usd = bundle?.priceUsd ?? 0;
+        const market = tierConfig.bundles[bundleId] ?? (tierConfig.currencyCode === "INR" ? inr : usd);
+        return {
+          id: bundleId,
+          name: bundle?.name ?? bundleId,
+          icon: bundle?.icon ?? "📦",
+          tagline: bundle?.tagline ?? "",
+          priceInr: inr,
+          priceUsd: usd,
+          priceMarket: market
+        };
+      })
     };
-  }, [selectedBundles, tierConfig]);
+  }, [selectedBundles, tierConfig, timeline]);
 
   // Quick Pick preset click in Hero
   const handleQuickPick = (industry: IndustryOption) => {
@@ -409,17 +465,28 @@ export default function WebsiteCostCalculatorFunnel({
         .map((id) => WEBSITE_GOALS.find((g) => g.id === id)?.title)
         .filter(Boolean)
         .join(" + ") || "Custom Growth";
+
+    const moduleLines = selectedBundles
+      .map((id) => {
+        const b = FEATURE_BUNDLES.find((item) => item.id === id);
+        const price = tierConfig.bundles[id] ?? (tierConfig.currencyCode === "INR" ? b?.priceInr : b?.priceUsd);
+        return `  • ${b?.icon || "📦"} ${b?.name}: ${tierConfig.currencySymbol}${price?.toLocaleString()} ${tierConfig.currencyCode}`;
+      })
+      .join("\n");
+
+    const urgencyLine =
+      calculation.urgencyPercent > 0
+        ? `⚡ *Timeline Acceleration Surcharge (+${calculation.urgencyPercent}%):* ${tierConfig.currencySymbol}${calculation.urgencyAmountMarket.toLocaleString()} ${tierConfig.currencyCode} (${calculation.urgencyReason})\n`
+        : "";
+
     const text = `Hi Tanie! I just calculated my website estimate on your site:
 🏢 *Brand / Contact:* ${socialAccount || businessName || "My Project"}
 🎯 *Primary Goals:* ${goalTitle}
-📦 *Selected Modules (${calculation.bundleCount}):*
-${selectedBundles
-  .map((id) => {
-    const b = FEATURE_BUNDLES.find((item) => item.id === id);
-    return `• ${b?.name}`;
-  })
-  .join("\n")}
-💰 *Calculated Price:* ${tierConfig.currencySymbol}${calculation.finalTotalMarket.toLocaleString()} ${tierConfig.currencyCode}
+📦 *Selected Scope Modules (${calculation.bundleCount}):*
+${moduleLines}
+
+📊 *Modules Subtotal:* ${tierConfig.currencySymbol}${calculation.subtotalMarket.toLocaleString()} ${tierConfig.currencyCode}
+${urgencyLine}💰 *Total Investment:* ${tierConfig.currencySymbol}${calculation.finalTotalMarket.toLocaleString()} ${tierConfig.currencyCode}
 ⏱️ *Timeline:* ${timeline}
 
 Let's discuss getting started!`;
@@ -795,25 +862,39 @@ Let's discuss getting started!`;
               {/* Timeline */}
               <div>
                 <label className="block text-xs font-black !text-[#0a192f] uppercase tracking-wider mb-3">
-                  {locale === "ur" ? "ہدف کی رفتار *" : locale === "hi" ? "लॉन्च की समय सीमा *" : locale === "es" ? "Plazo de lanzamiento *" : locale === "fr" ? "Vitesse de lancement ciblée *" : locale === "ja" ? "公開希望時期 *" : locale === "zh" ? "目标上线周期 *" : "Target Launch Speed *"}
+                  {locale === "ur" ? "ہدف کی رفتار *" : locale === "hi" ? "लॉन्च की समय सीमा *" : locale === "es" ? "Plazo de lanzamiento *" : locale === "fr" ? "Vitesse de lancement ciblée *" : locale === "ja" ? "公開希望時期 *" : locale === "zh" ? "目标上线周期 *" : "Target Launch Speed (Months) *"}
                 </label>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
                   {[
-                    "⚡ 1–2 Weeks (Express Sprint)",
-                    "🚀 3–4 Weeks (Standard Launch)",
-                    "🗓️ 4–6+ Weeks (Flexible)"
-                  ].map((time) => (
+                    {
+                      title: "⚡ 1 Month (Fast Sprint)",
+                      note: "Realistic for Base Foundation only. Express acceleration surcharge applies for multi-module scopes."
+                    },
+                    {
+                      title: "🚀 1–3 Months (Standard Single-Module)",
+                      note: "Standard delivery timeline for Base Foundation + 1 Core Engine (Sales or Marketing)."
+                    },
+                    {
+                      title: "🗓️ 3–5 Months (Multi-Module Ecosystem)",
+                      note: "Balanced delivery pace for 2–3 complex modules (Portals, 3D Canvas, Staff Roster)."
+                    },
+                    {
+                      title: "🏛️ 5–8+ Months (Custom SaaS & Full-Stack Platform)",
+                      note: "Standard delivery for custom SaaS platforms, PostgreSQL database, auth & billing."
+                    }
+                  ].map((timeObj) => (
                     <button
-                      key={time}
+                      key={timeObj.title}
                       type="button"
-                      onClick={() => setTimeline(time)}
+                      onClick={() => setTimeline(timeObj.title)}
                       className={`p-3.5 rounded-xl border text-left transition-all cursor-pointer ${
-                        timeline === time
+                        timeline === timeObj.title
                           ? "bg-sky-50/90 border-2 border-sky-600 shadow-md !text-[#0a192f] font-black ring-2 ring-sky-500/15"
                           : "bg-[#c8ecff]/20 hover:bg-[#c8ecff]/40 border-sky-200/80 !text-[#0a192f] font-medium"
                       }`}
                     >
-                      <div className="text-xs">{time}</div>
+                      <div className="text-xs font-bold">{timeObj.title}</div>
+                      <div className="text-[10px] text-sky-900/70 mt-1 leading-tight font-normal">{timeObj.note}</div>
                     </button>
                   ))}
                 </div>
