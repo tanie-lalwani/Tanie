@@ -21,10 +21,7 @@ export default function CalculatedPricesTile({
       >
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <span className="text-[11px] font-black uppercase tracking-wider text-sky-800 bg-sky-100/90 px-3 py-1 rounded-full border border-sky-200">
-              Pricing Calculator Snapshot
-            </span>
-            <h2 className="mt-2 text-2xl font-black text-[#0a192f]">
+            <h2 className="text-2xl font-black text-[#0a192f]">
               View Your Calculated Prices
             </h2>
             <p className="mt-1 text-xs sm:text-sm text-slate-600 max-w-xl">

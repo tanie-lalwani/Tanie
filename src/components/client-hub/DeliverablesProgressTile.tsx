@@ -26,10 +26,7 @@ export default function DeliverablesProgressTile({
               🔒
             </div>
             <div>
-              <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">
-                Sprint Telemetry & Deliverables
-              </span>
-              <h3 className="text-xl font-bold text-slate-900 mt-0.5">
+              <h3 className="text-xl font-bold text-slate-900">
                 Deliverables & Progress Unlocks Upon Advance Payment
               </h3>
               <p className="text-xs text-slate-600 mt-1 max-w-xl">

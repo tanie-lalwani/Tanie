@@ -32,10 +32,7 @@ export default function HandoverAndAddonsTile({
               📦
             </div>
             <div>
-              <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">
-                Production Release & Post-Launch
-              </span>
-              <h3 className="text-xl font-bold text-slate-900 mt-0.5">
+              <h3 className="text-xl font-bold text-slate-900">
                 Handover Vault & Post-Launch Add-ons
               </h3>
               <p className="text-xs text-slate-600 mt-1 max-w-xl">
@@ -90,18 +87,10 @@ export default function HandoverAndAddonsTile({
       {/* Handover Celebration Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <div className="flex items-center gap-2">
-            <span className="text-[11px] font-black uppercase tracking-wider text-purple-900 bg-purple-100 border border-purple-200 px-3 py-1 rounded-full shadow-2xs">
-              🎉 Official Status: Handed Over
-            </span>
-            <span className="text-xs text-slate-500 font-mono">
-              100% IP Transferred
-            </span>
-          </div>
-          <h2 className="mt-2 text-2xl sm:text-3xl font-black text-[#0a192f]">
+          <h2 className="text-2xl sm:text-3xl font-black text-[#0a192f]">
             Production Handover Vault & Post-Launch Orders
           </h2>
-          <p className="mt-0.5 text-xs text-slate-600 max-w-2xl leading-relaxed">
+          <p className="mt-1 text-xs text-slate-600 max-w-2xl leading-relaxed">
             Your project has been successfully completed, fully paid, and handed over. Access all production code deliverables below, or commission new revision sprints &amp; add-ons.
           </p>
         </div>

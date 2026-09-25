@@ -201,18 +201,10 @@ export default function SavedAestheticsTile({
     >
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <div>
-          <div className="flex items-center gap-2">
-            <span className="text-[11px] font-black uppercase tracking-wider text-rose-900 bg-rose-100 border border-rose-200 px-3 py-1 rounded-full shadow-2xs">
-              ❤️ Moodboard & Design Direction
-            </span>
-            <span className="text-xs text-slate-500 font-mono">
-              {savedList.length} Liked {savedList.length === 1 ? "Vibe" : "Vibes"}
-            </span>
-          </div>
-          <h2 className="mt-2 text-2xl sm:text-3xl font-black text-[#0a192f]">
+          <h2 className="text-2xl sm:text-3xl font-black text-[#0a192f]">
             Liked Design Aesthetics
           </h2>
-          <p className="mt-0.5 text-xs text-slate-600">
+          <p className="mt-1 text-xs text-slate-600">
             Aesthetics you liked while exploring design directions. These guide the UI styling and creative atmosphere of your build.
           </p>
         </div>
