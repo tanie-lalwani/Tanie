@@ -309,7 +309,7 @@ export default function CostCalculatorStepResult({
                     {locale === "ur"
                       ? "Google / Gmail کے ساتھ جاری رکھیں"
                       : locale === "hi"
-                      ? "Google / Gmail کے ساتھ جاری رکھیں"
+                      ? "Google / Gmail ke saath continue karein"
                       : locale === "es"
                       ? "Continuar con Google / Gmail"
                       : locale === "fr"

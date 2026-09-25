@@ -933,7 +933,7 @@ Let's discuss getting started!`;
               {/* Budget Range */}
               <div>
                 <label className="block text-xs font-black !text-[#0a192f] uppercase tracking-wider mb-3">
-                  {locale === "ur" ? "ہدف کا بجٹ *" : locale === "hi" ? "लक्ष्य बजट *" : locale === "es" ? "Presupuesto objetivo *" : locale === "fr" ? "Fourchette de budget *" : locale === "ja" ? "目標予算 *" : locale === "zh" ? "目标预算 *" : "Target Budget Bracket *"}
+                  {locale === "ur" ? "ہدف کا بجٹ *" : locale === "hi" ? "Target Budget Bracket *" : locale === "es" ? "Presupuesto objetivo *" : locale === "fr" ? "Fourchette de budget *" : locale === "ja" ? "目標予算 *" : locale === "zh" ? "目标预算 *" : "Target Budget Bracket *"}
                 </label>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
                   {[
@@ -961,7 +961,7 @@ Let's discuss getting started!`;
               {/* Timeline */}
               <div>
                 <label className="block text-xs font-black !text-[#0a192f] uppercase tracking-wider mb-3">
-                  {locale === "ur" ? "ہدف کی رفتار *" : locale === "hi" ? "लॉन्च की समय सीमा *" : locale === "es" ? "Plazo de lanzamiento *" : locale === "fr" ? "Vitesse de lancement ciblée *" : locale === "ja" ? "公開希望時期 *" : locale === "zh" ? "目标上线周期 *" : "Target Launch Speed (Months) *"}
+                  {locale === "ur" ? "ہدف کی رفتار *" : locale === "hi" ? "Target Launch Speed (Months) *" : locale === "es" ? "Plazo de lanzamiento *" : locale === "fr" ? "Vitesse de lancement ciblée *" : locale === "ja" ? "公開希望時期 *" : locale === "zh" ? "目标上线周期 *" : "Target Launch Speed (Months) *"}
                 </label>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
                   {[
