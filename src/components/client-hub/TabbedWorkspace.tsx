@@ -80,7 +80,7 @@ export default function TabbedWorkspace({
       <ClientHubHero project={project} />
 
       {/* 2. NAVIGATION BAR (Tabs + User Icon / Hamburger on mobile) */}
-      <div className="relative">
+      <div className="relative z-40">
         <div className="flex items-center justify-between gap-2 rounded-2xl border border-sky-200/80 bg-white/80 p-1.5 backdrop-blur-md shadow-xs">
           
           {/* Desktop Tabs */}
