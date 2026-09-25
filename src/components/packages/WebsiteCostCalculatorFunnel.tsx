@@ -603,10 +603,12 @@ Let's discuss getting started!`;
                       </div>
 
                       <div className="mt-4 pt-2.5 border-t border-sky-200/60 flex items-center justify-between text-xs font-semibold">
-                        <span className="text-sky-900 font-bold" style={{ color: '#0a192f' }}>
-                          {tierConfig.currencySymbol}{(tierConfig.bundles[bundle.id] ?? (tierConfig.currencyCode === "INR" ? bundle.priceInr : bundle.priceUsd)).toLocaleString()} {tierConfig.currencyCode}
+                        <span className="text-[11px] text-sky-800 font-medium">
+                          {isEssential
+                            ? (locale === "ur" ? "بنیادی خصوصیت" : "Core Architecture")
+                            : (locale === "ur" ? "کسٹم ماڈیول" : "Custom Scope")}
                         </span>
-                        <span className={`text-[11px] font-bold ${isSelected ? "text-sky-800" : "text-sky-600"}`}>
+                        <span className={`text-[11px] font-bold ${isSelected ? "text-sky-950 font-black" : "text-sky-600"}`}>
                           {isSelected ? (locale === "ur" ? "✓ شامل ہے" : "✓ Included") : (locale === "ur" ? "+ منتخب کریں" : "+ Select Module")}
                         </span>
                       </div>

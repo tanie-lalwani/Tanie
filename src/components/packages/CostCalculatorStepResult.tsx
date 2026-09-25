@@ -347,17 +347,8 @@ export default function CostCalculatorStepResult({
                         </span>
                       </div>
                     </div>
-                    <span className="font-black text-sky-950 shrink-0">
-                      {bundle.isEssential
-                        ? locale === "ur"
-                          ? "شامل ہے"
-                          : "Included"
-                        : `+${tierConfig.currencySymbol}${(
-                            tierConfig.bundles[bundle.id] ??
-                            (tierConfig.currencyCode === "INR"
-                              ? bundle.priceInr
-                              : bundle.priceUsd)
-                          ).toLocaleString()}`}
+                    <span className="font-bold text-sky-900 shrink-0">
+                      {locale === "ur" ? "اسکوپ میں شامل" : "Included in Scope"}
                     </span>
                   </div>
                 );
