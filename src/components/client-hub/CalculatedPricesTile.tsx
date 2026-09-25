@@ -123,9 +123,19 @@ export default function CalculatedPricesTile({
           <div className="mt-1 text-base font-extrabold text-slate-900 truncate">
             {quote.selected_aesthetic || "Bespoke Editorial / Modern SaaS"}
           </div>
-          <div className="mt-2 text-xs text-slate-600 font-medium">
-            Custom typographic hierarchy & shaders
-          </div>
+          {quote.liked_aesthetics && quote.liked_aesthetics.length > 0 ? (
+            <div className="mt-2 flex flex-wrap gap-1">
+              {quote.liked_aesthetics.map((l) => (
+                <span key={l} className="rounded-md bg-rose-50 border border-rose-200 px-1.5 py-0.5 text-[10px] font-bold text-rose-700">
+                  ❤️ {l}
+                </span>
+              ))}
+            </div>
+          ) : (
+            <div className="mt-2 text-xs text-slate-600 font-medium">
+              Custom typographic hierarchy & shaders
+            </div>
+          )}
         </div>
 
         {/* Contact handle */}

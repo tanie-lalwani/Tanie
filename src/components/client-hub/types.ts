@@ -1,6 +1,7 @@
 export interface CalculatedQuote {
   scope_tier: string;
   selected_aesthetic?: string;
+  liked_aesthetics?: string[];
   features: string[];
   timeline: string;
   calculated_price: number;

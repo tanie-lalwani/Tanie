@@ -443,6 +443,14 @@ export default function WebsiteCostCalculatorFunnel({
   // Background lead capture dispatcher
   const dispatchLeadCapture = async (data: Record<string, any>) => {
     try {
+      let likedAestheticsList: string[] = [];
+      if (typeof window !== "undefined") {
+        try {
+          const raw = localStorage.getItem("tanie_liked_aesthetics");
+          if (raw) likedAestheticsList = JSON.parse(raw);
+        } catch {}
+      }
+
       const payload = {
         id: leadId || undefined,
         businessName: businessName.trim() || socialAccount.trim() || undefined,
@@ -454,6 +462,7 @@ export default function WebsiteCostCalculatorFunnel({
         budgetTier,
         timeline,
         source: "hero_cost_calculator",
+        likedAesthetics: likedAestheticsList.length > 0 ? likedAestheticsList : undefined,
         ...data
       };
 
@@ -1318,6 +1327,13 @@ Let's discuss getting started!`;
                       onClick={() => {
                         if (onProceedWithCustomQuote) {
                           const goalObj = WEBSITE_GOALS.find((g) => g.id === selectedGoal);
+                          let likedList: string[] = [];
+                          if (typeof window !== "undefined") {
+                            try {
+                              const raw = localStorage.getItem("tanie_liked_aesthetics");
+                              if (raw) likedList = JSON.parse(raw);
+                            } catch {}
+                          }
                           onProceedWithCustomQuote({
                             projectName: businessName,
                             socialAccount: socialAccount.trim() || undefined,
@@ -1329,7 +1345,8 @@ Let's discuss getting started!`;
                             finalTotalUsd: calculation.finalTotalUsd,
                             currency,
                             timeline,
-                            budgetTier
+                            budgetTier,
+                            likedAesthetics: likedList
                           });
                         }
                       }}
