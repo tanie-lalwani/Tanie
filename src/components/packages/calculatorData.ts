@@ -12,6 +12,8 @@ export interface FeatureBundle {
   icon: string;
   priceInr: number;
   priceUsd: number;
+  deltaPriceInr?: number;
+  deltaPriceUsd?: number;
   badge?: string;
   tagline: string;
   description: string;
@@ -27,8 +29,10 @@ export const FEATURE_BUNDLES: FeatureBundle[] = [
     icon: "🏛️",
     priceInr: 4999,
     priceUsd: 99,
+    deltaPriceInr: 4999,
+    deltaPriceUsd: 99,
     isEssential: true,
-    badge: "Base Included",
+    badge: "Base Foundation",
     tagline: "Ultra-fast modern responsive foundation with bespoke typography & lead intake.",
     description: "Responsive layout across mobile/tablet/desktop, About story, Service sections, Contact form with instant email alerts, 95+ Lighthouse speed, SSL and Edge CDN hosting setup.",
     includedFeatures: [
@@ -107,6 +111,8 @@ export const FEATURE_BUNDLES: FeatureBundle[] = [
     icon: "🛍️",
     priceInr: 19999,
     priceUsd: 499,
+    deltaPriceInr: 15000,
+    deltaPriceUsd: 400,
     badge: "Revenue Engine",
     tagline: "E-Commerce store, 1-click checkouts, appointment calendar & instant payment gateways.",
     description: "Direct revenue engine: sell physical/digital products or book calendar appointments. Includes product catalogs, slide-over carts, live calendar slot booking, automated WhatsApp reminders, and Stripe/Razorpay/UPI checkout.",
@@ -186,6 +192,8 @@ export const FEATURE_BUNDLES: FeatureBundle[] = [
     icon: "📈",
     priceInr: 19999,
     priceUsd: 499,
+    deltaPriceInr: 15000,
+    deltaPriceUsd: 400,
     badge: "High Conversion",
     tagline: "Ad traffic landing pages, UGC review wall, urgency mechanics & UTM attribution.",
     description: "Transform cold ad traffic into paying customers with high-converting BOFU pages, countdown drop timers, sticky announcement bars, video testimonials, comparison matrices, and Meta CAPI / GA4 pixel telemetry.",
@@ -265,6 +273,8 @@ export const FEATURE_BUNDLES: FeatureBundle[] = [
     icon: "👥",
     priceInr: 24999,
     priceUsd: 599,
+    deltaPriceInr: 20000,
+    deltaPriceUsd: 500,
     badge: "Operations Hub",
     tagline: "Client hubs, staff rostering, geolocation punch clock, inventory & admin dashboards.",
     description: "Equip your business with dedicated Client Hubs (file vaults, milestone tracking, invoices, e-signatures), Staff Rostering & Time-off approval workflows, GPS Geolocation Punch Clock, and an Executive Admin Control Dashboard.",
@@ -344,6 +354,8 @@ export const FEATURE_BUNDLES: FeatureBundle[] = [
     icon: "🎨",
     priceInr: 39999,
     priceUsd: 899,
+    deltaPriceInr: 35000,
+    deltaPriceUsd: 800,
     badge: "Awwwards Tier",
     tagline: "Interactive Three.js 3D viewport, spatial particles, reactive audio & 60fps rendering.",
     description: "Give your brand a breathtaking digital presence with interactive 3D model orbiters, particle shaders, scroll-driven typography reveals, reactive audio, and silky smooth transitions.",
@@ -423,6 +435,8 @@ export const FEATURE_BUNDLES: FeatureBundle[] = [
     icon: "⚡",
     priceInr: 69999,
     priceUsd: 1499,
+    deltaPriceInr: 65000,
+    deltaPriceUsd: 1400,
     badge: "Software MVP",
     tagline: "Full-stack software with Supabase PostgreSQL, multi-role auth & billing webhooks.",
     description: "Production-ready software platforms, SaaS MVPs, marketplaces, and custom web apps with Next.js App Router, Supabase PostgreSQL with Row-Level Security, multi-role authentication, and subscription billing.",

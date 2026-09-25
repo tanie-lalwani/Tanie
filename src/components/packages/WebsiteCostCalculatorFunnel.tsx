@@ -213,27 +213,51 @@ export default function WebsiteCostCalculatorFunnel({
     return () => clearTimeout(timer);
   }, [socialAccount, businessName]);
 
-  // Math Calculations (including realistic timeline acceleration surcharges)
+  // Math Calculations (Delta Modular Pricing - Base ₹5k charged once, subsequent modules add delta)
   const calculation = useMemo(() => {
     let subtotalInr = 0;
     let subtotalUsd = 0;
     let subtotalMarket = 0;
 
-    selectedBundles.forEach((bundleId) => {
-      const bundle = FEATURE_BUNDLES.find((b) => b.id === bundleId);
-      if (bundle) {
-        subtotalInr += bundle.priceInr;
-        subtotalUsd += bundle.priceUsd;
-        const marketPrice = tierConfig.bundles[bundleId] ?? (tierConfig.currencyCode === "INR" ? bundle.priceInr : bundle.priceUsd);
-        subtotalMarket += marketPrice;
-      }
-    });
+    const baseInr = 4999;
+    const baseUsd = 99;
+    const baseMarket =
+      tierConfig.bundles["essential_core"] ??
+      (tierConfig.currencyCode === "INR" ? baseInr : baseUsd);
+
+    if (selectedBundles.length > 0) {
+      // 1. Base Foundation is always charged once
+      subtotalInr += baseInr;
+      subtotalUsd += baseUsd;
+      subtotalMarket += baseMarket;
+
+      // 2. Add delta prices for all additional modules beyond the base foundation
+      selectedBundles.forEach((bundleId) => {
+        if (bundleId === "essential_core") return; // Already included above
+
+        const bundle = FEATURE_BUNDLES.find((b) => b.id === bundleId);
+        const inrStandalone = bundle?.priceInr ?? 0;
+        const usdStandalone = bundle?.priceUsd ?? 0;
+        const marketStandalone =
+          tierConfig.bundles[bundleId] ??
+          (tierConfig.currencyCode === "INR" ? inrStandalone : usdStandalone);
+
+        const deltaInr = bundle?.deltaPriceInr ?? Math.max(0, inrStandalone - baseInr);
+        const deltaUsd = bundle?.deltaPriceUsd ?? Math.max(0, usdStandalone - baseUsd);
+        const deltaMarket = Math.max(0, marketStandalone - baseMarket);
+
+        subtotalInr += deltaInr;
+        subtotalUsd += deltaUsd;
+        subtotalMarket += deltaMarket;
+      });
+    }
 
     // Urgency surcharge computation
     let urgencyPercent = 0;
     let urgencyReason = "";
 
-    const hasHeavyModule = selectedBundles.includes("fullstack_saas") || selectedBundles.includes("design_3d");
+    const hasHeavyModule =
+      selectedBundles.includes("fullstack_saas") || selectedBundles.includes("design_3d");
     const moduleCount = selectedBundles.length;
 
     if (timeline.includes("1 Month")) {
@@ -279,6 +303,7 @@ export default function WebsiteCostCalculatorFunnel({
       subtotalInr,
       subtotalUsd,
       subtotalMarket,
+      baseMarket,
       discountPercent: 0,
       discountAmountInr: 0,
       discountAmountUsd: 0,
@@ -296,15 +321,26 @@ export default function WebsiteCostCalculatorFunnel({
         const bundle = FEATURE_BUNDLES.find((b) => b.id === bundleId);
         const inr = bundle?.priceInr ?? 0;
         const usd = bundle?.priceUsd ?? 0;
-        const market = tierConfig.bundles[bundleId] ?? (tierConfig.currencyCode === "INR" ? inr : usd);
+        const market =
+          tierConfig.bundles[bundleId] ??
+          (tierConfig.currencyCode === "INR" ? inr : usd);
+        const isBase = bundleId === "essential_core";
+        const deltaInr = isBase ? inr : (bundle?.deltaPriceInr ?? Math.max(0, inr - baseInr));
+        const deltaUsd = isBase ? usd : (bundle?.deltaPriceUsd ?? Math.max(0, usd - baseUsd));
+        const deltaMarket = isBase ? market : Math.max(0, market - baseMarket);
+
         return {
           id: bundleId,
           name: bundle?.name ?? bundleId,
           icon: bundle?.icon ?? "📦",
           tagline: bundle?.tagline ?? "",
+          isBase,
           priceInr: inr,
           priceUsd: usd,
-          priceMarket: market
+          priceMarket: market,
+          deltaPriceInr: deltaInr,
+          deltaPriceUsd: deltaUsd,
+          deltaPriceMarket: deltaMarket
         };
       })
     };
@@ -466,24 +502,36 @@ export default function WebsiteCostCalculatorFunnel({
         .filter(Boolean)
         .join(" + ") || "Custom Growth";
 
-    const moduleLines = selectedBundles
-      .map((id) => {
-        const b = FEATURE_BUNDLES.find((item) => item.id === id);
-        const price = tierConfig.bundles[id] ?? (tierConfig.currencyCode === "INR" ? b?.priceInr : b?.priceUsd);
-        return `  • ${b?.icon || "📦"} ${b?.name}: ${tierConfig.currencySymbol}${price?.toLocaleString()} ${tierConfig.currencyCode}`;
-      })
-      .join("\n");
+    const basePrice =
+      tierConfig.bundles["essential_core"] ??
+      (tierConfig.currencyCode === "INR" ? 4999 : 99);
+
+    const lines: string[] = [
+      `  • 🏛️ Base Brand Foundation: ${tierConfig.currencySymbol}${basePrice.toLocaleString()} ${tierConfig.currencyCode}`
+    ];
+
+    selectedBundles.forEach((id) => {
+      if (id === "essential_core") return;
+      const b = FEATURE_BUNDLES.find((item) => item.id === id);
+      const standalone =
+        tierConfig.bundles[id] ??
+        (tierConfig.currencyCode === "INR" ? b?.priceInr ?? 0 : b?.priceUsd ?? 0);
+      const delta = Math.max(0, standalone - basePrice);
+      lines.push(
+        `  • ${b?.icon || "📦"} ${b?.name} (Modular Add-on): +${tierConfig.currencySymbol}${delta.toLocaleString()} ${tierConfig.currencyCode}`
+      );
+    });
 
     const urgencyLine =
       calculation.urgencyPercent > 0
-        ? `⚡ *Timeline Acceleration Surcharge (+${calculation.urgencyPercent}%):* ${tierConfig.currencySymbol}${calculation.urgencyAmountMarket.toLocaleString()} ${tierConfig.currencyCode} (${calculation.urgencyReason})\n`
+        ? `⚡ *Timeline Acceleration Surcharge (+${calculation.urgencyPercent}%):* +${tierConfig.currencySymbol}${calculation.urgencyAmountMarket.toLocaleString()} ${tierConfig.currencyCode} (${calculation.urgencyReason})\n`
         : "";
 
     const text = `Hi Tanie! I just calculated my website estimate on your site:
 🏢 *Brand / Contact:* ${socialAccount || businessName || "My Project"}
 🎯 *Primary Goals:* ${goalTitle}
-📦 *Selected Scope Modules (${calculation.bundleCount}):*
-${moduleLines}
+📦 *Scope Breakdown (Delta Modular Pricing):*
+${lines.join("\n")}
 
 📊 *Modules Subtotal:* ${tierConfig.currencySymbol}${calculation.subtotalMarket.toLocaleString()} ${tierConfig.currencyCode}
 ${urgencyLine}💰 *Total Investment:* ${tierConfig.currencySymbol}${calculation.finalTotalMarket.toLocaleString()} ${tierConfig.currencyCode}
@@ -672,6 +720,16 @@ Let's discuss getting started!`;
                   const isEssential = bundle.isEssential;
                   const isExpanded = expandedBundle === bundle.id;
                   const macros = bundle.macroFeatures || [];
+                  const basePrice =
+                    tierConfig.bundles["essential_core"] ??
+                    (tierConfig.currencyCode === "INR" ? 4999 : 99);
+                  const standalonePrice =
+                    tierConfig.bundles[bundle.id] ??
+                    (tierConfig.currencyCode === "INR" ? bundle.priceInr : bundle.priceUsd);
+                  const deltaPrice =
+                    bundle.id === "essential_core"
+                      ? basePrice
+                      : Math.max(0, standalonePrice - basePrice);
 
                   return (
                     <div
@@ -689,15 +747,27 @@ Let's discuss getting started!`;
                       >
                         <span className="text-xl shrink-0">{bundle.icon}</span>
                         <div className="flex-1 min-w-0">
-                          <span className="text-sm font-semibold text-[#0a192f] leading-snug">
-                            {bundle.name}
-                          </span>
-                          {bundle.badge && (
-                            <span className="ml-2 px-1.5 py-0.5 rounded text-[9px] font-bold bg-sky-100 text-sky-900 border border-sky-200 align-middle">
-                              {bundle.badge}
+                          <div className="flex flex-wrap items-center gap-1.5">
+                            <span className="text-sm font-semibold text-[#0a192f] leading-snug">
+                              {bundle.name}
                             </span>
-                          )}
+                            {bundle.badge && (
+                              <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-sky-100 text-sky-900 border border-sky-200">
+                                {bundle.badge}
+                              </span>
+                            )}
+                          </div>
                           <p className="text-[11px] text-sky-900/70 mt-0.5 truncate">{bundle.tagline}</p>
+                          <div className="mt-1 flex items-center gap-2 text-[11px]">
+                            <span className="font-extrabold text-[#0a192f]">
+                              {tierConfig.currencySymbol}{standalonePrice.toLocaleString()} {tierConfig.currencyCode}
+                            </span>
+                            {!isEssential && (
+                              <span className="text-[10px] font-bold text-emerald-800 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200/80">
+                                +{tierConfig.currencySymbol}{deltaPrice.toLocaleString()} modular add-on
+                              </span>
+                            )}
+                          </div>
                         </div>
                         <span
                           className={`h-4 w-4 rounded shrink-0 flex items-center justify-center text-[10px] font-black border transition ${

@@ -339,34 +339,69 @@ export default function CostCalculatorStepResult({
             </div>
 
             <div className="divide-y divide-sky-200/50">
-              {selectedBundles.map((bundleId) => {
-                const bundle = FEATURE_BUNDLES.find((b) => b.id === bundleId);
-                if (!bundle) return null;
-                const price =
-                  tierConfig.bundles[bundleId] ??
-                  (tierConfig.currencyCode === "INR" ? bundle.priceInr : bundle.priceUsd);
-
-                return (
-                  <div
-                    key={bundle.id}
-                    className="py-3 flex items-center justify-between gap-3 text-xs"
-                  >
-                    <div className="flex items-center gap-2.5 min-w-0 pr-2">
-                      <span className="text-lg shrink-0">{bundle.icon}</span>
-                      <div className="min-w-0">
-                        <span className="font-bold !text-[#0a192f] block sm:inline">{bundle.name}</span>
-                        <span className="text-sky-800/80 hidden sm:inline ml-2 font-medium">
-                          • {bundle.tagline}
-                        </span>
-                      </div>
+              {/* Base Foundation Layer (Included once for the website build) */}
+              <div className="py-3 flex items-center justify-between gap-3 text-xs">
+                <div className="flex items-center gap-2.5 min-w-0 pr-2">
+                  <span className="text-lg shrink-0">🏛️</span>
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-2">
+                      <span className="font-bold !text-[#0a192f]">Luxury Brand Landing Foundation</span>
+                      <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-sky-100 text-sky-900 border border-sky-200">
+                        Base Layer
+                      </span>
                     </div>
-                    <span className="font-extrabold text-[#0a192f] shrink-0">
-                      {tierConfig.currencySymbol}
-                      {price.toLocaleString()} {tierConfig.currencyCode}
+                    <span className="text-sky-800/80 text-[11px] block mt-0.5 font-medium">
+                      Core responsive architecture, 95+ speed, SSL, DNS & lead intake
                     </span>
                   </div>
-                );
-              })}
+                </div>
+                <span className="font-extrabold text-[#0a192f] shrink-0">
+                  {tierConfig.currencySymbol}
+                  {(tierConfig.bundles["essential_core"] ?? (tierConfig.currencyCode === "INR" ? 4999 : 99)).toLocaleString()}{" "}
+                  {tierConfig.currencyCode}
+                </span>
+              </div>
+
+              {/* Additional Selected Modules as Modular Add-ons (Base deducted) */}
+              {selectedBundles
+                .filter((id) => id !== "essential_core")
+                .map((bundleId) => {
+                  const bundle = FEATURE_BUNDLES.find((b) => b.id === bundleId);
+                  if (!bundle) return null;
+                  const basePrice =
+                    tierConfig.bundles["essential_core"] ??
+                    (tierConfig.currencyCode === "INR" ? 4999 : 99);
+                  const standalonePrice =
+                    tierConfig.bundles[bundleId] ??
+                    (tierConfig.currencyCode === "INR" ? bundle.priceInr : bundle.priceUsd);
+                  const deltaPrice = Math.max(0, standalonePrice - basePrice);
+
+                  return (
+                    <div
+                      key={bundle.id}
+                      className="py-3 flex items-center justify-between gap-3 text-xs"
+                    >
+                      <div className="flex items-center gap-2.5 min-w-0 pr-2">
+                        <span className="text-lg shrink-0">{bundle.icon}</span>
+                        <div className="min-w-0">
+                          <div className="flex items-center gap-2">
+                            <span className="font-bold !text-[#0a192f] block sm:inline">{bundle.name}</span>
+                            <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-200">
+                              Modular Add-on
+                            </span>
+                          </div>
+                          <span className="text-sky-800/80 hidden sm:inline ml-0 text-[11px] font-medium">
+                            • {bundle.tagline} (Standalone {tierConfig.currencySymbol}{standalonePrice.toLocaleString()} − Base {tierConfig.currencySymbol}{basePrice.toLocaleString()} deducted)
+                          </span>
+                        </div>
+                      </div>
+                      <span className="font-extrabold text-[#0a192f] shrink-0">
+                        +{tierConfig.currencySymbol}
+                        {deltaPrice.toLocaleString()} {tierConfig.currencyCode}
+                      </span>
+                    </div>
+                  );
+                })}
 
               {/* Express Urgency / Timeline Acceleration Surcharge */}
               {calculation.urgencyPercent > 0 && (

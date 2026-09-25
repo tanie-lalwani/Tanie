@@ -491,3 +491,16 @@ export function formatPackageMarketPrice(
     currency: tier.currencyCode
   };
 }
+
+/**
+ * Returns the modular delta price for a bundle (standalone minus base foundation)
+ */
+export function getBundleDeltaPrice(tier: MarketPricingTier, bundleId: string): number {
+  const basePrice = tier.bundles["essential_core"] ?? (tier.currencyCode === "INR" ? 4999 : 99);
+  if (bundleId === "essential_core") {
+    return basePrice;
+  }
+  const standalonePrice = tier.bundles[bundleId] ?? (tier.currencyCode === "INR" ? 19999 : 499);
+  return Math.max(0, standalonePrice - basePrice);
+}
+
