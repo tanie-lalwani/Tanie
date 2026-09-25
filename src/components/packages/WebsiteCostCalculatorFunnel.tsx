@@ -42,7 +42,34 @@ export default function WebsiteCostCalculatorFunnel({
   // User input states
   const [businessName, setBusinessName] = useState("");
   const [socialAccount, setSocialAccount] = useState("");
-  const [selectedGoal, setSelectedGoal] = useState<string>("more_sales");
+  const [selectedGoals, setSelectedGoals] = useState<string[]>(["more_sales"]);
+  const selectedGoal = selectedGoals[0] || "more_sales";
+
+  const handleToggleGoal = (goalId: string) => {
+    setSelectedGoals((prev) => {
+      const isAlreadySelected = prev.includes(goalId);
+      let nextGoals: string[];
+      if (isAlreadySelected) {
+        if (prev.length <= 1) {
+          return prev; // keep at least one goal selected
+        }
+        nextGoals = prev.filter((id) => id !== goalId);
+      } else {
+        nextGoals = [...prev, goalId];
+      }
+
+      // Re-aggregate recommended modules from all active goals
+      const merged = new Set<string>();
+      merged.add("essential_core");
+      nextGoals.forEach((gId) => {
+        const g = WEBSITE_GOALS.find((item) => item.id === gId);
+        g?.recommendedBundles.forEach((b) => merged.add(b));
+      });
+      setSelectedBundles(Array.from(merged));
+
+      return nextGoals;
+    });
+  };
   const [websiteType, setWebsiteType] = useState<"business" | "portfolio" | "ecommerce" | "saas">("business");
   const [selectedIndustry, setSelectedIndustry] = useState<IndustryOption>(INDUSTRIES[0]);
   const [selectedBundles, setSelectedBundles] = useState<string[]>(["essential_core", "lead_crm", "growth_seo"]);
@@ -99,13 +126,20 @@ export default function WebsiteCostCalculatorFunnel({
         } catch {}
       }
 
+      const goalsLabel =
+        selectedGoals
+          .map((id) => WEBSITE_GOALS.find((g) => g.id === id)?.title)
+          .filter(Boolean)
+          .join(" + ") || selectedGoal;
+
       const payload = {
         id: leadId || undefined,
         businessName: businessName.trim() || socialAccount.trim() || undefined,
         socialAccount: socialAccount.trim() || undefined,
-        goal: selectedGoal,
+        goal: goalsLabel,
+        goals: selectedGoals,
         businessType: websiteType,
-        industry: selectedGoal,
+        industry: goalsLabel,
         selectedBundles,
         budgetTier,
         timeline,
@@ -338,10 +372,14 @@ export default function WebsiteCostCalculatorFunnel({
 
   // WhatsApp share
   const handleWhatsAppQuote = () => {
-    const goalTitle = WEBSITE_GOALS.find((g) => g.id === selectedGoal)?.title || "Custom Growth";
+    const goalTitle =
+      selectedGoals
+        .map((id) => WEBSITE_GOALS.find((g) => g.id === id)?.title)
+        .filter(Boolean)
+        .join(" + ") || "Custom Growth";
     const text = `Hi Tanie! I just calculated my website estimate on your site:
 🏢 *Brand / Contact:* ${socialAccount || businessName || "My Project"}
-🎯 *Primary Goal:* ${goalTitle}
+🎯 *Primary Goals:* ${goalTitle}
 📦 *Selected Modules (${calculation.bundleCount}):*
 ${selectedBundles
   .map((id) => {
@@ -459,22 +497,26 @@ Let's discuss getting started!`;
           {/* ------------------------------------------------------------- */}
           {currentStep === 1 && (
             <div className="space-y-6">
-              <div className="text-xs text-sky-950 font-medium">
-                {t.funnel.step1Subtitle || "Select your primary challenge — we'll automatically pre-configure the ideal package modules:"}
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <div className="text-xs text-sky-950 font-medium">
+                  {t.funnel.step1Subtitle || "Select your primary challenges (multiple allowed) — we'll automatically combine and pre-configure the ideal package modules:"}
+                </div>
+                {selectedGoals.length > 0 && (
+                  <span className="inline-flex items-center gap-1 rounded-full bg-sky-100 border border-sky-300 px-3 py-1 text-[11px] font-bold text-sky-900 shrink-0">
+                    <span>🎯</span>
+                    <span>{selectedGoals.length} {selectedGoals.length === 1 ? "Goal" : "Goals"} Selected</span>
+                  </span>
+                )}
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                 {WEBSITE_GOALS.map((goal) => {
-                  const isSelected = selectedGoal === goal.id;
+                  const isSelected = selectedGoals.includes(goal.id);
                   return (
                     <button
                       key={goal.id}
                       type="button"
-                      onClick={() => {
-                        setSelectedGoal(goal.id);
-                        setSelectedBundles(goal.recommendedBundles);
-                        goToStep(2);
-                      }}
+                      onClick={() => handleToggleGoal(goal.id)}
                       className={`p-5 rounded-2xl border text-left transition-all cursor-pointer flex items-start gap-4 ${
                         isSelected
                           ? "bg-sky-50/90 border-2 border-sky-600 shadow-md ring-2 ring-sky-500/15"
@@ -484,14 +526,25 @@ Let's discuss getting started!`;
                       <div className="text-2xl p-2.5 rounded-xl bg-sky-100/80 shrink-0 text-[#0a192f]">
                         {goal.icon}
                       </div>
-                      <div className="space-y-1">
+                      <div className="space-y-1 flex-1">
                         <div className="flex items-center justify-between">
                           <span className="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-sky-100 text-sky-900 border border-sky-200">
                             {goal.tag}
                           </span>
-                          <span className="text-[10px] text-sky-700 font-bold">
-                            {goal.recommendedBundles.length} Modules Pre-set
-                          </span>
+                          <div className="flex items-center gap-2">
+                            <span className="text-[10px] text-sky-700 font-bold">
+                              {goal.recommendedBundles.length} Modules Pre-set
+                            </span>
+                            <span
+                              className={`h-4 w-4 rounded flex items-center justify-center text-[10px] font-black border transition ${
+                                isSelected
+                                  ? "bg-sky-600 text-white border-sky-600"
+                                  : "border-slate-300 bg-white text-transparent"
+                              }`}
+                            >
+                              ✓
+                            </span>
+                          </div>
                         </div>
                         <h3 className="text-sm sm:text-base font-black text-[#0a192f]">{goal.title}</h3>
                         <p className="text-xs text-slate-600 font-medium leading-relaxed">
@@ -529,7 +582,7 @@ Let's discuss getting started!`;
             <div className="space-y-6">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs text-sky-950 bg-[#c8ecff]/30 border border-sky-300/80 rounded-xl p-3.5">
                 <span className="font-semibold text-slate-800" style={{ color: '#0a192f' }}>
-                  🎯 Pre-configured for: <strong className="text-sky-950 underline">{WEBSITE_GOALS.find(g => g.id === selectedGoal)?.title || "Your Goal"}</strong>
+                  🎯 Pre-configured for: <strong className="text-sky-950 underline">{selectedGoals.map(id => WEBSITE_GOALS.find(g => g.id === id)?.title).filter(Boolean).join(" + ") || "Your Goals"}</strong>
                 </span>
                 <span className="font-black !text-[#0a192f] shrink-0" style={{ color: '#0a192f' }}>
                   {selectedBundles.length} {locale === "ur" ? "ماڈیولز منتخب شدہ" : "Modules Selected"}
@@ -736,6 +789,7 @@ Let's discuss getting started!`;
               calculation={calculation}
               selectedBundles={selectedBundles}
               selectedGoal={selectedGoal}
+              selectedGoals={selectedGoals}
               currency={currency}
               signInWithGoogle={signInWithGoogle}
               dispatchLeadCapture={dispatchLeadCapture}

@@ -29,6 +29,7 @@ interface CostCalculatorStepResultProps {
   calculation: any;
   selectedBundles: string[];
   selectedGoal: string;
+  selectedGoals?: string[];
   currency: "USD" | "INR";
   signInWithGoogle: () => Promise<any>;
   dispatchLeadCapture: (params: any) => Promise<any>;
@@ -64,6 +65,7 @@ export default function CostCalculatorStepResult({
   calculation,
   selectedBundles,
   selectedGoal,
+  selectedGoals,
   currency,
   signInWithGoogle,
   dispatchLeadCapture,
@@ -365,7 +367,13 @@ export default function CostCalculatorStepResult({
               type="button"
               onClick={() => {
                 if (onProceedWithCustomQuote) {
-                  const goalObj = WEBSITE_GOALS.find((g) => g.id === selectedGoal);
+                  const goalTitle =
+                    selectedGoals && selectedGoals.length > 0
+                      ? selectedGoals
+                          .map((id) => WEBSITE_GOALS.find((g) => g.id === id)?.title)
+                          .filter(Boolean)
+                          .join(" + ")
+                      : WEBSITE_GOALS.find((g) => g.id === selectedGoal)?.title || selectedGoal;
                   let likedList: string[] = [];
                   if (typeof window !== "undefined") {
                     try {
@@ -376,8 +384,8 @@ export default function CostCalculatorStepResult({
                   onProceedWithCustomQuote({
                     projectName: businessName,
                     socialAccount: socialAccount.trim() || undefined,
-                    goal: goalObj?.title || selectedGoal,
-                    industry: goalObj?.title || selectedGoal,
+                    goal: goalTitle,
+                    industry: goalTitle,
                     selectedBundles,
                     bundles: selectedBundles
                       .map((id) => FEATURE_BUNDLES.find((b) => b.id === id))
