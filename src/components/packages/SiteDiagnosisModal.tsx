@@ -121,7 +121,7 @@ export default function SiteDiagnosisModal({
   };
 
   const handleWhatsAppInstantReview = () => {
-    const text = `Hi Tanie! I just requested a site diagnosis for my website:
+    const text = `Hi Tanie! I just requested a free site diagnosis for my website:
 🌐 *Website URL:* ${websiteUrl}
 🎯 *Primary Concern:* ${selectedIssue}
 👤 *Name / Contact:* ${clientName || "Brand Owner"} (${clientEmail || clientPhone})
@@ -141,10 +141,10 @@ Could you take a quick look and share what needs to be improved?`;
             <span className="text-2xl p-2 rounded-xl bg-sky-100 border border-sky-200">🩺</span>
             <div>
               <span className="text-[10px] font-black uppercase tracking-wider text-sky-800 block">
-                {locale === "hi" ? "Expert Website Review" : "Expert Website Review"}
+                {locale === "hi" ? "Free Expert Review" : "Free Expert Review"}
               </span>
               <h2 className="text-xl sm:text-2xl font-black text-[#0a192f]">
-                {locale === "hi" ? "Request Site Diagnosis" : "Request Site Diagnosis"}
+                {locale === "hi" ? "Request Free Site Diagnosis" : "Request Free Site Diagnosis"}
               </h2>
             </div>
           </div>
@@ -167,7 +167,7 @@ Could you take a quick look and share what needs to be improved?`;
 
             <div className="space-y-2">
               <h3 className="text-2xl font-black text-[#0a192f]">
-                {locale === "hi" ? "Diagnosis Request Received!" : "Diagnosis Request Received!"}
+                {locale === "hi" ? "Free Site Diagnosis Request Received!" : "Free Site Diagnosis Request Received!"}
               </h3>
               <p className="text-xs sm:text-sm text-sky-950/80 max-w-md mx-auto leading-relaxed font-medium">
                 {locale === "hi"
@@ -335,11 +335,11 @@ Could you take a quick look and share what needs to be improved?`;
                 className="w-full py-3.5 rounded-full bg-[#0a192f] hover:bg-slate-800 text-white font-bold text-xs uppercase tracking-wider transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60"
               >
                 {isSubmitting ? (
-                  <span>Requesting Diagnosis...</span>
+                  <span>Requesting Free Site Diagnosis...</span>
                 ) : (
                   <>
                     <span>🩺</span>
-                    <span>{locale === "hi" ? "Request Site Diagnosis (Free Audit)" : "Request Site Diagnosis (Free Audit)"}</span>
+                    <span>{locale === "hi" ? "Request Free Site Diagnosis" : "Request Free Site Diagnosis"}</span>
                   </>
                 )}
               </button>

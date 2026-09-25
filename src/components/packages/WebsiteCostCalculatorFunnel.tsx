@@ -550,8 +550,8 @@ Let's discuss getting started!`;
               <span className="text-base group-hover:scale-110 transition-transform">🩺</span>
               <span>
                 {locale === "hi"
-                  ? "Already have a website? Free diagnosis ke liye click karein →"
-                  : "Already have a website? Click for diagnosis →"}
+                  ? "Already have a website? Request Free Site Diagnosis ke liye click karein →"
+                  : "Already have a website? Request Free Site Diagnosis →"}
               </span>
             </button>
           </div>
