@@ -417,7 +417,16 @@ export default function WebsiteCostCalculatorFunnel({
   // Prepopulate from cookies/localStorage on mount
   useEffect(() => {
     const saved = getSavedLeadProfile();
-    if (saved.businessName && !businessName) {
+    try {
+      const savedSocial = localStorage.getItem("tanie_client_social");
+      if (savedSocial && !socialAccount) {
+        setSocialAccount(savedSocial);
+      }
+    } catch (_) {}
+    if (saved.socialAccount && !socialAccount) {
+      setSocialAccount(saved.socialAccount);
+    }
+    if (saved.businessName && !businessName && saved.businessName !== "Velvet & Silk Apparel") {
       setBusinessName(saved.businessName);
     }
     if (saved.name && !authName) {
@@ -429,12 +438,6 @@ export default function WebsiteCostCalculatorFunnel({
     if (saved.leadId && !leadId) {
       setLeadId(saved.leadId);
     }
-    try {
-      const savedSocial = localStorage.getItem("tanie_client_social");
-      if (savedSocial && !socialAccount) {
-        setSocialAccount(savedSocial);
-      }
-    } catch (_) {}
   }, []);
 
   // Background lead capture dispatcher
@@ -442,7 +445,7 @@ export default function WebsiteCostCalculatorFunnel({
     try {
       const payload = {
         id: leadId || undefined,
-        businessName: businessName.trim() || undefined,
+        businessName: businessName.trim() || socialAccount.trim() || undefined,
         socialAccount: socialAccount.trim() || undefined,
         goal: selectedGoal,
         businessType: websiteType,
@@ -472,18 +475,20 @@ export default function WebsiteCostCalculatorFunnel({
 
   // Debounced typing capture for the hero input field
   useEffect(() => {
-    if (businessName.trim().length < 2) return;
+    const term = (socialAccount || businessName).trim();
+    if (term.length < 2) return;
 
     const timer = setTimeout(() => {
       dispatchLeadCapture({
-        businessName: businessName.trim(),
+        businessName: term,
+        socialAccount: socialAccount.trim() || undefined,
         step: "Hero Search Input",
         status: "typing"
       });
     }, 500);
 
     return () => clearTimeout(timer);
-  }, [businessName]);
+  }, [socialAccount, businessName]);
 
   // If already authenticated, automatically unlock results
   useEffect(() => {
@@ -542,8 +547,7 @@ export default function WebsiteCostCalculatorFunnel({
     setSelectedIndustry(industry);
     setBusinessName(industry.sampleBusinessName);
     setSelectedBundles(industry.recommendedBundles);
-    setCurrentStep(1);
-    onStepChange?.(1);
+    goToStep(1);
 
     dispatchLeadCapture({
       businessName: industry.sampleBusinessName,
@@ -552,26 +556,26 @@ export default function WebsiteCostCalculatorFunnel({
       step: "Quick Choice Picked",
       status: "in_progress"
     });
-
-    scrollToFunnel();
   };
 
-  // Click on Hero "CALCULATE COST" button
+  // Click on Hero "GET YOUR PRICING" button
   const handleHeroSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!businessName.trim()) {
-      setBusinessName("My Website Project");
+    const handleOrContact = socialAccount.trim() || businessName.trim() || "My Project";
+    if (!socialAccount.trim()) {
+      setSocialAccount(handleOrContact);
     }
-    setCurrentStep(1);
-    onStepChange?.(1);
+    if (!businessName.trim()) {
+      setBusinessName(handleOrContact);
+    }
+    goToStep(1);
 
     dispatchLeadCapture({
-      businessName: businessName.trim() || "My Website Project",
-      step: "Step 1: Website Foundation",
+      businessName: handleOrContact,
+      socialAccount: socialAccount.trim() || undefined,
+      step: "Step 1: Website Goals",
       status: "in_progress"
     });
-
-    scrollToFunnel();
   };
 
   const scrollToFunnel = () => {
@@ -590,7 +594,7 @@ export default function WebsiteCostCalculatorFunnel({
 
       dispatchLeadCapture({
         selectedBundles: next,
-        step: "Step 3: Feature Bundles",
+        step: "Step 2: Feature Bundles",
         status: "in_progress"
       });
 
@@ -604,7 +608,7 @@ export default function WebsiteCostCalculatorFunnel({
     onStepChange?.(step);
     dispatchLeadCapture({
       step: `Step ${step}`,
-      status: step === 5 ? "unlocked" : "in_progress"
+      status: step === 4 ? "unlocked" : "in_progress"
     });
     scrollToFunnel();
   };
@@ -679,7 +683,7 @@ export default function WebsiteCostCalculatorFunnel({
   const handleWhatsAppQuote = () => {
     const goalTitle = WEBSITE_GOALS.find((g) => g.id === selectedGoal)?.title || "Custom Growth";
     const text = `Hi Tanie! I just calculated my website estimate on your site:
-🏢 *Brand:* ${businessName}${socialAccount ? ` (${socialAccount})` : ""}
+🏢 *Brand / Contact:* ${socialAccount || businessName || "My Project"}
 🎯 *Primary Goal:* ${goalTitle}
 📦 *Selected Modules (${calculation.bundleCount}):*
 ${selectedBundles
@@ -730,17 +734,22 @@ Let's discuss getting started!`;
               <div className="flex items-center gap-3 w-full pl-4">
                 <span className="text-sky-500 text-lg">🔍</span>
                 <input
-                  id="calc_hero_business_name"
-                  name="organization"
-                  autoComplete="organization"
+                  id="calc_hero_social_contact"
+                  name="social_or_contact"
+                  autoComplete="off"
                   type="text"
-                  value={businessName}
+                  value={socialAccount}
                   onChange={(e) => {
-                    setBusinessName(e.target.value);
-                    saveLeadProfile({ businessName: e.target.value });
+                    const val = e.target.value;
+                    setSocialAccount(val);
+                    setBusinessName(val.trim());
+                    saveLeadProfile({ businessName: val.trim(), socialAccount: val.trim() });
+                    try {
+                      localStorage.setItem("tanie_client_social", val.trim());
+                    } catch (_) {}
                   }}
                   placeholder={t.hero.inputPlaceholder}
-                  className="w-full bg-transparent text-sm sm:text-base !text-[#0a192f] placeholder-sky-900/40 focus:outline-none py-2 font-semibold"
+                  className="w-full bg-transparent text-sm sm:text-base !text-[#0a192f] placeholder-sky-900/50 focus:outline-none py-2 font-semibold"
                 />
               </div>
 
@@ -766,9 +775,7 @@ Let's discuss getting started!`;
                 onClick={() => {
                   setSelectedGoal(goal.id);
                   setSelectedBundles(goal.recommendedBundles);
-                  setCurrentStep(1);
-                  onStepChange?.(1);
-                  scrollToFunnel();
+                  goToStep(1);
                 }}
                 className="px-3.5 py-1.5 rounded-full bg-white/70 hover:bg-white border border-sky-200/80 hover:border-sky-400 text-xs font-semibold text-[#0a192f] hover:text-sky-900 shadow-xs transition-all cursor-pointer flex items-center gap-1.5"
               >
@@ -781,7 +788,7 @@ Let's discuss getting started!`;
       )}
 
       {/* ========================================================================= */}
-      {/* 2. THE 4-STEP INTERACTIVE QUESTIONNAIRE (ONLY THING ON SCREEN IN FLOW)    */}
+      {/* 2. THE 4-STEP INTERACTIVE QUESTIONNAIRE (GOALS DIRECTLY -> MODULES -> ...) */}
       {/* ========================================================================= */}
       {currentStep > 0 && (
         <div className="max-w-3xl mx-auto py-2 sm:py-6 space-y-8 animate-fadeIn">
@@ -789,15 +796,14 @@ Let's discuss getting started!`;
           <div className="flex items-center justify-between border-b border-sky-200/80 pb-4">
             <div>
               <h2 className="text-2xl sm:text-3xl font-black !text-[#0a192f] tracking-tight" style={{ color: '#0a192f' }}>
-                {currentStep === 1 && "Step 1: Your Brand & Social Media"}
-                {currentStep === 2 && "Step 2: What is Your Main Goal or Challenge?"}
-                {currentStep === 3 && "Step 3: Recommended Package & Custom Modules"}
-                {currentStep === 4 && "Step 4: Launch Timing & Budget Comfort"}
-                {currentStep === 5 && "Step 5: Review & Unlock Your Custom Estimate"}
+                {currentStep === 1 && (t.funnel.step1Title || "Step 1: What is Your Main Goal or Challenge?")}
+                {currentStep === 2 && (t.funnel.step2Title || "Step 2: Recommended Package & Custom Modules")}
+                {currentStep === 3 && (t.funnel.step3Title || "Step 3: Launch Timing & Budget Comfort")}
+                {currentStep === 4 && (t.funnel.step4Title || "Step 4: Review & Unlock Your Custom Estimate")}
               </h2>
               <p className="text-xs text-sky-950/80 mt-1 font-medium" style={{ color: '#0a192f' }}>
                 {locale === "ur" ? `مرحلہ ${currentStep} از 4 • پروجیکٹ: ` : `Step ${currentStep} of 4 • Project: `}
-                <span className="font-bold !text-[#0a192f]" style={{ color: '#0a192f' }}>{businessName || (locale === "ur" ? "میری ویب سائٹ" : "My Brand Project")}</span>
+                <span className="font-bold !text-[#0a192f]" style={{ color: '#0a192f' }}>{socialAccount || businessName || (locale === "ur" ? "میری ویب سائٹ" : "My Project")}</span>
               </p>
             </div>
 
@@ -821,74 +827,12 @@ Let's discuss getting started!`;
           </div>
 
           {/* ------------------------------------------------------------- */}
-          {/* STEP 1: BUSINESS NAME & SOCIAL MEDIA ACCOUNT                  */}
+          {/* STEP 1: WHAT IS YOUR MAIN GOAL / PROBLEM?                     */}
           {/* ------------------------------------------------------------- */}
           {currentStep === 1 && (
             <div className="space-y-6">
-              <div className="rounded-2xl border border-sky-300/80 bg-white/90 p-6 sm:p-8 shadow-sm space-y-5">
-                <div>
-                  <label htmlFor="calc_biz_name" className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
-                    1. Business or Brand Name <span className="text-rose-500">*</span>
-                  </label>
-                  <input
-                    id="calc_biz_name"
-                    type="text"
-                    value={businessName}
-                    onChange={(e) => {
-                      setBusinessName(e.target.value);
-                      saveLeadProfile({ businessName: e.target.value });
-                    }}
-                    placeholder="e.g. Aura Design Studio, Dr. Mehta Aesthetics, Velocity Apparel"
-                    className="w-full rounded-xl border border-sky-300 bg-white px-4 py-3 text-sm font-semibold text-slate-900 focus:border-sky-600 focus:ring-2 focus:ring-sky-500/20 focus:outline-none shadow-xs"
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="calc_social_account" className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
-                    2. Social Media Account or Current Website <span className="text-slate-500 font-normal">(Optional)</span>
-                  </label>
-                  <input
-                    id="calc_social_account"
-                    type="text"
-                    value={socialAccount}
-                    onChange={(e) => {
-                      setSocialAccount(e.target.value);
-                      try {
-                        localStorage.setItem("tanie_client_social", e.target.value);
-                      } catch (_) {}
-                    }}
-                    placeholder="e.g. @aurastudio on Instagram, linkedin.com/company/..., or existing URL"
-                    className="w-full rounded-xl border border-sky-300 bg-white px-4 py-3 text-sm font-semibold text-slate-900 focus:border-sky-600 focus:ring-2 focus:ring-sky-500/20 focus:outline-none shadow-xs"
-                  />
-                  <p className="text-[11px] text-slate-500 mt-1.5 font-medium">
-                    Helps us check your brand aesthetic, vibe, and scale so our recommendations fit your business perfectly.
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex justify-end pt-2">
-                <button
-                  type="button"
-                  onClick={() => {
-                    if (!businessName.trim()) setBusinessName("My Brand Project");
-                    goToStep(2);
-                  }}
-                  className="px-8 py-3 rounded-full bg-[#0a192f] hover:bg-slate-800 text-white font-bold text-xs uppercase tracking-wider transition-all shadow-md cursor-pointer flex items-center gap-2"
-                >
-                  <span>Next: Choose Your Goal</span>
-                  <span>→</span>
-                </button>
-              </div>
-            </div>
-          )}
-
-          {/* ------------------------------------------------------------- */}
-          {/* STEP 2: WHAT IS YOUR MAIN GOAL / PROBLEM?                     */}
-          {/* ------------------------------------------------------------- */}
-          {currentStep === 2 && (
-            <div className="space-y-6">
               <div className="text-xs text-sky-950 font-medium">
-                Select your primary challenge — we&apos;ll automatically pre-configure the ideal package modules:
+                {t.funnel.step1Subtitle || "Select your primary challenge — we'll automatically pre-configure the ideal package modules:"}
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
@@ -901,7 +845,7 @@ Let's discuss getting started!`;
                       onClick={() => {
                         setSelectedGoal(goal.id);
                         setSelectedBundles(goal.recommendedBundles);
-                        goToStep(3);
+                        goToStep(2);
                       }}
                       className={`p-5 rounded-2xl border text-left transition-all cursor-pointer flex items-start gap-4 ${
                         isSelected
@@ -934,14 +878,14 @@ Let's discuss getting started!`;
               <div className="flex items-center justify-between pt-4 border-t border-sky-200/60">
                 <button
                   type="button"
-                  onClick={() => goToStep(1)}
+                  onClick={() => goToStep(0)}
                   className="px-6 py-2.5 rounded-full border border-sky-300 text-[#0a192f] font-bold text-xs hover:bg-white transition cursor-pointer"
                 >
                   ← Back
                 </button>
                 <button
                   type="button"
-                  onClick={() => goToStep(3)}
+                  onClick={() => goToStep(2)}
                   className="px-8 py-3 rounded-full bg-[#0a192f] hover:bg-slate-800 text-white font-bold text-xs uppercase tracking-wider transition-all shadow-md cursor-pointer"
                 >
                   Next: Review Modules →
@@ -951,9 +895,9 @@ Let's discuss getting started!`;
           )}
 
           {/* ------------------------------------------------------------- */}
-          {/* QUESTION 3: FEATURE BUNDLES (CURATED 10 MODULES)               */}
+          {/* STEP 2: FEATURE BUNDLES (CURATED 10 MODULES)                  */}
           {/* ------------------------------------------------------------- */}
-          {currentStep === 3 && (
+          {currentStep === 2 && (
             <div className="space-y-6">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs text-sky-950 bg-[#c8ecff]/30 border border-sky-300/80 rounded-xl p-3.5">
                 <span className="font-semibold text-slate-800" style={{ color: '#0a192f' }}>
@@ -989,7 +933,7 @@ Let's discuss getting started!`;
                               <div className="flex items-center gap-2">
                                 <h3 className="text-sm font-black !text-[#0a192f]" style={{ color: '#0a192f' }}>{bundle.name}</h3>
                                 {bundle.badge && (
-                                  <span className="px-2 py-0.5 rounded text-[9px] font-bold bg-sky-100 text-sky-950 border border-sky-200">
+                                   <span className="px-2 py-0.5 rounded text-[9px] font-bold bg-sky-100 text-sky-950 border border-sky-200">
                                     {bundle.badge}
                                   </span>
                                 )}
@@ -1034,22 +978,29 @@ Let's discuss getting started!`;
                 })}
               </div>
 
-              <div className="flex justify-end pt-4">
+              <div className="flex items-center justify-between pt-4 border-t border-sky-200/60">
                 <button
                   type="button"
-                  onClick={() => goToStep(4)}
+                  onClick={() => goToStep(1)}
+                  className="px-6 py-2.5 rounded-full border border-sky-300 text-[#0a192f] font-bold text-xs hover:bg-white transition cursor-pointer"
+                >
+                  ← Back to Goals
+                </button>
+                <button
+                  type="button"
+                  onClick={() => goToStep(3)}
                   className="px-8 py-3 rounded-full bg-[#0a192f] hover:bg-slate-800 text-white font-bold text-xs uppercase tracking-wider transition-all shadow-md cursor-pointer"
                 >
-                  {t.funnel.nextBtn}
+                  Next: Budget & Timing →
                 </button>
               </div>
             </div>
           )}
 
           {/* ------------------------------------------------------------- */}
-          {/* QUESTION 4: BUDGET & TIMELINE                                 */}
+          {/* STEP 3: BUDGET & TIMELINE                                     */}
           {/* ------------------------------------------------------------- */}
-          {currentStep === 4 && (
+          {currentStep === 3 && (
             <div className="space-y-8">
               {/* Budget Range */}
               <div>
@@ -1106,10 +1057,17 @@ Let's discuss getting started!`;
                 </div>
               </div>
 
-              <div className="flex justify-end pt-4 border-t border-sky-200/80">
+              <div className="flex items-center justify-between pt-4 border-t border-sky-200/80">
                 <button
                   type="button"
-                  onClick={() => goToStep(5)}
+                  onClick={() => goToStep(2)}
+                  className="px-6 py-2.5 rounded-full border border-sky-300 text-[#0a192f] font-bold text-xs hover:bg-white transition cursor-pointer"
+                >
+                  ← Back to Modules
+                </button>
+                <button
+                  type="button"
+                  onClick={() => goToStep(4)}
                   className="px-8 py-3.5 rounded-full bg-[#0a192f] hover:bg-slate-800 text-white font-bold text-xs uppercase tracking-wider shadow-lg transition-all cursor-pointer"
                 >
                   {t.funnel.calculateBtn}
@@ -1119,10 +1077,20 @@ Let's discuss getting started!`;
           )}
 
           {/* ------------------------------------------------------------- */}
-          {/* STEP 5: RESULT (LOCKED BEHIND SIGN UP / LOGIN IF GUEST)       */}
+          {/* STEP 4: RESULT (LOCKED BEHIND SIGN UP / LOGIN IF GUEST)       */}
           {/* ------------------------------------------------------------- */}
-          {currentStep === 5 && (
+          {currentStep === 4 && (
             <div className="space-y-6">
+              <div className="flex items-center justify-between">
+                <button
+                  type="button"
+                  onClick={() => goToStep(3)}
+                  className="px-5 py-2 rounded-full border border-sky-300 text-[#0a192f] font-bold text-xs hover:bg-white transition cursor-pointer flex items-center gap-1.5"
+                >
+                  <span>←</span>
+                  <span>{locale === "ur" ? "بجٹ اور وقت تبدیل کریں" : "Adjust Scope & Budget"}</span>
+                </button>
+              </div>
               {!isUnlocked ? (
                 /* ================= LOCKED RESULT GATE ================= */
                 <div className="relative rounded-3xl bg-[#c8ecff]/30 border border-sky-300/90 p-6 sm:p-10 shadow-lg text-center overflow-hidden backdrop-blur-md">

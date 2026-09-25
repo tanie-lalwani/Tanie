@@ -18,14 +18,10 @@ import {
   type AestheticStyle,
   type WizardAnswers
 } from "@/data/aestheticDatabase";
-import CustomScopeCalculator from "@/components/CustomScopeCalculator";
 import WebsiteCostCalculatorFunnel from "@/components/packages/WebsiteCostCalculatorFunnel";
-import MarketingFunnelSuite from "@/components/packages/MarketingFunnelSuite";
-import PackagePricingBreakdown from "@/components/packages/PackagePricingBreakdown";
 import { useLanguage } from "@/context/LanguageContext";
 import { packagesTranslations } from "@/data/packagesTranslations";
 import { useGeoPricing } from "@/context/GeoPricingContext";
-import MarketRegionSelector from "@/components/ui/MarketRegionSelector";
 
 export default function PackagesView() {
   const router = useRouter();
@@ -130,8 +126,6 @@ export default function PackagesView() {
   // Palette preview state in modal
   const [activePaletteIdx, setActivePaletteIdx] = useState(0);
 
-  // FAQ open index
-  const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
 
   // Fetch packages on mount
   useEffect(() => {
@@ -651,20 +645,29 @@ ${companyName.trim() ? `🏢 Company / Brand: ${companyName.trim()}` : ""}
           {/* SECTION 2: DIRECT AESTHETICS LISTING & FILTER BAR (Step 0)    */}
           {/* ------------------------------------------------------------- */}
           {funnelStep === 0 && (
-            <div className="space-y-12">
-            {/* Category Filter Pills & Detailed Matrix Toggle */}
-            <div className="flex flex-wrap items-center justify-between gap-4">
-              <div className="flex flex-wrap items-center gap-2">
+            <div className="space-y-8">
+              {/* Section 2 Header: Pure Design Aesthetics & Inspirations */}
+              <div className="text-center max-w-2xl mx-auto pt-4">
+                <span className="inline-block rounded-full bg-sky-100/90 border border-sky-300/80 px-4 py-1 text-[11px] font-black uppercase tracking-widest text-sky-950 mb-3">
+                  Design Aesthetics & Visual DNA
+                </span>
+                <h2 className="text-3xl sm:text-4xl font-black text-[#0a192f] tracking-tight mb-2">
+                  Explore The Design Vibe
+                </h2>
+                <p className="text-xs sm:text-sm text-sky-900/80 leading-relaxed">
+                  Browse curated visual archetypes, typographic signatures, and color palettes to get a feel for our design craft and creative aesthetic.
+                </p>
+              </div>
+
+              {/* Category Filter Pills */}
+              <div className="flex flex-wrap items-center justify-center gap-2 pt-2">
                 {categories.map((cat) => (
                   <button
                     key={cat}
                     type="button"
-                    onClick={() => {
-                      setActiveCategory(cat);
-                      if (activeTab === "calculator") setActiveTab("home");
-                    }}
+                    onClick={() => setActiveCategory(cat)}
                     className={`rounded-full px-4 py-2 text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
-                      activeCategory === cat && activeTab !== "calculator"
+                      activeCategory === cat
                         ? "bg-[#0a192f] text-white shadow-sm"
                         : "bg-[#c8ecff]/30 text-sky-950 hover:bg-[#c8ecff]/50 border border-sky-300/80"
                     }`}
@@ -674,143 +677,7 @@ ${companyName.trim() ? `🏢 Company / Brand: ${companyName.trim()}` : ""}
                 ))}
               </div>
 
-              <div className="flex flex-wrap items-center gap-2">
-                <button
-                  type="button"
-                  onClick={() => setActiveTab(activeTab === "breakdown" ? "home" : "breakdown")}
-                  className={`rounded-full px-4 py-2 text-xs font-bold uppercase tracking-wider transition-all cursor-pointer border flex items-center gap-1.5 ${
-                    activeTab === "breakdown"
-                      ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white border-blue-500 font-black shadow-md scale-105"
-                      : "bg-sky-100/90 text-sky-950 hover:bg-sky-200 border-sky-300 font-black"
-                  }`}
-                >
-                  <span>📋</span>
-                  <span>Macro & Micro Breakdown</span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => setActiveTab(activeTab === "marketing" ? "home" : "marketing")}
-                  className={`rounded-full px-4 py-2 text-xs font-bold uppercase tracking-wider transition-all cursor-pointer border flex items-center gap-1.5 ${
-                    activeTab === "marketing"
-                      ? "bg-gradient-to-r from-emerald-600 to-teal-600 text-white border-emerald-500 font-black shadow-md scale-105"
-                      : "bg-emerald-100/80 text-emerald-950 hover:bg-emerald-200/90 border-emerald-300 font-extrabold"
-                  }`}
-                >
-                  <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-                  <span>🚀 BOFU Website Engine & Sources</span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => setActiveTab(activeTab === "calculator" ? "home" : "calculator")}
-                  className={`rounded-full px-4 py-2 text-xs font-bold uppercase tracking-wider transition-all cursor-pointer border ${
-                    activeTab === "calculator"
-                      ? "bg-sky-600 text-white border-sky-500 font-bold shadow-md"
-                      : "bg-[#c8ecff]/30 text-sky-950 hover:bg-[#c8ecff]/50 border border-sky-300/80"
-                  }`}
-                >
-                  <span>⚡</span>
-                  <span className="ml-1.5">{activeTab === "calculator" ? pkgCopy.aesthetics.showCatalog : pkgCopy.aesthetics.showMatrix}</span>
-                </button>
-              </div>
-            </div>
-
-            {/* VIEW: MARKETING CAMPAIGNS FULL-FUNNEL PACKAGE (MARKETING TAB) */}
-            {activeTab === "marketing" && (
-              <div className="space-y-8 animate-fadeIn">
-                <MarketingFunnelSuite
-                  currency={currency}
-                  onCurrencyChange={setCurrency}
-                  onBookMarketingPackage={handleBookMarketingPackage}
-                />
-              </div>
-            )}
-
-            {/* VIEW: INTERACTIVE SCOPE & PRICE ESTIMATOR (CALCULATOR TAB) */}
-            {activeTab === "calculator" && (
-              <div className="space-y-8">
-                <CustomScopeCalculator
-                  currency={currency}
-                  onCurrencyChange={setCurrency}
-                  onProceedWithScope={handleProceedWithScope}
-                />
-              </div>
-            )}
-
-            {/* VIEW: GRANULAR PACKAGE & FEATURE BREAKDOWN (BREAKDOWN TAB) */}
-            {activeTab === "breakdown" && (
-              <div className="space-y-8 animate-fadeIn">
-                <PackagePricingBreakdown
-                  onProceedWithCustomScope={handleProceedWithCustomScopeFromBreakdown}
-                />
-              </div>
-            )}
-
-            {/* PROMO BANNER FOR DETAILED SCOPE BREAKDOWN (SHOWN ON HOME) */}
-            {activeTab === "home" && (
-              <div className="relative overflow-hidden rounded-3xl border border-sky-300/80 bg-gradient-to-r from-sky-100/90 via-blue-50/90 to-indigo-100/90 p-5 sm:p-6 shadow-sm flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                <div className="flex items-center gap-3.5">
-                  <div className="h-11 w-11 shrink-0 rounded-2xl bg-[#0a192f] text-white flex items-center justify-center text-xl font-bold shadow-sm">
-                    📋
-                  </div>
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-[10px] font-black uppercase tracking-wider text-sky-800 bg-sky-200/80 px-2 py-0.5 rounded-full">
-                        Transparent Scope
-                      </span>
-                      <span className="text-xs font-black text-slate-900">
-                        Granular Macro & Micro Feature Pricing Breakdown
-                      </span>
-                    </div>
-                    <p className="text-xs text-slate-700 font-medium mt-0.5">
-                      Inspect every single macro-module and expandable micro-feature across all 6 packages. Customize optional features to tailor scope and reduce pricing.
-                    </p>
-                  </div>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => setActiveTab("breakdown")}
-                  className="shrink-0 rounded-xl bg-[#0a192f] px-4 py-2.5 text-xs font-black text-white hover:bg-slate-800 transition cursor-pointer shadow-sm"
-                >
-                  Open Scope Breakdown →
-                </button>
-              </div>
-            )}
-
-            {/* PROMO BANNER FOR MARKETING SUITE (SHOWN ON HOME) */}
-            {activeTab === "home" && (
-              <div className="relative overflow-hidden rounded-3xl border border-emerald-300/80 bg-gradient-to-r from-emerald-100/90 via-teal-50/90 to-sky-100/90 p-5 sm:p-6 shadow-sm flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                <div className="flex items-center gap-3.5">
-                  <div className="h-11 w-11 shrink-0 rounded-2xl bg-emerald-600 text-white flex items-center justify-center text-xl font-bold shadow-sm">
-                    🚀
-                  </div>
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-[10px] font-black uppercase tracking-wider text-emerald-800 bg-emerald-200/80 px-2 py-0.5 rounded-full">
-                        New Launch
-                      </span>
-                      <span className="text-xs font-black text-slate-900">
-                        BOFU Website Marketing & Sources Management Package
-                      </span>
-                    </div>
-                    <p className="text-xs text-slate-700 font-medium mt-0.5">
-                      Need 1-click checkouts, urgency countdowns, offer banners, 4K galleries, and multi-channel UTM source tracking on your website?
-                    </p>
-                  </div>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => setActiveTab("marketing")}
-                  className="shrink-0 rounded-xl bg-slate-950 px-4 py-2.5 text-xs font-black text-white hover:bg-slate-800 transition cursor-pointer shadow-sm"
-                >
-                  Explore BOFU Suite →
-                </button>
-              </div>
-            )}
-
-            {/* DIRECT AESTHETICS CARDS GRID */}
-            {activeTab === "home" && (
+              {/* DIRECT AESTHETICS CARDS GRID */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {filteredStyles.map((style) => (
                   <div
@@ -892,472 +759,20 @@ ${companyName.trim() ? `🏢 Company / Brand: ${companyName.trim()}` : ""}
                       </div>
                     </div>
 
-                    {/* Action Buttons */}
-                    <div className="flex items-center gap-2 pt-4 border-t border-sky-200/80">
+                    {/* Action Button: Pure Aesthetic Exploration (No Booking) */}
+                    <div className="pt-4 border-t border-sky-200/80">
                       <button
                         type="button"
                         onClick={() => setPreviewStyleModal(style)}
-                        className="flex-1 rounded-xl border border-sky-300/80 bg-white/70 py-2 text-xs font-bold text-[#0a192f] hover:bg-white transition cursor-pointer"
+                        className="w-full flex items-center justify-center gap-2 rounded-xl bg-[#0a192f] py-2.5 text-xs font-bold text-white hover:bg-slate-800 transition cursor-pointer shadow-xs"
                       >
-                        {pkgCopy.aesthetics.inspectPreview}
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => handleChooseAesthetic(style, "Business")}
-                        className="flex-1 rounded-xl bg-[#0a192f] py-2 text-xs font-bold text-white hover:bg-slate-800 transition cursor-pointer"
-                      >
-                        {pkgCopy.aesthetics.chooseStyle}
+                        <span>Inspect Design Vibe</span>
+                        <span>👁️</span>
                       </button>
                     </div>
                   </div>
                 ))}
               </div>
-            )}
-
-            {/* Currency & Addon Modules */}
-            <div className="rounded-[2.4rem] border border-sky-300/80 bg-[#c8ecff]/30 p-6 sm:p-10 shadow-md backdrop-blur-xl">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-                <div>
-                  <span className="text-xs font-extrabold uppercase tracking-widest text-sky-700">Modular Architecture</span>
-                  <h3 className="text-2xl font-bold text-[#0a192f] mt-0.5">Plug & Play Addon Modules</h3>
-                  <p className="text-xs text-slate-600 mt-1">
-                    Select a core package foundation, then customize with any standalone module below.
-                  </p>
-                </div>
-                {/* Market & Region Selector by the side */}
-                <div className="flex items-center gap-2">
-                  <MarketRegionSelector />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-xs">
-                {[
-                  { id: "ecommerce_ordering", name: "E-Commerce & Checkout Suite", desc: "Product catalog, variants, slide-over cart, Razorpay/Stripe checkout & automated GST/tax invoices.", icon: "🛍️" },
-                  { id: "booking_appointments", name: "Smart Booking Engine", desc: "Live slot picker, staff/doctor specialist selection, deposits & automated WhatsApp reminders.", icon: "📅" },
-                  { id: "lead_crm", name: "Lead CRM & Inquiry Pipeline", desc: "Interactive consultation quote modals, centralized lead database & instant WhatsApp notifications.", icon: "🎯" },
-                  { id: "ai_assistant", name: "AI Conversational Copilot", desc: "Streaming AI chat trained on your business docs, products & policies for 24/7 client qualification.", icon: "🧠" },
-                  { id: "staff_portal", name: "Staff & Employee Portal", desc: "Dedicated employee logins, weekly shift roster, task checklists & automated sales commissions.", icon: "👥" },
-                  { id: "multi_location", name: "Multi-Location Branch Hub", desc: "Individual SEO city pages, Google store locator, and routing inquiries to local branch managers.", icon: "🏢" },
-                  { id: "growth_seo", name: "Local SEO & Ad Pixel Telemetry", desc: "Google Search Console, JSON-LD Schema rich snippets, Meta CAPI & GA4 custom e-commerce tracking.", icon: "📈" },
-                  { id: "source_attribution_hub", name: "Multi-Source UTM Attribution", desc: "Link generator, campaign QR codes, first-touch & last-touch source tracking on every inquiry.", icon: "📊" },
-                  { id: "devops_care", name: "Cloud DevOps & Care Retainer", desc: "Automated daily cloud backups, 24/7 uptime monitoring, security patches & hypercare warranty.", icon: "🛡️" },
-                  { id: "copywriting", name: "Conversion Copywriting & Messaging", desc: "Brand narrative, audience-tailored hooks, value proposition formulation & persuasive action CTAs.", icon: "✍️" },
-                  { id: "newsletter", name: "Newsletter & Waitlist Sync", desc: "Automated email synchronization with Klaviyo, Resend, or Mailchimp for continuous audience growth.", icon: "📰" },
-                  { id: "priority", name: "72-Hour Priority Fast-Track", desc: "Accelerated development sprint delivering initial full functional prototype in 72 hours.", icon: "⚡" }
-                ].map((a) => {
-                  const priceInfo = formatAddonPrice(a.id);
-                  return (
-                    <div key={a.id} className="rounded-2xl border border-sky-200/80 bg-white/70 hover:bg-white p-4.5 transition-all shadow-xs flex flex-col justify-between">
-                      <div>
-                        <div className="flex items-start justify-between gap-2 font-bold text-[#0a192f] mb-1.5">
-                          <span className="flex items-center gap-1.5 text-[13px]">
-                            <span>{a.icon}</span>
-                            <span>{a.name}</span>
-                          </span>
-                          <span className="text-sky-700 font-mono text-xs whitespace-nowrap">+{priceInfo.formatted}</span>
-                        </div>
-                        <p className="text-sky-950/70 text-[11px] leading-relaxed">{a.desc}</p>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* FAQ Accordion */}
-            <div className="rounded-[2.4rem] border border-sky-300/80 bg-[#c8ecff]/30 p-6 sm:p-10 shadow-md backdrop-blur-xl">
-              <div className="mb-6">
-                <span className="text-xs font-extrabold uppercase tracking-widest text-sky-700">Client FAQ</span>
-                <h3 className="text-2xl font-bold text-[#0a192f] mt-0.5">How Working Together Works</h3>
-              </div>
-              <div className="space-y-3">
-                {[
-                  { q: "How does the aesthetic + scope model work?", a: "You select any aesthetic visual archetype you like from our gallery (or discover one via our questionnaire). Then, depending on whether you need a 1-3 page landing page, a 4-7 page business site, or a full 3D custom web app, we scope the project milestones transparently." },
-                  { q: "What happens after I request a website?", a: "Your project is instantly created on your dedicated Client Board (/client). You can review the milestone scope, upload assets to the dropzone, request modifications, and execute the digital agreement." },
-                  { q: "Can I request changes during development?", a: "Yes! Your Client Board includes an interactive Changes & Requests log where you can submit revision requests (e.g. 'make hero less dark', 'round buttons') and track them in real time." }
-                ].map((faq, idx) => (
-                  <div key={idx} className="rounded-2xl border border-sky-200/80 bg-white/50 overflow-hidden">
-                    <button
-                      type="button"
-                      onClick={() => setOpenFaqIndex(openFaqIndex === idx ? null : idx)}
-                      className="w-full text-left px-5 py-4 flex items-center justify-between font-bold text-sm text-[#0a192f] cursor-pointer"
-                    >
-                      <span>{faq.q}</span>
-                      <span className="text-sky-700">{openFaqIndex === idx ? "−" : "+"}</span>
-                    </button>
-                    {openFaqIndex === idx && (
-                      <div className="px-5 pb-4 text-xs text-sky-950/80 leading-relaxed border-t border-sky-200/60 pt-3">
-                        {faq.a}
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </div>
-
-          {/* ------------------------------------------------------------- */}
-          {/* VIEW C: "MAKE YOUR WEBSITE" 5-QUESTION FLOW                   */}
-          {/* ------------------------------------------------------------- */}
-          {activeTab === "wizard" && (
-            <div className="max-w-3xl mx-auto">
-              
-              {/* Top Bar for Wizard */}
-              <div className="flex items-center justify-between mb-6">
-                <button
-                  type="button"
-                  onClick={() => setActiveTab("home")}
-                  className="rounded-full bg-white/80 border border-black/10 px-4 py-2 text-xs font-bold text-slate-700 hover:bg-white transition cursor-pointer flex items-center gap-1.5"
-                >
-                  <span>←</span>
-                  <span>Back</span>
-                </button>
-                <div className="text-xs font-extrabold uppercase tracking-widest text-slate-500">
-                  Question {wizardStep} of 5
-                </div>
-              </div>
-
-              <div className="rounded-[2.4rem] border border-black/10 bg-white/90 p-6 sm:p-10 shadow-2xl backdrop-blur-xl">
-                
-                {/* STEP 1: What are you building? */}
-                {wizardStep === 1 && (
-                  <div>
-                    <span className="text-xs font-extrabold uppercase tracking-widest text-sky-600">Step 1 of 5</span>
-                    <h2 className="text-2xl sm:text-3xl font-black text-slate-950 mt-1 mb-2">
-                      What are you building?
-                    </h2>
-                    <p className="text-xs sm:text-sm text-slate-600 mb-6">
-                      Pick the primary purpose of your new website.
-                    </p>
-
-                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                      {["Portfolio", "Business", "Restaurant", "Agency", "SaaS", "Personal Brand", "E-Commerce", "Other"].map((item) => (
-                        <button
-                          key={item}
-                          type="button"
-                          onClick={() => {
-                            setWizardAnswers((p) => ({ ...p, buildingType: item }));
-                            setWizardStep(2);
-                          }}
-                          className={`rounded-2xl border p-4 text-center transition-all cursor-pointer font-bold text-sm ${
-                            wizardAnswers.buildingType === item
-                              ? "border-sky-500 bg-sky-50 text-sky-950 ring-2 ring-sky-300 shadow-sm"
-                              : "border-black/8 bg-white/70 hover:bg-white text-slate-800"
-                          }`}
-                        >
-                          {item}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* STEP 2: What's the vibe? */}
-                {wizardStep === 2 && (
-                  <div>
-                    <span className="text-xs font-extrabold uppercase tracking-widest text-sky-600">Step 2 of 5</span>
-                    <h2 className="text-2xl sm:text-3xl font-black text-slate-950 mt-1 mb-2">
-                      What&apos;s the vibe?
-                    </h2>
-                    <p className="text-xs sm:text-sm text-slate-600 mb-6">
-                      Select the primary emotional aesthetic and atmosphere you want to evoke.
-                    </p>
-
-                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                      {[
-                        "Elegant & Serif",
-                        "Luxury Minimal",
-                        "Bold & Playful",
-                        "Dark & Cinematic",
-                        "Soft & Organic",
-                        "Modern SaaS Bento",
-                        "Brutalist",
-                        "Y2K & Chromecore",
-                        "Futuristic & Cyber",
-                        "3D Spatial",
-                        "Kinetic Typography",
-                        "Ethereal Mist"
-                      ].map((item) => (
-                        <button
-                          key={item}
-                          type="button"
-                          onClick={() => {
-                            setWizardAnswers((p) => ({ ...p, vibe: item }));
-                            setWizardStep(3);
-                          }}
-                          className={`rounded-2xl border p-3.5 text-center transition-all cursor-pointer font-bold text-xs ${
-                            wizardAnswers.vibe === item
-                              ? "border-sky-500 bg-sky-50 text-sky-950 ring-2 ring-sky-300 shadow-sm"
-                              : "border-black/8 bg-white/70 hover:bg-white text-slate-800"
-                          }`}
-                        >
-                          {item}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* STEP 3: What should visitors feel? */}
-                {wizardStep === 3 && (
-                  <div>
-                    <span className="text-xs font-extrabold uppercase tracking-widest text-sky-600">Step 3 of 5</span>
-                    <h2 className="text-2xl sm:text-3xl font-black text-slate-950 mt-1 mb-2">
-                      What should visitors feel?
-                    </h2>
-                    <p className="text-xs sm:text-sm text-slate-600 mb-6">
-                      Click a quick preset or type your vision in your own words.
-                    </p>
-
-                    <div className="flex flex-wrap gap-2 mb-4">
-                      {[
-                        "I want it to feel expensive and artistic.",
-                        "Clean, authoritative, and trustworthy.",
-                        "High energy, playful, and unforgettable.",
-                        "Calm, serene, organic, and grounded.",
-                        "Cutting-edge, futuristic, and high-tech."
-                      ].map((preset) => (
-                        <button
-                          key={preset}
-                          type="button"
-                          onClick={() => setWizardAnswers((p) => ({ ...p, visitorFeeling: preset }))}
-                          className={`rounded-full px-3.5 py-1.5 text-xs font-semibold border transition cursor-pointer ${
-                            wizardAnswers.visitorFeeling === preset
-                              ? "bg-sky-600 text-white border-sky-600"
-                              : "bg-slate-100 text-slate-700 border-black/8 hover:bg-white"
-                          }`}
-                        >
-                          {preset}
-                        </button>
-                      ))}
-                    </div>
-
-                    <textarea
-                      rows={3}
-                      value={wizardAnswers.visitorFeeling}
-                      onChange={(e) => setWizardAnswers((p) => ({ ...p, visitorFeeling: e.target.value }))}
-                      placeholder="e.g. I want visitors to feel like they just walked into an exclusive high-end design gallery..."
-                      className="w-full rounded-2xl border border-black/15 bg-white p-4 text-sm outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-200 resize-none"
-                    />
-
-                    <div className="mt-6 flex justify-end">
-                      <button
-                        type="button"
-                        onClick={() => setWizardStep(4)}
-                        className="rounded-full bg-slate-950 px-7 py-3 text-xs font-bold uppercase tracking-widest text-white shadow-lg hover:bg-slate-800 transition cursor-pointer"
-                      >
-                        Next Step →
-                      </button>
-                    </div>
-                  </div>
-                )}
-
-                {/* STEP 4: References */}
-                {wizardStep === 4 && (
-                  <div>
-                    <span className="text-xs font-extrabold uppercase tracking-widest text-sky-600">Step 4 of 5</span>
-                    <h2 className="text-2xl sm:text-3xl font-black text-slate-950 mt-1 mb-2">
-                      Do you have references?
-                    </h2>
-                    <p className="text-xs sm:text-sm text-slate-600 mb-6">
-                      Paste websites, studios, or mood links that inspire you (optional).
-                    </p>
-
-                    <textarea
-                      rows={3}
-                      value={wizardAnswers.references}
-                      onChange={(e) => setWizardAnswers((p) => ({ ...p, references: e.target.value }))}
-                      placeholder="e.g. apple.com, stripe.com, minimal editorial portfolios..."
-                      className="w-full rounded-2xl border border-black/15 bg-white p-4 text-sm outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-200 resize-none"
-                    />
-
-                    <div className="mt-6 flex justify-end">
-                      <button
-                        type="button"
-                        onClick={() => setWizardStep(5)}
-                        className="rounded-full bg-slate-950 px-7 py-3 text-xs font-bold uppercase tracking-widest text-white shadow-lg hover:bg-slate-800 transition cursor-pointer"
-                      >
-                        Next Step →
-                      </button>
-                    </div>
-                  </div>
-                )}
-
-                {/* STEP 5: How big is the website? */}
-                {wizardStep === 5 && (
-                  <div>
-                    <span className="text-xs font-extrabold uppercase tracking-widest text-sky-600">Step 5 of 5</span>
-                    <h2 className="text-2xl sm:text-3xl font-black text-slate-950 mt-1 mb-2">
-                      How big is the website?
-                    </h2>
-                    <p className="text-xs sm:text-sm text-slate-600 mb-6">
-                      Pick your estimated scope.
-                    </p>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                      {[
-                        { title: "1–3 pages", desc: "Starter / High-Impact Landing Page" },
-                        { title: "4–7 pages", desc: "Business / Full Company Experience" },
-                        { title: "8+ pages", desc: "Custom Flagship / WebGL / Portal" }
-                      ].map((item) => (
-                        <button
-                          key={item.title}
-                          type="button"
-                          onClick={() => {
-                            setWizardAnswers((p) => ({ ...p, scopeSize: item.title }));
-                            setActiveTab("results");
-                            window.scrollTo({ top: 0, behavior: "smooth" });
-                          }}
-                          className={`rounded-2xl border p-5 text-left transition-all cursor-pointer ${
-                            wizardAnswers.scopeSize?.includes(item.title)
-                              ? "border-sky-500 bg-sky-50 text-sky-950 ring-2 ring-sky-300 shadow-md"
-                              : "border-black/8 bg-white/70 hover:bg-white text-slate-800"
-                          }`}
-                        >
-                          <div className="font-extrabold text-base mb-1 text-slate-950">{item.title}</div>
-                          <div className="text-xs text-slate-500">{item.desc}</div>
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* Stepper Progress Bar */}
-                <div className="mt-8 pt-6 border-t border-black/8 flex items-center justify-between text-xs">
-                  <button
-                    type="button"
-                    onClick={() => setWizardStep((p) => Math.max(1, p - 1))}
-                    disabled={wizardStep === 1}
-                    className="font-bold text-slate-500 hover:text-black disabled:opacity-30 cursor-pointer"
-                  >
-                    ← Previous
-                  </button>
-                  <div className="h-2 w-32 rounded-full bg-slate-200 overflow-hidden">
-                    <div
-                      className="h-full bg-sky-600 transition-all duration-300"
-                      style={{ width: `${(wizardStep / 5) * 100}%` }}
-                    />
-                  </div>
-                </div>
-
-              </div>
-            </div>
-          )}
-
-          {/* ------------------------------------------------------------- */}
-          {/* VIEW D: CURATED SUGGESTIONS RESULTS                           */}
-          {/* ------------------------------------------------------------- */}
-          {activeTab === "results" && (
-            <div className="space-y-8">
-              
-              {/* Results Top Header */}
-              <div className="text-center max-w-2xl mx-auto">
-                <div className="inline-flex items-center gap-2 rounded-full bg-sky-100 border border-sky-200 px-3.5 py-1 text-xs font-bold text-sky-950 mb-2">
-                  <span>✓</span>
-                  <span>Recommendation Generated</span>
-                </div>
-                <h2 className="text-3xl sm:text-4xl font-black text-[#0a192f] mb-2">
-                  We found {recommendationData.matches.length} aesthetics for your vision.
-                </h2>
-                <p className="text-xs sm:text-sm text-sky-900/80">
-                  Based on your {wizardAnswers.buildingType} project and desired {wizardAnswers.vibe} aesthetic, here are the top curated visual archetypes. Click any direction to request your build.
-                </p>
-              </div>
-
-              {/* Matched Cards Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {recommendationData.matches.map(({ style, matchScore, matchReason }, idx) => (
-                  <div
-                    key={style.id}
-                    className={`flex flex-col justify-between rounded-[2.2rem] border p-6 transition-all duration-300 backdrop-blur-xl ${
-                      idx === 0
-                        ? "border-sky-400 bg-gradient-to-b from-[#c8ecff]/40 via-sky-50/70 to-[#c8ecff]/40 shadow-xl ring-2 ring-sky-300/40"
-                        : "border-sky-300/80 bg-[#c8ecff]/30 shadow-md hover:-translate-y-1 hover:shadow-xl hover:bg-[#c8ecff]/50"
-                    }`}
-                  >
-                    <div>
-                      {/* Top Match Score Badge */}
-                      <div className="flex items-center justify-between mb-3">
-                        <span className="rounded-full bg-sky-100 border border-sky-200 px-2.5 py-0.5 text-[10px] font-extrabold text-sky-950">
-                          {matchScore}% Match
-                        </span>
-                        <span className="text-[11px] font-bold text-sky-800/80">{style.category}</span>
-                      </div>
-
-                      {/* Mini Wireframe Mockup */}
-                      <div
-                        className="rounded-2xl p-4 mb-4 border border-black/8 overflow-hidden cursor-pointer"
-                        style={{ backgroundColor: style.mockWireframe.bgColor, color: style.mockWireframe.textColor }}
-                        onClick={() => setPreviewStyleModal(style)}
-                      >
-                        <div className="flex items-center justify-between mb-2">
-                          <span className="h-2 w-10 rounded-full" style={{ backgroundColor: style.mockWireframe.accentColor }} />
-                          <span className="text-[9px] font-mono opacity-60">{style.mockWireframe.badgeText}</span>
-                        </div>
-                        <h4 className="text-xs font-bold line-clamp-1 mb-1">{style.mockWireframe.heroHeading}</h4>
-                        <p className="text-[10px] opacity-70 line-clamp-2 leading-relaxed">{style.mockWireframe.heroSubheading}</p>
-                      </div>
-
-                      <h3 className="text-xl font-bold text-[#0a192f] mb-1">{style.name}</h3>
-                      <p className="text-xs text-sky-900/80 line-clamp-2 mb-3 leading-relaxed">{style.tagline}</p>
-
-                      <div className="rounded-xl bg-white/60 border border-sky-200/80 p-2.5 mb-4 text-[11px] text-sky-950">
-                        💡 {matchReason}
-                      </div>
-
-                      {/* Color Palette */}
-                      <div className="mb-4">
-                        <span className="block text-[10px] font-bold uppercase tracking-wider text-sky-800 mb-1">
-                          Signature Colors
-                        </span>
-                        <div className="flex items-center gap-2">
-                          {style.defaultPalette.map((swatch) => (
-                            <div
-                              key={swatch.name}
-                              className="h-5 w-5 rounded-full border border-black/15 shadow-2xs"
-                              style={{ backgroundColor: swatch.hex }}
-                            />
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Action */}
-                    <div className="pt-3 border-t border-sky-200/80 flex items-center gap-2">
-                      <button
-                        type="button"
-                        onClick={() => setPreviewStyleModal(style)}
-                        className="flex-1 rounded-xl border border-sky-300/80 bg-white/70 py-2 text-xs font-bold text-[#0a192f] hover:bg-white transition cursor-pointer"
-                      >
-                        Preview DNA
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => handleChooseAesthetic(style, wizardAnswers.scopeSize || "Business")}
-                        className="flex-1 rounded-xl bg-[#0a192f] py-2 text-xs font-bold text-white hover:bg-slate-800 transition cursor-pointer"
-                      >
-                        Choose This →
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              {/* Retake or Browse */}
-              <div className="text-center pt-6">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setWizardStep(1);
-                    setActiveTab("wizard");
-                  }}
-                  className="text-xs font-bold text-slate-600 hover:text-black underline underline-offset-4 cursor-pointer"
-                >
-                  🔄 Retake Questionnaire with different parameters
-                </button>
-              </div>
-
-            </div>
-          )}
             </div>
           )}
         </div>
@@ -1432,21 +847,14 @@ ${companyName.trim() ? `🏢 Company / Brand: ${companyName.trim()}` : ""}
               </div>
             </div>
 
-            {/* Modal Bottom CTA */}
-            <div className="pt-4 border-t border-black/8 flex items-center justify-end gap-3">
+            {/* Modal Bottom Action: Close */}
+            <div className="pt-4 border-t border-black/8 flex items-center justify-end">
               <button
                 type="button"
                 onClick={() => setPreviewStyleModal(null)}
-                className="rounded-full px-5 py-2.5 text-xs font-bold text-slate-600 hover:text-black cursor-pointer"
+                className="rounded-full bg-[#0a192f] px-6 py-2.5 text-xs font-bold uppercase tracking-wider text-white hover:bg-slate-800 transition cursor-pointer shadow-sm"
               >
                 {pkgCopy.intakeModal.close}
-              </button>
-              <button
-                type="button"
-                onClick={() => handleChooseAesthetic(previewStyleModal, "Business")}
-                className="rounded-full bg-slate-950 px-7 py-3 text-xs font-bold uppercase tracking-widest text-white hover:bg-slate-800 transition cursor-pointer shadow-md"
-              >
-                {pkgCopy.aesthetics.chooseStyle}
               </button>
             </div>
           </div>

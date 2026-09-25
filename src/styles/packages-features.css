@@ -1,0 +1,806 @@
+/**
+ * ==============================================================================
+ * MASTER PACKAGE ARCHITECTURE & GRANULAR FEATURE STYLESHEET
+ * ------------------------------------------------------------------------------
+ * System: Independent Packages, Macro-Modules & Expandable Micro-Features
+ * Architecture Rule: Luxury Landing Sprint is the foundational base included
+ * in all 5 independent packages. Optional macro-features can be decoupled to
+ * dynamically customize deliverables and budget.
+ *
+ * TABLE OF CONTENTS:
+ * 1. Global Package Design Tokens & CSS Custom Properties
+ * 2. Typography & Color Variables
+ * 3. Package 1: Luxury Landing Sprint (Core Foundation)
+ * 4. Package 2: BOFU Sales Engine & Growth Marketing
+ * 5. Package 3: Smart Appointment & Booking Engine
+ * 6. Package 4: Staff & Team Management Portal
+ * 7. Package 5: 3D Interactive & Brand Experience
+ * 8. Package 6: Full-Stack Web App / SaaS MVP
+ * 9. Macro Feature Cards, Categories & Essential Status Styles
+ * 10. Micro Feature Pills, Tags, Details & Accordion Transitions
+ * 11. Custom Scope Pricing Calculator & Summary Styles
+ * 12. Responsive Grid Breakpoints & Print/Export Styles
+ * ==============================================================================
+ */
+
+/* ==========================================================================
+   1. GLOBAL PACKAGE DESIGN TOKENS & CSS CUSTOM PROPERTIES
+   ========================================================================== */
+:root {
+  /* Common Package Metric Dimensions */
+  --pkg-radius-sm: 8px;
+  --pkg-radius-md: 14px;
+  --pkg-radius-lg: 20px;
+  --pkg-radius-pill: 9999px;
+  --pkg-transition-speed: 250ms;
+  --pkg-transition-timing: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* Elevation Shadows & Glassmorphism */
+  --pkg-card-bg: rgba(9, 21, 37, 0.72);
+  --pkg-card-border: rgba(255, 255, 255, 0.08);
+  --pkg-card-hover-border: rgba(255, 255, 255, 0.2);
+  --pkg-card-shadow: 0 12px 36px -10px rgba(0, 0, 0, 0.5);
+  --pkg-card-glow: 0 0 40px -10px rgba(56, 189, 248, 0.15);
+
+  /* Status Colors */
+  --pkg-essential-color: #38bdf8;
+  --pkg-essential-bg: rgba(56, 189, 248, 0.12);
+  --pkg-essential-border: rgba(56, 189, 248, 0.25);
+  
+  --pkg-optional-color: #a78bfa;
+  --pkg-optional-bg: rgba(167, 139, 250, 0.12);
+  --pkg-optional-border: rgba(167, 139, 250, 0.25);
+
+  --pkg-tag-bg: rgba(255, 255, 255, 0.06);
+  --pkg-tag-border: rgba(255, 255, 255, 0.1);
+  --pkg-tag-text: #cbd5e1;
+
+  /* ------------------------------------------------------------------------
+     PACKAGE 1: LUXURY LANDING SPRINT (BASE FOUNDATION)
+     ------------------------------------------------------------------------ */
+  --pkg-1-id: "luxury-landing-sprint";
+  --pkg-1-name: "Luxury Landing Sprint (Base Foundation)";
+  --pkg-1-badge: "Core Foundation";
+  --pkg-1-turnaround: "5-7 Days";
+  --pkg-1-price-inr: 5000;
+  --pkg-1-price-usd: 100;
+  --pkg-1-accent: #38bdf8;
+  --pkg-1-accent-rgb: 56, 189, 248;
+  --pkg-1-gradient: linear-gradient(135deg, rgba(56, 189, 248, 0.2), rgba(59, 130, 246, 0.1), rgba(99, 102, 241, 0.2));
+
+  /* ------------------------------------------------------------------------
+     PACKAGE 2: BOFU WEBSITE MARKETING & SOURCES (INDEPENDENT PACKAGE)
+     ------------------------------------------------------------------------ */
+  --pkg-2-id: "growth-marketing-campaigns";
+  --pkg-2-name: "BOFU Website Marketing & Sources Package";
+  --pkg-2-badge: "High Conversion";
+  --pkg-2-turnaround: "2-3 Weeks";
+  --pkg-2-price-inr: 19999;
+  --pkg-2-price-usd: 499;
+  --pkg-2-accent: #10b981;
+  --pkg-2-accent-rgb: 16, 185, 129;
+  --pkg-2-gradient: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(20, 184, 166, 0.1), rgba(6, 182, 212, 0.2));
+
+  /* ------------------------------------------------------------------------
+     PACKAGE 3: SMART APPOINTMENT & BOOKING ENGINE (INDEPENDENT PACKAGE)
+     ------------------------------------------------------------------------ */
+  --pkg-3-id: "booking-appointments-engine";
+  --pkg-3-name: "Smart Appointment & Booking Engine";
+  --pkg-3-badge: "Booking Suite";
+  --pkg-3-turnaround: "2-3 Weeks";
+  --pkg-3-price-inr: 19999;
+  --pkg-3-price-usd: 499;
+  --pkg-3-accent: #0ea5e9;
+  --pkg-3-accent-rgb: 14, 165, 233;
+  --pkg-3-gradient: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(14, 165, 233, 0.1), rgba(20, 184, 166, 0.2));
+
+  /* ------------------------------------------------------------------------
+     PACKAGE 4: STAFF & TEAM MANAGEMENT PORTAL (INDEPENDENT PACKAGE)
+     ------------------------------------------------------------------------ */
+  --pkg-4-id: "staff-team-management-portal";
+  --pkg-4-name: "Staff & Team Management Portal";
+  --pkg-4-badge: "Operations";
+  --pkg-4-turnaround: "3-4 Weeks";
+  --pkg-4-price-inr: 24999;
+  --pkg-4-price-usd: 599;
+  --pkg-4-accent: #8b5cf6;
+  --pkg-4-accent-rgb: 139, 92, 246;
+  --pkg-4-gradient: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(139, 92, 246, 0.1), rgba(236, 72, 153, 0.2));
+
+  /* ------------------------------------------------------------------------
+     PACKAGE 5: 3D INTERACTIVE & BRAND EXPERIENCE (INDEPENDENT PACKAGE)
+     ------------------------------------------------------------------------ */
+  --pkg-5-id: "interactive-3d-experience";
+  --pkg-5-name: "3D Interactive & Brand Experience";
+  --pkg-5-badge: "3D & WebGL";
+  --pkg-5-turnaround: "3-4 Weeks";
+  --pkg-5-price-inr: 39999;
+  --pkg-5-price-usd: 899;
+  --pkg-5-accent: #f59e0b;
+  --pkg-5-accent-rgb: 245, 158, 11;
+  --pkg-5-gradient: linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(249, 115, 22, 0.1), rgba(244, 63, 94, 0.2));
+
+  /* ------------------------------------------------------------------------
+     PACKAGE 6: FULL-STACK WEB APP / SAAS MVP (INDEPENDENT PACKAGE)
+     ------------------------------------------------------------------------ */
+  --pkg-6-id: "fullstack-web-app";
+  --pkg-6-name: "Full-Stack Web App / SaaS MVP";
+  --pkg-6-badge: "Enterprise SaaS";
+  --pkg-6-turnaround: "4-6 Weeks";
+  --pkg-6-price-inr: 69999;
+  --pkg-6-price-usd: 1499;
+  --pkg-6-accent: #a855f7;
+  --pkg-6-accent-rgb: 168, 85, 247;
+  --pkg-6-gradient: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(168, 85, 247, 0.1), rgba(99, 102, 241, 0.2));
+}
+
+/* ==========================================================================
+   2. TYPOGRAPHY & GENERAL CONTAINER LAYOUTS
+   ========================================================================== */
+.packages-breakdown-container {
+  width: 100%;
+  max-width: 1380px;
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem;
+  box-sizing: border-box;
+  color: var(--color-text-main, #f3f6fa);
+}
+
+.packages-breakdown-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.packages-breakdown-title {
+  font-family: var(--font-display, "Bodoni Moda", serif);
+  font-size: clamp(2rem, 1.6rem + 1.8vw, 3.2rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin: 0 0 0.75rem 0;
+  color: #ffffff;
+}
+
+.packages-breakdown-subtitle {
+  font-family: var(--font-body, "Manrope", sans-serif);
+  font-size: clamp(1rem, 0.95rem + 0.2vw, 1.15rem);
+  color: #94a3b8;
+  max-width: 760px;
+  margin: 0 auto;
+  line-height: 1.65;
+}
+
+/* ==========================================================================
+   3. INDEPENDENT PACKAGE SELECTOR TABS & ACCENTS
+   ========================================================================== */
+.package-tabs-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: center;
+  margin-bottom: 2.5rem;
+}
+
+.package-tab-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.75rem 1.25rem;
+  border-radius: var(--pkg-radius-pill);
+  border: 1px solid var(--pkg-card-border);
+  background: rgba(15, 23, 42, 0.6);
+  color: #94a3b8;
+  font-size: 0.92rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--pkg-transition-speed) var(--pkg-transition-timing);
+  backdrop-filter: blur(12px);
+}
+
+.package-tab-btn:hover {
+  color: #ffffff;
+  border-color: var(--pkg-card-hover-border);
+  transform: translateY(-2px);
+}
+
+.package-tab-btn.is-active {
+  color: #ffffff;
+  border-color: currentColor;
+  box-shadow: 0 4px 20px -4px currentColor;
+}
+
+/* Tab Specific Color Bindings */
+.package-tab-btn[data-package="luxury-landing-sprint"].is-active {
+  color: var(--pkg-1-accent);
+  background: rgba(56, 189, 248, 0.15);
+}
+
+.package-tab-btn[data-package="growth-marketing-campaigns"].is-active {
+  color: var(--pkg-2-accent);
+  background: rgba(16, 185, 129, 0.15);
+}
+
+.package-tab-btn[data-package="booking-appointments-engine"].is-active {
+  color: var(--pkg-3-accent);
+  background: rgba(14, 165, 233, 0.15);
+}
+
+.package-tab-btn[data-package="staff-team-management-portal"].is-active {
+  color: var(--pkg-4-accent);
+  background: rgba(139, 92, 246, 0.15);
+}
+
+.package-tab-btn[data-package="interactive-3d-experience"].is-active {
+  color: var(--pkg-5-accent);
+  background: rgba(245, 158, 11, 0.15);
+}
+
+.package-tab-btn[data-package="fullstack-web-app"].is-active {
+  color: var(--pkg-6-accent);
+  background: rgba(168, 85, 247, 0.15);
+}
+
+/* ==========================================================================
+   4. ACTIVE PACKAGE HERO BANNER
+   ========================================================================== */
+.package-hero-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--pkg-radius-lg);
+  border: 1px solid var(--pkg-card-border);
+  background: var(--pkg-card-bg);
+  padding: 2.25rem;
+  margin-bottom: 2.5rem;
+  backdrop-filter: blur(20px);
+  box-shadow: var(--pkg-card-shadow);
+  transition: border-color var(--pkg-transition-speed) ease;
+}
+
+.package-hero-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--pkg-active-gradient, var(--pkg-1-gradient));
+}
+
+.package-badge-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.3rem 0.75rem;
+  border-radius: var(--pkg-radius-pill);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  margin-bottom: 0.75rem;
+}
+
+.package-title-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.package-title-heading {
+  font-size: clamp(1.5rem, 1.3rem + 0.8vw, 2.1rem);
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
+}
+
+.package-price-lockup {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  font-family: var(--font-body, monospace);
+}
+
+.package-price-number {
+  font-size: clamp(1.8rem, 1.6rem + 1vw, 2.5rem);
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.package-turnaround-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.85rem;
+  color: #94a3b8;
+}
+
+/* ==========================================================================
+   5. MACRO FEATURE CARDS & SECTION BREAKDOWN
+   ========================================================================== */
+.macro-features-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  margin-bottom: 3rem;
+}
+
+.macro-card {
+  position: relative;
+  background: rgba(13, 27, 46, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: var(--pkg-radius-md);
+  padding: 1.5rem;
+  transition: all var(--pkg-transition-speed) var(--pkg-transition-timing);
+  backdrop-filter: blur(14px);
+}
+
+.macro-card:hover {
+  background: rgba(13, 27, 46, 0.85);
+  border-color: rgba(255, 255, 255, 0.15);
+  transform: translateY(-1px);
+}
+
+/* Essential Macro Card: Locked Base */
+.macro-card[data-essential="true"] {
+  border-left: 4px solid var(--pkg-essential-color);
+}
+
+/* Optional Macro Card: Can be unselected to reduce cost */
+.macro-card[data-essential="false"] {
+  border-left: 4px solid var(--pkg-optional-color);
+}
+
+/* When deselected in Custom Scope mode */
+.macro-card.is-deselected {
+  opacity: 0.45;
+  background: rgba(10, 18, 30, 0.4);
+  border-color: rgba(255, 255, 255, 0.04);
+  filter: grayscale(0.85);
+}
+
+.macro-card-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.macro-identity {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.macro-icon-box {
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--pkg-radius-sm);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 1.35rem;
+}
+
+.macro-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 0.25rem 0;
+}
+
+.macro-category-badge {
+  display: inline-block;
+  font-size: 0.75rem;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+}
+
+.macro-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.macro-price-tag {
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: #f1f5f9;
+}
+
+.macro-status-pill {
+  padding: 0.25rem 0.65rem;
+  border-radius: var(--pkg-radius-pill);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.macro-status-pill.essential {
+  color: var(--pkg-essential-color);
+  background: var(--pkg-essential-bg);
+  border: 1px solid var(--pkg-essential-border);
+}
+
+.macro-status-pill.optional {
+  color: var(--pkg-optional-color);
+  background: var(--pkg-optional-bg);
+  border: 1px solid var(--pkg-optional-border);
+}
+
+.macro-description {
+  font-size: 0.95rem;
+  color: #94a3b8;
+  line-height: 1.6;
+  margin: 0 0 1.25rem 0;
+}
+
+/* ==========================================================================
+   6. MICRO FEATURE DRAWER & GRANULAR BREAKDOWN
+   ========================================================================== */
+.micro-features-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: transparent;
+  border: none;
+  color: #38bdf8;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  margin-bottom: 0.75rem;
+  transition: color var(--pkg-transition-speed) ease;
+}
+
+.micro-features-toggle:hover {
+  color: #7dd3fc;
+  text-decoration: underline;
+}
+
+.micro-features-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 0.85rem;
+  padding-top: 1rem;
+  border-top: 1px dashed rgba(255, 255, 255, 0.08);
+}
+
+.micro-card {
+  background: rgba(15, 23, 42, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: var(--pkg-radius-sm);
+  padding: 0.85rem 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 0.45rem;
+  transition: all var(--pkg-transition-speed) ease;
+}
+
+.micro-card:hover {
+  background: rgba(15, 23, 42, 0.8);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.micro-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.micro-title {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: #e2e8f0;
+  margin: 0;
+}
+
+.micro-tag {
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.15rem 0.5rem;
+  border-radius: var(--pkg-radius-pill);
+  background: var(--pkg-tag-bg);
+  border: 1px solid var(--pkg-tag-border);
+  color: var(--pkg-tag-text);
+  white-space: nowrap;
+}
+
+.micro-detail {
+  font-size: 0.82rem;
+  color: #8da2bb;
+  line-height: 1.45;
+  margin: 0;
+}
+
+/* ==========================================================================
+   7. EXPLICIT DATA-ATTRIBUTE INDEX FOR ALL 6 INDEPENDENT PACKAGES
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   PACKAGE 1: LUXURY LANDING SPRINT (6 MACROS | 24 MICROS)
+   -------------------------------------------------------------------------- */
+[data-package="luxury-landing-sprint"] {
+  --pkg-theme: var(--pkg-1-accent);
+}
+[data-macro="ls_macro_core_arch"]       { --macro-accent: #38bdf8; }
+[data-macro="ls_macro_motion"]          { --macro-accent: #60a5fa; }
+[data-macro="ls_macro_conversion"]      { --macro-accent: #34d399; }
+[data-macro="ls_macro_accessibility"]   { --macro-accent: #818cf8; }
+[data-macro="ls_macro_seo"]             { --macro-accent: #38bdf8; }
+[data-macro="ls_macro_compliance"]      { --macro-accent: #94a3b8; }
+
+/* Micro Feature Identifiers (1 to 24) */
+[data-micro="ls_micro_1"],  [data-micro="ls_micro_2"],  [data-micro="ls_micro_3"],  [data-micro="ls_micro_4"],
+[data-micro="ls_micro_5"],  [data-micro="ls_micro_6"],  [data-micro="ls_micro_7"],  [data-micro="ls_micro_8"],
+[data-micro="ls_micro_9"],  [data-micro="ls_micro_10"], [data-micro="ls_micro_11"], [data-micro="ls_micro_12"],
+[data-micro="ls_micro_13"], [data-micro="ls_micro_14"], [data-micro="ls_micro_15"], [data-micro="ls_micro_16"],
+[data-micro="ls_micro_17"], [data-micro="ls_micro_18"], [data-micro="ls_micro_19"], [data-micro="ls_micro_20"],
+[data-micro="ls_micro_21"], [data-micro="ls_micro_22"], [data-micro="ls_micro_23"], [data-micro="ls_micro_24"] {
+  border-left: 2px solid rgba(56, 189, 248, 0.4);
+}
+
+/* --------------------------------------------------------------------------
+   PACKAGE 2: BOFU WEBSITE MARKETING (8 MACROS | 27 MICROS)
+   -------------------------------------------------------------------------- */
+[data-package="growth-marketing-campaigns"] {
+  --pkg-theme: var(--pkg-2-accent);
+}
+[data-macro="gm_macro_foundation"]      { --macro-accent: #38bdf8; }
+[data-macro="gm_macro_checkout"]        { --macro-accent: #10b981; }
+[data-macro="gm_macro_urgency"]         { --macro-accent: #f59e0b; }
+[data-macro="gm_macro_attribution"]     { --macro-accent: #06b6d4; }
+[data-macro="gm_macro_ugc"]             { --macro-accent: #ec4899; }
+[data-macro="gm_macro_comparison"]      { --macro-accent: #8b5cf6; }
+[data-macro="gm_macro_ai_concierge"]    { --macro-accent: #6366f1; }
+[data-macro="gm_macro_multilingual"]    { --macro-accent: #14b8a6; }
+
+/* Micro Feature Identifiers (gm_micro_0a through gm_micro_24) */
+[data-micro^="gm_micro_"] {
+  border-left: 2px solid rgba(16, 185, 129, 0.4);
+}
+
+/* --------------------------------------------------------------------------
+   PACKAGE 3: SMART BOOKING ENGINE (7 MACROS | 20 MICROS)
+   -------------------------------------------------------------------------- */
+[data-package="booking-appointments-engine"] {
+  --pkg-theme: var(--pkg-3-accent);
+}
+[data-macro="bk_macro_foundation"]      { --macro-accent: #38bdf8; }
+[data-macro="bk_macro_slot_picker"]     { --macro-accent: #0ea5e9; }
+[data-macro="bk_macro_calendar_sync"]   { --macro-accent: #3b82f6; }
+[data-macro="bk_macro_reminders"]       { --macro-accent: #10b981; }
+[data-macro="bk_macro_payments"]        { --macro-accent: #f59e0b; }
+[data-macro="bk_macro_qualification"]   { --macro-accent: #8b5cf6; }
+[data-macro="bk_macro_multibranch"]     { --macro-accent: #14b8a6; }
+
+/* Micro Feature Identifiers (bk_micro_0a through bk_micro_18) */
+[data-micro^="bk_micro_"] {
+  border-left: 2px solid rgba(14, 165, 233, 0.4);
+}
+
+/* --------------------------------------------------------------------------
+   PACKAGE 4: STAFF & TEAM PORTAL (7 MACROS | 20 MICROS)
+   -------------------------------------------------------------------------- */
+[data-package="staff-team-management-portal"] {
+  --pkg-theme: var(--pkg-4-accent);
+}
+[data-macro="st_macro_foundation"]      { --macro-accent: #38bdf8; }
+[data-macro="st_macro_directory"]       { --macro-accent: #8b5cf6; }
+[data-macro="st_macro_roster"]          { --macro-accent: #6366f1; }
+[data-macro="st_macro_leave"]           { --macro-accent: #ec4899; }
+[data-macro="st_macro_punchclock"]      { --macro-accent: #f59e0b; }
+[data-macro="st_macro_payroll"]         { --macro-accent: #10b981; }
+[data-macro="st_macro_notices"]         { --macro-accent: #06b6d4; }
+
+/* Micro Feature Identifiers (st_micro_0a through st_micro_18) */
+[data-micro^="st_micro_"] {
+  border-left: 2px solid rgba(139, 92, 246, 0.4);
+}
+
+/* --------------------------------------------------------------------------
+   PACKAGE 5: 3D INTERACTIVE & BRAND EXPERIENCE (6 MACROS | 18 MICROS)
+   -------------------------------------------------------------------------- */
+[data-package="interactive-3d-experience"] {
+  --pkg-theme: var(--pkg-5-accent);
+}
+[data-macro="td_macro_foundation"]      { --macro-accent: #38bdf8; }
+[data-macro="td_macro_webgl"]           { --macro-accent: #f59e0b; }
+[data-macro="td_macro_choreography"]    { --macro-accent: #f97316; }
+[data-macro="td_macro_customizer"]      { --macro-accent: #ec4899; }
+[data-macro="td_macro_audio"]           { --macro-accent: #a855f7; }
+[data-macro="td_macro_mobile"]          { --macro-accent: #10b981; }
+
+/* Micro Feature Identifiers (td_micro_0a through td_micro_16) */
+[data-micro^="td_micro_"] {
+  border-left: 2px solid rgba(245, 158, 11, 0.4);
+}
+
+/* --------------------------------------------------------------------------
+   PACKAGE 6: FULL-STACK WEB APP / SAAS MVP (8 MACROS | 22 MICROS)
+   -------------------------------------------------------------------------- */
+[data-package="fullstack-web-app"] {
+  --pkg-theme: var(--pkg-6-accent);
+}
+[data-macro="fs_macro_foundation"]      { --macro-accent: #38bdf8; }
+[data-macro="fs_macro_db"]              { --macro-accent: #a855f7; }
+[data-macro="fs_macro_auth"]            { --macro-accent: #3b82f6; }
+[data-macro="fs_macro_billing"]         { --macro-accent: #10b981; }
+[data-macro="fs_macro_storage"]         { --macro-accent: #06b6d4; }
+[data-macro="fs_macro_rbac"]            { --macro-accent: #e11d48; }
+[data-macro="fs_macro_api_bridge"]      { --macro-accent: #f59e0b; }
+[data-macro="fs_macro_backups_export"]  { --macro-accent: #64748b; }
+
+/* Micro Feature Identifiers (fs_micro_0a through fs_micro_21) */
+[data-micro^="fs_micro_"] {
+  border-left: 2px solid rgba(168, 85, 247, 0.4);
+}
+
+/* ==========================================================================
+   8. SCOPE SUMMARY & CALCULATION DOCK
+   ========================================================================== */
+.custom-scope-dock {
+  position: sticky;
+  bottom: 1.5rem;
+  left: 0;
+  right: 0;
+  background: rgba(10, 22, 38, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: var(--pkg-radius-lg);
+  padding: 1.25rem 1.75rem;
+  backdrop-filter: blur(24px);
+  box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.7);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  z-index: 40;
+}
+
+.scope-stats-row {
+  display: flex;
+  align-items: baseline;
+  gap: 1.25rem;
+}
+
+.scope-price-total {
+  font-size: 1.85rem;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.scope-savings-indicator {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #34d399;
+  background: rgba(52, 211, 153, 0.12);
+  border: 1px solid rgba(52, 211, 153, 0.25);
+  padding: 0.2rem 0.6rem;
+  border-radius: var(--pkg-radius-pill);
+}
+
+.scope-cta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.85rem 1.75rem;
+  border-radius: var(--pkg-radius-pill);
+  font-weight: 700;
+  font-size: 0.95rem;
+  background: #ffffff;
+  color: #04111b;
+  border: none;
+  cursor: pointer;
+  transition: all var(--pkg-transition-speed) ease;
+  box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
+}
+
+.scope-cta-btn:hover {
+  background: #f8fafc;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(255, 255, 255, 0.3);
+}
+
+/* ==========================================================================
+   9. PRINT & MEDIA EXPORT RULES
+   ========================================================================== */
+@media print {
+  .packages-breakdown-container {
+    color: #000000 !important;
+    background: #ffffff !important;
+  }
+
+  .package-tabs-list,
+  .custom-scope-dock,
+  .micro-features-toggle {
+    display: none !important;
+  }
+
+  .macro-card,
+  .package-hero-card {
+    background: #ffffff !important;
+    color: #000000 !important;
+    border: 1px solid #cccccc !important;
+    box-shadow: none !important;
+    break-inside: avoid;
+    page-break-inside: avoid;
+    margin-bottom: 1.5rem !important;
+  }
+
+  .macro-title,
+  .package-title-heading,
+  .micro-title {
+    color: #000000 !important;
+  }
+
+  .macro-description,
+  .micro-detail {
+    color: #333333 !important;
+  }
+
+  .micro-features-list {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 0.5rem !important;
+  }
+}
+
+/* ==========================================================================
+   10. MOBILE & TABLET RESPONSIVENESS
+   ========================================================================== */
+@media (max-width: 768px) {
+  .packages-breakdown-container {
+    padding: 1.5rem 1rem;
+  }
+
+  .package-hero-card {
+    padding: 1.5rem;
+  }
+
+  .package-title-row {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .macro-card-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .macro-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .micro-features-list {
+    grid-template-columns: 1fr;
+  }
+
+  .custom-scope-dock {
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+  }
+
+  .scope-stats-row {
+    justify-content: center;
+  }
+
+  .scope-cta-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}

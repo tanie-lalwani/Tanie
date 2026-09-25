@@ -16,24 +16,27 @@ export function getSavedLeadProfile(): {
   name: string;
   email: string;
   businessName: string;
+  socialAccount: string;
   leadId: string;
 } {
   if (typeof window === "undefined") {
-    return { name: "", email: "", businessName: "", leadId: "" };
+    return { name: "", email: "", businessName: "", socialAccount: "", leadId: "" };
   }
 
   const name = getCookie("tanie_lead_name") || localStorage.getItem("tanie_lead_name") || "";
   const email = getCookie("tanie_lead_email") || localStorage.getItem("tanie_lead_email") || "";
   const businessName = getCookie("tanie_lead_business") || localStorage.getItem("tanie_lead_business") || "";
+  const socialAccount = getCookie("tanie_client_social") || localStorage.getItem("tanie_client_social") || "";
   const leadId = getCookie("tanie_calc_lead_id") || localStorage.getItem("tanie_calc_lead_id") || "";
 
-  return { name, email, businessName, leadId };
+  return { name, email, businessName, socialAccount, leadId };
 }
 
 export function saveLeadProfile(data: {
   name?: string;
   email?: string;
   businessName?: string;
+  socialAccount?: string;
   leadId?: string;
 }): void {
   if (typeof window === "undefined") return;
@@ -49,6 +52,10 @@ export function saveLeadProfile(data: {
   if (data.businessName) {
     setCookie("tanie_lead_business", data.businessName, 60);
     localStorage.setItem("tanie_lead_business", data.businessName);
+  }
+  if (data.socialAccount) {
+    setCookie("tanie_client_social", data.socialAccount, 60);
+    localStorage.setItem("tanie_client_social", data.socialAccount);
   }
   if (data.leadId) {
     setCookie("tanie_calc_lead_id", data.leadId, 60);
