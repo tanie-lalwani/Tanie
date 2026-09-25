@@ -18,6 +18,8 @@ import {
 import { useGeoPricing } from "@/context/GeoPricingContext";
 import { useLanguage } from "@/context/LanguageContext";
 import MarketRegionSelector from "@/components/ui/MarketRegionSelector";
+import { saveCalculatedQuote } from "@/components/client-hub/clientHubStorage";
+import { saveLeadProfile } from "@/features/lead-capture/lib/cookieHelper";
 
 export default function PricingBreakdownView() {
   const router = useRouter();
@@ -35,6 +37,8 @@ export default function PricingBreakdownView() {
   const [selectedAesthetic, setSelectedAesthetic] = useState("Luxury Minimalist");
   const [disabledMacros, setDisabledMacros] = useState<string[]>([]);
   const [saveToast, setSaveToast] = useState<string | null>(null);
+  const [isBookingComplete, setIsBookingComplete] = useState(false);
+  const [isSubmittingBooking, setIsSubmittingBooking] = useState(false);
 
   // Single-open accordion state: 1 macro open at a time
   const [expandedMacro, setExpandedMacro] = useState<string | null>(null);
@@ -203,6 +207,46 @@ ${urgencyLine}💰 *Total Investment:* ${tierConfig.currencySymbol}${calculation
 Let's discuss getting started!`;
 
     window.open(`https://wa.me/916351515091?text=${encodeURIComponent(text)}`, "_blank");
+  };
+
+  const handleConfirmProjectScope = () => {
+    setIsSubmittingBooking(true);
+
+    // 1. Save calculated quote for immediate pickup by /client
+    saveCalculatedQuote({
+      scope_tier: currentPackage.name,
+      selected_aesthetic: selectedAesthetic || "Luxury Minimalist",
+      liked_aesthetics: [selectedAesthetic],
+      features: currentPackage.macroFeatures.map((m) => m.name),
+      timeline: timeline || currentPackage.turnaround,
+      calculated_price: calculation.finalTotalMarket,
+      currency: tierConfig.currencyCode,
+      symbol: tierConfig.currencySymbol,
+      saved_at: new Date().toISOString(),
+      social_handle: socialAccount || businessName || undefined,
+    });
+
+    // 2. Save lead profile data
+    saveLeadProfile({
+      businessName: businessName || undefined,
+      socialAccount: socialAccount || undefined,
+    });
+
+    // 3. Save to localStorage
+    if (typeof window !== "undefined") {
+      localStorage.setItem("tanie_project_scope_confirmed", "true");
+      localStorage.setItem("tanie_confirmed_package_id", currentPackage.id);
+      localStorage.setItem("tanie_confirmed_package_name", currentPackage.name);
+      localStorage.setItem("tanie_client_business_name", businessName);
+    }
+
+    // 4. Show Booking Complete confirmation & auto-navigate
+    setIsBookingComplete(true);
+    setIsSubmittingBooking(false);
+
+    setTimeout(() => {
+      router.push("/client");
+    }, 2200);
   };
 
   return (
@@ -558,19 +602,80 @@ Let's discuss getting started!`;
               <span>{locale === "hi" ? "WhatsApp Par Share Karein" : "Share via WhatsApp"}</span>
             </button>
 
-            <Link
-              href="/contact"
-              className="flex-1 sm:flex-none px-8 py-3 rounded-full bg-[#0a192f] hover:bg-slate-800 text-white font-bold text-xs uppercase tracking-wider transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer text-center"
+            <button
+              type="button"
+              onClick={handleConfirmProjectScope}
+              disabled={isSubmittingBooking}
+              className="flex-1 sm:flex-none px-8 py-3 rounded-full bg-[#0a192f] hover:bg-slate-800 text-white font-bold text-xs uppercase tracking-wider transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer text-center disabled:opacity-60"
             >
               <span>
                 {currentPackage.isCustomQuoteOnly
-                  ? (locale === "hi" ? "Custom Quotation Request Karein ✨" : "Request Custom Quotation ✨")
-                  : (locale === "hi" ? "Project Booking Confirm Karein →" : "Confirm Project Scope →")}
+                  ? (locale === "hi" ? "Custom Quotation Confirm Karein ✨" : "Confirm Scope & Open Client Portal ✨")
+                  : (locale === "hi" ? "Project Booking Confirm Karein →" : "Confirm Project Scope & Open Portal →")}
               </span>
-            </Link>
+            </button>
           </div>
         </div>
       </div>
+
+      {/* BOOKING COMPLETE & CLIENT PORTAL REDIRECT MODAL */}
+      {isBookingComplete && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md animate-fadeIn">
+          <div className="w-full max-w-lg bg-[#f0f9ff] border-2 border-emerald-400 rounded-3xl p-6 sm:p-8 shadow-2xl space-y-5 text-center">
+            <div className="inline-flex h-20 w-20 items-center justify-center rounded-3xl bg-emerald-100 text-emerald-800 text-4xl border border-emerald-300 shadow-inner">
+              🎉
+            </div>
+
+            <div className="space-y-1.5">
+              <span className="text-[10px] font-black uppercase tracking-wider text-emerald-800 bg-emerald-100 px-3 py-1 rounded-full border border-emerald-200">
+                Booking Scope Confirmed
+              </span>
+              <h2 className="text-2xl sm:text-3xl font-black text-[#0a192f] mt-2">
+                {locale === "hi" ? "Project Booking Complete!" : "Project Booking Complete!"}
+              </h2>
+              <p className="text-xs sm:text-sm text-sky-950/80 font-medium">
+                {locale === "hi"
+                  ? "Aapka project scope confirm ho gaya hai. Client Portal workspace me navigate kar rahe hain..."
+                  : "Your project scope has been confirmed and initialized in your Client Portal workspace."}
+              </p>
+            </div>
+
+            <div className="p-4 rounded-2xl bg-white border border-sky-200 text-left space-y-2 text-xs">
+              <div className="flex justify-between items-center border-b border-sky-100 pb-2">
+                <span className="font-bold text-slate-500">Package Scope:</span>
+                <span className="font-black text-[#0a192f]">{currentPackage.name}</span>
+              </div>
+              <div className="flex justify-between items-center border-b border-sky-100 pb-2">
+                <span className="font-bold text-slate-500">Investment:</span>
+                <span className="font-black text-[#0a192f]">
+                  {currentPackage.isCustomQuoteOnly
+                    ? "Quotation on Request"
+                    : `${tierConfig.currencySymbol}${calculation.finalTotalMarket.toLocaleString()} ${tierConfig.currencyCode}`}
+                </span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="font-bold text-slate-500">Target Launch:</span>
+                <span className="font-black text-sky-900">{currentPackage.turnaround}</span>
+              </div>
+            </div>
+
+            <div className="space-y-2.5 pt-2">
+              <button
+                type="button"
+                onClick={() => router.push("/client")}
+                className="w-full py-3.5 rounded-full bg-[#0a192f] hover:bg-slate-800 text-white font-bold text-xs uppercase tracking-wider shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer"
+              >
+                <span>Enter Client Portal</span>
+                <span>💼 →</span>
+              </button>
+
+              <p className="text-[11px] text-sky-900/70 font-semibold animate-pulse">
+                Redirecting to your Client Portal in 2 seconds...
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
