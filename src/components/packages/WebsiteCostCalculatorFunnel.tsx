@@ -580,73 +580,40 @@ Let's discuss getting started!`;
           </div>
 
           {/* ───────────────────────────────────────────────────────────────────── */}
-          {/* STEP 1: WHAT ARE YOU BUILDING? (Single Select -> Direct Suggestion)  */}
+          {/* STEP 1: WHAT ARE YOU BUILDING? (Minimal, No Pricing)                 */}
           {/* ───────────────────────────────────────────────────────────────────── */}
           {currentStep === 1 && (
             <div className="space-y-6">
-              <p className="text-sm font-semibold text-sky-950/80">
-                {locale === "hi"
-                  ? "Apne project ke hisaab se option select karein — hum directly aapke liye best standalone package suggest karenge:"
-                  : "Select what best matches your project — we will directly suggest the ideal standalone package:"}
-              </p>
-
-              <div className="grid grid-cols-1 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {BUILDING_OPTIONS.map((option) => {
                   const isSelected = selectedPackageId === option.targetPackageId;
-                  const pkg = FEATURE_BUNDLES.find((b) => b.id === option.targetPackageId);
-                  const pkgPrice = formatPackagePrice(option.targetPackageId);
 
                   return (
                     <button
                       key={option.id}
                       type="button"
                       onClick={() => handleSelectBuildingOption(option)}
-                      className={`p-5 rounded-2xl border text-left transition-all cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between gap-4 ${
+                      className={`p-4 rounded-2xl border text-left transition-all cursor-pointer flex items-center gap-3.5 ${
                         isSelected
-                          ? "bg-sky-50/95 border-2 border-sky-600 shadow-md scale-[1.01]"
-                          : "bg-white/75 hover:bg-white border-sky-200/80 hover:border-sky-400 shadow-xs"
+                          ? "bg-sky-50/95 border-2 border-sky-600 shadow-md"
+                          : "bg-white/70 hover:bg-white border-sky-200/80 hover:border-sky-400 shadow-xs"
                       }`}
                     >
-                      <div className="flex items-start gap-4">
-                        <span className="text-2xl shrink-0 p-2.5 rounded-xl bg-sky-100 border border-sky-200">
-                          {option.icon}
-                        </span>
-                        <div>
-                          <div className="flex items-center gap-2">
-                            <h3 className="text-base font-black text-[#0a192f]">
-                              {option.title}
-                            </h3>
-                            <span className="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-md bg-sky-200 text-sky-900">
-                              {option.tag}
-                            </span>
-                          </div>
-                          <p className="text-xs text-slate-600 font-medium mt-1">
-                            {option.symptom}
-                          </p>
-                          <div className="mt-2 text-[11px] font-bold text-sky-800 flex items-center gap-1.5">
-                            <span>📦 Suggests:</span>
-                            <span className="underline">{pkg?.name}</span>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="shrink-0 flex items-center justify-between sm:justify-end sm:flex-col sm:items-end gap-2 border-t sm:border-t-0 border-sky-100 pt-2 sm:pt-0">
-                        <div className="text-right">
-                          <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 block">Package Price</span>
-                          <span className="text-base font-black text-[#0a192f]">
-                            {pkgPrice.formatted} <span className="text-[10px] text-slate-500">{pkgPrice.currency}</span>
-                          </span>
-                        </div>
-                        <span
-                          className={`h-5 w-5 rounded-full shrink-0 flex items-center justify-center text-[10px] font-black border transition ${
-                            isSelected
-                              ? "bg-sky-600 text-white border-sky-600"
-                              : "border-slate-300 bg-white text-transparent"
-                          }`}
-                        >
-                          ✓
-                        </span>
-                      </div>
+                      <span className="text-xl shrink-0 p-2 rounded-xl bg-sky-100/70 border border-sky-200">
+                        {option.icon}
+                      </span>
+                      <span className="text-sm font-bold text-[#0a192f] leading-snug">
+                        {option.title}
+                      </span>
+                      <span
+                        className={`ml-auto h-5 w-5 rounded-full shrink-0 flex items-center justify-center text-[10px] font-black border transition ${
+                          isSelected
+                            ? "bg-sky-600 text-white border-sky-600"
+                            : "border-slate-300 bg-white text-transparent"
+                        }`}
+                      >
+                        ✓
+                      </span>
                     </button>
                   );
                 })}
