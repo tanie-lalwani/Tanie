@@ -165,10 +165,12 @@ export default function PackagePricingBreakdown({
           <label className="text-[11px] font-black uppercase tracking-wider text-sky-900">
             1. Select Package to Inspect & Customize:
           </label>
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2">
             {PACKAGE_BREAKDOWN_DATA.map((pkg) => {
               const isSelected = pkg.id === selectedPackageId;
-              const displayPrice = tierConfig.packages[pkg.id as keyof typeof tierConfig.packages] ?? (isINR ? pkg.basePriceInr : pkg.basePriceUsd);
+              const displayPrice = formatPackagePrice(pkg.id);
+              const isINR = tierConfig.currencyCode === "INR";
+              const rangeText = isINR ? pkg.typicalRangeInr : pkg.typicalRangeUsd;
 
               return (
                 <button
@@ -190,8 +192,13 @@ export default function PackagePricingBreakdown({
                     {pkg.name}
                   </span>
                   <span className={`text-[11px] font-bold mt-1 ${isSelected ? "text-sky-300" : "text-sky-900"}`}>
-                    {tierConfig.currencySymbol}{displayPrice.toLocaleString()} {tierConfig.currencyCode}
+                    Starting {displayPrice.formatted} {displayPrice.currency}
                   </span>
+                  {rangeText && (
+                    <span className={`text-[10px] font-medium block truncate mt-0.5 ${isSelected ? "text-sky-200/70" : "text-slate-500"}`}>
+                      {rangeText}
+                    </span>
+                  )}
                 </button>
               );
             })}
@@ -202,13 +209,18 @@ export default function PackagePricingBreakdown({
       {/* SELECTED PACKAGE HEADER BANNER */}
       <div className={`rounded-3xl border border-sky-300/80 bg-gradient-to-r ${currentPackage.accentGradient} p-6 sm:p-7 shadow-md flex flex-col md:flex-row items-start md:items-center justify-between gap-6 backdrop-blur-md`}>
         <div className="space-y-1.5 max-w-2xl">
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <span className="rounded-full bg-sky-200 border border-sky-300 px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wider text-sky-950">
               {currentPackage.badge}
             </span>
             <span className="text-xs font-bold text-sky-900">
               ⏱ Turnaround: {currentPackage.turnaround}
             </span>
+            {(currentPackage.typicalRangeInr || currentPackage.typicalRangeUsd) && (
+              <span className="bg-sky-100/90 text-sky-950 px-2.5 py-0.5 rounded-full border border-sky-300 text-[10px] font-bold">
+                📊 Typical: {isINR ? currentPackage.typicalRangeInr : currentPackage.typicalRangeUsd}
+              </span>
+            )}
           </div>
           <h3 className="text-xl sm:text-2xl font-black text-[#0a192f]">
             {currentPackage.name}
@@ -221,18 +233,21 @@ export default function PackagePricingBreakdown({
         {/* LIVE PRICING SUMMARY TILE */}
         <div className="shrink-0 bg-white/80 border border-sky-200/80 rounded-2xl p-4 sm:p-5 shadow-sm text-center md:text-right min-w-[220px]">
           <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 block">
-            {calculation.deductionMarket > 0 ? "Custom Tailored Investment" : "Full Suite Package Investment"}
+            {currentPackage.isCustomQuoteOnly ? "Starting Investment" : calculation.deductionMarket > 0 ? "Custom Tailored Investment" : "Full Suite Package Investment"}
           </span>
           <div className="text-2xl sm:text-3xl font-black text-[#0a192f] mt-0.5">
             {tierConfig.currencySymbol}{calculation.customMarket.toLocaleString()} <span className="text-xs font-bold text-slate-600">{tierConfig.currencyCode}</span>
           </div>
-
-          {calculation.deductionMarket > 0 && (
+          {currentPackage.isCustomQuoteOnly ? (
+            <div className="text-[11px] text-indigo-800 font-bold mt-1">
+              ✨ Scope quotation on request
+            </div>
+          ) : calculation.deductionMarket > 0 ? (
             <div className="mt-1 flex items-center justify-center md:justify-end gap-1.5 text-[11px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full">
               <span>✂️ Saved:</span>
               <span className="font-black">-{tierConfig.currencySymbol}{calculation.deductionMarket.toLocaleString()}</span>
             </div>
-          )}
+          ) : null}
         </div>
       </div>
 
@@ -252,7 +267,10 @@ export default function PackagePricingBreakdown({
             const isRemoved = deselectedFeatureIds.has(macro.id);
             const isExpanded = expandedMacroId === macro.id;
             const macroPrice = isINR ? macro.priceInr : macro.priceUsd;
-            const macroMarketPrice = Math.round(macroPrice * (calculation.origMarket / (isINR ? currentPackage.basePriceInr : currentPackage.basePriceUsd)));
+            const basePrice = isINR ? currentPackage.basePriceInr : currentPackage.basePriceUsd;
+            const macroMarketPrice = macroPrice > 0 && basePrice > 0
+              ? Math.round(macroPrice * (calculation.origMarket / basePrice))
+              : 0;
 
             return (
               <div
@@ -317,6 +335,11 @@ export default function PackagePricingBreakdown({
                             {isRemoved ? "✂️ Removed from Scope" : "✓ Optional Module Included"}
                           </span>
                         )}
+                        {macro.isCustomQuoteOnly && (
+                          <span className="inline-flex items-center gap-1 rounded-full bg-indigo-50 border border-indigo-200 px-2 py-0.5 text-[9px] font-bold text-indigo-900">
+                            Quotation on Request
+                          </span>
+                        )}
                       </div>
                       <p className="text-xs text-sky-950/70 font-medium leading-relaxed">
                         {macro.description}
@@ -327,12 +350,20 @@ export default function PackagePricingBreakdown({
                   {/* Price Tag & Drawer Plus [+] Toggle */}
                   <div className="flex items-center justify-between sm:justify-end gap-3 shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-sky-200/50">
                     <div className="text-right">
-                      <span className={`text-xs font-black ${isRemoved ? "line-through text-slate-400" : "text-sky-950"}`}>
-                        {tierConfig.currencySymbol}{macroMarketPrice.toLocaleString()} {tierConfig.currencyCode}
-                      </span>
-                      <span className="text-[10px] font-semibold text-slate-500 block">
-                        {macro.isEssential ? "Built-In Base" : isRemoved ? "Deducted" : "Included"}
-                      </span>
+                      {macro.isCustomQuoteOnly ? (
+                        <span className="text-[11px] font-extrabold text-indigo-900 bg-indigo-50 border border-indigo-200 px-2 py-0.5 rounded">
+                          {macro.priceLabel || "Quote on Request"}
+                        </span>
+                      ) : (
+                        <>
+                          <span className={`text-xs font-black ${isRemoved ? "line-through text-slate-400" : "text-sky-950"}`}>
+                            {tierConfig.currencySymbol}{macroMarketPrice.toLocaleString()} {tierConfig.currencyCode}
+                          </span>
+                          <span className="text-[10px] font-semibold text-slate-500 block">
+                            {macro.isEssential ? "Built-In Base" : isRemoved ? "Deducted" : "Included"}
+                          </span>
+                        </>
+                      )}
                     </div>
 
                     {/* Plus [+] / Minus [-] Button */}
@@ -413,7 +444,9 @@ export default function PackagePricingBreakdown({
             Ready to proceed with this scope?
           </h4>
           <p className="text-xs text-sky-950/80 font-medium mt-0.5">
-            {calculation.removedNames.length > 0
+            {currentPackage.isCustomQuoteOnly
+              ? "Bespoke workflow architecture with custom requirements quotation."
+              : calculation.removedNames.length > 0
               ? `You removed ${calculation.removedNames.length} optional module(s) saving ${tierConfig.currencySymbol}${calculation.deductionMarket.toLocaleString()} ${tierConfig.currencyCode}.`
               : "All macro & micro modules are included for the complete, high-performance experience."}
           </p>
@@ -421,7 +454,9 @@ export default function PackagePricingBreakdown({
 
         <div className="flex flex-col sm:flex-row items-center gap-3.5 w-full md:w-auto">
           <div className="text-center sm:text-right w-full sm:w-auto">
-            <span className="text-[10px] font-bold text-slate-500 uppercase block">Total Custom Investment</span>
+            <span className="text-[10px] font-bold text-slate-500 uppercase block">
+              {currentPackage.isCustomQuoteOnly ? "Starting Investment" : "Total Custom Investment"}
+            </span>
             <span className="text-2xl sm:text-3xl font-black text-[#0a192f]">
               {tierConfig.currencySymbol}{calculation.customMarket.toLocaleString()} {tierConfig.currencyCode}
             </span>
@@ -446,7 +481,7 @@ export default function PackagePricingBreakdown({
             }}
             className="w-full sm:w-auto px-6 py-3.5 rounded-full bg-[#0a192f] hover:bg-slate-800 text-white font-black text-xs uppercase tracking-wider shadow-md transition-all cursor-pointer flex items-center justify-center gap-2 hover:scale-[1.02]"
           >
-            <span>Lock In Scope & Book Consultation</span>
+            <span>{currentPackage.isCustomQuoteOnly ? "Request Custom Quotation ✨" : "Lock In Scope & Book Consultation"}</span>
             <span>→</span>
           </button>
         </div>

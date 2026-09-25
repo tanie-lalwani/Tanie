@@ -13,6 +13,8 @@ export interface MacroFeature {
   isEssential?: boolean;
   priceInr?: number;
   priceUsd?: number;
+  isCustomQuoteOnly?: boolean;
+  priceLabel?: string;
   microFeatures: (string | MicroFeature)[];
   weightPercent?: number;
 }
@@ -36,6 +38,12 @@ export interface FeatureBundle {
   priceUsd: number;
   deltaPriceInr?: number;
   deltaPriceUsd?: number;
+  startingPriceInr?: number;
+  startingPriceUsd?: number;
+  typicalRangeInr?: string;
+  typicalRangeUsd?: string;
+  isCustomQuoteOnly?: boolean;
+  priceLabel?: string;
   badge?: string;
   tagline: string;
   description: string;
@@ -83,6 +91,10 @@ export const FEATURE_BUNDLES: FeatureBundle[] = [
     priceUsd: 99,
     deltaPriceInr: 4999,
     deltaPriceUsd: 99,
+    startingPriceInr: 4999,
+    startingPriceUsd: 99,
+    typicalRangeInr: "₹5k–₹15k",
+    typicalRangeUsd: "$99–$299",
     isEssential: true,
     badge: "Fast & Clean",
     turnaround: "5–7 Days",
@@ -195,10 +207,14 @@ export const FEATURE_BUNDLES: FeatureBundle[] = [
     id: "ecommerce",
     name: "E-Commerce Package",
     icon: "🛍️",
-    priceInr: 24999,
+    priceInr: 29999,
     priceUsd: 599,
-    deltaPriceInr: 24999,
+    deltaPriceInr: 29999,
     deltaPriceUsd: 599,
+    startingPriceInr: 29999,
+    startingPriceUsd: 599,
+    typicalRangeInr: "₹30k–₹1.5L+",
+    typicalRangeUsd: "$599–$2,999+",
     badge: "Direct Revenue",
     turnaround: "2–3 Weeks",
     tagline: "Complete online storefront: Landing + Sales CRM + Marketing Funnels + E-Commerce Operations.",
@@ -221,8 +237,8 @@ export const FEATURE_BUNDLES: FeatureBundle[] = [
         name: "Landing Foundation Module",
         icon: "🌐",
         isEssential: true,
-        priceInr: 4000,
-        priceUsd: 95,
+        priceInr: 4999,
+        priceUsd: 99,
         description: "High-end brand presence including Home/Hero, About, Services/Catalog, Contact, Basic CMS & Admin controls.",
         microFeatures: [
           "Home / Hero Narrative & Visuals",
@@ -237,8 +253,8 @@ export const FEATURE_BUNDLES: FeatureBundle[] = [
         name: "Sales & CRM System",
         icon: "💼",
         isEssential: true,
-        priceInr: 4500,
-        priceUsd: 110,
+        priceInr: 15000,
+        priceUsd: 299,
         description: "Integrated sales database, contact management, customer profiles, booking/inquiry flows, and admin sales dashboard.",
         microFeatures: [
           "Lead Capture & CRM Database",
@@ -253,8 +269,8 @@ export const FEATURE_BUNDLES: FeatureBundle[] = [
         name: "Marketing & Conversion Funnels",
         icon: "📈",
         isEssential: true,
-        priceInr: 4500,
-        priceUsd: 110,
+        priceInr: 15000,
+        priceUsd: 299,
         description: "Full conversion suite: Campaign pages, Ad landing pages, Offer pages, Discount systems, Urgency countdowns, and Marketing dashboard.",
         microFeatures: [
           "Ad Landing Pages & Campaign Pages",
@@ -269,8 +285,8 @@ export const FEATURE_BUNDLES: FeatureBundle[] = [
         name: "Products & Variant Catalog",
         icon: "📦",
         isEssential: true,
-        priceInr: 3500,
-        priceUsd: 85,
+        priceInr: 4999,
+        priceUsd: 99,
         description: "Rich product catalog with multi-dimensional variants (size, color, material, SKU), high-res galleries, and dynamic pricing.",
         microFeatures: [
           "Product Catalog & Multi-Category Hierarchy",
@@ -284,8 +300,8 @@ export const FEATURE_BUNDLES: FeatureBundle[] = [
         name: "Cart, Checkout & Payments",
         icon: "💳",
         isEssential: true,
-        priceInr: 3000,
-        priceUsd: 75,
+        priceInr: 4999,
+        priceUsd: 99,
         description: "Slide-over cart, 1-click express checkout, UPI, Razorpay, Stripe, and Apple Pay payment processing.",
         microFeatures: [
           "Interactive Slide-Over Shopping Cart",
@@ -295,33 +311,18 @@ export const FEATURE_BUNDLES: FeatureBundle[] = [
         ]
       },
       {
-        id: "ecom_macro_shipping",
-        name: "Shipping, Tracking & Taxes",
-        icon: "🚚",
-        isEssential: false,
-        priceInr: 2500,
-        priceUsd: 60,
-        description: "Automated shipping rate calculation, live order tracking, status webhooks, and GST/VAT tax compliance.",
-        microFeatures: [
-          "Configurable Shipping Methods & Flat Rates",
-          "Live Tracking Link & Courier Status",
-          "Automated GST / Tax Invoice PDF Generation",
-          "Postal Code / Pincode Delivery Checker"
-        ]
-      },
-      {
         id: "ecom_macro_operations",
-        name: "Operations, Admin & Fulfillment",
+        name: "Shipping, Tracking & Operations",
         icon: "⚙️",
         isEssential: false,
-        priceInr: 2999,
-        priceUsd: 64,
+        priceInr: 5002,
+        priceUsd: 103,
         description: "Comprehensive merchant admin for managing orders, stock updates, fulfillment tracking, returns, and sales analytics.",
         microFeatures: [
           "Admin Orders, Products & Customers Dashboard",
-          "Inventory Stock Updates & Low-Stock Alerts",
+          "Live Shipping Tracking & Tax PDF Invoices",
           "Order Fulfillment & Dispatch Status Workflow",
-          "Returns, Refunds & Exchange Management"
+          "Returns, Refunds & Stock Replenishment"
         ]
       }
     ]
@@ -332,16 +333,22 @@ export const FEATURE_BUNDLES: FeatureBundle[] = [
     id: "saas",
     name: "SaaS Product Package",
     icon: "⚡",
-    priceInr: 69999,
-    priceUsd: 1499,
-    deltaPriceInr: 69999,
-    deltaPriceUsd: 1499,
+    priceInr: 49999,
+    priceUsd: 999,
+    deltaPriceInr: 49999,
+    deltaPriceUsd: 999,
+    startingPriceInr: 49999,
+    startingPriceUsd: 999,
+    typicalRangeInr: "₹50k–₹2.5L+",
+    typicalRangeUsd: "$999–$4,999+",
     badge: "Software MVP",
     turnaround: "4–6 Weeks",
-    tagline: "Full-stack software platform: Public Website + Auth + Subscriptions + Core Engine + Dashboards.",
+    tagline: "Full-stack software platform: Public Website + Sales CRM + Marketing + Auth + Subscriptions + Core Engine + Dashboards.",
     description: "Engineered for tech founders and startups. Includes Public Marketing/Sales Website, Multi-Provider Auth, User Accounts, Subscription Billing, Application Logic, User Dashboards, APIs, RBAC Roles, and Executive Admin System.",
     includedFeatures: [
-      "Public Website: Landing, Sales CRM & Marketing conversion funnels",
+      "Public Landing: Hero story & Brand positioning",
+      "Sales: Lead capture, CRM demo booking & conversion pipeline",
+      "Marketing: Campaign funnels, plan comparison & SEO",
       "Authentication: Google OAuth, Magic Links, Passwords & Session tokens",
       "User Accounts: Profiles, Settings, Team workspaces & Organization switcher",
       "Subscription / Plans: Stripe & Razorpay recurring billing, proration & invoices",
@@ -354,17 +361,47 @@ export const FEATURE_BUNDLES: FeatureBundle[] = [
     macroFeatures: [
       {
         id: "saas_macro_public_web",
-        name: "Public Website (Landing, Sales, Marketing)",
+        name: "Public Landing Foundation",
         icon: "🌐",
         isEssential: true,
-        priceInr: 12000,
-        priceUsd: 260,
-        description: "High-converting public-facing web presence with Landing story, Sales CRM intake, and Marketing campaign funnels.",
+        priceInr: 4999,
+        priceUsd: 99,
+        description: "High-converting public-facing web presence with Landing story and interactive demo showcase.",
         microFeatures: [
           "Public Landing & Brand Positioning",
+          "Interactive Product Tour & Hero Teaser",
+          "SEO Optimization & Social OpenGraph Metadata",
+          "Fast Edge Caching & Content Delivery"
+        ]
+      },
+      {
+        id: "saas_macro_sales",
+        name: "Sales & CRM System",
+        icon: "💼",
+        isEssential: true,
+        priceInr: 15000,
+        priceUsd: 299,
+        description: "Enterprise lead qualification flow, sales CRM database, and automated demo booking calendar sync.",
+        microFeatures: [
           "Sales Lead Capture & Demo Booking Flows",
-          "Marketing Campaign & Pricing Plans Comparison",
-          "SEO Optimization & Social OpenGraph Metadata"
+          "CRM Pipeline & Lead Scoring",
+          "Prospect Contact Management & Notes",
+          "Automated Sales Notifications"
+        ]
+      },
+      {
+        id: "saas_macro_marketing",
+        name: "Marketing & Conversion Funnels",
+        icon: "📈",
+        isEssential: true,
+        priceInr: 15000,
+        priceUsd: 299,
+        description: "Marketing campaign funnels, dynamic annual/monthly plan comparison matrix, and conversion triggers.",
+        microFeatures: [
+          "Marketing Campaign Landing Pages",
+          "Dynamic Pricing Matrix & Plan Comparison",
+          "Urgency Triggers & Promo Code Engine",
+          "Marketing Traffic Attribution Telemetry"
         ]
       },
       {
@@ -372,8 +409,8 @@ export const FEATURE_BUNDLES: FeatureBundle[] = [
         name: "Authentication & User Accounts",
         icon: "🔐",
         isEssential: true,
-        priceInr: 12000,
-        priceUsd: 260,
+        priceInr: 15000,
+        priceUsd: 299,
         description: "Zero-trust auth with Google OAuth, Magic Links, secure cookie sessions, user account profiles, and password resets.",
         microFeatures: [
           "Multi-Provider OAuth (Google, Email, Magic Link)",
@@ -387,8 +424,8 @@ export const FEATURE_BUNDLES: FeatureBundle[] = [
         name: "Subscription, Plans & Billing",
         icon: "💳",
         isEssential: true,
-        priceInr: 12000,
-        priceUsd: 260,
+        priceInr: 15000,
+        priceUsd: 299,
         description: "Recurring SaaS billing engine with tiered pricing, Stripe / Razorpay webhooks, customer self-serve portal, and invoices.",
         microFeatures: [
           "Tiered Subscription Plans & Feature Gating",
@@ -402,8 +439,8 @@ export const FEATURE_BUNDLES: FeatureBundle[] = [
         name: "Application & Core Software Logic",
         icon: "⚙️",
         isEssential: true,
-        priceInr: 15000,
-        priceUsd: 320,
+        priceInr: 20000,
+        priceUsd: 399,
         description: "The proprietary application engine, server actions, backend data processing, and custom domain algorithms.",
         microFeatures: [
           "Server-Side App Router Architecture",
@@ -418,7 +455,7 @@ export const FEATURE_BUNDLES: FeatureBundle[] = [
         icon: "📊",
         isEssential: true,
         priceInr: 10000,
-        priceUsd: 215,
+        priceUsd: 199,
         description: "Interactive client dashboard with live data metrics, project management, file uploads, and notification streams.",
         microFeatures: [
           "Real-Time Data Visualization & Analytics",
@@ -432,8 +469,8 @@ export const FEATURE_BUNDLES: FeatureBundle[] = [
         name: "Permissions, APIs & Admin System",
         icon: "🛡️",
         isEssential: false,
-        priceInr: 8999,
-        priceUsd: 184,
+        priceInr: 5000,
+        priceUsd: 104,
         description: "Executive control panel for platform admins: Manage tenant users, RBAC permissions, audit trails, and REST APIs.",
         microFeatures: [
           "Granular RBAC Security Roles (Admin, Manager, Member)",
@@ -450,35 +487,37 @@ export const FEATURE_BUNDLES: FeatureBundle[] = [
     id: "business_automation",
     name: "Business Automation Package",
     icon: "🤖",
-    priceInr: 29999,
-    priceUsd: 699,
-    deltaPriceInr: 29999,
-    deltaPriceUsd: 699,
+    priceInr: 24999,
+    priceUsd: 499,
+    deltaPriceInr: 24999,
+    deltaPriceUsd: 499,
+    startingPriceInr: 24999,
+    startingPriceUsd: 499,
+    typicalRangeInr: "₹25k–₹2L+",
+    typicalRangeUsd: "$499–$3,999+",
+    isCustomQuoteOnly: true,
+    priceLabel: "Quotation on Request",
     badge: "Efficiency Engine",
     turnaround: "2–3 Weeks",
-    tagline: "Automate repetitive tasks: Leads + WhatsApp + Emails + Orders + Staff + AI.",
-    description: "Eliminate manual chaos. Connects your customer intake, CRM, WhatsApp notifications, email sequences, order processing, employee approvals, scheduled jobs, and AI workflows into an automated engine.",
+    tagline: "Automate manual chaos: Sales CRM + Marketing + WhatsApp + Emails + Orders + Staff + AI.",
+    description: "Eliminate repetitive tasks. Choose standardized Sales & Marketing automation modules (₹15,000 each) or request custom quotation for tailored multi-system integrations, WhatsApp workflows, and AI automation.",
     includedFeatures: [
-      "Lead automation & Instant CRM qualification",
-      "CRM workflows & Pipeline status updates",
-      "Automated Email sequences & transactional notifications",
-      "WhatsApp Cloud API automated reminders & 2-way alerts",
-      "Order processing workflows & invoice generation",
+      "Sales & CRM Automation (₹15,000 / $299)",
+      "Marketing & Campaign Automation (₹15,000 / $299)",
+      "WhatsApp Cloud API 2-way workflows & automated reminders",
+      "Order processing workflows & digital invoice generation",
       "Employee workflows, shift scheduling & leave approvals",
-      "Multi-level approval systems with 1-click email/WhatsApp buttons",
-      "Bi-directional data synchronization across databases & sheets",
-      "API integrations with third-party SaaS & ERP systems",
-      "Scheduled background jobs & automated recurring tasks",
-      "AI automation & intelligent conversational lead handling"
+      "Multi-system database & Google Sheets synchronization",
+      "Custom ERP / API integrations & AI conversational agents"
     ],
     macroFeatures: [
       {
-        id: "ba_macro_lead_crm",
-        name: "Lead & CRM Automation",
-        icon: "🎯",
-        isEssential: true,
-        priceInr: 7500,
-        priceUsd: 175,
+        id: "ba_macro_sales",
+        name: "Sales & CRM Automation (₹15,000 / $299)",
+        icon: "💼",
+        isEssential: false,
+        priceInr: 15000,
+        priceUsd: 299,
         description: "Automatic lead routing, instant CRM updates, prospect scoring, and pipeline stage progression.",
         microFeatures: [
           "Instant Lead Qualification & Scoring",
@@ -488,18 +527,35 @@ export const FEATURE_BUNDLES: FeatureBundle[] = [
         ]
       },
       {
+        id: "ba_macro_marketing",
+        name: "Marketing & Campaign Automation (₹15,000 / $299)",
+        icon: "📈",
+        isEssential: false,
+        priceInr: 15000,
+        priceUsd: 299,
+        description: "Ad campaign landing pages, offer pages, automated lead nurture drip sequences, and marketing analytics.",
+        microFeatures: [
+          "Ad Landing Pages & Campaign Pages",
+          "Offer Pages & Discount Automation",
+          "Triggered Email Nurture Sequences",
+          "Marketing Dashboard & Analytics"
+        ]
+      },
+      {
         id: "ba_macro_comms",
-        name: "WhatsApp & Email Communication Workflows",
+        name: "WhatsApp & Notification Workflows",
         icon: "📱",
         isEssential: true,
-        priceInr: 7500,
-        priceUsd: 175,
-        description: "2-way WhatsApp Cloud API automation, appointment reminder sequences, and triggered transactional emails.",
+        isCustomQuoteOnly: true,
+        priceLabel: "Quotation on Request",
+        priceInr: 0,
+        priceUsd: 0,
+        description: "2-way WhatsApp Cloud API automation, appointment reminder sequences, and triggered transactional notifications.",
         microFeatures: [
           "WhatsApp 24h & 2h Automated Reminders",
-          "Triggered Email Nurture Sequences",
           "Instant Customer Confirmation Messages",
-          "Dynamic Template Variables & Personalization"
+          "Dynamic Template Variables & Personalization",
+          "Custom WhatsApp Webhook Trigger Handlers"
         ]
       },
       {
@@ -507,8 +563,10 @@ export const FEATURE_BUNDLES: FeatureBundle[] = [
         name: "Order & Employee Workflows",
         icon: "👥",
         isEssential: true,
-        priceInr: 7500,
-        priceUsd: 175,
+        isCustomQuoteOnly: true,
+        priceLabel: "Quotation on Request",
+        priceInr: 0,
+        priceUsd: 0,
         description: "Automated order fulfillment handoffs, digital invoice dispatch, staff shift notifications, and approval systems.",
         microFeatures: [
           "Order Status Progression & Dispatch Alerts",
@@ -519,11 +577,13 @@ export const FEATURE_BUNDLES: FeatureBundle[] = [
       },
       {
         id: "ba_macro_sync_ai",
-        name: "Data Synchronization, APIs & AI Automation",
+        name: "Data Sync, ERP Connectors & AI Workflows",
         icon: "🤖",
         isEssential: false,
-        priceInr: 7499,
-        priceUsd: 174,
+        isCustomQuoteOnly: true,
+        priceLabel: "Quotation on Request",
+        priceInr: 0,
+        priceUsd: 0,
         description: "Background cron jobs, multi-system database synchronization, custom API webhooks, and AI-powered intelligence.",
         microFeatures: [
           "Two-Way Database & Google Sheets Sync",
@@ -540,15 +600,23 @@ export const FEATURE_BUNDLES: FeatureBundle[] = [
     id: "custom_app",
     name: "Custom Application Package",
     icon: "✨",
-    priceInr: 39999,
-    priceUsd: 899,
-    deltaPriceInr: 39999,
-    deltaPriceUsd: 899,
+    priceInr: 59999,
+    priceUsd: 1199,
+    deltaPriceInr: 59999,
+    deltaPriceUsd: 1199,
+    startingPriceInr: 59999,
+    startingPriceUsd: 1199,
+    typicalRangeInr: "₹60k–₹5L+",
+    typicalRangeUsd: "$1,199–$9,999+",
+    isCustomQuoteOnly: true,
+    priceLabel: "Quotation on Request",
     badge: "Bespoke Architecture",
     turnaround: "Bespoke Timeline",
     tagline: "Tailor-made digital architecture, proprietary business logic & bespoke engineering.",
-    description: "For bespoke projects, unique workflows, interactive 3D web apps, or specialized digital tools requiring dedicated architecture design.",
+    description: "For bespoke projects, unique workflows, interactive 3D web apps, or specialized digital tools. Choose standardized Sales & Marketing modules (₹15,000 each) or request a bespoke quotation for custom architecture.",
     includedFeatures: [
+      "Sales & CRM Module (₹15,000 / $299)",
+      "Marketing & Conversion Funnels (₹15,000 / $299)",
       "Custom system architecture & technical specification",
       "Tailor-made business logic & proprietary workflows",
       "Dedicated PostgreSQL / Cloud database schema",
@@ -557,12 +625,44 @@ export const FEATURE_BUNDLES: FeatureBundle[] = [
     ],
     macroFeatures: [
       {
+        id: "ca_macro_sales",
+        name: "Sales & CRM Module (₹15,000 / $299)",
+        icon: "💼",
+        isEssential: false,
+        priceInr: 15000,
+        priceUsd: 299,
+        description: "Lead capture, CRM database, contact management, customer accounts, and sales qualification.",
+        microFeatures: [
+          "Lead Capture & CRM Database",
+          "Contact & Customer Profile Management",
+          "Booking / Inquiry Qualification Flows",
+          "Customer Login & Client Account Hub"
+        ]
+      },
+      {
+        id: "ca_macro_marketing",
+        name: "Marketing & Conversion Funnels (₹15,000 / $299)",
+        icon: "📈",
+        isEssential: false,
+        priceInr: 15000,
+        priceUsd: 299,
+        description: "Campaign pages, Ad landing pages, offer pages, and conversion telemetry.",
+        microFeatures: [
+          "Ad Landing Pages & Campaign Pages",
+          "Offer Pages & Discount Systems",
+          "Conversion Funnels & Notifications",
+          "Marketing Dashboard & Analytics"
+        ]
+      },
+      {
         id: "ca_macro_arch",
         name: "Bespoke Architecture & Engineering",
         icon: "🏛️",
         isEssential: true,
-        priceInr: 12000,
-        priceUsd: 270,
+        isCustomQuoteOnly: true,
+        priceLabel: "Quotation on Request",
+        priceInr: 0,
+        priceUsd: 0,
         description: "Tailored full-stack technical foundation built specifically to your requirements.",
         microFeatures: [
           "Custom Frontend & Backend Architecture",
@@ -576,8 +676,10 @@ export const FEATURE_BUNDLES: FeatureBundle[] = [
         name: "Proprietary Business Logic & APIs",
         icon: "⚙️",
         isEssential: true,
-        priceInr: 12000,
-        priceUsd: 270,
+        isCustomQuoteOnly: true,
+        priceLabel: "Quotation on Request",
+        priceInr: 0,
+        priceUsd: 0,
         description: "Tailored business logic, calculation engines, and third-party API orchestrations.",
         microFeatures: [
           "Custom Algorithm & Calculation Engine",
@@ -591,8 +693,10 @@ export const FEATURE_BUNDLES: FeatureBundle[] = [
         name: "Dedicated Data Schema & Security",
         icon: "🗄️",
         isEssential: true,
-        priceInr: 8000,
-        priceUsd: 180,
+        isCustomQuoteOnly: true,
+        priceLabel: "Quotation on Request",
+        priceInr: 0,
+        priceUsd: 0,
         description: "Custom relational database design with role permissions and backup guarantees.",
         microFeatures: [
           "Custom Relational Schema & Indexes",
@@ -606,8 +710,10 @@ export const FEATURE_BUNDLES: FeatureBundle[] = [
         name: "Bespoke UX / UI Design System",
         icon: "🎨",
         isEssential: false,
-        priceInr: 7999,
-        priceUsd: 179,
+        isCustomQuoteOnly: true,
+        priceLabel: "Quotation on Request",
+        priceInr: 0,
+        priceUsd: 0,
         description: "Distinct visual styling, custom micro-animations, and responsive component library.",
         microFeatures: [
           "Tailored Typography & Color Tokens",

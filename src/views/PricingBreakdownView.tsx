@@ -242,13 +242,20 @@ Let's discuss getting started!`;
 
         {/* PACKAGE SELECTOR SWITCHER PILLS */}
         <div className="rounded-3xl border border-sky-300/80 bg-white/70 p-5 shadow-xs space-y-3">
-          <label className="text-[11px] font-black uppercase tracking-wider text-sky-900 block">
-            {locale === "hi" ? "Package Inspect Karein:" : "Inspect Any Standalone Package Scope:"}
-          </label>
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <label className="text-[11px] font-black uppercase tracking-wider text-sky-900 block">
+              {locale === "hi" ? "Package Inspect Karein:" : "Inspect Any Standalone Package Scope:"}
+            </label>
+            <span className="text-[11px] font-semibold text-slate-500">
+              {locale === "hi" ? "Scope aur features ke hisaab se typical ranges" : "Typical ranges influenced by scope of work"}
+            </span>
+          </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2">
             {PACKAGE_BREAKDOWN_DATA.map((pkg) => {
               const isSelected = pkg.id === selectedPackageId;
               const displayPrice = formatPackagePrice(pkg.id);
+              const isINR = tierConfig.currencyCode === "INR";
+              const rangeText = isINR ? pkg.typicalRangeInr : pkg.typicalRangeUsd;
 
               return (
                 <button
@@ -273,8 +280,13 @@ Let's discuss getting started!`;
                     {pkg.name}
                   </span>
                   <span className={`text-[11px] font-bold mt-1 block ${isSelected ? "text-sky-300" : "text-sky-900"}`}>
-                    {displayPrice.formatted} {displayPrice.currency}
+                    Starting {displayPrice.formatted} {displayPrice.currency}
                   </span>
+                  {rangeText && (
+                    <span className={`text-[10px] font-medium block truncate mt-0.5 ${isSelected ? "text-sky-200/70" : "text-slate-500"}`}>
+                      {rangeText}
+                    </span>
+                  )}
                 </button>
               );
             })}
@@ -300,6 +312,11 @@ Let's discuss getting started!`;
               <span className="bg-sky-50 px-2.5 py-1 rounded-lg border border-sky-200">
                 🎨 Aesthetic: {selectedAesthetic}
               </span>
+              {(currentPackage.typicalRangeInr || currentPackage.typicalRangeUsd) && (
+                <span className="bg-sky-100/80 text-sky-950 px-2.5 py-1 rounded-lg border border-sky-300 font-bold">
+                  📊 Typical Range: {tierConfig.currencyCode === "INR" ? currentPackage.typicalRangeInr : currentPackage.typicalRangeUsd}
+                </span>
+              )}
               {disabledMacros.length > 0 && (
                 <span className="bg-amber-50 text-amber-900 px-2.5 py-1 rounded-lg border border-amber-200">
                   ✂️ {disabledMacros.length} Omitted Modules (−{tierConfig.currencySymbol}{calculation.omittedDeductionsMarket.toLocaleString()})
@@ -310,14 +327,14 @@ Let's discuss getting started!`;
 
           <div className="text-center md:text-right shrink-0 bg-sky-50/80 p-5 rounded-2xl border border-sky-200 min-w-[220px]">
             <div className="text-xs uppercase tracking-wider font-bold text-sky-800 mb-1">
-              Package Investment
+              {currentPackage.isCustomQuoteOnly ? "Starting Investment" : "Package Investment"}
             </div>
             <div className="text-3xl sm:text-4xl font-black text-[#0a192f] tracking-tight">
               {tierConfig.currencySymbol}
               {calculation.finalTotalMarket.toLocaleString()} {tierConfig.currencyCode}
             </div>
             <div className="text-[11px] text-emerald-800 font-bold mt-1">
-              ✓ Standalone Independent Package
+              {currentPackage.isCustomQuoteOnly ? "✨ Scope quotation on request" : "✓ Standalone Independent Package"}
             </div>
           </div>
         </div>
@@ -337,9 +354,9 @@ Let's discuss getting started!`;
             {currentPackage.macroFeatures.map((macro) => {
               const isMacroOpen = expandedMacro === macro.id;
               const isOmitted = disabledMacros.includes(macro.id);
-              const macroPriceMarket = Math.round(
-                (macro.priceInr / currentPackage.basePriceInr) * calculation.pkgMarket
-              );
+              const macroPriceMarket = macro.priceInr > 0 && currentPackage.basePriceInr > 0
+                ? Math.round((macro.priceInr / currentPackage.basePriceInr) * calculation.pkgMarket)
+                : 0;
 
               return (
                 <div
@@ -376,6 +393,11 @@ Let's discuss getting started!`;
                               Optional Module
                             </span>
                           )}
+                          {macro.isCustomQuoteOnly && (
+                            <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-indigo-50 text-indigo-900 border border-indigo-200">
+                              Quotation on Request
+                            </span>
+                          )}
                         </div>
                         <p className="text-xs text-sky-900/70 mt-0.5 truncate">
                           {macro.description}
@@ -385,9 +407,15 @@ Let's discuss getting started!`;
 
                     <div className="flex items-center gap-3 shrink-0">
                       <div className="text-right">
-                        <div className={`font-black text-sm ${isOmitted ? "line-through text-slate-400" : "text-[#0a192f]"}`}>
-                          {tierConfig.currencySymbol}{macroPriceMarket.toLocaleString()}
-                        </div>
+                        {macro.isCustomQuoteOnly ? (
+                          <span className="text-[11px] font-extrabold text-indigo-900 bg-indigo-50 border border-indigo-200 px-2 py-0.5 rounded">
+                            {macro.priceLabel || "Quote on Request"}
+                          </span>
+                        ) : (
+                          <div className={`font-black text-sm ${isOmitted ? "line-through text-slate-400" : "text-[#0a192f]"}`}>
+                            {tierConfig.currencySymbol}{macroPriceMarket.toLocaleString()}
+                          </div>
+                        )}
                       </div>
 
                       {/* Optional toggle checkbox */}

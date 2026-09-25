@@ -339,14 +339,27 @@ export default function CostCalculatorStepResult({
               <p className="text-xs text-sky-950/80 mt-1 font-medium">
                 {`Target Timeline: ${timeline || activePackage.turnaround || "Standard"}`}
               </p>
+              {(breakdownDef.typicalRangeInr || activePackage.typicalRangeInr) && (
+                <p className="text-[11px] text-sky-800 font-bold mt-1">
+                  Typical Scope Range: {tierConfig.currencyCode === "INR" ? (breakdownDef.typicalRangeInr || activePackage.typicalRangeInr) : (breakdownDef.typicalRangeUsd || activePackage.typicalRangeUsd)}
+                </p>
+              )}
             </div>
 
             <div className="text-center md:text-right">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 block">Total Investment</span>
+              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 block">
+                {activePackage.isCustomQuoteOnly ? "Starting Investment" : "Total Investment"}
+              </span>
               <div className="text-4xl sm:text-5xl font-black !text-[#0a192f] tracking-tight">
+                {activePackage.isCustomQuoteOnly ? "From " : ""}
                 {tierConfig.currencySymbol}
                 {calculation.finalTotalMarket.toLocaleString()} {tierConfig.currencyCode}
               </div>
+              {activePackage.isCustomQuoteOnly && (
+                <span className="text-[10px] font-bold text-sky-900 bg-sky-100/90 px-2 py-0.5 rounded-full border border-sky-300 inline-block mt-1">
+                  Scope quotation on request
+                </span>
+              )}
             </div>
           </div>
 
@@ -394,6 +407,7 @@ export default function CostCalculatorStepResult({
                   </div>
                 </div>
                 <span className="font-extrabold text-[#0a192f] shrink-0 text-sm">
+                  {activePackage.isCustomQuoteOnly ? "From " : ""}
                   {tierConfig.currencySymbol}
                   {calculation.pkgMarket.toLocaleString()} {tierConfig.currencyCode}
                 </span>
@@ -473,6 +487,13 @@ export default function CostCalculatorStepResult({
               <div className="space-y-2">
                 {breakdownDef.macroFeatures.map((macro) => {
                   const isOpen = expandedMacroInPage === macro.id;
+                  const isCustomMacro = macro.isCustomQuoteOnly;
+                  const macroPriceFormatted = macro.priceInr
+                    ? (tierConfig.currencyCode === "INR"
+                        ? `₹${macro.priceInr.toLocaleString()}`
+                        : `$${(macro.priceUsd || Math.round(macro.priceInr / 83)).toLocaleString()}`)
+                    : `${tierConfig.currencySymbol}${Math.round((macro.priceInr / Math.max(1, breakdownDef.basePriceInr)) * calculation.pkgMarket).toLocaleString()}`;
+
                   return (
                     <div
                       key={macro.id}
@@ -490,9 +511,15 @@ export default function CostCalculatorStepResult({
                           </span>
                         </div>
                         <div className="flex items-center gap-2 shrink-0">
-                          <span className="text-[11px] font-bold text-sky-800">
-                            {tierConfig.currencySymbol}{Math.round((macro.priceInr / breakdownDef.basePriceInr) * calculation.pkgMarket).toLocaleString()}
-                          </span>
+                          {isCustomMacro ? (
+                            <span className="px-2 py-0.5 rounded-md text-[10px] font-bold bg-amber-100 text-amber-900 border border-amber-300">
+                              Quotation on Request
+                            </span>
+                          ) : (
+                            <span className="text-[11px] font-bold text-sky-800">
+                              {macroPriceFormatted}
+                            </span>
+                          )}
                           <span className="h-5 w-5 rounded-full bg-sky-100 flex items-center justify-center text-xs font-black text-sky-900">
                             {isOpen ? "−" : "+"}
                           </span>
@@ -514,9 +541,11 @@ export default function CostCalculatorStepResult({
                                   <span className="text-xs font-bold text-[#0a192f] block truncate">
                                     • {micro.name}
                                   </span>
-                                  <span className="text-[10px] text-slate-500 block truncate">
-                                    {micro.detail}
-                                  </span>
+                                  {micro.detail && (
+                                    <span className="text-[10px] text-slate-500 block truncate">
+                                      {micro.detail}
+                                    </span>
+                                  )}
                                 </div>
                                 <span className="text-[10px] font-bold text-sky-800 shrink-0">
                                   ✓
@@ -566,7 +595,11 @@ export default function CostCalculatorStepResult({
                 }}
                 className="w-full sm:w-auto px-8 py-3 rounded-full bg-[#0a192f] hover:bg-slate-800 text-white font-bold text-xs uppercase tracking-wider transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer"
               >
-                <span>{locale === "hi" ? "Project Booking Ke Liye Aage Badhein →" : t.funnel.proceedBooking}</span>
+                <span>
+                  {activePackage.isCustomQuoteOnly
+                    ? (locale === "hi" ? "Custom Quotation Request Karein ✨" : "Request Custom Quotation ✨")
+                    : (locale === "hi" ? "Project Booking Ke Liye Aage Badhein →" : t.funnel.proceedBooking)}
+                </span>
               </button>
             </div>
           </div>
