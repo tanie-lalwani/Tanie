@@ -19,6 +19,9 @@ import {
   type WizardAnswers
 } from "@/data/aestheticDatabase";
 import WebsiteCostCalculatorFunnel from "@/components/packages/WebsiteCostCalculatorFunnel";
+import AestheticsGridSection from "@/components/packages/AestheticsGridSection";
+import AestheticPreviewModal from "@/components/packages/AestheticPreviewModal";
+import ProjectIntakeModal from "@/components/packages/ProjectIntakeModal";
 import { saveCalculatedQuote } from "@/components/client-hub/clientHubStorage";
 import { useLanguage } from "@/context/LanguageContext";
 import { packagesTranslations } from "@/data/packagesTranslations";
@@ -693,181 +696,12 @@ ${companyName.trim() ? `🏢 Company / Brand: ${companyName.trim()}` : ""}
           {/* SECTION 2: DIRECT AESTHETICS LISTING & FILTER BAR (Step 0)    */}
           {/* ------------------------------------------------------------- */}
           {funnelStep === 0 && (
-            <div className="space-y-8">
-              {/* Section 2 Header: Pure Design Aesthetics & Inspirations */}
-              <div className="text-center max-w-2xl mx-auto pt-4">
-                <h2 className="text-3xl sm:text-4xl font-black text-[#0a192f] tracking-tight">
-                  Choose Your Design Aesthetic
-                </h2>
-                {likedAesthetics.length > 0 && (
-                  <div className="mt-3 inline-flex flex-wrap items-center justify-center gap-2 rounded-2xl bg-rose-50/90 border border-rose-200/90 px-4 py-1.5 text-xs text-rose-900 shadow-2xs">
-                    <span className="font-bold flex items-center gap-1.5 text-rose-700">
-                      <span>❤️</span>
-                      <span>Liked Aesthetics ({likedAesthetics.length}):</span>
-                    </span>
-                    <div className="flex flex-wrap gap-1.5">
-                      {likedAesthetics.map((name) => (
-                        <span
-                          key={name}
-                          className="inline-flex items-center gap-1 rounded-lg bg-white border border-rose-200 px-2 py-0.5 text-[11px] font-bold text-rose-800 shadow-2xs"
-                        >
-                          <span>{name}</span>
-                          <button
-                            type="button"
-                            onClick={() => toggleLikeAesthetic(name)}
-                            className="text-rose-400 hover:text-rose-700 ml-0.5 text-xs font-black cursor-pointer"
-                            title="Remove like"
-                          >
-                            ×
-                          </button>
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              {/* DIRECT AESTHETICS CARDS GRID */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 pt-4">
-                {AESTHETIC_STYLES.map((style) => {
-                  const isLiked = likedAesthetics.includes(style.name);
-                  return (
-                    <div
-                      key={style.id}
-                      onClick={() => setPreviewStyleModal(style)}
-                      className={`flex flex-col justify-between rounded-[2.2rem] border p-6 shadow-md backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl cursor-pointer ${
-                        isLiked
-                          ? "border-rose-300/90 bg-rose-50/30 hover:bg-rose-50/50 ring-2 ring-rose-400/40"
-                          : "border-sky-300/80 bg-[#c8ecff]/30 hover:bg-[#c8ecff]/50"
-                      }`}
-                    >
-                      <div>
-                        {/* Badge, Category & Direct Like Button */}
-                        <div className="flex items-center justify-between mb-3 gap-2">
-                          <span className="rounded-full bg-sky-100 border border-sky-200 px-3 py-1 text-[10px] font-extrabold uppercase tracking-wider text-sky-950">
-                            {style.category}
-                          </span>
-                          <div className="flex items-center gap-2">
-                            <span className="text-[11px] font-bold text-sky-800/80 hidden sm:inline">
-                              {style.badge}
-                            </span>
-                            <button
-                              type="button"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                toggleLikeAesthetic(style.name);
-                              }}
-                              className={`flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-bold transition shadow-2xs cursor-pointer border ${
-                                isLiked
-                                  ? "bg-rose-500 hover:bg-rose-600 text-white border-rose-600 shadow-rose-200"
-                                  : "bg-white/85 hover:bg-white text-slate-700 border-black/10 hover:text-rose-600"
-                              }`}
-                              title={isLiked ? "Unlike this design aesthetic" : "Like this design aesthetic"}
-                            >
-                              <span>{isLiked ? "❤️" : "🤍"}</span>
-                              <span>{isLiked ? "Liked" : "Like"}</span>
-                            </button>
-                          </div>
-                        </div>
-
-                        {/* Mock Mini Wireframe Preview */}
-                        <div
-                          className="rounded-2xl p-4 mb-5 border border-black/10 overflow-hidden"
-                          style={{ backgroundColor: style.mockWireframe.bgColor, color: style.mockWireframe.textColor }}
-                        >
-                          <div className="flex items-center justify-between mb-3">
-                            <span className="h-2 w-12 rounded-full" style={{ backgroundColor: style.mockWireframe.accentColor }} />
-                            <span className="text-[9px] font-mono opacity-60">{style.mockWireframe.badgeText}</span>
-                          </div>
-                          <h4 className="text-xs font-bold line-clamp-1 mb-1" style={{ color: style.mockWireframe.textColor }}>
-                            {style.mockWireframe.heroHeading}
-                          </h4>
-                          <p className="text-[10px] opacity-70 line-clamp-2 leading-relaxed mb-3">
-                            {style.mockWireframe.heroSubheading}
-                          </p>
-                          <div className="flex items-center gap-2">
-                            <div
-                              className="rounded-md px-2.5 py-1 text-[9px] font-bold"
-                              style={{ backgroundColor: style.mockWireframe.accentColor, color: style.mockWireframe.bgColor === "#02040a" || style.mockWireframe.bgColor.includes("#0") ? "#fff" : "#000" }}
-                            >
-                              {style.mockWireframe.ctaText}
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* Title & Tagline */}
-                        <h3 className="text-xl font-bold mb-1 text-[#0a192f] flex items-center justify-between">
-                          <span>{style.name}</span>
-                          {isLiked && <span className="text-sm text-rose-500 font-normal">❤️</span>}
-                        </h3>
-                        <p className="text-xs mb-4 leading-relaxed text-sky-950/80 line-clamp-2">
-                          {style.tagline}
-                        </p>
-
-                        {/* Color Palette Swatches */}
-                        <div className="mb-4">
-                          <span className="block text-[10px] font-bold uppercase tracking-wider text-sky-800 mb-1.5">
-                            {pkgCopy.aesthetics.colorDna}
-                          </span>
-                          <div className="flex items-center gap-2">
-                            {style.defaultPalette.map((swatch) => (
-                              <div
-                                key={swatch.name}
-                                className="h-6 w-6 rounded-full border border-black/15 shadow-2xs"
-                                style={{ backgroundColor: swatch.hex }}
-                                title={`${swatch.name} (${swatch.hex})`}
-                              />
-                            ))}
-                          </div>
-                        </div>
-
-                        {/* Tech Stack Badges */}
-                        <div className="mb-6 flex flex-wrap gap-1.5">
-                          {style.techStack.slice(0, 3).map((tech) => (
-                            <span
-                              key={tech}
-                              className="rounded-md border border-sky-200/60 bg-sky-100/70 px-2 py-0.5 text-[10px] font-semibold text-sky-900"
-                            >
-                              {tech}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* Action Buttons: Inspect & Like */}
-                      <div className="pt-4 border-t border-sky-200/80 flex items-center gap-2">
-                        <button
-                          type="button"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setPreviewStyleModal(style);
-                          }}
-                          className="flex-1 flex items-center justify-center gap-2 rounded-xl bg-[#0a192f] py-2.5 text-xs font-bold text-white hover:bg-slate-800 transition cursor-pointer shadow-xs"
-                        >
-                          <span>Inspect Design Vibe</span>
-                          <span>👁️</span>
-                        </button>
-                        <button
-                          type="button"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            toggleLikeAesthetic(style.name);
-                          }}
-                          className={`flex items-center justify-center gap-1.5 rounded-xl px-3.5 py-2.5 text-xs font-bold transition cursor-pointer border shadow-xs ${
-                            isLiked
-                              ? "bg-rose-500 hover:bg-rose-600 text-white border-rose-600"
-                              : "bg-white hover:bg-rose-50 text-slate-800 border-sky-300 hover:text-rose-600"
-                          }`}
-                        >
-                          <span>{isLiked ? "❤️" : "🤍"}</span>
-                          <span>{isLiked ? "Liked" : "Like"}</span>
-                        </button>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
+            <AestheticsGridSection
+              likedAesthetics={likedAesthetics}
+              onToggleLike={toggleLikeAesthetic}
+              onSelectPreview={setPreviewStyleModal}
+              pkgCopy={pkgCopy}
+            />
           )}
         </div>
       </div>
@@ -875,322 +709,43 @@ ${companyName.trim() ? `🏢 Company / Brand: ${companyName.trim()}` : ""}
       {/* ------------------------------------------------------------- */}
       {/* 4. AESTHETIC PREVIEW MODAL                                    */}
       {/* ------------------------------------------------------------- */}
-      {previewStyleModal && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 backdrop-blur-md"
-          onClick={(e) => {
-            if (e.target === e.currentTarget) setPreviewStyleModal(null);
-          }}
-        >
-          <div className="relative w-full max-w-2xl rounded-[2.4rem] border border-black/10 bg-white p-6 sm:p-8 shadow-2xl max-h-[85vh] overflow-y-auto">
-            <button
-              type="button"
-              onClick={() => setPreviewStyleModal(null)}
-              className="absolute right-5 top-5 h-8 w-8 rounded-full border border-black/10 text-lg flex items-center justify-center text-slate-500 hover:bg-slate-100 cursor-pointer"
-            >
-              ×
-            </button>
-
-            <div className="flex items-center justify-between mb-1 pr-10">
-              <span className="text-[10px] font-extrabold uppercase tracking-widest text-sky-600">
-                {previewStyleModal.category}
-              </span>
-              <button
-                type="button"
-                onClick={() => toggleLikeAesthetic(previewStyleModal.name)}
-                className={`flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold transition shadow-xs cursor-pointer border ${
-                  likedAesthetics.includes(previewStyleModal.name)
-                    ? "bg-rose-500 hover:bg-rose-600 text-white border-rose-600"
-                    : "bg-rose-50 hover:bg-rose-100 text-rose-700 border-rose-200"
-                }`}
-              >
-                <span>{likedAesthetics.includes(previewStyleModal.name) ? "❤️" : "🤍"}</span>
-                <span>{likedAesthetics.includes(previewStyleModal.name) ? "Liked" : "Like This Vibe"}</span>
-              </button>
-            </div>
-            <h3 className="text-2xl sm:text-3xl font-bold mt-1 mb-1 text-slate-950">
-              {previewStyleModal.name}
-            </h3>
-            <p className="text-xs text-slate-500 mb-4 font-mono">
-              {previewStyleModal.vibeSummary || "High-fidelity digital direction · Bespoke typography · Custom shaders"}
-            </p>
-            <p className="text-sm text-slate-700 leading-relaxed mb-6">
-              {previewStyleModal.description}
-            </p>
-
-            {/* Visual DNA Principles */}
-            <div className="mb-6">
-              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-800 mb-2">Visual DNA Principles</h4>
-              <ul className="space-y-1.5">
-                {previewStyleModal.visualDna.map((dna) => (
-                  <li key={dna} className="flex items-start gap-2 text-xs text-slate-600">
-                    <span className="text-sky-600 font-bold">✓</span>
-                    <span>{dna}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Interactive Palette Preview */}
-            <div className="mb-6">
-              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-800 mb-2">Color Palette Swatches</h4>
-              <div className="flex flex-wrap gap-2">
-                {previewStyleModal.palettes.map((p, idx) => (
-                  <button
-                    key={p.name}
-                    type="button"
-                    onClick={() => setActivePaletteIdx(idx)}
-                    className={`flex items-center gap-2 rounded-xl border p-2 text-xs cursor-pointer ${
-                      activePaletteIdx === idx ? "border-sky-500 bg-sky-50 ring-1 ring-sky-300" : "border-black/10 bg-slate-50"
-                    }`}
-                  >
-                    <div className="flex items-center -space-x-1">
-                      {p.swatches.map((s) => (
-                        <div key={s.name} className="h-4 w-4 rounded-full border border-black/20" style={{ backgroundColor: s.hex }} />
-                      ))}
-                    </div>
-                    <span className="font-bold text-slate-800 text-[11px]">{p.name}</span>
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Modal Bottom Action: Like & Close */}
-            <div className="pt-4 border-t border-black/8 flex items-center justify-between gap-3">
-              <button
-                type="button"
-                onClick={() => toggleLikeAesthetic(previewStyleModal.name)}
-                className={`flex items-center gap-2 rounded-full px-5 py-2.5 text-xs font-bold uppercase tracking-wider transition cursor-pointer border shadow-sm ${
-                  likedAesthetics.includes(previewStyleModal.name)
-                    ? "bg-rose-500 hover:bg-rose-600 text-white border-rose-600"
-                    : "bg-rose-50 hover:bg-rose-100 text-rose-700 border-rose-300"
-                }`}
-              >
-                <span>{likedAesthetics.includes(previewStyleModal.name) ? "❤️" : "🤍"}</span>
-                <span>
-                  {likedAesthetics.includes(previewStyleModal.name)
-                    ? "Design Aesthetic Liked!"
-                    : "Like This Aesthetic"}
-                </span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setPreviewStyleModal(null)}
-                className="rounded-full bg-[#0a192f] px-6 py-2.5 text-xs font-bold uppercase tracking-wider text-white hover:bg-slate-800 transition cursor-pointer shadow-sm"
-              >
-                {pkgCopy.intakeModal.close}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <AestheticPreviewModal
+        style={previewStyleModal}
+        isLiked={previewStyleModal ? likedAesthetics.includes(previewStyleModal.name) : false}
+        onToggleLike={toggleLikeAesthetic}
+        onClose={() => setPreviewStyleModal(null)}
+        pkgCopy={pkgCopy}
+      />
 
       {/* ------------------------------------------------------------- */}
-      {/* 5. "REQUEST THIS WEBSITE" PROJECT INTAKE & ONBOARDING DRAWER  */}
+      {/* 5. PROJECT INTAKE & ONBOARDING DRAWER                         */}
       {/* ------------------------------------------------------------- */}
-      {showIntakeModal && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 backdrop-blur-md"
-          onClick={(e) => {
-            if (e.target === e.currentTarget) setShowIntakeModal(false);
-          }}
-        >
-          <div
-            className="relative w-full max-w-xl rounded-[2.4rem] border border-sky-300/80 bg-[#dff4ff]/95 p-6 sm:p-8 shadow-2xl max-h-[90vh] overflow-y-auto backdrop-blur-xl"
-            dir={locale === "ur" ? "rtl" : "ltr"}
-          >
-            <button
-              type="button"
-              onClick={() => setShowIntakeModal(false)}
-              className="absolute right-5 top-5 h-8 w-8 rounded-full border border-sky-300/80 text-lg flex items-center justify-center text-sky-900 hover:bg-sky-100 cursor-pointer"
-            >
-              ×
-            </button>
-
-            {intakeSuccess ? (
-              <div className="text-center py-8">
-                <div className="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-sky-100 border border-sky-200 text-[#0a192f] text-3xl mb-4">
-                  🎉
-                </div>
-                <h3 className="text-2xl font-black text-[#0a192f] mb-2">Booking & Scope Saved!</h3>
-                <p className="text-xs text-sky-900/80 mb-4">
-                  Your project and estimated pricing have been saved to your workspace. Redirecting to your Client Hub...
-                </p>
-                <div className="animate-spin h-5 w-5 border-2 border-sky-600 border-t-transparent rounded-full mx-auto" />
-              </div>
-            ) : (
-              <div>
-                {/* Header */}
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="text-[10px] font-extrabold uppercase tracking-widest text-sky-700 bg-sky-100/70 border border-sky-200 px-2.5 py-0.5 rounded-full">
-                    Fast Booking • Direct to Studio
-                  </span>
-                </div>
-                <h3 className="text-2xl font-black text-[#0a192f] mt-1 mb-1">
-                  Book Your Website Project
-                </h3>
-                <p className="text-xs text-sky-900/80 mb-4">
-                  Confirm your contact details. Your selected options and estimated price are saved directly for both you and Tanie.
-                </p>
-
-                {/* SELECTED OPTIONS & ESTIMATED PRICE SUMMARY CARD */}
-                <div className="rounded-2xl border border-sky-300/90 bg-white/80 p-4 mb-5 shadow-xs">
-                  <div className="flex flex-wrap items-center justify-between gap-3 border-b border-sky-100 pb-3 mb-3">
-                    <div>
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-sky-700">Selected Direction</span>
-                      <div className="text-sm font-black text-[#0a192f]">
-                        {selectedAestheticForRequest?.name || "Bespoke Web Design"}
-                      </div>
-                      <div className="text-[11px] text-slate-500 font-medium">
-                        Foundation: <span className="font-bold text-slate-800">{selectedScopeTier}</span>
-                      </div>
-                    </div>
-
-                    <div className="text-left sm:text-right">
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-sky-700">Estimated Investment</span>
-                      <div className="text-xl sm:text-2xl font-black text-[#0a192f]">
-                        {estimatedPriceSymbol}{(estimatedPriceAmount ?? 2899).toLocaleString()} {estimatedPriceCurrency}
-                      </div>
-                      <div className="text-[10px] font-semibold text-emerald-700">
-                        📍 {tierConfig.countryName} Market Pricing
-                      </div>
-                    </div>
-                  </div>
-
-                  {featuresList.length > 0 && (
-                    <div>
-                      <span className="block text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1.5">
-                        Selected Modules & Features ({featuresList.length})
-                      </span>
-                      <div className="flex flex-wrap gap-1.5">
-                        {featuresList.map((feat, i) => (
-                          <span
-                            key={i}
-                            className="rounded-lg bg-sky-50 border border-sky-200/80 px-2 py-0.5 text-[10px] font-semibold text-sky-950"
-                          >
-                            ✓ {feat}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
-                  {likedAesthetics.length > 0 && (
-                    <div className="mt-3 pt-3 border-t border-sky-100">
-                      <span className="block text-[10px] font-bold uppercase tracking-wider text-rose-700 mb-1.5">
-                        Liked Aesthetics Attached ({likedAesthetics.length})
-                      </span>
-                      <div className="flex flex-wrap gap-1.5">
-                        {likedAesthetics.map((liked) => (
-                          <span
-                            key={liked}
-                            className="rounded-lg bg-rose-50 border border-rose-200 px-2 py-0.5 text-[10px] font-bold text-rose-800"
-                          >
-                            ❤️ {liked}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </div>
-
-                {/* ESSENTIAL LEAD FORM */}
-                <form onSubmit={handleIntakeSubmit} className="space-y-3.5">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <div>
-                      <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1">
-                        Full Name *
-                      </label>
-                      <input
-                        type="text"
-                        required
-                        value={clientName}
-                        onChange={(e) => setClientName(e.target.value)}
-                        placeholder="e.g. Sarah Jenkins"
-                        className="w-full rounded-xl border border-black/15 bg-white px-3.5 py-2.5 text-xs text-slate-900 outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-200"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1">
-                        Email Address *
-                      </label>
-                      <input
-                        type="email"
-                        required
-                        value={clientEmail}
-                        onChange={(e) => setClientEmail(e.target.value)}
-                        placeholder="sarah@company.com"
-                        className="w-full rounded-xl border border-black/15 bg-white px-3.5 py-2.5 text-xs text-slate-900 outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-200"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <div>
-                      <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1">
-                        Phone / WhatsApp *
-                      </label>
-                      <input
-                        type="tel"
-                        required
-                        value={contactPhone}
-                        onChange={(e) => setContactPhone(e.target.value)}
-                        placeholder="+91 98765 43210 / +1..."
-                        className="w-full rounded-xl border border-black/15 bg-white px-3.5 py-2.5 text-xs text-slate-900 outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-200"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1">
-                        Company or Brand (Optional)
-                      </label>
-                      <input
-                        type="text"
-                        value={companyName}
-                        onChange={(e) => setCompanyName(e.target.value)}
-                        placeholder="e.g. Apex Living Ltd."
-                        className="w-full rounded-xl border border-black/15 bg-white px-3.5 py-2.5 text-xs text-slate-900 outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-200"
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1">
-                      Project Message & Notes
-                    </label>
-                    <textarea
-                      rows={3}
-                      value={clientMessage}
-                      onChange={(e) => setClientMessage(e.target.value)}
-                      placeholder="Briefly describe what you're building, specific inspirations, or desired launch timeline..."
-                      className="w-full rounded-xl border border-black/15 bg-white px-3.5 py-2.5 text-xs text-slate-900 outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-200 resize-none"
-                    />
-                  </div>
-
-                  <button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="w-full rounded-full bg-slate-950 py-3.5 text-xs font-bold uppercase tracking-widest text-white shadow-xl hover:bg-slate-800 disabled:opacity-50 cursor-pointer mt-2 transition-all flex items-center justify-center gap-2"
-                  >
-                    {isSubmitting ? (
-                      <>
-                        <div className="h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                        <span>Saving Booking & Scope...</span>
-                      </>
-                    ) : (
-                      <span>Confirm Booking & Save Scope →</span>
-                    )}
-                  </button>
-
-                  <p className="text-[10px] text-center text-slate-500 mt-2">
-                    🔒 Saved directly to Tanie's studio portal. You can review your saved estimate anytime on the Client Hub.
-                  </p>
-                </form>
-              </div>
-            )}
-          </div>
-        </div>
-      )}
+      <ProjectIntakeModal
+        isOpen={showIntakeModal}
+        onClose={() => setShowIntakeModal(false)}
+        onSubmit={handleIntakeSubmit}
+        isSubmitting={isSubmitting}
+        intakeSuccess={intakeSuccess}
+        selectedAesthetic={selectedAestheticForRequest}
+        selectedScopeTier={selectedScopeTier}
+        estimatedPriceAmount={estimatedPriceAmount}
+        estimatedPriceSymbol={estimatedPriceSymbol}
+        estimatedPriceCurrency={estimatedPriceCurrency}
+        countryName={tierConfig.countryName}
+        featuresList={featuresList}
+        likedAesthetics={likedAesthetics}
+        clientName={clientName}
+        setClientName={setClientName}
+        clientEmail={clientEmail}
+        setClientEmail={setClientEmail}
+        contactPhone={contactPhone}
+        setContactPhone={setContactPhone}
+        companyName={companyName}
+        setCompanyName={setCompanyName}
+        clientMessage={clientMessage}
+        setClientMessage={setClientMessage}
+        locale={locale}
+      />
 
     </main>
   );
