@@ -305,7 +305,7 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
       <motion.section
         id="home"
         aria-labelledby="home-title"
-        className="relative isolate flex min-h-[128svh] w-full items-start overflow-hidden px-4 pb-8 pt-16 sm:min-h-[118svh] sm:px-6 sm:pb-14 sm:pt-24"
+        className="relative isolate flex min-h-[128svh] w-full items-start overflow-hidden px-4 pb-8 pt-28 sm:min-h-[118svh] sm:px-6 sm:pb-14 sm:pt-24"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
@@ -319,7 +319,7 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
           <header className="relative flex w-fit flex-col">
             <motion.h1
               id="home-title"
-              className="hero-title-lockup relative mt-1 inline-flex w-fit items-start gap-x-[0.5rem] text-5xl tracking-normal text-[#F4F1EE] sm:mt-0 sm:gap-x-[0.65rem] sm:text-6xl md:gap-x-[0.8rem] md:text-7xl lg:gap-x-[0.95rem] lg:text-8xl"
+              className="hero-title-lockup relative mt-1 inline-flex w-fit items-start gap-x-[0.55rem] text-[3.4rem] tracking-normal text-[#F4F1EE] sm:mt-0 sm:gap-x-[0.65rem] sm:text-6xl md:gap-x-[0.8rem] md:text-7xl lg:gap-x-[0.95rem] lg:text-8xl"
               style={{ fontFamily: "var(--font-display)", lineHeight: 1 }}
               aria-label={`${copy.home.heroTitle} ${copy.home.heroRole}`}
               initial={{ opacity: 0, y: 10 }}
@@ -331,7 +331,7 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
                 {heroRoleLead ? (
                   <span
                     ref={heroLeadRoleRef}
-                    className="hero-title-role hero-title-role--lead absolute bottom-0 inline-block text-[0.48rem] font-medium leading-none sm:text-[0.58rem] md:text-[0.64rem] lg:text-[0.7rem]"
+                    className="hero-title-role hero-title-role--lead absolute bottom-0 inline-block text-[0.54rem] font-medium leading-none sm:text-[0.58rem] md:text-[0.64rem] lg:text-[0.7rem]"
                     style={{ ...createHeroRoleStyle(heroRoleLayout.lead) }}
                   >
                     {heroRoleLead}
@@ -344,7 +344,7 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
                   {heroRoleTail ? (
                     <span
                       ref={heroTailRoleRef}
-                      className="hero-title-role hero-title-role--tail absolute bottom-0 inline-block text-[0.48rem] font-medium leading-none sm:text-[0.58rem] md:text-[0.64rem] lg:text-[0.7rem]"
+                      className="hero-title-role hero-title-role--tail absolute bottom-0 inline-block text-[0.54rem] font-medium leading-none sm:text-[0.58rem] md:text-[0.64rem] lg:text-[0.7rem]"
                       style={{ ...createHeroRoleStyle(heroRoleLayout.tail) }}
                     >
                       {heroRoleTail}
@@ -355,7 +355,7 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
             </motion.h1>
 
             <motion.div
-              className="mt-[1.75rem] min-w-0 w-full text-[1.06rem] sm:text-[1.12rem] font-normal leading-[1.4] tracking-normal text-[#2D466F]"
+              className="mt-[1.85rem] min-w-0 w-full text-[1.18rem] font-normal leading-[1.45] tracking-normal text-[#2D466F] sm:mt-[1.75rem] sm:text-[1.12rem] sm:leading-[1.4]"
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.45, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
@@ -368,17 +368,17 @@ export default function Home({ phase, onSceneReady }: HomeProps) {
               ) : null}
 
               {/* HERO CTA — plain text links */}
-              <div className="mt-3 flex items-center gap-6">
+              <div className="mt-3.5 flex items-center gap-6">
                 <Link
                   href="/projects"
-                  className="group inline-flex items-center gap-1.5 text-[0.88rem] font-medium no-underline transition-opacity hover:opacity-70"
+                  className="group inline-flex items-center gap-1.5 text-[0.95rem] font-medium no-underline transition-opacity hover:opacity-70 sm:text-[0.88rem]"
                   style={{ color: "#2D466F", textDecoration: "none" }}
                 >
                   {copy.home.ctaWork} →
                 </Link>
                 <Link
                   href="/pricing"
-                  className="group inline-flex items-center gap-1.5 text-[0.88rem] font-medium no-underline transition-opacity hover:opacity-70"
+                  className="group inline-flex items-center gap-1.5 text-[0.95rem] font-medium no-underline transition-opacity hover:opacity-70 sm:text-[0.88rem]"
                   style={{ color: "rgba(45,70,111,0.7)", textDecoration: "none" }}
                 >
                   {copy.home.ctaPricing} →
