@@ -2,50 +2,63 @@ import type { MetadataRoute } from "next";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = "https://tanie.me";
-  const lastModified = new Date();
+  const now = new Date();
 
   return [
     {
       url: baseUrl,
-      lastModified,
+      lastModified: now,
       changeFrequency: "weekly",
       priority: 1.0,
     },
     {
-      url: `${baseUrl}/contact`,
-      lastModified,
-      changeFrequency: "monthly",
-      priority: 0.8,
-    },
-    {
       url: `${baseUrl}/projects`,
-      lastModified,
+      lastModified: now,
       changeFrequency: "weekly",
       priority: 0.9,
     },
     {
-      url: `${baseUrl}/qna`,
-      lastModified,
-      changeFrequency: "monthly",
-      priority: 0.8,
+      url: `${baseUrl}/packages`,
+      lastModified: now,
+      changeFrequency: "weekly",
+      priority: 0.9,
     },
     {
       url: `${baseUrl}/pricing`,
-      lastModified,
+      lastModified: now,
+      changeFrequency: "weekly",
+      priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/pricing/breakdown`,
+      lastModified: now,
       changeFrequency: "monthly",
       priority: 0.8,
     },
     {
       url: `${baseUrl}/faq`,
-      lastModified,
+      lastModified: now,
+      changeFrequency: "weekly",
+      priority: 0.85,
+    },
+    {
+      url: `${baseUrl}/qna`,
+      lastModified: now,
       changeFrequency: "monthly",
-      priority: 0.7,
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/contact`,
+      lastModified: now,
+      changeFrequency: "monthly",
+      priority: 0.8,
     },
     {
       url: `${baseUrl}/terms`,
-      lastModified,
+      lastModified: now,
       changeFrequency: "monthly",
       priority: 0.6,
     },
   ];
 }
+

@@ -84,6 +84,12 @@ export const metadata: Metadata = {
       "Tanie Lalwani is a creative full-stack developer specializing in React.js, TypeScript, Three.js, and Next.js. Explore her portfolio, projects, experience, and interactive web development.",
     images: ["https://tanie.me/og.webp"],
   },
+  verification: {
+    google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || "google-site-verification-id",
+    other: {
+      "msvalidate.01": "EDD728E9B87B2E690DC2EB9CB968C1B0",
+    },
+  },
   other: {
     "msvalidate.01": "EDD728E9B87B2E690DC2EB9CB968C1B0",
   },
@@ -102,32 +108,41 @@ const jsonLd = {
       mainEntityOfPage: "https://tanie.me/",
       jobTitle: "Creative & Full-Stack Developer",
       description:
-        "Tanie Lalwani is a creative full-stack developer based in India specializing in React, TypeScript, Three.js, and Next.js, building interactive 3D web experiences, landing pages, and frontend applications.",
+        "Tanie Lalwani is a creative full-stack developer specializing in React, Next.js, TypeScript, Three.js, and interactive 3D WebGL web applications.",
       knowsAbout: [
         "React",
         "Next.js",
         "TypeScript",
         "Three.js",
-        "Frontend Development",
-        "Creative Development",
-        "Interactive Web Experiences",
         "WebGL",
-        "Performance Optimization"
+        "Creative Development",
+        "Frontend Engineering",
+        "Full-Stack Web Development",
+        "Interactive 3D Web Experiences",
+        "Performance Optimization & Core Web Vitals",
+        "UI/UX Design Systems"
       ],
       sameAs: [
         "https://github.com/tanie-lalwani",
-        "https://instagram.com/tanie.mp3",
         "https://linkedin.com/in/tanie-lalwani/",
         "https://x.com/tanielalwani",
-        "https://me.developers.google.com/u/tanielalwani",
+        "https://instagram.com/tanie.mp3",
+        "https://me.developers.google.com/u/tanielalwani"
       ],
+      offers: {
+        "@type": "Offer",
+        category: "Web Development and Creative Web Design",
+        priceCurrency: "USD",
+        availability: "https://schema.org/InStock",
+        url: "https://tanie.me/pricing"
+      }
     },
     {
       "@type": "WebSite",
       "@id": "https://tanie.me/#website",
       url: "https://tanie.me/",
-      name: "Tanie Lalwani Portfolio",
-      alternateName: "Tanie",
+      name: "Tanie Lalwani Portfolio & Web Studio",
+      alternateName: "Tanie Lalwani",
       description:
         "Official portfolio and creative web engineering showcase of Tanie Lalwani.",
       publisher: {
@@ -154,20 +169,6 @@ const jsonLd = {
       },
       inLanguage: "en",
     },
-    {
-      "@type": "CreativeWork",
-      "@id": "https://tanie.me/#project-viziona-webapp-1",
-      name: "Viziona",
-      description: "A web project built by Tanie Lalwani.",
-      url: "https://viziona.com",
-      codeRepository: "https://github.com/tanie-lalwani/viziona",
-      author: {
-        "@id": "https://tanie.me/#person",
-      },
-      about: {
-        "@id": "https://tanie.me/#person",
-      },
-    },
   ],
 };
 
@@ -183,6 +184,8 @@ export default function RootLayout({
       className={`${manrope.variable} ${inter.variable} ${bodoniModa.variable}`}
     >
       <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <script
           id="schema-org-jsonld"
           type="application/ld+json"

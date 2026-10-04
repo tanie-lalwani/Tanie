@@ -69,6 +69,92 @@ export default function SiteFooter({ className = "" }: SiteFooterProps) {
     <footer className={`relative z-20 w-full border-t border-white/8 bg-slate-950/56 px-4 pt-12 pb-6 backdrop-blur-xl sm:px-6 sm:pt-16 sm:pb-8 ${className}`}>
       <div className="site-container">
         <div className="h-px w-full bg-linear-to-r from-transparent via-white/10 to-transparent" />
+        
+        {/* Navigation Grid linking all site sections to eliminate orphan pages */}
+        <div className="mt-8 mb-8 grid grid-cols-2 gap-8 sm:grid-cols-4 lg:gap-12">
+          <div>
+            <h3 className="text-xs font-semibold uppercase tracking-wider text-sky-200/90">
+              Navigation
+            </h3>
+            <ul className="mt-3 space-y-2 text-xs">
+              <li>
+                <a href="/" className="text-slate-300 hover:text-white transition-colors">Home</a>
+              </li>
+              <li>
+                <a href="/projects" className="text-slate-300 hover:text-white transition-colors">Projects &amp; Works</a>
+              </li>
+              <li>
+                <a href="/packages" className="text-slate-300 hover:text-white transition-colors">Website Packages</a>
+              </li>
+              <li>
+                <a href="/pricing" className="text-slate-300 hover:text-white transition-colors">Pricing Calculator</a>
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 className="text-xs font-semibold uppercase tracking-wider text-sky-200/90">
+              Services &amp; Scope
+            </h3>
+            <ul className="mt-3 space-y-2 text-xs">
+              <li>
+                <a href="/pricing/breakdown" className="text-slate-300 hover:text-white transition-colors">Feature Breakdown</a>
+              </li>
+              <li>
+                <a href="/pricing#calculator" className="text-slate-300 hover:text-white transition-colors">Instant Estimator</a>
+              </li>
+              <li>
+                <a href="/pricing#gallery" className="text-slate-300 hover:text-white transition-colors">Aesthetic Catalog</a>
+              </li>
+              <li>
+                <a href="/contact" className="text-slate-300 hover:text-white transition-colors">Start a Project</a>
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 className="text-xs font-semibold uppercase tracking-wider text-sky-200/90">
+              Insights &amp; Help
+            </h3>
+            <ul className="mt-3 space-y-2 text-xs">
+              <li>
+                <a href="/faq" className="text-slate-300 hover:text-white transition-colors">Frequently Asked Questions</a>
+              </li>
+              <li>
+                <a href="/qna" className="text-slate-300 hover:text-white transition-colors">Interview Q&amp;A</a>
+              </li>
+              <li>
+                <a href="/client" className="text-slate-300 hover:text-white transition-colors">Client Hub</a>
+              </li>
+              <li>
+                <a href="/contact" className="text-slate-300 hover:text-white transition-colors">Contact Studio</a>
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 className="text-xs font-semibold uppercase tracking-wider text-sky-200/90">
+              Legal &amp; Policies
+            </h3>
+            <ul className="mt-3 space-y-2 text-xs">
+              <li>
+                <a href="/terms#terms" className="text-slate-300 hover:text-white transition-colors">Terms of Service</a>
+              </li>
+              <li>
+                <a href="/terms#privacy" className="text-slate-300 hover:text-white transition-colors">Privacy Policy</a>
+              </li>
+              <li>
+                <a href="/terms#refunds" className="text-slate-300 hover:text-white transition-colors">Refund &amp; Milestones</a>
+              </li>
+              <li>
+                <a href="/terms#delivery" className="text-slate-300 hover:text-white transition-colors">Delivery &amp; Handover</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div className="h-px w-full bg-linear-to-r from-transparent via-white/8 to-transparent" />
+
         <div className="mt-5 flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <p className="text-sm font-semibold tracking-normal text-white/92" style={{ fontFamily: "var(--font-display)" }}>
