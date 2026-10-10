@@ -36,11 +36,31 @@ export const metadata: Metadata = {
     template: "%s | Tanie Lalwani",
   },
   description:
-    "Tanie Lalwani is a creative full-stack developer specializing in React.js, TypeScript, Three.js, and Next.js. Explore her portfolio, projects, experience, and interactive web development.",
+    "Tanie Lalwani is a creative full-stack developer specializing in React.js, TypeScript, Three.js, and Next.js. Building interactive 3D WebGL experiences and modern web applications for clients across the United States, UK, UAE, India, and worldwide.",
   applicationName: "Tanie",
   authors: [{ name: "Tanie Lalwani", url: "https://tanie.me" }],
   creator: "Tanie Lalwani",
   publisher: "Tanie Lalwani",
+  keywords: [
+    "Tanie Lalwani",
+    "Creative Developer",
+    "Full Stack Developer",
+    "React Developer",
+    "Three.js Developer",
+    "Next.js Developer",
+    "WebGL 3D Websites",
+    "Frontend Engineer Ahmedabad",
+    "Creative Developer India",
+    "Hire React Developer USA",
+    "Freelance Frontend Engineer",
+    "Luxury Websites & WebGL",
+  ],
+  alternates: {
+    canonical: "https://tanie.me/",
+    types: {
+      "text/markdown": "/llms.txt",
+    },
+  },
   robots: {
     index: true,
     follow: true,
@@ -62,10 +82,10 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     url: "https://tanie.me/",
-    siteName: "Tanie",
+    siteName: "Tanie Lalwani",
     title: "Tanie Lalwani | Creative and Full Stack Developer",
     description:
-      "Tanie Lalwani is a creative full-stack developer specializing in React.js, TypeScript, Three.js, and Next.js. Explore her portfolio, projects, experience, and interactive web development.",
+      "Tanie Lalwani is a creative full-stack developer specializing in React.js, TypeScript, Three.js, and Next.js. Building interactive 3D WebGL experiences and high-converting web apps globally.",
     images: [
       {
         url: "https://tanie.me/og.webp",
@@ -81,7 +101,7 @@ export const metadata: Metadata = {
     creator: "@tanielalwani",
     title: "Tanie Lalwani | Creative and Full Stack Developer",
     description:
-      "Tanie Lalwani is a creative full-stack developer specializing in React.js, TypeScript, Three.js, and Next.js. Explore her portfolio, projects, experience, and interactive web development.",
+      "Tanie Lalwani is a creative full-stack developer specializing in React.js, TypeScript, Three.js, and Next.js.",
     images: ["https://tanie.me/og.webp"],
   },
   verification: {
@@ -92,6 +112,15 @@ export const metadata: Metadata = {
   },
   other: {
     "msvalidate.01": "EDD728E9B87B2E690DC2EB9CB968C1B0",
+    "geo.region": "IN-GJ",
+    "geo.placename": "Ahmedabad, Gujarat, India",
+    "geo.position": "23.0225;72.5714",
+    ICBM: "23.0225, 72.5714",
+    "dc.coverage": "Worldwide (United States, United Kingdom, United Arab Emirates, India, Canada, Australia, Europe, Global)",
+    abstract:
+      "Tanie Lalwani is an Ahmedabad-based creative full-stack developer building interactive WebGL/Three.js web experiences, Next.js apps, and luxury landing pages for clients across the US, UK, UAE, India, and worldwide.",
+    summary:
+      "Creative & full-stack developer specializing in React, Next.js, TypeScript, Three.js, and interactive 3D web experiences.",
   },
 };
 
@@ -99,7 +128,7 @@ const jsonLd = {
   "@context": "https://schema.org",
   "@graph": [
     {
-      "@type": "Person",
+      "@type": ["Person", "ProfessionalService"],
       "@id": "https://tanie.me/#person",
       name: "Tanie Lalwani",
       givenName: "Tanie",
@@ -110,7 +139,66 @@ const jsonLd = {
       mainEntityOfPage: "https://tanie.me/",
       jobTitle: "Creative & Full-Stack Developer",
       description:
-        "Tanie Lalwani is a creative full-stack developer specializing in React, Next.js, TypeScript, Three.js, and interactive 3D WebGL web applications.",
+        "Tanie Lalwani is a creative full-stack developer specializing in React, Next.js, TypeScript, Three.js, and interactive 3D WebGL web applications. Partnering with clients across the United States, United Kingdom, United Arab Emirates, India, and worldwide.",
+      address: {
+        "@type": "PostalAddress",
+        addressLocality: "Ahmedabad",
+        addressRegion: "Gujarat",
+        addressCountry: "IN",
+      },
+      geo: {
+        "@type": "GeoCoordinates",
+        latitude: 23.0225,
+        longitude: 72.5714,
+      },
+      email: "tanielalwani@gmail.com",
+      priceRange: "$$",
+      currenciesAccepted: "USD, INR, AED, GBP, EUR, CAD, AUD",
+      areaServed: [
+        {
+          "@type": "Country",
+          name: "United States",
+          alternateName: "USA",
+        },
+        {
+          "@type": "Country",
+          name: "United Kingdom",
+          alternateName: "UK",
+        },
+        {
+          "@type": "Country",
+          name: "United Arab Emirates",
+          alternateName: "UAE",
+        },
+        {
+          "@type": "Country",
+          name: "India",
+        },
+        {
+          "@type": "Country",
+          name: "Canada",
+        },
+        {
+          "@type": "Country",
+          name: "Australia",
+        },
+        {
+          "@type": "Place",
+          name: "Europe",
+        },
+        {
+          "@type": "AdministrativeArea",
+          name: "Ahmedabad",
+        },
+        {
+          "@type": "AdministrativeArea",
+          name: "Gujarat",
+        },
+        {
+          "@type": "Place",
+          name: "Worldwide",
+        },
+      ],
       knowsAbout: [
         "React",
         "Next.js",
@@ -122,22 +210,23 @@ const jsonLd = {
         "Full-Stack Web Development",
         "Interactive 3D Web Experiences",
         "Performance Optimization & Core Web Vitals",
-        "UI/UX Design Systems"
+        "UI/UX Design Systems",
+        "Generative Engine Optimization (GEO)",
       ],
       sameAs: [
         "https://github.com/tanie-lalwani",
         "https://linkedin.com/in/tanie-lalwani/",
         "https://x.com/tanielalwani",
         "https://instagram.com/tanie.mp3",
-        "https://me.developers.google.com/u/tanielalwani"
+        "https://me.developers.google.com/u/tanielalwani",
       ],
       offers: {
         "@type": "Offer",
-        category: "Web Development and Creative Web Design",
+        category: "Web Development, 3D WebGL Experiences, and Creative Web Engineering",
         priceCurrency: "USD",
         availability: "https://schema.org/InStock",
-        url: "https://tanie.me/pricing"
-      }
+        url: "https://tanie.me/pricing",
+      },
     },
     {
       "@type": "WebSite",
@@ -188,6 +277,18 @@ export default function RootLayout({
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          rel="help"
+          href="/llms.txt"
+          type="text/markdown"
+          title="LLM Agent Manifest"
+        />
+        <link
+          rel="alternate"
+          href="/llms-full.txt"
+          type="text/markdown"
+          title="Full Agent Knowledge Base"
+        />
         <script
           id="schema-org-jsonld"
           type="application/ld+json"

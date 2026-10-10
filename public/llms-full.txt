@@ -1,0 +1,103 @@
+# Tanie Lalwani – Full Knowledge Base (llms-full.txt)
+
+## Executive Summary & Developer Profile
+- **Name**: Tanie Lalwani
+- **Portfolio & Domain**: https://tanie.me
+- **Title**: Creative & Full-Stack Developer
+- **Email**: tanielalwani@gmail.com
+- **Operational Location**: Ahmedabad, Gujarat, India (23.0225° N, 72.5714° E)
+- **Primary Client Markets**:
+  - **United States**: Tech startups, creative agencies, SaaS ventures, e-commerce brands
+  - **United Arab Emirates (UAE)**: Dubai recruiters, regional platforms (e.g. UAE ATS Resume AI)
+  - **United Kingdom**: Design studios, digital products, creative portfolios
+  - **India**: Fast-growing startups, agencies, venture-backed founders
+  - **Global**: Canada, Australia, European Union, Singapore, and Worldwide
+- **Core Focus**: Tanie bridges the gap between high-end creative direction (Three.js, WebGL, custom shaders, Framer Motion) and robust full-stack engineering (React, Next.js, TypeScript, Supabase, Node.js).
+
+---
+
+## Technical Philosophy & Interview Answers
+
+### Philosophy & Approach
+- **Personality Over Generic Templates**: Websites should feel memorable, responsive, and tactile rather than corporate boilerplate.
+- **Frontend Performance**: Measure before optimizing. Eliminate unnecessary JS bundles, lazy-load 3D WebGL assets, optimize images to modern formats (WebP/AVIF), and guarantee 60fps micro-interactions.
+- **Clean TypeScript Workflows**: Strict types, reusable component systems, and clear state management that makes codebases easy to scale and maintain.
+
+### Production Bug Handling
+- Reproduce the issue locally and analyze logs and user impact.
+- Isolate the smallest failing path.
+- Ship a minimal targeted hotfix or rollback safely if user-facing downtime is at risk.
+- Add regression guards or unit tests to prevent recurrence.
+
+### Collaborative Disagreements
+- Align on the core product goal and user need.
+- Objectively compare tradeoffs based on performance, maintainability, and user experience.
+- Choose the option that best serves the product and client rather than personal ego.
+
+---
+
+## Detailed Project Case Studies
+
+### 1. UAE ATS Resume Generator AI
+- **Live URL**: https://emiratescv.in
+- **Overview**: An AI-driven resume optimization and generator application engineered specifically for the UAE employment ecosystem and regional Applicant Tracking System (ATS) parsing standards.
+- **Key Features**:
+  - Direct job-description keyword matching to increase recruiter callback rates
+  - Clean ATS-compliant layout generation
+  - Curated recruiter feedback scoring engine
+- **Tech Stack**: React, TypeScript, AI/LLM API, Tailwind CSS, Next.js.
+
+### 2. Viziona
+- **Live URL**: https://viziona.com
+- **Source Code**: https://github.com/tanie-lalwani/viziona
+- **Overview**: A modern responsive web application shaped around intuitive interaction design, UI/UX consistency, and practical product execution.
+- **Tech Stack**: React, TypeScript, Tailwind CSS, UI/UX Design System.
+
+### 3. FinchPay (Checkout Performance Overhaul)
+- **Live Showcase**: https://tanie.me/projects
+- **Overview**: A deep frontend performance overhaul pass focused on accelerating checkout flows, clarifying transaction states, and eliminating UI friction during payment.
+- **Key Features**:
+  - Reduced checkout drop-off through sub-second transition states
+  - Streamlined micro-interactions and instant feedback
+- **Tech Stack**: React, TypeScript, Performance Auditing, State Architecture.
+
+### 4. Leafline (Marketing Site Rebuild)
+- **Live Showcase**: https://tanie.me/projects
+- **Overview**: A modern frontend rebuild focusing on tighter content hierarchy, responsive typography, and a calm, nature-inspired visual design system.
+- **Tech Stack**: React, Next.js, Tailwind CSS, Responsive Web Design.
+
+### 5. Interactive 3D Portfolio (tanie.me)
+- **Live URL**: https://tanie.me
+- **Overview**: An ocean-inspired creative portfolio featuring custom WebGL water shaders, 3D interactive physics, fluid cursor effects, dynamic sound design, and smooth scroll mechanics.
+- **Tech Stack**: Three.js, WebGL, Next.js, Tailwind CSS, Lenis, Framer Motion.
+
+---
+
+## Service Packages & Market-Specific Pricing
+
+Tanie uses purchasing-power parity (PPP) to adjust pricing across different currencies:
+
+| Package | USD ($) | INR (₹) | AED (AED) | GBP (£) | EUR (€) | Description |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **Luxury Landing Sprint** | $99 | ₹4,999 | 370 AED | £79 | €89 | Fast-turnaround high-converting landing page with custom motion and typography |
+| **Sales Website Engine** | $999 | ₹49,999 | 3,650 AED | £799 | €899 | Complete multi-page sales platform with lead capture, CMS integration & SEO |
+| **Portals & Dashboards Suite** | $499 | ₹24,999 | 1,820 AED | £399 | €459 | Internal operations tools, client management portals, and analytics dashboards |
+| **Interactive 3D Experience** | $899 | ₹39,999 | 3,270 AED | £729 | €819 | Bespoke Three.js / WebGL 3D web experience with custom shaders and interactive models |
+| **Full-Stack SaaS App** | $999 | ₹49,999 | 3,650 AED | £799 | €899 | End-to-end web application with authentication, database models & payment checkout |
+| **Custom Bespoke Build** | $1,199 | ₹59,999 | 4,390 AED | £959 | €1,099 | Fully tailored architecture combining 3D WebGL, custom backend APIs, and custom UI |
+
+---
+
+## Frequently Asked Questions (FAQs)
+
+**Q: Where is Tanie located?**
+A: Tanie is based in Ahmedabad, Gujarat, India. She collaborates remotely with founders, agencies, and businesses across the US, UK, UAE, India, and worldwide.
+
+**Q: What is the typical project turnaround time?**
+A: Landing pages and sprints typically take 1 to 2 weeks. Full interactive web applications, 3D WebGL experiences, or custom portfolio builds generally take 2 to 4+ weeks depending on scope.
+
+**Q: Can Tanie build custom 3D WebGL websites?**
+A: Yes. Tanie specializes in Three.js and WebGL interactive 3D web experiences, from interactive product showcases to complete spatial web worlds.
+
+**Q: How do I get in touch or request a quote?**
+A: You can reach Tanie through the contact form at https://tanie.me/contact or directly by emailing tanielalwani@gmail.com.

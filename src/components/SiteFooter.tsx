@@ -127,7 +127,7 @@ export default function SiteFooter({ className = "" }: SiteFooterProps) {
                 <a href="/client" className="text-slate-300 hover:text-white transition-colors">Client Hub</a>
               </li>
               <li>
-                <a href="/contact" className="text-slate-300 hover:text-white transition-colors">Contact Studio</a>
+                <a href="/llms.txt" className="text-slate-300 hover:text-white transition-colors" title="LLM & AI Agent Direct Manifest">AI / Agent Digest</a>
               </li>
             </ul>
           </div>

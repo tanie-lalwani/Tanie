@@ -35,6 +35,13 @@ export const metadata: Metadata = {
       "Find answers to frequently asked questions about custom website packages, 3D WebGL experiences, pricing, turnaround times, payments, and client deliverables.",
     images: ["https://tanie.me/og.webp"],
   },
+  other: {
+    "geo.region": "IN-GJ",
+    "geo.placename": "Ahmedabad, Gujarat, India",
+    "geo.position": "23.0225;72.5714",
+    ICBM: "23.0225, 72.5714",
+    "dc.coverage": "Worldwide (United States, United Kingdom, United Arab Emirates, India, Canada, Australia, Europe, Global)",
+  },
 };
 
 export default function FaqPage() {
