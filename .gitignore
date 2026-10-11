@@ -31,3 +31,7 @@ dist-ssr
 # TypeScript cache
 *.tsbuildinfo
 next-env.d.ts
+
+# Internal Notes
+SEO_NOTES.md
+seo-notes.md
