@@ -4,7 +4,7 @@ import PackagesView from "@/views/PackagesView";
 export const metadata: Metadata = {
   title: "Website Pricing & Cost Calculator | Tanie Lalwani",
   description:
-    "Calculate your custom website cost and explore bespoke design aesthetics by Tanie Lalwani. 3D WebGL interactive brand experiences, full-stack Next.js web applications, and high-converting luxury websites for US, UK, UAE, and global clients.",
+    "Calculate your custom website cost and explore bespoke design aesthetics by Tanie Lalwani. 3D WebGL interactive brand experiences, full-stack Next.js web applications, and high-converting luxury websites.",
   alternates: {
     canonical: "https://tanie.me/pricing",
   },
@@ -33,13 +33,6 @@ export const metadata: Metadata = {
     description:
       "Calculate your custom website cost and explore bespoke design aesthetics by Tanie Lalwani.",
     images: ["https://tanie.me/og.webp"],
-  },
-  other: {
-    "geo.region": "IN-GJ",
-    "geo.placename": "Ahmedabad, Gujarat, India",
-    "geo.position": "23.0225;72.5714",
-    ICBM: "23.0225, 72.5714",
-    "dc.coverage": "Worldwide (United States, United Kingdom, United Arab Emirates, India, Canada, Australia, Europe, Global)",
   },
 };
 

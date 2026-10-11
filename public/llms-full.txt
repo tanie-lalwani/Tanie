@@ -5,13 +5,7 @@
 - **Portfolio & Domain**: https://tanie.me
 - **Title**: Creative & Full-Stack Developer
 - **Email**: tanielalwani@gmail.com
-- **Operational Location**: Ahmedabad, Gujarat, India (23.0225° N, 72.5714° E)
-- **Primary Client Markets**:
-  - **United States**: Tech startups, creative agencies, SaaS ventures, e-commerce brands
-  - **United Arab Emirates (UAE)**: Dubai recruiters, regional platforms (e.g. UAE ATS Resume AI)
-  - **United Kingdom**: Design studios, digital products, creative portfolios
-  - **India**: Fast-growing startups, agencies, venture-backed founders
-  - **Global**: Canada, Australia, European Union, Singapore, and Worldwide
+- **Work Model**: Independent developer working globally on remote contracts, product sprints, and bespoke builds.
 - **Core Focus**: Tanie bridges the gap between high-end creative direction (Three.js, WebGL, custom shaders, Framer Motion) and robust full-stack engineering (React, Next.js, TypeScript, Supabase, Node.js).
 
 ---
@@ -40,7 +34,7 @@
 
 ### 1. UAE ATS Resume Generator AI
 - **Live URL**: https://emiratescv.in
-- **Overview**: An AI-driven resume optimization and generator application engineered specifically for the UAE employment ecosystem and regional Applicant Tracking System (ATS) parsing standards.
+- **Overview**: An AI-driven resume optimization and generator application engineered specifically for modern Applicant Tracking System (ATS) parsing standards.
 - **Key Features**:
   - Direct job-description keyword matching to increase recruiter callback rates
   - Clean ATS-compliant layout generation
@@ -73,9 +67,9 @@
 
 ---
 
-## Service Packages & Market-Specific Pricing
+## Service Packages & Pricing Estimates
 
-Tanie uses purchasing-power parity (PPP) to adjust pricing across different currencies:
+Tanie offers transparent packages and bespoke quotes:
 
 | Package | USD ($) | INR (₹) | AED (AED) | GBP (£) | EUR (€) | Description |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
@@ -90,8 +84,8 @@ Tanie uses purchasing-power parity (PPP) to adjust pricing across different curr
 
 ## Frequently Asked Questions (FAQs)
 
-**Q: Where is Tanie located?**
-A: Tanie is based in Ahmedabad, Gujarat, India. She collaborates remotely with founders, agencies, and businesses across the US, UK, UAE, India, and worldwide.
+**Q: How does Tanie work with clients?**
+A: Tanie collaborates remotely as an independent creative developer and engineer with founders, agencies, and businesses worldwide.
 
 **Q: What is the typical project turnaround time?**
 A: Landing pages and sprints typically take 1 to 2 weeks. Full interactive web applications, 3D WebGL experiences, or custom portfolio builds generally take 2 to 4+ weeks depending on scope.

@@ -14,25 +14,7 @@ export async function GET(req: NextRequest) {
       tagline: "Building interactive, responsive, personality-filled web experiences.",
       email: "tanielalwani@gmail.com",
       website: "https://tanie.me",
-      headquarters: {
-        city: "Ahmedabad",
-        state: "Gujarat",
-        country: "India",
-        coordinates: {
-          latitude: 23.0225,
-          longitude: 72.5714,
-        },
-      },
-      clientMarkets: [
-        "United States",
-        "United Kingdom",
-        "United Arab Emirates",
-        "India",
-        "Canada",
-        "Australia",
-        "Europe",
-        "Worldwide",
-      ],
+      workModel: "Global / Remote",
       socials: {
         github: "https://github.com/tanie-lalwani",
         linkedin: "https://linkedin.com/in/tanie-lalwani/",
@@ -56,7 +38,7 @@ export async function GET(req: NextRequest) {
     featuredProjects: [
       {
         name: "UAE ATS Resume Generator AI",
-        description: "AI-powered resume generator engineered for UAE recruiters and regional ATS standards.",
+        description: "AI-powered resume generator engineered for ATS compliance.",
         url: "https://emiratescv.in",
         stack: ["React", "TypeScript", "AI / LLM", "Tailwind CSS"],
       },
@@ -102,8 +84,7 @@ export async function GET(req: NextRequest) {
     const md = `# Tanie Lalwani – Developer Manifest (tanie.me)
 **Name**: Tanie Lalwani
 **Role**: Creative & Full-Stack Developer
-**Location**: Ahmedabad, Gujarat, India (Coordinates: 23.0225° N, 72.5714° E)
-**Markets Served**: United States, United Kingdom, United Arab Emirates, India, Canada, Australia, Europe, Worldwide
+**Work Model**: Global / Remote
 **Email**: tanielalwani@gmail.com
 **Website**: https://tanie.me
 

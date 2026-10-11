@@ -36,7 +36,7 @@ export const metadata: Metadata = {
     template: "%s | Tanie Lalwani",
   },
   description:
-    "Tanie Lalwani is a creative full-stack developer specializing in React.js, TypeScript, Three.js, and Next.js. Building interactive 3D WebGL experiences and modern web applications for clients across the United States, UK, UAE, India, and worldwide.",
+    "Tanie Lalwani is a creative full-stack developer specializing in React.js, TypeScript, Three.js, and Next.js. Building interactive 3D WebGL experiences and modern web applications.",
   applicationName: "Tanie",
   authors: [{ name: "Tanie Lalwani", url: "https://tanie.me" }],
   creator: "Tanie Lalwani",
@@ -49,10 +49,9 @@ export const metadata: Metadata = {
     "Three.js Developer",
     "Next.js Developer",
     "WebGL 3D Websites",
-    "Frontend Engineer Ahmedabad",
-    "Creative Developer India",
-    "Hire React Developer USA",
-    "Freelance Frontend Engineer",
+    "Creative Technologist",
+    "Frontend Engineer",
+    "Interactive Web Applications",
     "Luxury Websites & WebGL",
   ],
   alternates: {
@@ -85,7 +84,7 @@ export const metadata: Metadata = {
     siteName: "Tanie Lalwani",
     title: "Tanie Lalwani | Creative and Full Stack Developer",
     description:
-      "Tanie Lalwani is a creative full-stack developer specializing in React.js, TypeScript, Three.js, and Next.js. Building interactive 3D WebGL experiences and high-converting web apps globally.",
+      "Tanie Lalwani is a creative full-stack developer specializing in React.js, TypeScript, Three.js, and Next.js. Building interactive 3D WebGL experiences and high-converting web applications.",
     images: [
       {
         url: "https://tanie.me/og.webp",
@@ -112,13 +111,8 @@ export const metadata: Metadata = {
   },
   other: {
     "msvalidate.01": "EDD728E9B87B2E690DC2EB9CB968C1B0",
-    "geo.region": "IN-GJ",
-    "geo.placename": "Ahmedabad, Gujarat, India",
-    "geo.position": "23.0225;72.5714",
-    ICBM: "23.0225, 72.5714",
-    "dc.coverage": "Worldwide (United States, United Kingdom, United Arab Emirates, India, Canada, Australia, Europe, Global)",
     abstract:
-      "Tanie Lalwani is an Ahmedabad-based creative full-stack developer building interactive WebGL/Three.js web experiences, Next.js apps, and luxury landing pages for clients across the US, UK, UAE, India, and worldwide.",
+      "Tanie Lalwani is a creative full-stack developer building interactive WebGL/Three.js web experiences, Next.js apps, and luxury landing pages.",
     summary:
       "Creative & full-stack developer specializing in React, Next.js, TypeScript, Three.js, and interactive 3D web experiences.",
   },
@@ -139,66 +133,10 @@ const jsonLd = {
       mainEntityOfPage: "https://tanie.me/",
       jobTitle: "Creative & Full-Stack Developer",
       description:
-        "Tanie Lalwani is a creative full-stack developer specializing in React, Next.js, TypeScript, Three.js, and interactive 3D WebGL web applications. Partnering with clients across the United States, United Kingdom, United Arab Emirates, India, and worldwide.",
-      address: {
-        "@type": "PostalAddress",
-        addressLocality: "Ahmedabad",
-        addressRegion: "Gujarat",
-        addressCountry: "IN",
-      },
-      geo: {
-        "@type": "GeoCoordinates",
-        latitude: 23.0225,
-        longitude: 72.5714,
-      },
+        "Tanie Lalwani is a creative full-stack developer specializing in React, Next.js, TypeScript, Three.js, and interactive 3D WebGL web applications.",
       email: "tanielalwani@gmail.com",
       priceRange: "$$",
       currenciesAccepted: "USD, INR, AED, GBP, EUR, CAD, AUD",
-      areaServed: [
-        {
-          "@type": "Country",
-          name: "United States",
-          alternateName: "USA",
-        },
-        {
-          "@type": "Country",
-          name: "United Kingdom",
-          alternateName: "UK",
-        },
-        {
-          "@type": "Country",
-          name: "United Arab Emirates",
-          alternateName: "UAE",
-        },
-        {
-          "@type": "Country",
-          name: "India",
-        },
-        {
-          "@type": "Country",
-          name: "Canada",
-        },
-        {
-          "@type": "Country",
-          name: "Australia",
-        },
-        {
-          "@type": "Place",
-          name: "Europe",
-        },
-        {
-          "@type": "AdministrativeArea",
-          name: "Ahmedabad",
-        },
-        {
-          "@type": "AdministrativeArea",
-          name: "Gujarat",
-        },
-        {
-          "@type": "Place",
-          name: "Worldwide",
-        },
-      ],
       knowsAbout: [
         "React",
         "Next.js",
@@ -211,7 +149,6 @@ const jsonLd = {
         "Interactive 3D Web Experiences",
         "Performance Optimization & Core Web Vitals",
         "UI/UX Design Systems",
-        "Generative Engine Optimization (GEO)",
       ],
       sameAs: [
         "https://github.com/tanie-lalwani",
